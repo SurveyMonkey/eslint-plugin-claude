@@ -2,6 +2,7 @@
 // another file, sends the reader of a report to a 404.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
+import type { Linter } from 'eslint'
 import { expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { docsUrl } from '../src/docs-url.ts'
@@ -490,5 +491,54 @@ it('gives each rule doc frontmatter that parses, with a string description', () 
       description = (parse(front) as { description?: unknown } | null)?.description
     }, file).not.toThrow()
     expect(typeof description, file).toBe('string')
+  }
+})
+
+/** The files and the severity that `config` gives each rule. A rule with two languages has two
+ *  blocks, so its files are the files of both. */
+function rulesOf(config: Linter.Config[]): Map<string, { files: string[]; severity: unknown }> {
+  const rules = new Map<string, { files: string[]; severity: unknown }>()
+  for (const block of config) {
+    for (const [id, severity] of Object.entries(block.rules ?? {})) {
+      const name = id.slice('claude/'.length)
+      const files = (block.files ?? []).flat().map(String)
+      rules.set(name, { files: [...(rules.get(name)?.files ?? []), ...files], severity })
+    }
+  }
+  return rules
+}
+
+const STRICT = rulesOf(plugin.configs.strict)
+const RECOMMENDED = rulesOf(plugin.configs.recommended)
+
+/** The text of the doc of `name`. */
+function docOf(name: string): string {
+  return readFileSync(path.join(DOCS, `${name}.md`), 'utf8')
+}
+
+// eslint-doc-generator writes no Files cell (ADR 003). A person writes it, so a test compares it
+// with the files of the rule. A cell can add where the files are, after ", in ".
+it('gives each rule doc a Files cell with the files of the rule', () => {
+  expect(STRICT.size).toBe(Object.keys(plugin.rules).length)
+  for (const [name, { files }] of STRICT) {
+    const cell = /^\| Category \| Files \|\n\|-+\|-+\|\n\| [^|]+ \| (.+) \|$/m.exec(
+      docOf(name),
+    )?.[1]
+    const globs = files.map((file) => `\`${file}\``).join(', ')
+    expect(cell === globs || cell?.startsWith(`${globs}, in `), `${name}: ${cell}`).toBe(true)
+  }
+})
+
+// eslint-doc-generator writes no Usage block (ADR 003). The block gives the `recommended`
+// severity, or the `strict` severity for a rule that is off in `recommended` (CONTRIBUTING.md).
+it('gives each rule doc a Usage block with the severity of the rule', () => {
+  for (const [name, strict] of STRICT) {
+    const severity = (RECOMMENDED.get(name) ?? strict).severity
+    const usage =
+      docOf(name)
+        .split(/^## Usage$/m)[1]
+        ?.split(/^## /m)[0] ?? ''
+    const code = /^```js\n([\s\S]*?)^```$/m.exec(usage)?.[1] ?? ''
+    expect(code, name).toContain(`'claude/${name}': '${severity}'`)
   }
 })
