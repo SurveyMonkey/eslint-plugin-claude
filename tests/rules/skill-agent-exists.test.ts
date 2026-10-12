@@ -498,8 +498,9 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
 })
 
 // A project directory that is a link to a target out of the repository. The folder
-// `.claude/agents/` below the link is not there, and its real path is out of the repository. The
-// rule cannot see it (ADR 001, Decision 14), so it makes no report, whatever agent the field names.
+// `.claude/agents/` below the link is not there, and the nearest part of its path that exists is
+// out of the repository. The rule cannot see the folder (ADR 001, Decision 14). So it makes no
+// report, whatever agent the field names.
 describe.skipIf(process.platform === 'win32')('a project directory that is a link', () => {
   const file = (() => {
     put('lnkwrap/repo/.git/HEAD', '')
@@ -509,7 +510,7 @@ describe.skipIf(process.platform === 'win32')('a project directory that is a lin
     symlinkSync('../../lnkproj-target', path.join(scratch, 'lnkwrap/repo/app'))
     return path.join(scratch, 'lnkwrap', 'repo', 'app', '.claude', 'skills', 's', 'SKILL.md')
   })()
-  it('stays silent for a missing agent', () => {
+  it('stays silent for each agent name, because the agents folder of the link is unseen', () => {
     for (const agent of ['ghost', 'above-agent', 'beyond-agent']) {
       expect(lintMarkdown('skill-agent-exists', fork(agent), file), agent).toEqual([])
     }
@@ -517,7 +518,8 @@ describe.skipIf(process.platform === 'win32')('a project directory that is a lin
 })
 
 // A project `.claude/` that is a link out of the repository, with no `agents` folder in the
-// target. The folder is not there, and its real path is out of the repository.
+// target. The folder is not there, and the nearest part of its path that exists is out of the
+// repository.
 describe.skipIf(process.platform === 'win32')('a .claude link out of the repository', () => {
   it('stays silent when the agents folder is missing, and reports it in the repository', () => {
     put('lnkout/repo/.git/HEAD', '')
