@@ -411,7 +411,7 @@ describe('bodyOf', () => {
     expect(api.bodyOf({ ...f, rules: rules.slice(0, 12) }, REPO)).toContain('<details>')
   })
 
-  it('fails before any gh call for a body that does not fit at all (#218)', async () => {
+  it('fails before it writes for a body that does not fit at all (#218)', async () => {
     const rules = Array.from({ length: 2000 }, (_, i) => `a-rule-with-a-long-name-${i}`)
     const f: Finding = { ...update, rules }
     expect(() => api.bodyOf(f, REPO)).toThrow(
@@ -1652,6 +1652,15 @@ describe('the moved kind (#152)', () => {
       '- Possible move: `Set variables in settings files` (block `set-variables-in-settings-files`) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.',
     )
     expect(api.bodyOf(update, REPO)).not.toContain('Possible move')
+    // Only a block with more than MAX_MOVES possible moves gets a count line.
+    expect(api.bodyOf(removal, REPO)).not.toContain('more possible moves')
+    const five = Array.from({ length: api.MAX_MOVES }, (_, i) => ({
+      heading: `Near ${i}`,
+      blockId: `near-${i}`,
+    }))
+    const body = api.bodyOf({ ...removal, possibleMoves: five }, REPO)
+    expect(body.match(/^- Possible move: /gm)).toHaveLength(api.MAX_MOVES)
+    expect(body).not.toContain('more possible moves')
   })
 
   it('refuses a moved finding whose hashes, texts or move do not fit its kind', () => {
