@@ -1,9 +1,10 @@
 // The config of eslint-doc-generator (ADR 003). `pnpm docs:generate` writes the
 // rule list of README.md and the header and options list of each rule doc.
-// `pnpm docs:check` fails when one of them does not agree with the rule `meta`.
+// `pnpm docs:check` fails when one of them does not agree with the rule `meta`
+// and the configs.
 
 // The groups of the README rule list, in the order of the rule inventory. Each
-// rule is in one group. Add a new rule to the list of its group.
+// rule is in one group only. Add a new rule to the list of its group.
 const GROUPS = [
   {
     title: 'Skills and commands',
@@ -502,11 +503,18 @@ const GROUPS = [
   },
 ]
 
-/** Puts each rule in its group. A rule in no group, or a name in a group that
- *  is not a rule, stops the run with an error that names it. */
+/** Puts each rule in its group. A rule in no group, a rule in two groups, or a
+ *  name in a group that is not a rule, stops the run with an error that names it. */
 function ruleListSplit(rules) {
   const byName = new Map(rules)
-  const grouped = new Set(GROUPS.flatMap((group) => group.rules))
+  const listed = GROUPS.flatMap((group) => group.rules)
+  const twice = listed.filter((name, at) => listed.indexOf(name) !== at)
+  if (twice.length > 0) {
+    throw new Error(
+      `Put each rule in one group only in .eslint-doc-generatorrc.mjs: ${twice.join(', ')}`,
+    )
+  }
+  const grouped = new Set(listed)
   const missing = rules.map(([name]) => name).filter((name) => !grouped.has(name))
   if (missing.length > 0) {
     throw new Error(
@@ -529,8 +537,8 @@ function ruleListSplit(rules) {
 export default {
   pathRuleList: 'README.md',
   ruleDocTitleFormat: 'prefix-name',
-  // No config sets a rule to `off`, so the `configsOff` column stays empty and
-  // the generator does not show it.
+  // `configFor` in src/index.ts leaves out each rule that is `off`. So the
+  // `configsOff` column is empty, and the generator does not show it.
   ruleListColumns: ['name', 'description', 'configsError', 'configsWarn', 'configsOff', 'options'],
   ruleListSplit,
 }
