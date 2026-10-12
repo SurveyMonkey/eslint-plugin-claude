@@ -1130,8 +1130,8 @@ interface Module {
 }
 type Severity = 'off' | 'warn' | 'error'
 
-// Language settings only, so the spread in `configFor` cannot replace a
-// block's `files` or `plugins`.
+// Language settings only, so the spread in `configFor` and `fileBlocksFor`
+// cannot replace a block's `files` or `plugins`.
 const LANGUAGES: Record<
   (typeof modules)[number]['target']['language'],
   Pick<Linter.Config, 'language' | 'languageOptions'>
@@ -1608,8 +1608,9 @@ const STRICT: Record<Severity, Exclude<Severity, 'off'>> = {
 // to check for `undefined`. `configs` drops the string index of
 // `ESLint.Plugin`, so a config name with a typo does not type-check.
 // `ESLint.Plugin['rules']` rather than `Rule.RuleModule`, which types
-// JavaScript rules only. Each config is an array of one block per rule that
-// it turns on, then one block of files for each language. Add a key for a new config.
+// JavaScript rules only. Each config starts with one block of files for each
+// language. Then it has the blocks of each rule that it turns on. Add a key
+// for a new config.
 type Plugin = Omit<ESLint.Plugin, 'meta' | 'configs'> & {
   meta: { name: string; version: string; namespace: 'claude' }
   rules: NonNullable<ESLint.Plugin['rules']>
@@ -1623,9 +1624,11 @@ const plugin: Plugin = {
   configs: { recommended: [], strict: [] },
 }
 
-/** One block for each rule that `severity` turns on, with the rule's own
- *  files and language. The block also registers the language plugins, so a
- *  consumer needs no other setup. */
+/** The blocks of files from `fileBlocksFor`, then one block for each rule
+ *  block that `severity` turns on, with its files and language. Each block
+ *  also registers the language plugins, so a consumer needs no other setup.
+ *  The rule blocks come last, so they set the language of a file that globs
+ *  of two languages match. */
 function configFor(config: string, severity: (rule: RuleName) => Severity): Linter.Config[] {
   const ruleBlocks = modules
     .filter((m) => severity(m.target.name) !== 'off')
@@ -1641,14 +1644,14 @@ function configFor(config: string, severity: (rule: RuleName) => Severity): Lint
         rules: { [`claude/${m.target.name}`]: severity(m.target.name as RuleName) },
       })),
     )
-  return [...ruleBlocks, ...fileBlocksFor(config)]
+  return [...fileBlocksFor(config), ...ruleBlocks]
 }
 
-/** One block for each language, with the globs of every rule of that
- *  language and no rules. A rule that is `off` has no block of its own, so
- *  this block gives its files a config. A user then turns the rule on with
- *  an entry in `rules`. The globs come from the modules, so a new rule adds
- *  no entry to a central list. */
+/** One block for each language, with each glob of that language from the
+ *  `files` and `also` of every module, and no rules. A rule that is `off` has
+ *  no block of its own, so this block gives its files a config. A user then
+ *  turns the rule on with an entry in `rules`. The globs come from the
+ *  modules, so a new rule adds no entry to a central list. */
 function fileBlocksFor(config: string): Linter.Config[] {
   const globs = new Map<Language, Set<string>>()
   for (const { target } of modules as Module[]) {

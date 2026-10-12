@@ -6732,7 +6732,7 @@ describe('configs', () => {
   }, 30_000)
 })
 
-// The block names and settings that each language has in a config.
+// The language settings of the block of files of each language.
 const LANGUAGE_SETTINGS = {
   markdown: { language: 'markdown/gfm', languageOptions: { frontmatter: 'yaml' } },
   json: { language: 'json/json' },
@@ -6759,7 +6759,8 @@ async function targets(): Promise<Target[]> {
   return found
 }
 
-/** A file path that a glob of a `target` matches. */
+/** A path below `proj/` that a glob of a `target` matches. It knows only the glob forms
+ *  that the modules use. */
 function sampleOf(glob: string): string {
   return `proj/${glob
     .replace(/^\*\*\//, '')
@@ -6796,6 +6797,10 @@ describe('files of each rule in recommended and strict', () => {
               const where = `${config} ${name} ${glob}`
               expect([where, calculated?.rules?.[`claude/${name}`]?.[0]]).toEqual([where, 1])
               expect([where, calculated?.language]).toEqual([where, LANGUAGE_OBJECTS[lang]])
+              expect([where, calculated?.languageOptions?.frontmatter]).toEqual([
+                where,
+                lang === 'markdown' ? 'yaml' : undefined,
+              ])
             }
           }
         }
@@ -6823,9 +6828,26 @@ describe('files of each rule in recommended and strict', () => {
         expect(block.rules).toBeUndefined()
         expect(new Set(block.files as string[])).toEqual(union)
         expect(block.files).toHaveLength(union.size)
-        expect(block.language).toBe(LANGUAGE_SETTINGS[language].language)
+        expect({ language: block.language, languageOptions: block.languageOptions }).toEqual(
+          LANGUAGE_SETTINGS[language],
+        )
         expect(block.plugins?.claude).toBe(plugin)
       }
+    }
+  })
+
+  // A JSON file below `.claude/rules/` matches globs of both languages. The rule blocks set its
+  // language, as before the blocks of files. So `rules-md-extension` still reports it.
+  it('keeps the language of the rule blocks on a file that both languages match', async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'claude-config-order-'))
+    try {
+      mkdirSync(path.join(dir, '.claude/rules'), { recursive: true })
+      writeFileSync(path.join(dir, '.claude/rules/managed-mcp.json'), '{"mcpServers":{}}\n')
+      expect(await reports(plugin.configs.recommended, dir)).toEqual([
+        '.claude/rules/managed-mcp.json: claude/rules-md-extension@2',
+      ])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
     }
   })
 
