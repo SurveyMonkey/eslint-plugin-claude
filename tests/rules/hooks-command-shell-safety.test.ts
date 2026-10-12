@@ -186,20 +186,32 @@ describe(`${name}: an unquoted variable in the command`, () => {
       `echo \${@% #*}`,
       `echo \${@// #/}`,
       `echo \${@:-\${@% #*}}`,
+      // The inner expansion ends, and the `#` is still in the outer one.
+      `echo \${@:-\${@} #*}`,
       'ls a\\ #b',
+      // The shell removes the backslash and the new line, so the `#` is in the word `a#b`.
+      'ls a\\\n#b',
     ]) {
       expect(line(`x="$(${text})" && cat $FILE`), text).toEqual(['unquoted'])
     }
   })
 
-  it('ends a comment in a backtick substitution at the closing backtick', () => {
+  it('reads a comment after a line continuation, or after a backtick that starts a substitution', () => {
+    // The shell removes the backslash and the new line, so the `#` starts a word.
+    expect(script('x="$(date \\\n# it\'s\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    expect(script('x="$(echo `#it\'s`)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    // A quote at the end of the comment is plain text too.
+    expect(script('x="$(date # it\'\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+  })
+
+  it('ends a comment in a backtick substitution at the backtick that ends it', () => {
     expect(line('x="$(echo `id -u # uid`)"; rm -rf $TARGET')).toEqual(['destructive'])
-    // The closing backtick ends the substitution, so a backtick in a later comment is plain text.
+    // The second backtick ends the substitution, so a backtick in a later comment is plain text.
     expect(script('x="$(echo `id # u`; date # a ` it\'s\n)"\nrm -rf $TARGET\n')).toEqual([
       'destructive',
     ])
     // Out of a backtick substitution, a backtick in a comment is plain text.
-    expect(script('x="$(date # a ` tick\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    expect(script('x="$(date # a ` it\'s\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
   })
 
   it('reads a test that ends, and the lines after it', () => {
