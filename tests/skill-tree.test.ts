@@ -555,6 +555,24 @@ describe('readJson', () => {
   )
 })
 
+describe('readJson when a stat fails', () => {
+  it('gives UNREADABLE for a failed stat, and null for a file that a process removed', () => {
+    const file = put('rs/a.json', '{"a":1}')
+    for (const [code, result] of [
+      ['EACCES', UNREADABLE],
+      ['ENOENT', null],
+    ] as const) {
+      faults.set(file, code)
+      try {
+        expect(readJson(file, scratch)).toBe(result)
+      } finally {
+        faults.clear()
+      }
+    }
+    expect(readJson(file, scratch)).toEqual({ data: { a: 1 } })
+  })
+})
+
 // Claude Code 2.1.246 and later loads a `plugin.json` that starts with a byte order mark (the
 // 2.1.246 entry of https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
 describe('readJson and a byte order mark', () => {
