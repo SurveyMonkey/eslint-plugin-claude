@@ -759,6 +759,29 @@ describe('openIssues', () => {
       api.openIssues({ findings: [update], repo: REPO, run, dryRun: false, log: quiet }),
     ).rejects.toThrow('gh: HTTP 403')
   })
+
+  it('fails, and records no empty URL, when gh prints nothing for a new issue (#219)', async () => {
+    const calls: string[][] = []
+    const run: Run = (args) => {
+      calls.push(args)
+      if (args.includes('--paginate')) return ''
+      return calls.length === 2 ? `https://github.com/${REPO}/issues/7\n` : ' \n'
+    }
+    const logs: string[] = []
+    await expect(
+      api.openIssues({
+        findings: [update, { ...newRule, rules: ['a-rule'] }],
+        repo: REPO,
+        run,
+        dryRun: false,
+        log: (text) => logs.push(text),
+      }),
+    ).rejects.toThrow(
+      'gh printed no URL for the issue "feat: new rule candidate from Agent frontmatter"',
+    )
+    // The first issue opened, and stays. The second has no URL, so the step stops.
+    expect(logs).toEqual([`opened: https://github.com/${REPO}/issues/7`])
+  })
 })
 
 const HOOKS = 'https://code.claude.com/docs/en/hooks'
@@ -1172,6 +1195,24 @@ describe('the group comment path for tracked blocks', () => {
     expect(body.match(/<!-- docs-watch-tracked:/g)).toHaveLength(30)
     expect(body).toContain('Read the page for the rest.')
     expect(api.commentOf(blocks.slice(0, 1), 'Hooks')).not.toContain('Read the page for the rest.')
+  })
+
+  it('fails, and records no empty URL, when gh prints nothing for a new comment (#219)', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const run: Run = (args, input) => (args.includes('POST') ? '' : gh.run(args, input))
+    const logs: string[] = []
+    await expect(
+      api.openIssues({
+        findings: [update],
+        tracked: [common],
+        repo: REPO,
+        run,
+        dryRun: false,
+        log: (text) => logs.push(text),
+      }),
+    ).rejects.toThrow('gh printed no URL for the comment on #10')
+    // The step stops before it opens the issue of the finding.
+    expect(logs.filter((line) => /^(opened|commented): /.test(line))).toEqual([])
   })
 
   it('fails before any gh call for a tracked block that is not valid', async () => {

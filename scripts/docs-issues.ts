@@ -836,6 +836,14 @@ export function commentOf(
   return `${head}${text}${note ? `\n\n${note}` : ''}\n`
 }
 
+// The URL that gh prints for a new comment or issue. Empty output fails the
+// step, so the result never holds an empty URL. What gh made before stays.
+function urlOf(out: string, what: string): string {
+  const url = out.trim()
+  if (url === '') throw new Error(`gh printed no URL for ${what}`)
+  return url
+}
+
 // Runs gh and returns its stdout. Tests pass a fake runner instead.
 export const ghRunner: Run = (args, input) =>
   execFileSync('gh', args, { input, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'] })
@@ -1033,8 +1041,9 @@ export async function openIssues({
       ],
       JSON.stringify({ body }),
     )
-    commented.push(out.trim())
-    log(`commented: ${out.trim()}`)
+    const url = urlOf(out, `the comment on #${issue}`)
+    commented.push(url)
+    log(`commented: ${url}`)
   }
   const opened: string[] = []
   for (const issue of issues) {
@@ -1046,8 +1055,9 @@ export async function openIssues({
       ['api', '--method', 'POST', `repos/${repo}/issues`, '--input', '-', '--jq', '.html_url'],
       JSON.stringify(issue),
     )
-    opened.push(out.trim())
-    log(`opened: ${out.trim()}`)
+    const url = urlOf(out, `the issue "${issue.title}"`)
+    opened.push(url)
+    log(`opened: ${url}`)
   }
   return {
     opened,
