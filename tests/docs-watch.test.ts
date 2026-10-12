@@ -833,6 +833,19 @@ describe('update and check on a temporary tree', () => {
     expect(readdirSync(path.join(partial, 'docs'))).toEqual(['rule-sources.json'])
   })
 
+  it('update keeps the old snapshot set whole when a write fails (#35)', async () => {
+    const root = tree(map('hooks'))
+    const dir = path.join(root, 'docs/docs-snapshot')
+    mkdirSync(dir)
+    // A stale page that no rule cites now, and a directory where the new file
+    // must go, so the write fails.
+    writeFileSync(path.join(dir, 'old-page.json'), '{}\n')
+    mkdirSync(path.join(dir, api.snapshotName(URL_)))
+    await expect(run(['update', root], FIXTURE)).rejects.toThrow(/EISDIR/)
+    expect(readdirSync(dir).sort()).toEqual(['old-page.json', api.snapshotName(URL_)].sort())
+    expect(readFileSync(path.join(dir, 'old-page.json'), 'utf8')).toBe('{}\n')
+  })
+
   it('update stops for a map that cites no page, and keeps the snapshot', async () => {
     const root = tree(map('hooks'))
     await run(['update', root], FIXTURE)

@@ -448,8 +448,8 @@ function readJson(file: string) {
 export const loadMap = (root: string): SourceMap => readJson(path.join(root, MAP_FILE))
 
 // Reads every cited page, then writes the snapshot and the map hashes. It
-// writes nothing when one page fails. It deletes the snapshot file of a page
-// that no rule cites now.
+// writes nothing when one page fails. After it writes the snapshot, it
+// deletes the snapshot file of a page that no rule cites now.
 export async function updateState({
   root,
   fetchText,
@@ -466,11 +466,12 @@ export async function updateState({
   }
   const dir = path.join(root, SNAPSHOT_DIR)
   mkdirSync(dir, { recursive: true })
+  // The new files come first. A failed write then leaves each old file there.
+  for (const page of current) writeFileSync(path.join(dir, snapshotName(page.url)), toJson(page))
   const keep = new Set(current.map((page) => snapshotName(page.url)))
   for (const file of readdirSync(dir)) {
     if (file.endsWith('.json') && !keep.has(file)) rmSync(path.join(dir, file))
   }
-  for (const page of current) writeFileSync(path.join(dir, snapshotName(page.url)), toJson(page))
   const hashes = new Map<string, string>()
   for (const page of current) {
     for (const source of page.sources) hashes.set(`${page.url}\n${source.heading}`, source.hash)
