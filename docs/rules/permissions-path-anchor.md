@@ -12,7 +12,7 @@ generated:
 
 # claude/permissions-path-anchor
 
-📝 Anchor a path rule at the file system root with //, and a project path with ./.
+📝 Anchor an absolute path rule with `//`, and a project sandbox path with `./`.
 
 ⚠️ This rule _warns_ in the 🔒 `strict` config.
 

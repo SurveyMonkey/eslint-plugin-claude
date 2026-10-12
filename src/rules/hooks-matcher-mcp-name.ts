@@ -22,7 +22,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Match the tools of an MCP server with mcp__<server>__.*, not the server name',
+      description: 'Match the tools of an MCP server with `mcp__<server>__.*`, not the server name',
       url: docsUrl(name),
     },
     schema: [],

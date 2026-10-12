@@ -23,7 +23,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Put a tool-name glob in an allow rule only after mcp__<server>__',
+      description: 'Put a tool-name glob in an allow rule only after `mcp__<server>__`',
       url: docsUrl(name),
     },
     schema: [],

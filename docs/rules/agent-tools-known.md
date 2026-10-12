@@ -12,7 +12,7 @@ generated:
 
 # claude/agent-tools-known
 
-📝 Name a tool that Claude Code knows in the tools of a subagent.
+📝 Name a tool that Claude Code knows in the tools and disallowedTools of a subagent.
 
 💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
 

@@ -12,7 +12,7 @@ generated:
 
 # claude/marketplace-min-version
 
-📝 Use no marketplace field that is newer than the configured Claude Code version.
+📝 Use no marketplace field or source type that is newer than the configured Claude Code version.
 
 ⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
 

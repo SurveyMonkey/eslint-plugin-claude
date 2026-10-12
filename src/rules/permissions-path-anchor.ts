@@ -24,7 +24,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'singleSlash' | 's
   meta: {
     type: 'problem',
     docs: {
-      description: 'Anchor a path rule at the file system root with //, and a project path with ./',
+      description: 'Anchor an absolute path rule with `//`, and a project sandbox path with `./`',
       url: docsUrl(name),
     },
     schema: [],

@@ -46,7 +46,8 @@ const rule: JSONRuleDefinition<{
   meta: {
     type: 'problem',
     docs: {
-      description: 'Use no marketplace field that is newer than the configured Claude Code version',
+      description:
+        'Use no marketplace field or source type that is newer than the configured Claude Code version',
       url: docsUrl(name),
     },
     schema: [

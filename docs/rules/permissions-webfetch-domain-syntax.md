@@ -12,7 +12,7 @@ generated:
 
 # claude/permissions-webfetch-domain-syntax
 
-📝 Write a WebFetch rule as domain:<host>, with a hostname or wildcard only.
+📝 Write a WebFetch rule as `domain:<host>`, with a hostname or wildcard only.
 
 💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
 

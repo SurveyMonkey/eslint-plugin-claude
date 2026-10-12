@@ -37,7 +37,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
     type: 'suggestion',
     docs: {
       description:
-        'Do not let sandboxed commands write shell startup files or executable directories',
+        'Do not let sandboxed commands write shell startup files, system configuration or executable directories',
       url: docsUrl(name),
     },
     schema: [],
