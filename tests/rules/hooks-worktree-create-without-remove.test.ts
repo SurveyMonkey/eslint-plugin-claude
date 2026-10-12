@@ -112,11 +112,25 @@ describe(`${name}: a merge key`, () => {
   const yaml = (text: string) => markdownIds(name, frontmatter(text), FILES.skill)
   const createYaml = 'WorktreeCreate:\n  - hooks:\n      - &c { type: command, command: ./c.sh }\n'
 
-  it('is silent when the WorktreeRemove event holds a map with a merge key', () => {
+  it('is silent when a WorktreeRemove group or handler holds a merge key', () => {
     expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - <<: *c\n`)).toEqual([])
     expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n`)).toEqual([])
-    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([])
-    expect(yaml(`${createYaml}WorktreeRemove: { <<: { a: 1 } }\n`)).toEqual([])
+    expect(
+      yaml(
+        `${createYaml}WorktreeRemove:\n  - hooks:\n      - { type: command, command: ./r.sh, input: { <<: { a: 1 } } }\n`,
+      ),
+    ).toEqual([])
+  })
+
+  it('reports when the WorktreeRemove value or its handler list is a map with a merge key', () => {
+    // A map is no list, so it holds no handler.
+    expect(yaml(`${createYaml}WorktreeRemove: { <<: { a: 1 } }\n`)).toEqual(['noRemove'])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([
+      'noRemove',
+    ])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - x\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([
+      'noRemove',
+    ])
   })
 
   it('is silent when the hooks value itself holds a merge key', () => {

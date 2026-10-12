@@ -7,7 +7,8 @@
 //
 // The tree is tolerant: a value of the wrong type is still a node. `hooks-config-schema`
 // reports it. The other rules read `handlersOf`, which gives the handlers of well-formed groups only.
-// A YAML map that holds a merge key is a node of kind `unseen`. No rule reads into it. A YAML value
+// A YAML map that holds a merge key is a node of kind `unseen`. It is an object, and no rule reads
+// into it. A YAML value
 // over the alias limit gives no tree at all (see `fromYaml`).
 import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
@@ -49,7 +50,8 @@ export interface HMember {
 
 /** A value of the config. A node of kind `other` is a value of no JSON type. An example is a
  *  YAML alias that names its own ancestor. No rule reads into it. A node of kind `unseen` is a YAML
- *  map that holds a merge key (`<<`). No rule reads it as a value (see `fromYaml`). */
+ *  map that holds a merge key (`<<`). It is an object, and no rule reads a key of it (see
+ *  `fromYaml`). */
 export type HNode =
   | { kind: 'object'; loc: Loc; members: HMember[] }
   | { kind: 'array'; loc: Loc; items: HNode[] }
@@ -464,7 +466,8 @@ export interface HookGroup {
 /** The matcher groups of the source, in file order. A value of the wrong shape adds none: an
  *  event whose value is not an array, and a group that is not an object. A group that has no
  *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. An
- *  event or a group of kind `unseen` adds none too, and no rule reports it. An `unseen` matcher
+ *  event of kind `unseen` is an object, so it adds none, and `hooks-config-schema` reports it. A
+ *  group of kind `unseen` adds none, and no rule reports it. An `unseen` matcher
  *  gives `matcher: undefined`, as an omitted matcher does. So a rule reads the `matcher` member
  *  before it reads undefined as "every tool". `handlers` leaves out each handler that holds an
  *  `unseen` node. A rule cannot know how Claude Code runs it. */

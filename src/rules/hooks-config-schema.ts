@@ -2,8 +2,8 @@
 // (docs/rules/hooks-config-schema.md). The same shape is in `hooks/hooks.json` of a plugin, in the
 // `hooks` key of a settings file, and in skill and agent frontmatter. The rule reports the
 // shape only. An event name is for `hooks-event-name-known`, and a handler field that it does not
-// know is not checked here. A node of kind `unseen` holds a merge key, so the rule makes no report
-// on it, and reads its siblings.
+// know is not checked here. A node of kind `unseen` is a map that holds a merge key. The rule reads
+// it as an object, and makes no report that rests on a key of it.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import {
@@ -103,17 +103,15 @@ const FILE_KEYS = new Map<string, Kind>([
 /** The events where an array `matcher` also stops the other hooks of the file from loading. */
 const WHOLE_FILE = ['PreToolUse', 'PermissionRequest']
 
-/** True when `node` is of kind `unseen`: a map that holds a merge key. No report rests on it. */
+/** True when `node` is of kind `unseen`: a map that holds a merge key. The rule reads no key of
+ *  it. */
 const unseen = (node: HNode) => node.kind === 'unseen'
 
-/** True when `node` is of the kind `kind`, or when the rule cannot see its kind. */
+/** True when `node` is of the kind `kind`. An `unseen` node is an object. */
 function hasKind(kind: Kind, node: HNode): boolean {
-  if (unseen(node)) {
-    return true
-  }
   return kind === 'strings'
-    ? node.kind === 'array' && node.items.every((item) => item.kind === 'string' || unseen(item))
-    : node.kind === kind
+    ? node.kind === 'array' && node.items.every((item) => item.kind === 'string')
+    : node.kind === kind || (kind === 'object' && unseen(node))
 }
 
 /** The problems with the field `key` of an object, when its value is of the wrong type. */
@@ -124,6 +122,7 @@ function typeProblems(key: string, kind: Kind, node: HNode): Problem[] {
 }
 
 function handlerProblems(handler: HNode): Problem[] {
+  // An `unseen` handler is an object, and each report on it rests on a key.
   if (unseen(handler)) {
     return []
   }
@@ -134,10 +133,9 @@ function handlerProblems(handler: HNode): Problem[] {
   const type = memberOf(handler, 'type')?.value
   if (type === undefined) {
     problems.push({ loc: handler.loc, messageId: 'typeMissing' })
-  } else if (!unseen(type) && (type.kind !== 'string' || !isHandlerType(type.value))) {
+  } else if (type.kind !== 'string' || !isHandlerType(type.value)) {
     problems.push({ loc: type.loc, messageId: 'typeInvalid' })
-  } else if (type.kind === 'string' && isHandlerType(type.value)) {
-    // An unseen type gives no required field.
+  } else {
     for (const field of REQUIRED[type.value]) {
       if (memberOf(handler, field) === undefined) {
         problems.push({
@@ -155,7 +153,6 @@ function handlerProblems(handler: HNode): Problem[] {
       problems.push(...typeProblems(key, kind, value))
     } else if (
       allowed !== undefined &&
-      !unseen(value) &&
       !(value.kind === 'string' && allowed.includes(value.value))
     ) {
       problems.push({
@@ -169,6 +166,7 @@ function handlerProblems(handler: HNode): Problem[] {
 }
 
 function groupProblems(event: string, group: HNode): Problem[] {
+  // An `unseen` group is an object, and each report on it rests on a key.
   if (unseen(group)) {
     return []
   }
@@ -177,7 +175,7 @@ function groupProblems(event: string, group: HNode): Problem[] {
   }
   const problems: Problem[] = []
   const matcher = memberOf(group, 'matcher')?.value
-  if (matcher !== undefined && matcher.kind !== 'string' && !unseen(matcher)) {
+  if (matcher !== undefined && matcher.kind !== 'string') {
     const messageId =
       matcher.kind !== 'array'
         ? 'matcherType'
@@ -187,9 +185,6 @@ function groupProblems(event: string, group: HNode): Problem[] {
     problems.push({ loc: matcher.loc, messageId })
   }
   const handlers = memberOf(group, 'hooks')?.value
-  if (handlers !== undefined && unseen(handlers)) {
-    return problems
-  }
   if (handlers?.kind !== 'array') {
     problems.push({ loc: handlers?.loc ?? group.loc, messageId: 'handlersMissing' })
     return problems
@@ -199,20 +194,18 @@ function groupProblems(event: string, group: HNode): Problem[] {
 
 /** The problems with the `hooks` value. A `null` value removes the key, so it is no fault. */
 function hooksProblems(hooks: HNode): Problem[] {
+  // An `unseen` value is an object, and the rule reads none of its events.
   if (hooks.kind === 'null' || unseen(hooks)) {
     return []
   }
   if (hooks.kind !== 'object') {
     return [{ loc: hooks.loc, messageId: 'notObject' }]
   }
-  return lastMembers(hooks).flatMap(({ key: event, value: groups }) => {
-    if (unseen(groups)) {
-      return []
-    }
-    return groups.kind === 'array'
+  return lastMembers(hooks).flatMap(({ key: event, value: groups }) =>
+    groups.kind === 'array'
       ? groups.items.flatMap((group) => groupProblems(event, group))
-      : [{ loc: groups.loc, messageId: 'eventNotArray' as const, data: { event } }]
-  })
+      : [{ loc: groups.loc, messageId: 'eventNotArray' as const, data: { event } }],
+  )
 }
 
 /** The problems with the top level of a plugin `hooks.json`. */
