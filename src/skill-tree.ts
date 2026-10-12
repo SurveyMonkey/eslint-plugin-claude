@@ -175,8 +175,8 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
     return
   }
   if (real === null) {
-    // A missing `dir` is empty. A dangling link in its path can lead anywhere. With the root of
-    // the file system as the bound, `missingOf` checks for such a link only.
+    // A `dir` that is not there is empty. A dangling link in its path can lead anywhere. The
+    // bound is the root of the file system, so `missingOf` does not check the repository bound.
     if (missingOf(dir, path.parse(path.resolve(dir)).root) === UNREADABLE) {
       scan.unreadable = true
     }
@@ -346,8 +346,8 @@ export function missingOf(file: string, bound: string): null | Unreadable {
 }
 
 /** The parsed JSON of `file`, as `{ data }`. The result is:
- *  - `{ data }` with the parsed value, when `file` parses. A leading byte
- *    order mark is not part of the text.
+ *  - `{ data }` with the parsed value, when `file` parses. A byte order mark
+ *    at the start is not part of the text.
  *  - `{ data: undefined }`, when the text does not parse.
  *  - null, when `file` is not there and its path is in `bound`.
  *  - `UNREADABLE`, when `file` is a dangling link.
@@ -371,7 +371,8 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
     return text
   }
   try {
-    // Claude Code 2.1.246 and later loads a manifest that starts with a byte order mark.
+    // Claude Code 2.1.246 and later loads a manifest that starts with a byte order mark. A JSON
+    // parser can ignore the mark (RFC 8259, section 8.1), so the step applies to each JSON file.
     return { data: JSON.parse(text.replace(/^\u{FEFF}/u, '')) as unknown }
   } catch {
     return { data: undefined }

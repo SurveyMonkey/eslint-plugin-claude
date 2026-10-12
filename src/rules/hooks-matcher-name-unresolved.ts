@@ -59,8 +59,8 @@ const SKIPPED = new Set(['.git', 'node_modules'])
 /** True when `entry` is a link with no target. */
 const isDangling = (entry: string) => realOf(entry) === null && danglingOf(entry) === UNREADABLE
 
-/** True when `dir` holds, at any depth, a link with no target. The scan of the agents folder skips such a link
- *  without a flag, and the link can hold any agent: a file link or a folder link, with any name. */
+/** True when `dir` holds, at any depth, a link with no target. The link can hold any agent: a file link or a
+ *  folder link, with any name. The scan of the agents folder also sets `unreadable` for such a link. */
 function hasDanglingLink(dir: string, bound: string, seen = new Set<string>()): boolean {
   const real = realOf(dir)
   const entries =

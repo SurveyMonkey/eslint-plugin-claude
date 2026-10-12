@@ -34,9 +34,9 @@ function fileDecides(plugin: Plugin): boolean {
   )
 }
 
-/** True when `dir` holds, at any depth, a link with no target. The scan of `agents/` skips such a
- *  link without a flag, and the link can hold any agent: the name of an agent is its frontmatter
- *  `name` or its file name, in any case, and a link to a folder adds folder names. */
+/** True when `dir` holds, at any depth, a link with no target. The link can hold any agent: the
+ *  name of an agent is its frontmatter `name` or its file name, in any case, and a link to a
+ *  folder adds folder names. The scan of `agents/` also sets `unseen` for such a link. */
 function hasDanglingLink(dir: string, bound: string, seen = new Set<string>()): boolean {
   const real = realOf(dir)
   if (typeof real !== 'string' || seen.has(real) || !isInside(real, bound)) {
@@ -121,7 +121,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
           return
         }
         const agents = pluginAgents(plugin.root, pluginName, plugin.bound)
-        // The scan of `agents/` skips a link with no target and sets no flag, so look for one.
+        // The scan of `agents/` sets `unseen` for a link with no target. This check is a second
+        // guard.
         if (
           !agents.unseen &&
           !agents.names.some(same) &&
