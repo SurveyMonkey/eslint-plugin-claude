@@ -117,6 +117,9 @@ describe(`${name}: a merge key`, () => {
     expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n`)).toEqual([])
     expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([])
     expect(yaml(`${createYaml}WorktreeRemove: { <<: { a: 1 } }\n`)).toEqual([])
+  })
+
+  it('is silent when the hooks value itself holds a merge key', () => {
     expect(yaml(`<<: { WorktreeRemove: [] }\n${createYaml}`)).toEqual([])
   })
 

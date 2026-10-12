@@ -424,6 +424,12 @@ describe(`${name}: frontmatter`, () => {
     expect(at(`Stop: ${merged}\nSessionEnd: x\n`)).toEqual([['eventNotArray', 6]])
   })
 
+  it('reports a sibling event of an event where a handler holds a merge key', () => {
+    expect(at(`${base}      - <<: *base\n        timeout: x\nSessionEnd: x\n`)).toEqual([
+      ['eventNotArray', 10],
+    ])
+  })
+
   it('reports a sibling group of a group that holds a merge key', () => {
     expect(at('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n  - x\n')).toEqual([
       ['groupNotObject', 8],
