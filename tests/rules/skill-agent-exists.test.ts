@@ -566,6 +566,7 @@ describe.skipIf(process.platform === 'win32')('a link with no target', () => {
 
   it('stays silent when the agents directory of the plugin is a link with no target', () => {
     put('deadroot/.claude-plugin/plugin.json', '{"name": "dr"}')
+    expect(ghost(skill('deadroot', '.'))).toEqual(['plugin'])
     symlinkSync('missing', path.join(scratch, 'deadroot/agents'))
     expect(ghost(skill('deadroot', '.'))).toEqual([])
   })

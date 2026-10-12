@@ -31,8 +31,8 @@ import {
 } from '../src/skill-tree.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
-// A `statSync` can fail after `realpathSync` resolves the same path, as when a process removes
-// the file between the two calls. No tree on disk gives that order, so the wrapper below
+// A `statSync` can fail after `realpathSync` resolves the same path. A process can remove the
+// file between the two calls. No tree on disk gives that order, so the wrapper below
 // makes `statSync` fail with the code in `faults` for that path. Each other call goes to the
 // real function.
 const faults = vi.hoisted(() => new Map<string, string>())
@@ -596,7 +596,7 @@ describe('readJson and a byte order mark', () => {
 // A read of a path that is not a regular file gives UNREADABLE. A FIFO is the case that
 // matters: a read of it waits for a writer, and stops the lint run.
 describe('a path that is not a regular file', () => {
-  it('reads a regular file as before, and gives UNREADABLE for a directory', () => {
+  it('reads a regular file, and gives UNREADABLE for a directory', () => {
     expect(readJson(put('special/a.json', '{"a":1}'), scratch)).toEqual({ data: { a: 1 } })
     expect(frontmatterOfFile(put('special/a.md', '---\nname: a\n---\n'))).toEqual({ name: 'a' })
     mkdirSync(path.join(scratch, 'special', 'dir.json'))
