@@ -1809,6 +1809,8 @@ const TREE: Record<string, string> = {
   'packages/re/.claude/rules/style.txt': '# Rule\n',
   'packages/re/.claude/rules/sub/react.markdown': '# Rule\n',
   'packages/re/.claude/rules/noextension': '# Rule\n',
+  'packages/re/.claude/rules/settings.json': '{}\n',
+  'packages/re/.claude/rules/x/package.json': '{}\n',
   'packages/re/.claude/rules/.gitkeep': '',
   'packages/re/.claude/rules/ok.md': '# Rule\n',
   'packages/re/docs/rules/style.txt': '# Not a rule file\n',
@@ -3151,7 +3153,8 @@ const MARKET_SETTINGS_OFF_RULES = MARKET_SETTINGS_RULES.filter(
 // The conflict rule reads the project files, and the managed files for the policy pair.
 const CONFLICT_RULE = 'settings-marketplace-key-alias-conflict'
 // The CLAUDE.md, rules and memory rules of #13, in the order of the `modules` list. Each is an
-// error, and each has one block for its own language.
+// error, and each has one block for its own language. `rules-md-extension` has two: one for
+// Markdown and one for JSON.
 const MEMORY_RULES = [
   'claude-md-agents-md-shadowed',
   'claude-md-agents-md-variant',
@@ -3162,6 +3165,7 @@ const MEMORY_RULES = [
   'memory-settings-schema',
   'memory-symlink-network-target',
   'rules-frontmatter-schema',
+  'rules-md-extension',
   'rules-md-extension',
   'rules-paths-glob-valid',
   'rules-symlink-external-scoped',
@@ -4462,6 +4466,8 @@ const EXPECTED = [
   'packages/re/.claude/rules/style.txt: claude/rules-md-extension@2',
   'packages/re/.claude/rules/sub/react.markdown: claude/rules-md-extension@2',
   'packages/re/.claude/rules/noextension: claude/rules-md-extension@2',
+  'packages/re/.claude/rules/settings.json: claude/rules-md-extension@2',
+  'packages/re/.claude/rules/x/package.json: claude/rules-md-extension@2',
   // `memory-settings-schema` reads the project and managed files, and no other file.
   'packages/ms/.claude/settings.json: claude/memory-settings-schema@2',
   // `settings-schema` also reports the wrong type of `autoMemoryEnabled`.
@@ -6434,6 +6440,7 @@ describe('configs', () => {
     }
     expect(blocks('rules-md-extension')).toEqual([
       ['markdown/gfm', ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)']],
+      ['json/json', ['**/.claude/rules/**/*.json']],
     ])
   })
 
@@ -6773,6 +6780,10 @@ function sampleOf(glob: string): string {
 // A glob that matches every file of a language, such as `**/*.md`.
 const isCatchAll = (glob: string) => /^\*\*\/\*\.[A-Za-z0-9]+$/.test(glob)
 
+// A rule whose Markdown globs match some of its JSON files too. The Markdown block sets the
+// `frontmatter` option, and the JSON language ignores it.
+const MARKDOWN_ALSO = new Set(['rules-md-extension'])
+
 describe('files of each rule in recommended and strict', () => {
   it('reaches every glob of every rule with a rules entry in the user block', async () => {
     const all = await targets()
@@ -6802,7 +6813,7 @@ describe('files of each rule in recommended and strict', () => {
               expect([where, calculated?.language]).toEqual([where, LANGUAGE_OBJECTS[lang]])
               expect([where, calculated?.languageOptions?.frontmatter]).toEqual([
                 where,
-                lang === 'markdown' ? 'yaml' : undefined,
+                lang === 'markdown' || MARKDOWN_ALSO.has(name) ? 'yaml' : undefined,
               ])
             }
           }

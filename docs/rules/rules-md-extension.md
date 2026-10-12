@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/.claude/rules/**/*.*`, `**/.claude/rules/**/!(*.*)` |
+| no-op | `**/.claude/rules/**/*.*`, `**/.claude/rules/**/!(*.*)`, `**/.claude/rules/**/*.json` |
 
 ## Rule details
 
@@ -34,7 +34,8 @@ the file to end in `.md`, or move it out of the directory.
 The files globs name every file below `.claude/rules/`, because the file to report is by
 definition not a Markdown file. ESLint lints a file only when a pattern names it and does not end
 in `/*` or `/**`. So one glob names the files that have a dot in the name, and one names the files
-that have none. ESLint reads such a file as Markdown text, so the rule makes no other check on it.
+that have none. ESLint reads a `.json` file as JSON, and each other file as Markdown text. The rule
+makes no other check on these files.
 The rule makes no report on these files:
 
 - A hidden file, such as `.gitkeep`. It keeps an empty directory in git and is not a rule.
@@ -44,9 +45,12 @@ The rule makes no report on these files:
 
 The rule makes no report on a directory.
 
-A config block of your own can match a file below `.claude/rules/` and set another language, such as
-`json/json`. ESLint then lints that file with the other language, and this rule makes no report on
-it.
+The rule reports a JSON file below `.claude/rules/`, such as `settings.json`, in the same way. For
+a JSON file that does not parse, ESLint gives a parse error, and this rule makes no report.
+
+A config block of your own can match a file below `.claude/rules/` and set another language. ESLint
+then lints that file with that language. This rule makes no report on it, unless the language
+comes from `@eslint/markdown` or `@eslint/json`.
 
 Fail:
 

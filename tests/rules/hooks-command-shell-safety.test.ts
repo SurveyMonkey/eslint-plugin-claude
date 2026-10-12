@@ -143,6 +143,77 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(script('# c\n# $X\n')).toEqual([])
   })
 
+  it('skips a quote in a comment inside a command substitution', () => {
+    // A quote in a comment does not hide the end of the substitution, or the report below it.
+    expect(script("x=$(date # it's\n)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script('x=$(date # a "quote\n)\ncat $FILE\n')).toEqual(['unquoted'])
+    // In double quotes, a substitution that does not end hides the report below it.
+    for (const text of [
+      "date # it's\n",
+      "date;# it's\n",
+      "date|# it's\n cat",
+      "date&# it's\n",
+      "date\t# it's\n",
+      "# it's\n",
+      "echo (# it's\n)",
+      // A comment after an expansion that ends, and after a group in braces.
+      `echo \${@} # it's\n`,
+      "{ date; } # it's\n",
+    ]) {
+      expect(script(`x="$(${text})"\nrm -rf $TARGET\n`), text).toEqual(['destructive'])
+    }
+  })
+
+  it('skips a quote in a comment in an array', () => {
+    expect(script("x=(a # it's\nb)\ncat $FILE\n")).toEqual(['unquoted'])
+  })
+
+  it('ends a comment in a command substitution at the end of its line', () => {
+    expect(script('x=$(date # it\'s\n)\ncat "$FILE"\n')).toEqual([])
+    expect(script("x=$(date # it's")).toEqual([])
+  })
+
+  it('keeps a hash after a closing parenthesis or backtick in the word', () => {
+    // The `#` is part of the word, so the quote after it opens a quote that hides the `)`.
+    expect(script('x="$(echo $(a)#it\'s\n)"\nrm -rf $TARGET\n')).toEqual([])
+    expect(script('x="$(echo `a`#it\'s\n)"\nrm -rf $TARGET\n')).toEqual([])
+  })
+
+  it('reads no comment where a # does not start a word', () => {
+    // A `#` in a parameter expansion, or after an escaped space, is not a comment. The
+    // expansions name no variable, so the report comes from the variable after the quote.
+    for (const text of [
+      `echo \${@% #*}`,
+      `echo \${@// #/}`,
+      `echo \${@:-\${@% #*}}`,
+      // The inner expansion ends, and the `#` is still in the outer one.
+      `echo \${@:-\${@} #*}`,
+      'ls a\\ #b',
+      // The shell removes the backslash and the new line, so the `#` is in the word `a#b`.
+      'ls a\\\n#b',
+    ]) {
+      expect(line(`x="$(${text})" && cat $FILE`), text).toEqual(['unquoted'])
+    }
+  })
+
+  it('reads a comment after a line continuation, or after a backtick that starts a substitution', () => {
+    // The shell removes the backslash and the new line, so the `#` starts a word.
+    expect(script('x="$(date \\\n# it\'s\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    expect(script('x="$(echo `#it\'s`)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    // A quote at the end of the comment is plain text too.
+    expect(script('x="$(date # it\'\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+  })
+
+  it('ends a comment in a backtick substitution at the backtick that ends it', () => {
+    expect(line('x="$(echo `id -u # uid`)"; rm -rf $TARGET')).toEqual(['destructive'])
+    // The second backtick ends the substitution, so a backtick in a later comment is plain text.
+    expect(script('x="$(echo `id # u`; date # a ` it\'s\n)"\nrm -rf $TARGET\n')).toEqual([
+      'destructive',
+    ])
+    // Out of a backtick substitution, a backtick in a comment is plain text.
+    expect(script('x="$(date # a ` it\'s\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+  })
+
   it('reads a test that ends, and the lines after it', () => {
     expect(line('[[ -n "$X" ]]\ncat $FILE')).toEqual(['unquoted'])
   })

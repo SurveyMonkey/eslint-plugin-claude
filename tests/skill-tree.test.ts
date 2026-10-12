@@ -33,9 +33,11 @@ import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 // A `statSync` can fail after `realpathSync` resolves the same path. A process can remove the
 // file between the two calls. No tree on disk gives that order, so the wrapper below
-// makes `statSync` fail with the code in `faults` for that path. Each other call goes to the
-// real function.
+// makes `statSync` fail with the code in `faults` for that path. It also makes `realpathSync`
+// give the path in `realpaths` for a path that is not on disk, once. A later call sees the disk,
+// as after the race. Each other call goes to the real function.
 const faults = vi.hoisted(() => new Map<string, string>())
+const realpaths = vi.hoisted(() => new Map<string, string>())
 vi.mock('node:fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:fs')>()
   const statSync = (...args: unknown[]) => {
@@ -45,7 +47,20 @@ vi.mock('node:fs', async (importOriginal) => {
     }
     return (actual.statSync as (...rest: unknown[]) => unknown)(...args)
   }
-  return { ...actual, statSync, default: { ...actual, statSync } }
+  const realpathSync = Object.assign(
+    (...args: unknown[]) => {
+      const real = realpaths.get(String(args[0]))
+      realpaths.delete(String(args[0]))
+      return real ?? (actual.realpathSync as (...rest: unknown[]) => unknown)(...args)
+    },
+    { native: actual.realpathSync.native },
+  )
+  return {
+    ...actual,
+    statSync,
+    realpathSync,
+    default: { ...actual, statSync, realpathSync },
+  }
 })
 
 // The system tool that makes a FIFO. Node has no call for it.
@@ -249,12 +264,60 @@ describe('markdownFiles and a link with no target', () => {
     },
   )
 
-  it('gives nothing for a missing directory out of the bound, with no link in its path', () => {
+  // A missing directory out of the bound can be there. The scan cannot see out of the bound
+  // (ADR 001, Decision 14), so it sets `outside`.
+  it('sets outside for a missing directory out of the bound, with no link in its path', () => {
     put('db/in/a.md', '')
     expect(markdownFiles(path.join(scratch, 'db', 'gone'), path.join(scratch, 'db', 'in'))).toEqual(
-      { files: [], outside: false, unreadable: false },
+      { files: [], outside: true, unreadable: false },
     )
+    // A missing directory below the bound is not there, and the scan sees that.
+    expect(
+      markdownFiles(path.join(scratch, 'db', 'in', 'gone'), path.join(scratch, 'db', 'in')),
+    ).toEqual({ files: [], outside: false, unreadable: false })
+    // The same holds when a file in the path stops the walk up.
+    expect(
+      markdownFiles(path.join(scratch, 'db', 'in', 'a.md', 'gone'), path.join(scratch, 'db', 'in')),
+    ).toEqual({ files: [], outside: false, unreadable: false })
   })
+
+  it.skipIf(process.platform === 'win32')(
+    'sets outside for a missing directory below a link out of the bound',
+    () => {
+      put('lo/repo/.git/HEAD', '')
+      put('lo/elsewhere/team/far.md', '')
+      const repo = path.join(scratch, 'lo', 'repo')
+      symlinkSync('../elsewhere', path.join(repo, '.claude'))
+      // The target has no `agents` folder, and the link leads out of the bound.
+      expect(markdownFiles(path.join(repo, '.claude', 'agents'), repo)).toEqual({
+        files: [],
+        outside: true,
+        unreadable: false,
+      })
+      // The bound of the target itself holds the path, so the folder is not there.
+      expect(
+        markdownFiles(path.join(repo, '.claude', 'agents'), path.join(scratch, 'lo', 'elsewhere')),
+      ).toEqual({ files: [], outside: false, unreadable: false })
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'sets unreadable, not outside, for a dangling link in the path of a directory out of the bound',
+    () => {
+      put('ld/in/a.md', '')
+      mkdirSync(path.join(scratch, 'ld', 'out'), { recursive: true })
+      symlinkSync('missing', path.join(scratch, 'ld', 'out', 'agents'))
+      expect(
+        markdownFiles(
+          path.join(scratch, 'ld', 'out', 'agents', 'team'),
+          path.join(scratch, 'ld', 'in'),
+        ),
+      ).toEqual({ files: [], outside: false, unreadable: true })
+      expect(
+        markdownFiles(path.join(scratch, 'ld', 'out', 'agents'), path.join(scratch, 'ld', 'in')),
+      ).toEqual({ files: [], outside: false, unreadable: true })
+    },
+  )
 })
 
 describe('markdownFiles when a stat fails', () => {
@@ -556,21 +619,63 @@ describe('readJson', () => {
 })
 
 describe('readJson when a stat fails', () => {
-  it('gives UNREADABLE for a failed stat, and null for a file that a process removed', () => {
+  it('gives UNREADABLE for a failed stat of a file', () => {
     const file = put('rs/a.json', '{"a":1}')
-    for (const [code, result] of [
-      ['EACCES', UNREADABLE],
-      ['ENOENT', null],
-    ] as const) {
-      faults.set(file, code)
-      try {
-        expect(readJson(file, scratch)).toBe(result)
-      } finally {
-        faults.clear()
-      }
+    faults.set(file, 'EACCES')
+    try {
+      expect(readJson(file, scratch)).toBe(UNREADABLE)
+    } finally {
+      faults.clear()
     }
     expect(readJson(file, scratch)).toEqual({ data: { a: 1 } })
   })
+
+  it('gives null for a file that a process removed after the real path resolved', () => {
+    // The file is not on disk. `realpaths` makes the real path resolve, as before the process
+    // removed the file.
+    const file = path.join(scratch, 'rs', 'removed.json')
+    realpaths.set(file, file)
+    try {
+      expect(readJson(file, scratch)).toBeNull()
+    } finally {
+      realpaths.clear()
+    }
+    // Without the wrapper, the file is not there, and the result is the same.
+    expect(readJson(file, scratch)).toBeNull()
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a link whose target a process removed after the real path resolved',
+    () => {
+      // The link has no target on disk. `realpaths` makes it resolve, as before the process
+      // removed the target.
+      const target = path.join(scratch, 'rs', 'target.json')
+      const link = path.join(scratch, 'rs', 'link.json')
+      symlinkSync('target.json', link)
+      realpaths.set(link, target)
+      try {
+        expect(readJson(link, scratch)).toBe(UNREADABLE)
+      } finally {
+        realpaths.clear()
+      }
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a file below a link whose target a process removed',
+    () => {
+      // A link in the path, not the file, loses its target during the read.
+      mkdirSync(path.join(scratch, 'rp'), { recursive: true })
+      symlinkSync('cfg', path.join(scratch, 'rp', 'dot'))
+      const file = path.join(scratch, 'rp', 'dot', 'a.json')
+      realpaths.set(file, path.join(scratch, 'rp', 'cfg', 'a.json'))
+      try {
+        expect(readJson(file, scratch)).toBe(UNREADABLE)
+      } finally {
+        realpaths.clear()
+      }
+    },
+  )
 })
 
 // Claude Code 2.1.246 and later loads a `plugin.json` that starts with a byte order mark (the

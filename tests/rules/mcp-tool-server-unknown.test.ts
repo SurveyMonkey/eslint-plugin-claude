@@ -119,6 +119,16 @@ it('stays silent when the local agents cannot be read', () => {
     rmSync(outside, { recursive: true, force: true })
   }
 })
+it('stays silent when the .claude folder is a link out of the repository with no agents folder', () => {
+  const outside = repo({ 'dot/keep': '' })
+  const root = repo({ '.mcp.json': servers('db') })
+  symlinkSync(path.join(outside, 'dot'), path.join(root, '.claude'))
+  const file = path.join(root, '.claude', 'settings.json')
+  expect(ids(lintJson(NAME, allow('mcp__nope__t'), file))).toEqual([])
+  // A real `.claude` folder with no agents folder: the folder is not there, and the report holds.
+  const files = { '.mcp.json': servers('db'), '.claude/keep': '' }
+  expect(ids(settings(allow('mcp__nope__t'), files))).toEqual(['unknown'])
+})
 it('reports in a plugin file after a name that the plugin does not own', () => {
   expect(ids(inPlugin('mcp__db__t mcp__plugin_my-plugin_nope__t', PLUGIN))).toEqual(['unknown'])
   expect(ids(inPlugin('mcp__plugin_my-plugin_dbx__t', PLUGIN))).toEqual(['unknown'])

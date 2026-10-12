@@ -1,7 +1,9 @@
 // The `@path` imports of an instruction file
 // (https://code.claude.com/docs/en/memory#import-additional-files). The lookup and the walk
 // use trees on disk.
+import { execFileSync, spawnSync } from 'node:child_process'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   candidates,
@@ -200,12 +202,44 @@ describe('locate', () => {
   })
 })
 
+// The system tool that makes a FIFO. Node has no call for it.
+const MAKE_FIFO = 'mkfifo'
+
 describe('readImported', () => {
   it('reads a file, gives null for a directory, and UNREADABLE for a failed read', () => {
     const root = tree(files)
     expect(readImported(path.join(root, 'a.md'))).toBe('a\n')
     expect(readImported(path.join(root, 'dir'))).toBeNull()
     expect(readImported(path.join(root, 'none.md'))).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a device', () => {
+    expect(readImported('/dev/null')).toBe(UNREADABLE)
+  })
+
+  // A read that waits on the FIFO blocks the thread, and a test timeout cannot stop it. So a
+  // child process does the read, and `spawnSync` stops the child at its own timeout.
+  it('gives UNREADABLE for a FIFO, and does not wait for a writer', {
+    skip: process.platform === 'win32',
+    timeout: 30_000,
+  }, () => {
+    const root = tree({ 'CLAUDE.md': '@pipe\n' })
+    const fifo = path.join(root, 'pipe')
+    execFileSync(MAKE_FIFO, [fifo])
+    const source = pathToFileURL(path.join(import.meta.dirname, '../src/memory-imports.ts')).href
+    const probe = [
+      `import { followImports, readImported } from ${JSON.stringify(source)}`,
+      'const [root, fifo] = process.argv.slice(1)',
+      "const chain = followImports(root + '/CLAUDE.md', '@pipe\\n', root, 4)",
+      'console.log(JSON.stringify([String(readImported(fifo)), chain.unreadable, chain.loaded.size]))',
+    ].join('\n')
+    // Node 22.13 to 22.17 needs the flag to import a .ts file.
+    const flags = process.features.typescript ? [] : ['--experimental-strip-types']
+    const args = [...flags, '--input-type=module', '-e', probe, root, fifo]
+    const child = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 10_000 })
+    expect(child.signal).toBeNull()
+    expect(child.status, child.stderr).toBe(0)
+    expect(child.stdout.trim()).toBe('["Symbol(unreadable)",true,1]')
   })
 })
 

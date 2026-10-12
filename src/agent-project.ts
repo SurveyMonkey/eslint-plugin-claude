@@ -43,8 +43,10 @@ export function mainAgentNames(scope: AgentFile): string[] | Unreadable {
 
 /** The `name` of each agent file in `.claude/agents/` of each project folder. The result is
  *  `UNREADABLE` when a scan meets a link out of the repository, a directory that it cannot read, or
- *  a file that it cannot read, because the missing agent can be there. A file with no `name`, or with
- *  frontmatter that does not parse, defines no agent. */
+ *  a file that it cannot read, because the missing agent can be there. The same holds for an agents
+ *  folder that is not there. That occurs when the real path of the nearest part that exists is out
+ *  of the repository. A file with no `name`, or with frontmatter that does not parse, defines no
+ *  agent. */
 export function projectAgentNames(scope: AgentFile): string[] | Unreadable {
   const bound = repositoryRoot(scope.root)
   const names: string[] = []
@@ -92,8 +94,8 @@ export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
     return files
   }
   const agents = path.join(scope.root, 'agents')
-  // `markdownFiles` reads a directory that is not there as empty, and does not check the
-  // bound for it. Such a directory out of the repository is a part that the check cannot see.
+  // The check cannot see a directory that is not there when its path is out of the repository.
+  // The same holds when its path has a dangling link. The scan below gives the same result.
   if (realOf(agents) === null && missingOf(agents, bound) === UNREADABLE) {
     return UNREADABLE
   }
