@@ -74,7 +74,7 @@ modified: 2026-10-14T09:30:00Z
 
 The rule does not compare the path of a file with its globs. An entry in the block that extends
 `claude/recommended` applies to each Markdown file that the config lints. So give the rule its
-files in a block of its own:
+files in a block of its own. See [Usage](../../README.md#usage) in the README.
 
 ```js
 export default defineConfig([

@@ -74,11 +74,18 @@ memory: project
 
 ## Usage
 
-Put the rule in `rules`, in the config block that extends `claude/recommended`. See
-[Usage](../../README.md#usage) in the README.
+The rule does not compare the path of a file with its globs. An entry in the block that extends
+`claude/recommended` applies to each Markdown file that the config lints. So give the rule its
+files in a block of its own. See [Usage](../../README.md#usage) in the README.
 
 ```js
-'claude/memory-agent-memory-orphan': 'warn'
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/.claude/agent-memory/*/MEMORY.md'],
+    rules: { 'claude/memory-agent-memory-orphan': 'warn' },
+  },
+])
 ```
 
 ## Options
@@ -90,6 +97,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 | `allow` | Names of subagents that the repository does not hold, such as user subagents. | String[] | `[]`    |
 
 <!-- end auto-generated rule options list -->
+
+Give the options in the `rules` of that block:
 
 ```js
 'claude/memory-agent-memory-orphan': ['warn', { allow: ['my-user-agent'] }]
