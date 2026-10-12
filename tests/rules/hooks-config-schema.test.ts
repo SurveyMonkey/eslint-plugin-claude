@@ -388,8 +388,9 @@ describe(`${name}: frontmatter`, () => {
   })
 
   it('does not expand a nest of aliases', () => {
-    // Four levels of ten hold 1110 aliases, over the limit. With no limit, `Stop` holds 10 lists
-    // that are not objects. `l0` is an empty list, as the parser counts no alias to one.
+    // With four levels of ten, the walk reads 1111 aliases, over the limit. With no limit, `Stop`
+    // holds 10 lists that are not objects. `l0` is an empty list, as the parser counts no alias to
+    // one.
     const levels = Array.from({ length: 4 }, (_, i) => {
       const refs = Array.from({ length: 10 }, () => `*l${i}`).join(', ')
       return `l${i + 1}: &l${i + 1} [${refs}]\n`
