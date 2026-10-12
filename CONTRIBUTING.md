@@ -62,7 +62,8 @@ rule that is off in `recommended`, it gives the `strict` severity.
 ## Rule source map
 
 `docs/rule-sources.json` lists the pages and headings of the Claude Code docs that are the
-source of each rule in `src/rules/`. Each source has a `url` on `code.claude.com/docs` and a `heading`. The
+source of each rule in `src/rules/`. Each source has a `url` on `code.claude.com/docs` and a
+`heading`. The
 docs watch sets a `hash` on each source. Do not set `hash` by hand. `pnpm docs:seed` keeps a
 `hash` when the `url` and `heading` stay the same.
 
