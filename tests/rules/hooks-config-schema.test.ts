@@ -344,6 +344,14 @@ describe(`${name}: frontmatter`, () => {
     expect(yaml('Stop: &a [x]\nSessionEnd: *a\n')).toEqual(['groupNotObject', 'groupNotObject'])
     // An alias names the last node before it with the anchor, and not a later one.
     expect(yaml('Stop: &a []\nSessionEnd: *a\nPostToolUse: &a x\n')).toEqual(['eventNotArray'])
+    expect(yaml('Stop: &a x\nSessionEnd: &a []\nPostToolUse: *a\n')).toEqual(['eventNotArray'])
+    // An alias key reads as the string that it names.
+    expect(yaml('Stop: &e SessionEnd\n*e : x\n')).toEqual(['eventNotArray', 'eventNotArray'])
+  })
+
+  it('reads an alias to an anchor out of the hooks value', () => {
+    const text = '---\nname: s\ndescription: d\nbase: &b x\nhooks:\n  Stop: *b\n---\n'
+    expect(markdownIds(name, text, FILES.skill)).toEqual(['eventNotArray'])
   })
 
   it('reports at the alias, and at the anchor for a fault inside the named node', () => {
@@ -371,6 +379,8 @@ describe(`${name}: frontmatter`, () => {
   })
 
   it('reads 1000 aliases, and makes no report on a hooks value with more', () => {
+    // The parser stops a file that uses an anchor more than 100 times, but not an anchor on an
+    // empty list. So these aliases name an empty list.
     const fault = 'Stop:\n  - { hooks: [ { type: script } ] }\n  - { hooks: &a [] }\n'
     const row = '  - { hooks: *a }\n'
     expect(yaml(fault + row.repeat(1000))).toEqual(['typeInvalid'])
@@ -378,13 +388,13 @@ describe(`${name}: frontmatter`, () => {
   })
 
   it('does not expand a nest of aliases', () => {
-    const levels = Array.from({ length: 12 }, (_, i) => {
+    // Four levels of ten hold 1110 aliases, over the limit. With no limit, `Stop` holds 10 lists
+    // that are not objects. `l0` is an empty list, as the parser counts no alias to one.
+    const levels = Array.from({ length: 4 }, (_, i) => {
       const refs = Array.from({ length: 10 }, () => `*l${i}`).join(', ')
       return `l${i + 1}: &l${i + 1} [${refs}]\n`
     })
-    const start = Date.now()
-    expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l12\n`)).toEqual([])
-    expect(Date.now() - start).toBeLessThan(5000)
+    expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l4\n`)).toEqual([])
   })
 
   it('makes no report on a hooks value that holds a merge key, as no docs page says what it means', () => {
@@ -396,7 +406,8 @@ describe(`${name}: frontmatter`, () => {
     expect(yaml(`${base}      - { <<: *base, type: script }\n`)).toEqual([])
     expect(yaml('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n')).toEqual([])
     expect(yaml('<<: { Stop: x }\nSessionEnd: x\n')).toEqual([])
-    // A rule that saw the other events could report a fault that is not there, so none is read.
+    // A rule that sees the other events can report a fault that is not there, so the reader reads
+    // none of them.
     expect(yaml('Stop: { <<: { k: 1 } }\nSessionEnd: x\n')).toEqual([])
     expect(
       yaml(
@@ -405,8 +416,9 @@ describe(`${name}: frontmatter`, () => {
     ).toEqual([])
   })
 
-  it('reads a quoted << as a plain key', () => {
+  it('reads a quoted << as an ordinary key', () => {
     expect(yaml('Stop: { "<<": 1 }\nSessionEnd: x\n')).toEqual(['eventNotArray', 'eventNotArray'])
+    expect(yaml("Stop: { '<<': 1 }\nSessionEnd: x\n")).toEqual(['eventNotArray', 'eventNotArray'])
   })
 
   it('skips a key that is not a string', () => {
