@@ -6770,6 +6770,9 @@ function sampleOf(glob: string): string {
     .replaceAll('*', 'x')}`
 }
 
+// A glob that matches every file of a language, such as `**/*.md`.
+const isCatchAll = (glob: string) => /^\*\*\/\*\.[A-Za-z0-9]+$/.test(glob)
+
 describe('files of each rule in recommended and strict', () => {
   it('reaches every glob of every rule with a rules entry in the user block', async () => {
     const all = await targets()
@@ -6792,7 +6795,7 @@ describe('files of each rule in recommended and strict', () => {
           const groups: [Target['language'], string[]][] = [[language, files]]
           if (also) groups.push([also.language, also.files])
           for (const [lang, globs] of groups) {
-            for (const glob of globs) {
+            for (const glob of globs.filter((g) => !isCatchAll(g))) {
               const calculated = await eslint.calculateConfigForFile(path.join(cwd, sampleOf(glob)))
               const where = `${config} ${name} ${glob}`
               expect([where, calculated?.rules?.[`claude/${name}`]?.[0]]).toEqual([where, 1])
@@ -6814,10 +6817,12 @@ describe('files of each rule in recommended and strict', () => {
     const all = await targets()
     for (const language of ['markdown', 'json'] as const) {
       const union = new Set(
-        all.flatMap((t) => [
-          ...(t.language === language ? t.files : []),
-          ...(t.also?.language === language ? t.also.files : []),
-        ]),
+        all
+          .flatMap((t) => [
+            ...(t.language === language ? t.files : []),
+            ...(t.also?.language === language ? t.also.files : []),
+          ])
+          .filter((glob) => !isCatchAll(glob)),
       )
       for (const config of ['recommended', 'strict'] as const) {
         const blocks = plugin.configs[config].filter(
@@ -6842,6 +6847,37 @@ describe('files of each rule in recommended and strict', () => {
         `claude/${config}/json-files`,
       ])
     }
+  })
+
+  it('leaves each catch-all glob out of the blocks of files', async () => {
+    const all = await targets()
+    const catchAll = new Set(
+      all.flatMap((t) => [...t.files, ...(t.also?.files ?? [])]).filter(isCatchAll),
+    )
+    expect(catchAll.size).toBeGreaterThan(0)
+    for (const config of ['recommended', 'strict'] as const) {
+      const listed = plugin.configs[config]
+        .filter((c) => !c.rules)
+        .flatMap((c) => c.files as string[])
+      for (const glob of catchAll) expect(listed).not.toContain(glob)
+    }
+  })
+
+  // The README example puts `rules` in the block that extends `recommended`. That block must not
+  // lint a Markdown file that only a catch-all glob matches.
+  it('gives a file that only a catch-all glob matches no config from recommended', async () => {
+    const eslint = new ESLint({
+      cwd: tmpdir(),
+      overrideConfigFile: true,
+      overrideConfig: defineConfig([
+        {
+          plugins: { claude: plugin },
+          extends: ['claude/recommended'],
+          rules: { 'claude/skill-description-max-length': ['warn', { listingMax: 1000 }] },
+        },
+      ]),
+    })
+    expect(await eslint.calculateConfigForFile(path.join(tmpdir(), 'docs/note.md'))).toBe(undefined)
   })
 
   // A JSON file below `.claude/rules/` matches globs of both languages. The rule blocks come after

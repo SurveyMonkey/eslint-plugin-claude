@@ -1647,17 +1647,22 @@ function configFor(config: string, severity: (rule: RuleName) => Severity): Lint
   return [...fileBlocksFor(config), ...ruleBlocks]
 }
 
+// A glob that matches every file of a language, such as `**/*.md`.
+const CATCH_ALL = /^\*\*\/\*\.[A-Za-z0-9]+$/
+
 /** One block for each language, with each glob of that language from the
  *  `files` and `also` of every module, and no rules. A rule that is `off` has
  *  no block of its own, so this block gives its files a config. A user then
  *  turns the rule on with an entry in `rules`. The globs come from the
- *  modules, so a new rule adds no entry to a central list. */
+ *  modules, so a new rule adds no entry to a central list. A catch-all glob
+ *  is not in the block. Else a `rules` entry would reach every file of the
+ *  language, and a user's own config for those files would change. */
 function fileBlocksFor(config: string): Linter.Config[] {
   const globs = new Map<Language, Set<string>>()
   for (const { target } of modules as Module[]) {
     for (const block of [target, ...(target.also ? [target.also] : [])]) {
       const set = globs.get(block.language) ?? new Set<string>()
-      for (const glob of block.files) set.add(glob)
+      for (const glob of block.files.filter((g) => !CATCH_ALL.test(g))) set.add(glob)
       globs.set(block.language, set)
     }
   }
