@@ -1,0 +1,153 @@
+{
+  "url": "https://code.claude.com/docs/en/chrome",
+  "hash": "afadfd9114496fac25143a94b59c3a5d553b71df45ba08827dfda901fdb42fd9",
+  "blocks": [
+    {
+      "id": "use-claude-code-with-chrome",
+      "hash": "0e4784b9a87ccbe6bd8593ed1c7cddd305646693eb15427c4aa0509d5c81d097",
+      "bodyHash": "faa16bcf1746a1f8add8f64f51a7bff5227f43b02e84b1d9b7b689278a5a07e1"
+    },
+    {
+      "id": "capabilities",
+      "hash": "47da08d3c5709b108411ac3b2790778e1a6873b322fc2353d4fde3fbaef9034a",
+      "bodyHash": "afea96b92e62e9d95263e621cbcb7f002b19ed2236457a4f083caf35df5b0a54"
+    },
+    {
+      "id": "prerequisites",
+      "hash": "7c3726d3a67f4bde5c6ff7083f39a67676fc83b8c301b20645d8e20ab9c42867",
+      "bodyHash": "80468829c99672f542666ee3ed4c5999b921338b1c8bd6315295aae964202f51"
+    },
+    {
+      "id": "get-started-in-the-cli",
+      "hash": "f2f636a02afaf38ed687c76f69f071cafc5bd6675ddf67de05c91e36aeafd4fb",
+      "bodyHash": "ca29e25c9f68654324c3e418d145df4aa03ecf56e911932d3ae012b3096bc17d"
+    },
+    {
+      "id": "install-the-extension-when-claude-asks",
+      "hash": "919bfc77366401a28074fb0a1033c67d9a9e5b6ac3973ed3221830d66159f7d4",
+      "bodyHash": "70471ed288764d70bf39bad9f0f46b5c608fdb8bc1279c2c7cbc755184fdb6a6"
+    },
+    {
+      "id": "enable-chrome-by-default",
+      "hash": "c6cf0c7a83ec2bfe130dfa670d75377baa64d9d8c00630aca0636de0c04e8590",
+      "bodyHash": "5806e4f5a855d375e69a829ffd5ccc358a9786754fefef3cf87a3bf0f7a2c526"
+    },
+    {
+      "id": "manage-site-permissions",
+      "hash": "1e3d21ca0442cd6d7d0ad3e97e6b8e3fc1cc3df5023fd29befaa0a7987688faf",
+      "bodyHash": "d3ae92cbfde7d676874253d560738b719ee3f776a87c192e81552d5de7fe3c32"
+    },
+    {
+      "id": "permission-prompts-in-vs-code-sessions",
+      "hash": "b71a6bedfddad085145628f8f9b771732d5d0b4f67a5fa1cc13bddd68c000854",
+      "bodyHash": "32c326ce3a6c24140d4bf3757a2967ea15e4e70302f680ef0152d612e0c52faf"
+    },
+    {
+      "id": "browser-tools-in-plan-mode",
+      "hash": "1a6dfee9d00f34e0671dbca692621128aaefcd4f47241f033f8e681283c3abd5",
+      "bodyHash": "0f2259de92f1972df48f432fa88a2882a72193250f553036c7659c6bb737ef09"
+    },
+    {
+      "id": "example-workflows",
+      "hash": "62693dfeeabb4bd38b45153c218287ea13d80c05a787e625b18aa36e918eaf19",
+      "bodyHash": "ad093cc4490466f686c8f2428191d7dc0357209d3a60d69a477953f954433a76"
+    },
+    {
+      "id": "test-a-local-web-application",
+      "hash": "ec7fea3fa1625926fad8114f272141af9732bce6f3a87a219023aec5fd715f98",
+      "bodyHash": "be896b11d5ee346e1b3d5d213a058963b9ba21f6ef423264f2ed0d6b639144d9"
+    },
+    {
+      "id": "debug-with-console-logs",
+      "hash": "4eb2d8e83f53061535f0d32a20eeb95223ff2199e6f609ea4389390d18e125a1",
+      "bodyHash": "b781d9d3ccb69cd04f75164d946d2c38cf5c3eeb05b9ff44dc773698bbed5119"
+    },
+    {
+      "id": "automate-form-filling",
+      "hash": "67b686cd1b53dadd679d4b914f5246dd08c9644ce289811fb9208c0ca5224337",
+      "bodyHash": "cd24e845895ea3b8e348bc0163994237e4dd04c7a6b237f4bca8d23d7bef85f3"
+    },
+    {
+      "id": "upload-files-to-web-pages",
+      "hash": "7f72c8a564fd27d2cd24b11b630eef2061fb2f05b91469268e0de0ebef50ea3a",
+      "bodyHash": "bdf3f6832b2db78638945dbae3347eff752e7015c0a40288b10c7a3fa6b3e7d0"
+    },
+    {
+      "id": "draft-content-in-google-docs",
+      "hash": "26f1676d8353c5f9ba3590c1d8b9044e494ee5bec22df0a3bff0615641d8cb09",
+      "bodyHash": "73dfd974e1c73c3def5143158571a111dcc2f8fc4b6adf9073e4875cdb0a579a"
+    },
+    {
+      "id": "extract-data-from-web-pages",
+      "hash": "9cd8bcd0c1ebacf15cd41b66f1472de9c64fe455a2a6761c3b3f496e2ff24c5f",
+      "bodyHash": "1c90636aa44308171882807b40fb85d33a2376cc13e28b10d00e7c623e11d6ea"
+    },
+    {
+      "id": "run-multi-site-workflows",
+      "hash": "e7a829cd822ae09471c7828b9883c8ff1841679c642ad195fe697cdad4930491",
+      "bodyHash": "ac1f118b31eae21ca39acd4dec13323eb9ebc6daab97c636630f3952c25e5544"
+    },
+    {
+      "id": "record-a-demo-gif",
+      "hash": "b399b1d2dd15bdcde0483c9687fc15b146018375a3438420d4c3313d1c7c54d8",
+      "bodyHash": "050795b118176640ee31def49cb0b34751004065b70632b972bdf8ec9e74723e"
+    },
+    {
+      "id": "save-screenshots-to-disk",
+      "hash": "b30f0cebdcfa7d7c423076ba71d2166691cb94111f02000b1c7570eaa93639dc",
+      "bodyHash": "d4c1fc8c8313aa9f1129ee652d52cfa6225e252ac1ab07919db55f0a31dece59"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "659a188b36f9c3262a28539e24c345df4edc9657f59b116b0a1d9887cf2e28e0"
+    },
+    {
+      "id": "extension-not-detected",
+      "hash": "8fe175053cfa9194c7bc22269c7d4c90c2d4ed1bcb1d164bde721e8185732fb7",
+      "bodyHash": "1609255fefadea2cb5d4b2931e3e97379a9b11e99a6da788e0934f4698fbefc2"
+    },
+    {
+      "id": "project-settings-cant-turn-on-chrome",
+      "hash": "a7222cdab216a3222241eba4a538abf4b4dcf686caafdbb89d9e132c284475c6",
+      "bodyHash": "d3796827fa76b91345eb0f27f1e6c950a296dcdb63a757f6c314d6ccf8926d8c"
+    },
+    {
+      "id": "browser-not-responding",
+      "hash": "e97e696e83197010a10c0a519aa46cb466f90e7d7a5b34aa5f84550ec8dca8c5",
+      "bodyHash": "02d0f443168d6427ab7ac001f51d5972a794c075c2edf436066fa9447488bcce"
+    },
+    {
+      "id": "connection-drops-during-long-sessions",
+      "hash": "91c79d950771af4584b109c3b982f6ef536431f0e0bec5038d4badb8ef0c6926",
+      "bodyHash": "5d7ee3824d4311218ea7ebe5aa20e02b96b3462376d3408d59ac286a2e346ae0"
+    },
+    {
+      "id": "extension-signed-in-to-a-different-organization",
+      "hash": "50ff882d33b6060477adb4a1449556855f0cf73999128b146a997d58d63f30f2",
+      "bodyHash": "4fc439d521373589ad431d45663e087089a6217d7519fa7b69dbde12ede4f356"
+    },
+    {
+      "id": "windows-specific-issues",
+      "hash": "cab667840e63566ffb8e225629c985418a3da2a56bb04df24e61b7ddd87ab082",
+      "bodyHash": "7d0a9d05b4047061e203e3c7ce15667cc1e1c34469a8aea8356964b8f3973e93"
+    },
+    {
+      "id": "common-error-messages",
+      "hash": "4c688d662c2d134dabcf2888b5dc1b9cefa7e227869878560c1d0a174ceff068",
+      "bodyHash": "7998d4976e3ad82a6ced2c9e37c509674270548b39f61d4c6f6e63f264195a2d"
+    },
+    {
+      "id": "see-also",
+      "hash": "fa10cb8bda6a4add52957b490a77202170ba57c49fc882c1a65dd01e64b49e27",
+      "bodyHash": "f1416195c8a5a57a96795ce35c1f0c84ce0313e2378dcd995dda0315f4a1380b"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Project settings can’t turn on Chrome",
+      "id": "project-settings-cant-turn-on-chrome",
+      "hash": "a7222cdab216a3222241eba4a538abf4b4dcf686caafdbb89d9e132c284475c6",
+      "text": "### Project settings can't turn on Chrome\n\nThis warning in your terminal means the project you're working in tried to turn on Chrome integration, and Claude Code didn't allow it:\n\n```text wrap theme={null}\nClaude Code ignored CLAUDE_CODE_ENABLE_CFC in this project's settings: a project can't turn on Claude in Chrome. To turn it on yourself, run /chrome or start with --chrome.\n```\n\nThe project's `.claude/settings.json` or `.claude/settings.local.json` sets [`CLAUDE_CODE_ENABLE_CFC`](/docs/en/env-vars#variables) to `1` in its `env` block to turn Chrome integration on. Claude Code didn't apply that setting, so Chrome integration is off in this session and Claude has no browser tools.\n\nClaude Code skips the setting because those files are stored in the project directory, and a repository you check out must not be able to connect Claude to your browser.\n\nYou can keep working as you are. If you want browser tools, or want the warning gone, do one of these:\n\n* **To get browser tools now**: exit and start again with `claude --chrome` in your shell.\n* **To get browser tools in later sessions**: run `/chrome` at the Claude Code prompt and select [**Enabled by default**](#enable-chrome-by-default). This applies to sessions you start afterward, not the one that's running.\n* **To stop the warning without browser tools**: remove the `CLAUDE_CODE_ENABLE_CFC` line from the project's settings file."
+    }
+  ]
+}
