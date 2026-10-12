@@ -54,7 +54,9 @@
 // section of those rows has a group issue (GROUP_ISSUES). The step reads the
 // state and the comments of each group issue. While a group issue is open,
 // it gets at most one comment for each run. The comment shows each new
-// block, the rows that cite it, and its text.
+// block, the rows that cite it, and its text. It takes the new blocks in
+// order while the whole comment fits in MAX_COMMENT. The other blocks get
+// no marker, so the next run posts them.
 // Each block in the comment has a hidden marker
 // <!-- docs-watch-tracked:<page>#<blockId>:<hash> -->, with the key of an
 // issue marker. The step does not post a block again while its marker is in
@@ -70,9 +72,13 @@
 // - a tracked block that is in the list twice
 // - a tracked block in a section that has no group issue
 // - a group issue whose state is not open or closed
+// - a tracked block whose comment alone does not fit in MAX_COMMENT
+// - an issue body that does not fit in MAX_COMMENT with no Before and After
+//   parts
 // - more new issues than --max (default 20), in a live run.
-// A gh failure makes it exit 1. The comments and the issues that the step
-// made before the failure stay. The next run makes the rest. All gh calls go
+// A gh failure makes it exit 1, and so does a gh call that prints no URL for
+// a new comment or issue. The comments and the issues that the step made
+// before the failure stay. The next run makes the rest. All gh calls go
 // through a runner, so tests never call GitHub.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
@@ -119,11 +125,19 @@ const GROUP_ISSUES: Record<string, number> = {
   'Permissions and sandbox': 15,
   'MCP and LSP servers': 16,
 }
-// The markers and the text of a comment take at most this value. The step
-// cuts the text after the markers, and adds a note of the cut after it. The
-// comment then stays under the GitHub limit of 65,536 characters. The whole
-// body of a digest takes at most this value too, with no cut.
+// The most characters of a comment, of a digest body and of the body of an
+// issue for one block. Each then stays under the GitHub limit of 65,536
+// characters. The step cuts no comment and no digest: it packs blocks
+// until the next block does not fit.
 export const MAX_COMMENT = 60_000
+// The most characters of a heading or a block ID in the text of a body or a
+// comment. The marker keeps the full block ID.
+export const MAX_NAME = 300
+// The most characters of a reason, and of a line of inventory rows. merge
+// makes a reason longer for each finding that it joins.
+export const MAX_REASON = 2000
+// The most possible-move lines for one block.
+export const MAX_MOVES = 5
 
 // The most blocks in one digest issue. A page with more uncited findings
 // gets more than one issue.
@@ -241,6 +255,20 @@ export function inline(text: string): string {
   const ticks = '`'.repeat(longestRun(body, '`') + 1)
   const pad = body.startsWith('`') || body.endsWith('`') ? ' ' : ''
   return `${ticks}${pad}${body}${pad}${ticks}`
+}
+
+// A text of at most `max` characters, with "..." after a cut.
+const short = (text: string, max: number) =>
+  text.length <= max ? text : `${cutAt(text, max).trimEnd()}...`
+
+// A heading or a block ID as inline code, cut at MAX_NAME characters.
+const nameOf = (text: string) => inline(short(text, MAX_NAME))
+
+// The reason of a finding, made inert, and cut at MAX_REASON characters.
+const reasonOf = (f: Finding) => {
+  if (f.reason.length <= MAX_REASON) return neutralize(f.reason)
+  const note = `The reason is cut at ${MAX_REASON} of ${f.reason.length} characters.`
+  return `${neutralize(cutAt(f.reason, MAX_REASON))}... ${note}`
 }
 
 // A collapsed section that quotes a full text in a fence. The blank lines
@@ -392,7 +420,7 @@ function blockText(
 // section" in the triage runbook.
 function movedBodyOf(f: Finding, move: NonNullable<Finding['move']>, blob: string): string {
   const anchor = `${f.page}#${encodeURIComponent(move.blockId)}`
-  const old = inline(f.heading)
+  const old = nameOf(f.heading)
   const footnotes = [
     ...f.rules.map((rule) => `- \`docs/rules/${rule}.md\`: the footnote that cites ${old}`),
     ...move.sections.map(
@@ -408,12 +436,12 @@ function movedBodyOf(f: Finding, move: NonNullable<Finding['move']>, blob: strin
     WHY.moved,
     '',
     `- Page: ${f.page}`,
-    `- Old heading: ${old} (block ${inline(f.blockId)})`,
-    `- New heading: ${inline(move.heading)} (block ${inline(move.blockId)})`,
+    `- Old heading: ${old} (block ${nameOf(f.blockId)})`,
+    `- New heading: ${nameOf(move.heading)} (block ${nameOf(move.blockId)})`,
     `- New anchor: ${anchor}`,
     `- Change: ${f.change}`,
     '- Classifier result: `moved`, with no model answer',
-    `- Reason: ${neutralize(f.reason)}`,
+    `- Reason: ${reasonOf(f)}`,
     `- Hashes: old \`${f.oldHash}\`, new \`${f.newHash}\``,
     '',
     'The footnotes to change:',
@@ -434,7 +462,7 @@ function movedBodyOf(f: Finding, move: NonNullable<Finding['move']>, blob: strin
     '',
     '## Acceptance',
     '',
-    `- [ ] No footnote cites the old block ${inline(f.blockId)} of this page.`,
+    `- [ ] No footnote cites the old block ${nameOf(f.blockId)} of this page.`,
     '- [ ] The resolving pull request refreshes the snapshot with `node scripts/docs-watch.ts update`.',
     '',
     '## References',
@@ -446,39 +474,69 @@ function movedBodyOf(f: Finding, move: NonNullable<Finding['move']>, blob: strin
   ].join('\n')
 }
 
-// The line for each possible move of a removed or an added block.
-const nearLines = (f: Finding) =>
-  (f.possibleMoves ?? []).map(
-    (m) =>
-      `- Possible move: ${inline(m.heading)} (block ${inline(m.blockId)}) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.`,
-  )
+// The line for each possible move of a removed or an added block, for the
+// first MAX_MOVES of them. A line then counts the others.
+const nearLines = (f: Finding) => {
+  const all = f.possibleMoves ?? []
+  const lines = all
+    .slice(0, MAX_MOVES)
+    .map(
+      (m) =>
+        `- Possible move: ${nameOf(m.heading)} (block ${nameOf(m.blockId)}) on the same page ` +
+        'shares three or more words with this heading. The job did not match the two blocks ' +
+        'as a move. See "A moved section" in the triage runbook.',
+    )
+  const more = all.length - MAX_MOVES
+  return more > 0 ? [...lines, `- ${more} more possible moves. See the page.`] : lines
+}
 
 // The metadata lines of a block, after its page. `tracked` is the tracked
 // block of the finding, when the inventory cites it. A line then names the
-// inventory rows.
-function metaLines(f: Finding, tracked?: Tracked): string[] {
+// inventory rows. `reason` is the reason line text: an issue for one block
+// cuts it, and a digest does not, because its packing limits its size.
+function metaLines(f: Finding, reason: string, tracked?: Tracked): string[] {
   const classifier =
     f.probability === null
       ? `\`${f.kind}\`, with no model answer`
       : `\`${f.kind}\`, probability ${f.probability}, confidence ${f.confidence}`
   return [
-    `- Heading: ${inline(f.heading)} (block ${inline(f.blockId)})`,
+    `- Heading: ${nameOf(f.heading)} (block ${nameOf(f.blockId)})`,
     `- Change: ${f.change}`,
     `- Classifier result: ${classifier}`,
-    `- Reason: ${neutralize(f.reason)}`,
+    `- Reason: ${reason}`,
     `- Hashes: old \`${f.oldHash ?? 'none'}\`, new \`${f.newHash ?? 'none'}\``,
     ...(tracked
-      ? [`- Inventory rows that cite the block: ${rowsOf(tracked)}. Their group issues are closed.`]
+      ? [
+          `- Inventory rows that cite the block: ${short(rowsOf(tracked), MAX_REASON)}. ` +
+            'Their group issues are closed.',
+        ]
       : []),
     ...nearLines(f),
   ]
 }
 
 // The body of an issue. `tracked` is the tracked block of the finding, when
-// the inventory cites it. A line then names the inventory rows.
+// the inventory cites it. A line then names the inventory rows. The body
+// takes at most MAX_COMMENT characters. When the body with the Before and
+// After parts does not fit, it has no Before and After parts. The step cuts
+// no body: a body that still does not fit throws, before any gh call.
 export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
   const blob = `https://github.com/${repo}/blob/main`
-  if (f.move !== undefined) return movedBodyOf(f, f.move, blob)
+  const body =
+    f.move !== undefined
+      ? movedBodyOf(f, f.move, blob)
+      : [true, false]
+          .map((full) => singleBodyOf(f, blob, full, tracked))
+          .find((one) => one.length <= MAX_COMMENT)
+  if (body === undefined || body.length > MAX_COMMENT) {
+    throw new Error(`the issue body for ${keyOf(f)} does not fit in ${MAX_COMMENT} characters`)
+  }
+  return body
+}
+
+// The body of an issue for one block that did not move. With `full`, the
+// diff of a changed block has the Before and After parts.
+function singleBodyOf(f: Finding, blob: string, full: boolean, tracked?: Tracked): string {
   const lines = [
     markerOf(f),
     '',
@@ -487,9 +545,9 @@ export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
     WHY[f.kind],
     '',
     `- Page: ${f.page}`,
-    ...metaLines(f, tracked),
+    ...metaLines(f, reasonOf(f), tracked),
     '',
-    ...blockText(f, true),
+    ...blockText(f, full),
   ]
   lines.push(
     '## Scope',
@@ -505,7 +563,7 @@ export function bodyOf(f: Finding, repo: string, tracked?: Tracked): string {
     '',
     '## References',
     '',
-    f.link === f.page ? `- ${f.page} (heading ${inline(f.heading)})` : `- ${f.link}`,
+    f.link === f.page ? `- ${f.page} (heading ${nameOf(f.heading)})` : `- ${f.link}`,
     `- [ADR 002](${blob}/${ADR})`,
     `- [Triage runbook](${blob}/${RUNBOOK})`,
     '',
@@ -548,9 +606,9 @@ export function digestOf(
   ]
   for (const { finding: f, tracked } of blocks) {
     parts.push(
-      `### ${inline(f.heading)}`,
+      `### ${nameOf(f.heading)}`,
       '',
-      ...metaLines(f, tracked),
+      ...metaLines(f, neutralize(f.reason), tracked),
       '',
       ...blockText(f, false, MAX_DIGEST_QUOTE),
     )
@@ -806,8 +864,8 @@ function readGroup(repo: string, issue: number, run: Run): { open: boolean; keys
 }
 
 // One comment for a group issue: a marker for each block first, then a
-// section for each block. The text after the markers is cut to fit
-// MAX_COMMENT, so a cut never removes a marker.
+// section for each block. This function cuts no section. openIssues puts in
+// a comment only the blocks whose whole comment fits in MAX_COMMENT.
 export function commentOf(
   blocks: { tracked: Tracked; rules: string[] }[],
   section: string,
@@ -821,19 +879,17 @@ export function commentOf(
   ]
   for (const { tracked: t, rules } of blocks) {
     parts.push(
-      `### ${inline(t.heading)}`,
+      `### ${nameOf(t.heading)}`,
       '',
       `- Page: ${t.page}`,
-      `- Block: ${inline(t.blockId)}, ${t.change}`,
+      `- Block: ${nameOf(t.blockId)}, ${t.change}`,
       `- Hashes: old \`${t.oldHash ?? 'none'}\`, new \`${t.newHash ?? 'none'}\``,
       `- Rows: ${rules.map((rule) => `\`${rule}\``).join(', ')}`,
       '',
       ...blockText(t, false),
     )
   }
-  const head = `${markers.join('\n')}\n\n`
-  const { text, note } = cap(parts.join('\n'), MAX_COMMENT - head.length)
-  return `${head}${text}${note ? `\n\n${note}` : ''}\n`
+  return `${markers.join('\n')}\n\n${parts.join('\n')}\n`
 }
 
 // The URL that gh prints for a new comment or issue. Empty output fails the
@@ -842,6 +898,31 @@ function urlOf(out: string, what: string): string {
   const url = out.trim()
   if (url === '') throw new Error(`gh printed no URL for ${what}`)
   return url
+}
+
+// The first blocks, in order, whose comment fits in MAX_COMMENT. The step
+// writes no marker for the other blocks, so the next run posts them. A block
+// whose comment alone does not fit throws, because no run can post it.
+function packed(
+  blocks: { tracked: Tracked; rules: string[] }[],
+  section: string,
+): { tracked: Tracked; rules: string[] }[] {
+  for (const b of blocks) {
+    if (commentOf([b], section).length > MAX_COMMENT) {
+      throw new Error(
+        `the tracked block ${keyOf(b.tracked)} does not fit in a comment of ` +
+          `${MAX_COMMENT} characters`,
+      )
+    }
+  }
+  let count = 0
+  while (
+    count < blocks.length &&
+    commentOf(blocks.slice(0, count + 1), section).length <= MAX_COMMENT
+  ) {
+    count++
+  }
+  return blocks.slice(0, count)
 }
 
 // Runs gh and returns its stdout. Tests pass a fake runner instead.
@@ -931,7 +1012,14 @@ export async function openIssues({
     if (fresh.length < group.blocks.length) {
       log(`skip: #${issue} already has ${group.blocks.length - fresh.length} tracked block(s)`)
     }
-    if (fresh.length > 0) comments.push({ issue, body: commentOf(fresh, group.section) })
+    const part = packed(fresh, group.section)
+    for (const b of fresh.slice(part.length)) {
+      log(
+        `later: ${keyOf(b.tracked)} does not fit in the comment on #${issue}. ` +
+          'The next run posts it.',
+      )
+    }
+    if (part.length > 0) comments.push({ issue, body: commentOf(part, group.section) })
   }
   const open = openBodies(repo, run).map((issue) => ({
     number: issue.number,
