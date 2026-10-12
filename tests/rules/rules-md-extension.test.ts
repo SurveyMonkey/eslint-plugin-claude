@@ -1,7 +1,7 @@
 // Claude Code discovers all `.md` files in `.claude/rules/`, at any depth, and ignores the others
 // (https://code.claude.com/docs/en/memory#set-up-rules). The files glob is in
 // tests/configs.test.ts.
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('rules-md-extension')
 
@@ -59,5 +59,25 @@ markdownTester.run('rules-md-extension (message text)', rule, {
         },
       ],
     },
+  ],
+})
+
+// A JSON file below `.claude/rules/` has the JSON language, with a `Document` node and no `root` node.
+const json = '{"a": 1}\n'
+
+jsonTester.run('rules-md-extension (json)', rule, {
+  valid: [
+    // A hidden file, and a file outside `.claude/rules/`, with the same extension.
+    { code: json, filename: '.claude/rules/.hidden.json' },
+    { code: json, filename: '.claude/rules/x/.hidden.json' },
+    { code: json, filename: '.claude/settings.json' },
+    { code: json, filename: 'docs/rules/settings.json' },
+    { code: json, filename: '.claude/skills/rules/package.json' },
+  ],
+  invalid: [
+    { code: json, filename: '.claude/rules/settings.json', errors: [extension] },
+    { code: json, filename: '.claude/rules/x/package.json', errors: [extension] },
+    { code: json, filename: 'packages/web/.claude/rules/a/b/c/data.JSON', errors: [extension] },
+    { code: '[]\n', filename: '/home/user/.claude/rules/list.json', errors: [extension] },
   ],
 })

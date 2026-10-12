@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/.claude/rules/**/*.*`, `**/.claude/rules/**/!(*.*)` |
+| no-op | `**/.claude/rules/**/*.*`, `**/.claude/rules/**/!(*.*)`, `**/.claude/rules/**/*.json` |
 
 ## Rule details
 
@@ -44,9 +44,12 @@ The rule makes no report on these files:
 
 The rule makes no report on a directory.
 
-A config block of your own can match a file below `.claude/rules/` and set another language, such as
-`json/json`. ESLint then lints that file with the other language, and this rule makes no report on
-it.
+The rule also reads the JSON files below `.claude/rules/`, such as `settings.json`, with the JSON
+language. It reports each one in the same way. A JSON file that does not parse gets no report.
+
+A config block of your own can match a file below `.claude/rules/` and set another language
+that is not Markdown or JSON. ESLint then lints that file with the other language, and this rule
+makes no report on it.
 
 Fail:
 

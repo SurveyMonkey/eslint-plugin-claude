@@ -8,14 +8,18 @@
 //
 // The rule makes no report on a hidden file such as `.gitkeep`. It reads the extension without
 // case, because the docs do not say that Claude Code treats `.MD` differently from `.md`.
+//
+// One rule object serves two languages. The Markdown tree has a `root` node, and the JSON tree
+// has a `Document` node. The `also` block of `target` gives a JSON file below `.claude/rules/`
+// the JSON language, so the rule needs the `Document` listener to report on it.
 import path from 'node:path'
-import type { MarkdownRuleDefinition } from '@eslint/markdown'
+import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import { classifyMemoryFile } from '../memory-files.ts'
 
 const name = 'rules-md-extension' as const
 
-const rule: MarkdownRuleDefinition<{ MessageIds: 'extension' }> = {
+const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
@@ -37,14 +41,12 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'extension' }> = {
     ) {
       return {}
     }
-    return {
-      root() {
-        context.report({
-          loc: { start: { line: 1, column: 1 }, end: { line: 1, column: 2 } },
-          messageId: 'extension',
-        })
-      },
-    }
+    const report = () =>
+      context.report({
+        loc: { start: { line: 1, column: 1 }, end: { line: 1, column: 2 } },
+        messageId: 'extension',
+      })
+    return { root: report, Document: report }
   },
 }
 
@@ -52,6 +54,8 @@ export const target = {
   name,
   language: 'markdown' as const,
   files: ['**/.claude/rules/**/*.*', '**/.claude/rules/**/!(*.*)'],
+  // The same rule, for the JSON files below `.claude/rules/`.
+  also: { language: 'json' as const, files: ['**/.claude/rules/**/*.json'] },
 }
 
 export default rule
