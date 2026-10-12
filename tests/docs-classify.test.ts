@@ -1464,6 +1464,30 @@ describe('a moved section (#152)', () => {
     ])
   })
 
+  it('names the rows of the new block when nothing cites the old block (#219)', async () => {
+    // An inventory footnote already cites the new heading. The old block has
+    // no citation.
+    const inventory: Inventory = new Map([
+      [
+        URL_,
+        [
+          {
+            heading: 'command files',
+            anchor: 'command-files',
+            rows: [{ section: 'Skills and commands', rules: ['command-legacy-format'] }],
+          },
+        ],
+      ],
+    ])
+    const moved = PAGE.replace('### `commands`', '### `command files`')
+    const jev = fakeJev(() => 1)
+    const output = await run(cited, moved, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+    expect(output.results.filter((r) => r.change === 'moved').map((r) => r.note)).toEqual([
+      'moved, and no rule or inventory row cites the old block. ' +
+        'Rows that cite the new block: command-legacy-format.',
+    ])
+  })
+
   it('gives the findings of today for a renamed heading with a changed body, each with the cross-reference line', async () => {
     const map: SourceMap = {
       'settings-env-value-format': [{ url: ENV, heading: 'Variables in settings files' }],
