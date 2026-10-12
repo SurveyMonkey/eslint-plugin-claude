@@ -143,6 +143,30 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(script('# c\n# $X\n')).toEqual([])
   })
 
+  it('skips a quote in a comment inside a command substitution', () => {
+    // Before, the quote of the comment hid the end of the substitution, and the report below it.
+    expect(script("x=$(date # it's\n)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script('x=$(date # a "quote\n)\ncat $FILE\n')).toEqual(['unquoted'])
+    expect(script('x="$(date # it\'s\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    expect(script("x=(a # it's\nb)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script("x=$(date; # it's\n)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script("x=$(date | # it's\n cat)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script("x=$(date & # it's\n)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script("x=$(date\t# it's\n)\ncat $FILE\n")).toEqual(['unquoted'])
+    expect(script("x=$(# it's\n)\ncat $FILE\n")).toEqual(['unquoted'])
+  })
+
+  it('ends a comment in a command substitution at the end of its line', () => {
+    expect(script('x=$(date # it\'s\n)\ncat "$FILE"\n')).toEqual([])
+    expect(script("x=$(date # it's")).toEqual([])
+  })
+
+  it('keeps a hash after a closing parenthesis or backtick in the word', () => {
+    // The `#` is part of the word, so the quote after it opens a quote that hides the `)`.
+    expect(script("x=$(echo $(a)#it's)\ncat $FILE\n")).toEqual([])
+    expect(script("x=$(echo `a`#it's)\ncat $FILE\n")).toEqual([])
+  })
+
   it('reads a test that ends, and the lines after it', () => {
     expect(line('[[ -n "$X" ]]\ncat $FILE')).toEqual(['unquoted'])
   })

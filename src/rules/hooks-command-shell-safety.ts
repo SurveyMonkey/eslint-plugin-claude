@@ -50,7 +50,7 @@ function quoteEnd(text: string, start: number): number {
 }
 
 /** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A
- *  parenthesis in quotes or after a backslash does not count. */
+ *  parenthesis in quotes, after a backslash or in a comment does not count. */
 function closingParen(text: string, open: number): number {
   let depth = 0
   for (let i = open; i < text.length; i++) {
@@ -59,6 +59,11 @@ function closingParen(text: string, open: number): number {
       i = quoteEnd(text, i)
     } else if (char === '\\') {
       i++
+    } else if (char === '#' && /[\s(;|&]/.test(text.charAt(i - 1))) {
+      // A `#` that starts a word starts a comment, to the next new line. A quote in it is plain
+      // text. A `#` after `)` or a backtick stays in the word, as in `src/shell-words.ts`.
+      const end = text.indexOf('\n', i)
+      i = end === -1 ? text.length : end
     } else if (char === '(') {
       depth++
     } else if (char === ')' && --depth === 0) {
