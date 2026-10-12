@@ -561,6 +561,13 @@ describe('classify', () => {
         classifyHtml(where, ['Choose where skills load'], `${HTML}\n\`\`\`text\nopen\n`),
       ).rejects.toThrow(`${SKILLS}: a code fence is not closed`)
     })
+
+    it('fails, and names the page and the id, for an unsafe id (#35)', async () => {
+      const unsafe = HTML.replace('<h2 id="where-skills-live">', '<h2 id="where -->">')
+      await expect(classifyHtml(where, ['Choose where skills load'], unsafe)).rejects.toThrow(
+        new RegExp(`^${SKILLS}: line \\d+ has an HTML heading id that is not safe: "where -->"$`),
+      )
+    })
   })
 
   it('makes no call and no finding for an unchanged page', async () => {

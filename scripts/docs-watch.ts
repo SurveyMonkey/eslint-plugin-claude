@@ -88,7 +88,8 @@ export function stripInline(text: string): string {
 }
 
 // The slug of a heading title: rendered text, lowercase, no punctuation, each
-// space a hyphen. A Markdown heading has this slug as its ID. The site also turns a dot into a hyphen, as in "plugin-json".
+// space a hyphen. A Markdown heading has this slug as its ID. The site also
+// turns a dot into a hyphen, as in "plugin-json".
 export function slugify(heading: string): string {
   return stripInline(heading)
     .toLowerCase()
@@ -106,6 +107,10 @@ const FENCE = /^[ \t]*(`{3,}|~{3,})/
 const HTML_OPEN = /^<h([1-6])((?:[ \t]+[a-z-]+="[^"]*")*)[ \t]*>$/
 const HTML_LIKE = /^\s*<h[1-6][\s>]/i
 const HTML_ID = /(?:^|[ \t])id="([^"]*)"/
+// The characters that an HTML heading `id` can have. On 2026-10-11, the
+// 2,194 block IDs in the snapshot of the cited pages use only these. An `id` with another
+// character, such as a space, `<` or `>`, is an error (see splitBlocks).
+const SAFE_ID = /^[a-z0-9_-]+$/
 // The most lines that may sit between the opening tag and the closing tag.
 const HTML_TITLE_LINES = 5
 
@@ -139,8 +144,9 @@ function readHtmlHeading(lines: string[], start: number) {
 // heading is its `id` attribute, which is the anchor of the site. `key` is
 // `id`, with a numeric suffix on the second and later blocks that share an ID.
 // It throws for a code fence that is not closed, and for a line that looks
-// like an HTML heading but is not in the form above. Setext headings and
-// indented Markdown headings are not supported.
+// like an HTML heading but is not in the form above. It also throws for an
+// HTML heading whose `id` has a character outside SAFE_ID. An empty `id` is
+// no ID. Setext headings and indented Markdown headings are not supported.
 //
 // The body of a block is its text after the heading. The heading of a
 // Markdown block is its first line. The heading of an HTML block is all its
@@ -160,6 +166,10 @@ export function splitBlocks(markdown: string): Block[] {
       fence = mark
     } else {
       const html = readHtmlHeading(lines, index)
+      if (html?.id && !SAFE_ID.test(html.id)) {
+        const id = JSON.stringify(html.id)
+        throw new Error(`line ${index + 1} has an HTML heading id that is not safe: ${id}`)
+      }
       if (html) {
         blocks.push({
           level: html.level,
@@ -367,7 +377,8 @@ const list = (ids: string[]) =>
 export function renderMarkdown(report: Report): string {
   const lines = ['# Claude Code docs watch', '']
   lines.push(
-    `${report.changed} page(s) changed or new, ${report.unchanged} unchanged, ${report.errors.length} error(s).`,
+    `${report.changed} page(s) changed or new, ${report.unchanged} unchanged, ` +
+      `${report.errors.length} error(s).`,
     '',
   )
   for (const error of report.errors) lines.push(`- ERROR: ${error}`)
