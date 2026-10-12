@@ -105,7 +105,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 'claude/skill-side-effects-manual-only': ['warn', { patterns: ['terraform apply', 'kubectl delete'] }]
 ```
 
-The `recommended` and `strict` configs set no option.
+Each pattern has at least one ASCII letter or digit. A quote mark in a pattern is not part of a
+word. The `recommended` and `strict` configs set no option.
 
 ## Sources
 

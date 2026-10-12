@@ -45,11 +45,12 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 - [ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md): why this is an ESLint plugin on
   `@eslint/markdown` and `@eslint/json`. See the [ADR index](docs/adr/index.md) for later ADRs.
 
-eslint-doc-generator writes the rule list in the Rules section of `README.md`, and the header and
-options list of each rule doc
-([ADR 003](docs/adr/003-generate-rule-docs-with-eslint-doc-generator.md)). Do not edit these parts by hand. Add a new rule to the list of its group in
-`.eslint-doc-generatorrc.mjs`. Then run `pnpm docs:generate`. The `docs` check fails when a
-generated part does not agree with the code.
+eslint-doc-generator writes the rule list in the Rules section of `README.md`. It also writes the
+header and options list of each rule doc
+([ADR 003](docs/adr/003-generate-rule-docs-with-eslint-doc-generator.md)). Do not edit these
+parts by hand. Add a new rule to the list of its group in `.eslint-doc-generatorrc.mjs`. Then
+run `pnpm docs:generate`. The `docs` check fails when a generated part does not agree with the
+code.
 
 Under the generated header, each rule doc has a `| Category | Files |` table. The Files cell
 gives the `files` globs of the rule. `tests/docs.test.ts` compares them.

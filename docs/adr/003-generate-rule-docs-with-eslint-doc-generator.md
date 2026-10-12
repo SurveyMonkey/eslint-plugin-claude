@@ -1,10 +1,13 @@
 ---
 type: ADR
-description: eslint-doc-generator 3.7.1 writes the README rule list and the header and options list of each rule doc from the rule meta, in its own format. A docs check in CI fails when they do not agree. The rule details, the examples, Usage, the Category and Files table and Sources stay hand-written.
+description: eslint-doc-generator 3.7.1 writes the README rule list and the header and options list of each rule doc. It reads the rule meta and the configs, and uses its own format. A docs check in CI fails when they do not agree. The rule details, the examples, Usage, the Category and Files table and Sources stay hand-written.
 status: stable
 created: 2026-10-11
 owner: brianespinosa
 related_issues: [234, 235, 236]
+generated:
+  by: claude-code
+  at: 2026-10-11T00:00:00Z
 ---
 
 # ADR 003: Generate the rule list and the rule doc headers with eslint-doc-generator
@@ -34,8 +37,8 @@ options keeps its defaults in `meta.defaultOptions`. A tool can now read all of 
 2. **The config is `.eslint-doc-generatorrc.mjs`.**
    - The title of a rule doc is `prefix-name`, such as `# claude/skill-max-lines`.
    - A `ruleListSplit` function puts each rule in one of 9 groups, by the type of file that it
-     checks. The function stops the run for a rule in no group. It also stops the run for a name
-     in a group that is not a rule.
+     checks. The function stops the run for a rule in no group or in two groups. It also stops
+     the run for a name in a group that is not a rule.
 3. **`pnpm docs:generate` writes the docs, and `pnpm docs:check` checks them.** Each script
    builds `dist/` first, because the generator loads the built plugin. The `docs` check in CI
    runs `pnpm docs:check`. It fails when a generated part does not agree with the code.
@@ -49,8 +52,10 @@ options keeps its defaults in `meta.defaultOptions`. A tool can now read all of 
    - the `## Sources` footnotes and the frontmatter.
 
    `tests/docs.test.ts` compares the Files cell of each doc with the files of the rule. It also
-   compares the Usage severity with the `recommended` severity, or with the `strict` severity for
-   a rule that is off in `recommended`.
+   compares the Usage severity with the `recommended` severity. For a rule that is off in
+   `recommended`, it uses the `strict` severity. The generator writes no options list in a doc
+   that has no markers for it, and `--check` then passes. So the test also requires the markers
+   in each doc of a rule with options. It also checks that the README lists each rule once.
 
 ## Consequences
 
@@ -63,5 +68,8 @@ options keeps its defaults in `meta.defaultOptions`. A tool can now read all of 
   reads the source.
 - **The "Require CI" ruleset needs the `docs` check.** A person adds it after the first run
   reports it.
+- **The rule docs lost the hand text of their header and options table.** The description line
+  and the "Use" cells were hand text. Now `meta.docs.description` and the schema `description`
+  give that text. A fact that only the old hand text gave must go into the rule details.
 - **A schema `description` is now text of the docs.** A change to it changes the options list of
   the doc. `pnpm docs:check` fails until its author runs `pnpm docs:generate`.

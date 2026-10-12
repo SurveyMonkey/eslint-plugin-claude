@@ -87,10 +87,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 'claude/skill-shell-platform': ['warn', { platforms: ['windows-no-git-bash', 'macos', 'linux'] }]
 ```
 
-With no `platforms`, the rule is inactive and makes no report. The `recommended` and `strict`
-configs set no option. A team turns the rule on when it names its platforms. The platform
-`windows-no-git-bash` makes the rule report `shell: bash`. Each other platform makes it report
-`shell: powershell`.
+`platforms` lists values from `windows-no-git-bash`, `macos`, `linux`, `wsl`, `bedrock`, `vertex`
+and `foundry`. With no `platforms`, the rule is inactive and makes no report. The `recommended`
+and `strict` configs set no option. A team turns the rule on when it names its platforms. The
+platform `windows-no-git-bash` makes the rule report `shell: bash`. Each other platform makes it
+report `shell: powershell`.
 
 ## Sources
 

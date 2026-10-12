@@ -84,8 +84,8 @@ The doc of each rule shows its entry.
 
 The rules are in groups by the type of file that they check. The groups follow the [rule inventory](docs/rules-inventory.md).
 
-The list marks each rule that has options. The doc of each rule gives each option and its
-default.
+The list marks each rule that has options. The doc of each rule gives each option, and its
+default if it has one.
 
 <!-- begin auto-generated rules list -->
 
