@@ -109,8 +109,8 @@ const FENCE = /^[ \t]*(`{3,}|~{3,})/
 const HTML_OPEN = /^<h([1-6])((?:[ \t]+[a-z-]+="[^"]*")*)[ \t]*>$/
 const HTML_LIKE = /^\s*<h[1-6][\s>]/i
 const HTML_ID = /(?:^|[ \t])id="([^"]*)"/
-// The characters that an HTML heading `id` can have. On 2026-10-11, the
-// 2,194 block IDs in the snapshot of the cited pages use only these. An `id` with another
+// The characters that an HTML heading `id` can have. The block IDs in the
+// snapshot of the cited pages use only these. An `id` with another
 // character, such as a space, `<` or `>`, is an error (see splitBlocks).
 const SAFE_ID = /^[a-z0-9_-]+$/
 // The most lines that may sit between the opening tag and the closing tag.
@@ -466,7 +466,7 @@ export async function updateState({
   }
   const dir = path.join(root, SNAPSHOT_DIR)
   mkdirSync(dir, { recursive: true })
-  // The new files come first. A failed write then leaves each old file there.
+  // The new files come first. A failed write then deletes no stale file.
   for (const page of current) writeFileSync(path.join(dir, snapshotName(page.url)), toJson(page))
   const keep = new Set(current.map((page) => snapshotName(page.url)))
   for (const file of readdirSync(dir)) {

@@ -215,7 +215,8 @@ describe('HTML headings', () => {
   })
 
   it('stops for an HTML heading id with a character that is not safe (#35)', () => {
-    // A `-->` in an id could close the marker comment of an issue body.
+    // The issue step makes an id inert in a marker and in a body. The parser
+    // also stops an unsafe id at its source.
     for (const id of ['x-->', 'a b', '<b>', 'Upper', 'a.b', "it's", 'x&gt;']) {
       const text = `# T\n\n<h2 id="${id}">\n  Title\n</h2>\n`
       expect(() => api.splitBlocks(text), id).toThrow(
@@ -484,6 +485,20 @@ describe('checkPages', () => {
     ])
     // The page itself did not change.
     expect(report.pages[0]?.status).toBe('unchanged')
+  })
+
+  it('reports no map hash error for a source that the snapshot does not hold (#35)', async () => {
+    // The snapshot holds the source "hooks" only, and no file for the other page.
+    const snapshots = await snapshotOf(FIXTURE, ['hooks'])
+    const other = 'https://code.claude.com/docs/en/other'
+    const sources: SourceMap = {
+      'a-rule': [
+        { url: URL_, heading: 'Path rules', hash: 'f'.repeat(64) },
+        { url: other, heading: 'hooks', hash: 'f'.repeat(64) },
+      ],
+    }
+    const report = await api.checkPages({ map: sources, snapshots, fetchText: serve(FIXTURE) })
+    expect(report.errors).toEqual([])
   })
 
   it('lists a changed block as changed and its neighbors as unchanged', async () => {
@@ -833,7 +848,7 @@ describe('update and check on a temporary tree', () => {
     expect(readdirSync(path.join(partial, 'docs'))).toEqual(['rule-sources.json'])
   })
 
-  it('update keeps the old snapshot set whole when a write fails (#35)', async () => {
+  it('update deletes no stale snapshot file when a write fails (#35)', async () => {
     const root = tree(map('hooks'))
     const dir = path.join(root, 'docs/docs-snapshot')
     mkdirSync(dir)
