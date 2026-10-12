@@ -106,6 +106,28 @@ describe(`${name}: the silent cases`, () => {
   })
 })
 
+// No docs page says how Claude Code reads a merge key (`<<`), so a map that holds one can hide a
+// WorktreeRemove handler.
+describe(`${name}: a merge key`, () => {
+  const yaml = (text: string) => markdownIds(name, frontmatter(text), FILES.skill)
+  const createYaml = 'WorktreeCreate:\n  - hooks:\n      - &c { type: command, command: ./c.sh }\n'
+
+  it('is silent when the WorktreeRemove event holds a map with a merge key', () => {
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - <<: *c\n`)).toEqual([])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n`)).toEqual([])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks: { <<: { a: 1 } }\n`)).toEqual([])
+    expect(yaml(`${createYaml}WorktreeRemove: { <<: { a: 1 } }\n`)).toEqual([])
+    expect(yaml(`<<: { WorktreeRemove: [] }\n${createYaml}`)).toEqual([])
+  })
+
+  it('still reports when the merge key is in another event', () => {
+    const other = 'Stop:\n  - hooks:\n      - <<: *c\n'
+    expect(yaml(`${createYaml}${other}`)).toEqual(['noRemove'])
+    expect(yaml(`${createYaml}${other}WorktreeRemove: []\n`)).toEqual(['noRemove'])
+    expect(yaml(`${createYaml}      - <<: *c\n`)).toEqual(['noRemove'])
+  })
+})
+
 describe(`${name}: one file at a time`, () => {
   it('reports a create hook whose remove hook is in another settings file on disk', () => {
     const text = settings(create)

@@ -1,10 +1,18 @@
 // A WorktreeCreate hook creates the worktree (docs/rules/hooks-worktree-create-without-remove.md).
 // The hooks reference, "WorktreeRemove", says to pair it with a WorktreeRemove hook. Without one, Claude
 // Code removes a worktree that git knows, and leaves any other worktree on disk.
-// The rule reads one file at a time, because "the same source" is one file.
+// The rule reads one file at a time, because "the same source" is one file. A map that holds a merge
+// key can hide a WorktreeRemove handler, so the rule makes no report when the WorktreeRemove event
+// holds one (ADR 001, Decision 14).
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
-import { eventMember, HOOKS_TARGET, handlersOf, hooksListener } from '../hooks-config.ts'
+import {
+  eventMember,
+  HOOKS_TARGET,
+  handlersOf,
+  holdsUnseen,
+  hooksListener,
+} from '../hooks-config.ts'
 
 const name = 'hooks-worktree-create-without-remove' as const
 
@@ -25,10 +33,13 @@ const rule: Rule.RuleModule = {
     return hooksListener(context, (source) => {
       const events = handlersOf(source).map(({ event }) => event)
       const create = eventMember(source, 'WorktreeCreate')
+      const remove = eventMember(source, 'WorktreeRemove')
+      const hidden = source.partial && remove !== undefined && holdsUnseen(remove.value)
       if (
         create !== undefined &&
         events.includes('WorktreeCreate') &&
-        !events.includes('WorktreeRemove')
+        !events.includes('WorktreeRemove') &&
+        !hidden
       ) {
         context.report({ loc: create.keyLoc, messageId: 'noRemove' })
       }
