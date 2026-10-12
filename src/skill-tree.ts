@@ -362,7 +362,7 @@ export function missingOf(file: string, bound: string): null | Unreadable {
  *  - `UNREADABLE`, when a part of the path is a dangling link.
  *  - `UNREADABLE`, when `file` is not there and its path is out of `bound`.
  *  - `UNREADABLE`, when its real path is out of `bound`.
- *  - `UNREADABLE`, when `file` is a link and its target goes away during the read.
+ *  - `UNREADABLE`, when a link in the path loses its target during the read.
  *  - `UNREADABLE`, when its real path is not a regular file, such as a FIFO.
  *  - `UNREADABLE`, when a read fails for another reason. */
 export function readJson(file: string, bound: string): { data: unknown } | null | Unreadable {
@@ -378,8 +378,8 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
   const text = textOf(real)
   if (typeof text !== 'string') {
     // `realOf` found a target, so null means that the target went away during the read. A link
-    // is still an entry then, and `danglingOf` tells it from a file that is gone.
-    return text === null ? danglingOf(file) : text
+    // in the path is still an entry then, and `missingOf` tells it from a file that is gone.
+    return text === null ? missingOf(file, bound) : text
   }
   try {
     // Claude Code 2.1.246 and later loads a manifest that starts with a byte order mark. A JSON

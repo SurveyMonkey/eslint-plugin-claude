@@ -34,8 +34,8 @@ import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 // A `statSync` can fail after `realpathSync` resolves the same path. A process can remove the
 // file between the two calls. No tree on disk gives that order, so the wrapper below
 // makes `statSync` fail with the code in `faults` for that path. It also makes `realpathSync`
-// give the path in `realpaths` for a path that is not on disk. Each other call goes to the
-// real function.
+// give the path in `realpaths` for a path that is not on disk, once. A later call sees the disk,
+// as after the race. Each other call goes to the real function.
 const faults = vi.hoisted(() => new Map<string, string>())
 const realpaths = vi.hoisted(() => new Map<string, string>())
 vi.mock('node:fs', async (importOriginal) => {
@@ -48,9 +48,11 @@ vi.mock('node:fs', async (importOriginal) => {
     return (actual.statSync as (...rest: unknown[]) => unknown)(...args)
   }
   const realpathSync = Object.assign(
-    (...args: unknown[]) =>
-      realpaths.get(String(args[0])) ??
-      (actual.realpathSync as (...rest: unknown[]) => unknown)(...args),
+    (...args: unknown[]) => {
+      const real = realpaths.get(String(args[0]))
+      realpaths.delete(String(args[0]))
+      return real ?? (actual.realpathSync as (...rest: unknown[]) => unknown)(...args)
+    },
     { native: actual.realpathSync.native },
   )
   return {
@@ -645,15 +647,32 @@ describe('readJson when a stat fails', () => {
   it.skipIf(process.platform === 'win32')(
     'gives UNREADABLE for a link whose target a process removed after the real path resolved',
     () => {
-      const target = put('rs/target.json', '{"a":1}')
+      // The link has no target on disk, and `realpaths` makes it resolve, as it did before the
+      // process removed the target.
+      const target = path.join(scratch, 'rs', 'target.json')
       const link = path.join(scratch, 'rs', 'link.json')
       symlinkSync('target.json', link)
-      expect(readJson(link, scratch)).toEqual({ data: { a: 1 } })
-      faults.set(target, 'ENOENT')
+      realpaths.set(link, target)
       try {
         expect(readJson(link, scratch)).toBe(UNREADABLE)
       } finally {
-        faults.clear()
+        realpaths.clear()
+      }
+    },
+  )
+
+  it.skipIf(process.platform === 'win32')(
+    'gives UNREADABLE for a file below a link whose target a process removed',
+    () => {
+      // A link in the path, not the file, loses its target during the read.
+      mkdirSync(path.join(scratch, 'rp'), { recursive: true })
+      symlinkSync('cfg', path.join(scratch, 'rp', 'dot'))
+      const file = path.join(scratch, 'rp', 'dot', 'a.json')
+      realpaths.set(file, path.join(scratch, 'rp', 'cfg', 'a.json'))
+      try {
+        expect(readJson(file, scratch)).toBe(UNREADABLE)
+      } finally {
+        realpaths.clear()
       }
     },
   )
