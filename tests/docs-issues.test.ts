@@ -357,7 +357,10 @@ describe('bodyOf', () => {
     const added: Finding = { ...newRule, possibleMoves: near }
     const rows: Tracked = {
       ...common,
-      sections: [{ section: 'Hooks', rules: near.map((_, i) => `a-rule-${i}`) }],
+      // 6,000 rows make a line of about 80,000 characters.
+      sections: [
+        { section: 'Hooks', rules: Array.from({ length: 6000 }, (_, i) => `a-rule-${i}`) },
+      ],
     }
     const body = api.bodyOf(added, REPO, rows)
     expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
