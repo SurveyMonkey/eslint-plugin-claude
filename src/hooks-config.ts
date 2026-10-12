@@ -101,7 +101,14 @@ const PLATFORMS = ['windows-git-bash', 'windows-no-git-bash', 'macos', 'linux', 
  *  makes no report without it. */
 export const PLATFORMS_SCHEMA = {
   type: 'object',
-  properties: { platforms: { type: 'array', items: { enum: PLATFORMS }, uniqueItems: true } },
+  properties: {
+    platforms: {
+      description: 'The platforms where the team runs Claude Code.',
+      type: 'array',
+      items: { enum: PLATFORMS },
+      uniqueItems: true,
+    },
+  },
   additionalProperties: false,
 } as const
 

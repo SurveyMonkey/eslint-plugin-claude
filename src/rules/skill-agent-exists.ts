@@ -87,7 +87,12 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description: 'Names of agents that the repository cannot see.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

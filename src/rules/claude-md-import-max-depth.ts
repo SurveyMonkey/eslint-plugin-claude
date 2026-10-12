@@ -31,7 +31,14 @@ const rule: MarkdownRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1, maximum: DEPTH } },
+        properties: {
+          max: {
+            description: 'The most import hops from the linted file.',
+            type: 'integer',
+            minimum: 1,
+            maximum: DEPTH,
+          },
+        },
         additionalProperties: false,
       },
     ],

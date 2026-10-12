@@ -20,6 +20,7 @@ const rule: Rule.RuleModule = {
       description: 'Write a tool that takes no specifier as its bare name',
       url: docsUrl(name),
     },
+    schema: [],
     messages: {
       unsupported:
         '{{tool}} takes the bare tool name only, so this rule does not match as written.',

@@ -50,7 +50,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'broad' }
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description:
+              'Rules to accept, as each one is in allowed-tools, such as Bash or mcp__github__*.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

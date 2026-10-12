@@ -42,7 +42,9 @@ const rule: MarkdownRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1 } },
+        properties: {
+          max: { description: 'The most lines in the file.', type: 'integer', minimum: 1 },
+        },
         additionalProperties: false,
       },
     ],

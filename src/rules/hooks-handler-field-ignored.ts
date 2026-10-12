@@ -133,8 +133,17 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          sessionEndMax: { type: 'number', exclusiveMinimum: 0 },
-          sessionEndPluginMax: { type: 'number', exclusiveMinimum: 0 },
+          sessionEndMax: {
+            description: 'The most seconds for a SessionEnd timeout.',
+            type: 'number',
+            exclusiveMinimum: 0,
+          },
+          sessionEndPluginMax: {
+            description:
+              'The most seconds for a SessionEnd timeout in the hooks.json file of a plugin.',
+            type: 'number',
+            exclusiveMinimum: 0,
+          },
         },
         additionalProperties: false,
       },

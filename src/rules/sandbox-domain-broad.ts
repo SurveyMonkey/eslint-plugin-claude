@@ -31,7 +31,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
       {
         type: 'object',
         properties: {
-          broad: { type: 'array', items: { type: 'string', minLength: 1 }, uniqueItems: true },
+          broad: {
+            description: 'More hosts to report as broad.',
+            type: 'array',
+            items: { type: 'string', minLength: 1 },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

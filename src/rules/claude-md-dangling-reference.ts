@@ -61,7 +61,13 @@ const rule: MarkdownRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' } } },
+        properties: {
+          allow: {
+            description: 'Commands and paths from outside the repository, as the file writes them.',
+            type: 'array',
+            items: { type: 'string' },
+          },
+        },
         additionalProperties: false,
       },
     ],

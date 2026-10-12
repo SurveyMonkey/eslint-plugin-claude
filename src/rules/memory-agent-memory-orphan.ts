@@ -14,7 +14,7 @@ import { frontmatterOfFile, markdownFiles, repositoryRoot, UNREADABLE } from '..
 
 const name = 'memory-agent-memory-orphan' as const
 
-type Options = [{ allow?: string[] }]
+type Options = [{ allow: string[] }]
 
 const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'orphan' }> = {
   meta: {
@@ -26,7 +26,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'orphan' 
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' } } },
+        properties: {
+          allow: {
+            description:
+              'Names of subagents that the repository does not hold, such as user subagents.',
+            type: 'array',
+            items: { type: 'string' },
+          },
+        },
         additionalProperties: false,
       },
     ],
@@ -37,7 +44,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'orphan' 
     },
   },
   create(context) {
-    const [{ allow = [] }] = context.options
+    const [{ allow }] = context.options
     const folder = path.dirname(path.resolve(context.filename))
     const agent = path.basename(folder)
     const top = gitTop(folder)

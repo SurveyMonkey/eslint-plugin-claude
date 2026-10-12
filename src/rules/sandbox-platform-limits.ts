@@ -66,8 +66,18 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
       {
         type: 'object',
         properties: {
-          platforms: { type: 'array', items: { enum: PLATFORMS }, uniqueItems: true },
-          minVersion: { type: 'string', pattern: '^\\d+\\.\\d+\\.\\d+$' },
+          platforms: {
+            description: 'The platforms where the team runs Claude Code.',
+            type: 'array',
+            items: { enum: PLATFORMS },
+            uniqueItems: true,
+          },
+          minVersion: {
+            description:
+              'The oldest Claude Code version that the team supports, as major.minor.patch.',
+            type: 'string',
+            pattern: '^\\d+\\.\\d+\\.\\d+$',
+          },
         },
         additionalProperties: false,
       },

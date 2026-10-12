@@ -23,7 +23,12 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadows'
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description: 'Names of built-in subagents that a local agent replaces on purpose.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

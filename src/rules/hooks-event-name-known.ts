@@ -69,7 +69,12 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          additionalEvents: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          additionalEvents: {
+            description: 'Event names to accept that are not in the list of known events.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

@@ -33,7 +33,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown' }> 
       {
         type: 'object',
         properties: {
-          allow: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          allow: {
+            description: 'Skill names to accept, such as a user skill.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

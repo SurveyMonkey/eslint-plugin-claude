@@ -27,7 +27,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'hosted' }> =
     schema: [
       {
         type: 'object',
-        properties: { hosts: { type: 'array', items: { type: 'string', minLength: 1 } } },
+        properties: {
+          hosts: {
+            description: 'More host names to report.',
+            type: 'array',
+            items: { type: 'string', minLength: 1 },
+          },
+        },
         additionalProperties: false,
       },
     ],

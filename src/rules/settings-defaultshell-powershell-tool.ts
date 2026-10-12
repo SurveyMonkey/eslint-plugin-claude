@@ -34,7 +34,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'off' }> = {
       {
         type: 'object',
         properties: {
-          platforms: { type: 'array', items: { enum: [...PLATFORMS] }, uniqueItems: true },
+          platforms: {
+            description:
+              'The platforms where the team runs Claude Code. Without it, the rule makes no report.',
+            type: 'array',
+            items: { enum: [...PLATFORMS] },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

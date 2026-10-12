@@ -42,7 +42,14 @@ const rule: Rule.RuleModule = {
     schema: [
       {
         type: 'object',
-        properties: { minVersion: { type: 'string', pattern: '^\\d+\\.\\d+\\.\\d+$' } },
+        properties: {
+          minVersion: {
+            description:
+              'The oldest Claude Code version that the team supports, as major.minor.patch.',
+            type: 'string',
+            pattern: '^\\d+\\.\\d+\\.\\d+$',
+          },
+        },
         additionalProperties: false,
       },
     ],
@@ -78,7 +85,7 @@ const rule: Rule.RuleModule = {
         if (free && !MATCHER_VALUES.has(event) && isBefore(minVersion, HYPHEN_FIXED)) {
           for (const segment of wide ?? []) {
             if (/\w-\w/.test(segment)) {
-              context.report({ loc, messageId: 'hyphen', data: { ...data, segment } })
+              context.report({ loc, messageId: 'hyphen', data: { min: minVersion, segment } })
             }
           }
         }
@@ -89,7 +96,7 @@ const rule: Rule.RuleModule = {
                 context.report({
                   loc,
                   messageId: 'value',
-                  data: { ...data, segment, event, version: since.version },
+                  data: { min: minVersion, segment, event, version: since.version },
                 })
               }
             }

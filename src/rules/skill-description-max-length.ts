@@ -27,7 +27,11 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          listingMax: { type: 'integer', minimum: 1 },
+          listingMax: {
+            description: 'The most characters in description and when_to_use together.',
+            type: 'integer',
+            minimum: 1,
+          },
         },
         additionalProperties: false,
       },

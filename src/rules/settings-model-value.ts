@@ -56,7 +56,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
       {
         type: 'object',
         properties: {
-          providerIdPatterns: { type: 'array', items: { type: 'string', minLength: 1 } },
+          providerIdPatterns: {
+            description:
+              'Regular expressions. A model value that matches one of them passes the check.',
+            type: 'array',
+            items: { type: 'string', minLength: 1 },
+          },
         },
         additionalProperties: false,
       },

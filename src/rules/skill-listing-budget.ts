@@ -95,8 +95,16 @@ const rule: MarkdownRuleDefinition<{
       {
         type: 'object',
         properties: {
-          max: { type: 'integer', minimum: 1 },
-          listingMax: { type: 'integer', minimum: 1 },
+          max: {
+            description: 'The most characters in the entries of one scope.',
+            type: 'integer',
+            minimum: 1,
+          },
+          listingMax: {
+            description: 'The length at which Claude Code cuts the text of one entry.',
+            type: 'integer',
+            minimum: 1,
+          },
         },
         additionalProperties: false,
       },

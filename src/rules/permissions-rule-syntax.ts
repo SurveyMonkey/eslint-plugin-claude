@@ -23,6 +23,7 @@ const rule: Rule.RuleModule = {
       description: 'Write each permission rule as Tool or Tool(specifier)',
       url: docsUrl(name),
     },
+    schema: [],
     messages,
   },
   create(context) {

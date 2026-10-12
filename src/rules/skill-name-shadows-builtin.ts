@@ -24,7 +24,15 @@ const rule: MarkdownRuleDefinition<{
     schema: [
       {
         type: 'object',
-        properties: { allow: { type: 'array', items: { type: 'string' }, uniqueItems: true } },
+        properties: {
+          allow: {
+            description:
+              'Names that the repository replaces on purpose. The rule makes no report for them.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
+        },
         additionalProperties: false,
       },
     ],

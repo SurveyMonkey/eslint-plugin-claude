@@ -32,6 +32,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'bash' | 
         type: 'object',
         properties: {
           platforms: {
+            description: 'The platforms and providers where the team runs Claude Code.',
             type: 'array',
             items: { enum: [NO_BASH, ...NO_POWERSHELL] },
             uniqueItems: true,

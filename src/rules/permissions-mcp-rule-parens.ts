@@ -16,6 +16,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'parens' }> = {
       description: 'Write an MCP permission rule without parentheses',
       url: docsUrl(name),
     },
+    schema: [],
     messages: {
       parens:
         'Claude Code skips an "mcp__" rule that has parentheses. To match a parameter, pass a deny rule with --disallowedTools.',

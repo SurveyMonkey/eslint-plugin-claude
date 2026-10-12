@@ -129,7 +129,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooLong'
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1 } },
+        properties: {
+          max: {
+            description:
+              'The most lines in the set of files. Without it, the rule makes no report.',
+            type: 'integer',
+            minimum: 1,
+          },
+        },
         additionalProperties: false,
       },
     ],

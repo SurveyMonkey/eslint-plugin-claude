@@ -23,7 +23,13 @@ const rule: Rule.RuleModule = {
     schema: [
       {
         type: 'object',
-        properties: { millisecondsFrom: { type: 'integer', minimum: 1 } },
+        properties: {
+          millisecondsFrom: {
+            description: 'The lowest timeout, in seconds, that the rule reports.',
+            type: 'integer',
+            minimum: 1,
+          },
+        },
         additionalProperties: false,
       },
     ],

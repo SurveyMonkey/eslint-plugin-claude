@@ -21,7 +21,12 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          additionalTools: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+          additionalTools: {
+            description: 'Tool names to accept that are not in the list of known tools.',
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },

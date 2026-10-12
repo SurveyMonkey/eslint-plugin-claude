@@ -22,7 +22,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'bin' }> = {
     schema: [
       {
         type: 'object',
-        properties: { targets: { type: 'array', items: { enum: ['claude-ai'] } } },
+        properties: {
+          targets: {
+            description: 'The apps that the plugin must reach. The only value is claude-ai.',
+            type: 'array',
+            items: { enum: ['claude-ai'] },
+          },
+        },
         additionalProperties: false,
       },
     ],

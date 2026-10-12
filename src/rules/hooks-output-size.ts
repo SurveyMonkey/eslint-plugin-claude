@@ -66,8 +66,19 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          maxOutputChars: { type: 'integer', minimum: 1, maximum: OUTPUT_CAP },
-          maxClassifierChars: { type: 'integer', minimum: 1, maximum: CLASSIFIER_CAP },
+          maxOutputChars: {
+            description:
+              'The most characters in additionalContext, systemMessage, initialUserMessage or plain stdout.',
+            type: 'integer',
+            minimum: 1,
+            maximum: OUTPUT_CAP,
+          },
+          maxClassifierChars: {
+            description: 'The most characters in a classifierContext note.',
+            type: 'integer',
+            minimum: 1,
+            maximum: CLASSIFIER_CAP,
+          },
         },
         additionalProperties: false,
       },

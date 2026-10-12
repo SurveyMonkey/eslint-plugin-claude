@@ -32,7 +32,14 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooMany'
     schema: [
       {
         type: 'object',
-        properties: { max: { type: 'integer', minimum: 1 } },
+        properties: {
+          max: {
+            description:
+              'The most lines with emphasis words. Without it, the rule makes no report.',
+            type: 'integer',
+            minimum: 1,
+          },
+        },
         additionalProperties: false,
       },
     ],
