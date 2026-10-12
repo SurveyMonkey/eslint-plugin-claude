@@ -332,6 +332,9 @@ describe(`${name}: frontmatter`, () => {
     const list =
       'PreToolUse: &p\n  - matcher: Bash\n    hooks:\n      - type: command\n        command: ./a.sh\n'
     expect(yaml(`${list}PostToolUse: *p\n`)).toEqual([])
+    const scalars =
+      'Stop:\n  - hooks:\n      - { type: &t command, command: &c ./a.sh }\n      - { type: *t, command: *c }\n'
+    expect(yaml(scalars)).toEqual([])
     expect(yaml('Stop: &a x\nSessionEnd: *a\n')).toEqual(['eventNotArray', 'eventNotArray'])
     expect(yaml('Stop: &a { k: 1 }\nSessionEnd: *a\n')).toEqual(['eventNotArray', 'eventNotArray'])
     expect(yaml('Stop:\n  - hooks:\n      - &h { type: script }\n      - *h\n')).toEqual([
@@ -379,6 +382,7 @@ describe(`${name}: frontmatter`, () => {
     expect(yaml('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n')).toEqual([])
     expect(yaml('<<: { Stop: x }\nSessionEnd: x\n')).toEqual([])
     expect(yaml('Stop: { <<: { k: 1 } }\n')).toEqual([])
+    expect(yaml('Stop: { <<: { k: 1 } }\nSessionEnd: x\n')).toEqual([])
     expect(
       yaml(
         'Stop:\n  - hooks:\n      - { type: command, command: a, input: { <<: { k: 1 } } }\n      - { type: script }\n',

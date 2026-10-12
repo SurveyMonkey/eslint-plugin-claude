@@ -240,8 +240,8 @@ function fromJson(node: ValueNode): HNode {
 
 type At = (start: number, end: number) => Loc
 
-/** What `fromYaml` needs besides the node: the document that holds the anchors, the nodes that the
- *  walk is inside, and how many aliases it may still read. */
+/** The state of one `fromYaml` walk: the document with the anchors, the nodes that the walk is inside,
+ *  and the count of aliases that it can still read. */
 interface YamlContext {
   at: At
   doc: Document
@@ -249,14 +249,17 @@ interface YamlContext {
   aliases: { left: number }
 }
 
-/** How many aliases one `hooks` value may read. A nest of aliases grows with each level, so the limit stops it. */
+/** The count of aliases that one `hooks` value can use. A nest of aliases grows with each level, so this limit stops it. */
 const MAX_ALIASES = 1000
 
-/** The node for a YAML node, or undefined when the node holds a merge key (`<<`). No page of the Claude Code
- *  docs says what Claude Code does with a merge key, so no rule may read that object. The result for
- *  a key is then undefined too, up to the nearest list item, which a list leaves out. A null node has no
- *  range, so it takes `fallback`. Any other node has a range. An alias reads as the node that it names,
- *  with the location of the alias. An alias that names no anchor, or a node that holds it, is kind `other`. */
+/** The node for a YAML node. A null node has no range, so it takes `fallback`. Any other node has a range.
+ *
+ *  An alias reads as the node that it names, with the location of the alias. An alias that names an
+ *  ancestor, or no anchor, or that is over the limit, is kind `other`.
+ *
+ *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So no rule reads
+ *  an object that holds one, and the result is undefined. A member with an undefined value makes its
+ *  object undefined too. A list leaves out an undefined item. */
 function fromYaml(
   node: unknown,
   context: YamlContext,
