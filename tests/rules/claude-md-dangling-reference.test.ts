@@ -225,7 +225,7 @@ describe(`${RULE}: commands`, () => {
     link(dir, '.claude/skills/deploy', 'nowhere')
     expect(lintMemory(RULE, dir, 'CLAUDE.md', '`/ship`\n')).toEqual([])
     expect(lintMemory(RULE, dir, 'CLAUDE.md', '`/deploy`\n')).toEqual([])
-    expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', '`/other`\n'))).toEqual(['command'])
+    expect(ids(lintMemory(RULE, dir, 'CLAUDE.md', '`/other`\n'))).toEqual([])
   })
 
   it.skipIf(noLinks)('stays silent when a commands folder links out of the repository', () => {

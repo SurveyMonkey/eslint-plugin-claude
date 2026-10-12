@@ -271,6 +271,17 @@ describe(RULE, () => {
       expect(ids(dir, settings('nobody'))).toEqual([])
     })
 
+    // A dangling link can lead anywhere, so the agent can be behind it (ADR 001, Decision 14).
+    it.skipIf(noLinks)('stays silent for a dangling link inside the agents directory', () => {
+      const dir = tree({ [`${AGENTS}/root.md`]: agent('name: root') })
+      link(dir, `${AGENTS}/nobody.md`, 'missing.md')
+      link(dir, `${AGENTS}/team`, 'missing-team')
+      expect(ids(dir, settings('nobody'))).toEqual([])
+      expect(ids(tree({ [`${AGENTS}/root.md`]: agent('name: root') }), settings('nobody'))).toEqual(
+        ['unknown'],
+      )
+    })
+
     it.skipIf(noLinks)(
       'stays silent for a link out of the repository below a readable root',
       () => {

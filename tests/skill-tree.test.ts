@@ -1,5 +1,6 @@
 // The files around a skill: the scope root, frontmatter read from text and
 // from a file, the Markdown files below a directory, and the plugin manifest.
+import { execFileSync, spawnSync } from 'node:child_process'
 import {
   mkdirSync,
   mkdtempSync,
@@ -11,7 +12,8 @@ import {
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterAll, describe, expect, it } from 'vitest'
+import { pathToFileURL } from 'node:url'
+import { afterAll, describe, expect, it, vi } from 'vitest'
 import { readSettings } from '../src/settings-files.ts'
 import { classifySkillFile } from '../src/skill-files.ts'
 import {
@@ -28,6 +30,26 @@ import {
   UNREADABLE,
 } from '../src/skill-tree.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
+
+// A `statSync` can fail after `realpathSync` resolves the same path. A process can remove the
+// file between the two calls. No tree on disk gives that order, so the wrapper below
+// makes `statSync` fail with the code in `faults` for that path. Each other call goes to the
+// real function.
+const faults = vi.hoisted(() => new Map<string, string>())
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>()
+  const statSync = (...args: unknown[]) => {
+    const code = faults.get(String(args[0]))
+    if (code !== undefined) {
+      throw Object.assign(new Error(`${code}: stat '${String(args[0])}'`), { code })
+    }
+    return (actual.statSync as (...rest: unknown[]) => unknown)(...args)
+  }
+  return { ...actual, statSync, default: { ...actual, statSync } }
+})
+
+// The system tool that makes a FIFO. Node has no call for it.
+const MAKE_FIFO = 'mkfifo'
 
 // The real path, so that a bound compares equal on a system where the
 // temporary directory is a link (macOS).
@@ -185,6 +207,80 @@ describe('markdownFiles', () => {
       // `alias` is the same directory as `real`, so its files are not listed twice.
       // A link comes after the real entries.
       expect(rel).toEqual(['other/y.md', 'real/x.md', 'file.md'])
+    },
+  )
+})
+
+// A dangling link can lead anywhere, so the scan cannot see what is behind it (ADR 001,
+// Decision 14). The scan keeps the files that it found, and sets `unreadable`.
+describe('markdownFiles and a link with no target', () => {
+  it.skipIf(process.platform === 'win32')('sets unreadable for a dangling link in the walk', () => {
+    put('dl/a.md', '')
+    put('dl/sub/b.md', '')
+    const dir = path.join(scratch, 'dl')
+    const found = [path.join(dir, 'a.md'), path.join(dir, 'sub', 'b.md')]
+    expect(markdownFiles(dir, scratch)).toEqual({ files: found, outside: false, unreadable: false })
+    symlinkSync('missing.md', path.join(dir, 'sub', 'gone.md'))
+    expect(markdownFiles(dir, scratch)).toEqual({ files: found, outside: false, unreadable: true })
+    // A dangling link with no `.md` name can be a directory, so it sets `unreadable` too.
+    put('dl2/a.md', '')
+    symlinkSync('missing', path.join(scratch, 'dl2', 'team'))
+    expect(markdownFiles(path.join(scratch, 'dl2'), scratch)).toEqual({
+      files: [path.join(scratch, 'dl2', 'a.md')],
+      outside: false,
+      unreadable: true,
+    })
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'sets unreadable when the directory is a dangling link, or is below one',
+    () => {
+      mkdirSync(path.join(scratch, 'dr'), { recursive: true })
+      symlinkSync('missing', path.join(scratch, 'dr', 'agents'))
+      const unseen = { files: [], outside: false, unreadable: true }
+      expect(markdownFiles(path.join(scratch, 'dr', 'agents'), scratch)).toEqual(unseen)
+      expect(markdownFiles(path.join(scratch, 'dr', 'agents', 'team'), scratch)).toEqual(unseen)
+      // A missing directory with no link in its path is not there, and the scan sees that.
+      expect(markdownFiles(path.join(scratch, 'dr', 'none'), scratch)).toEqual({
+        files: [],
+        outside: false,
+        unreadable: false,
+      })
+    },
+  )
+
+  it('gives nothing for a missing directory out of the bound, with no link in its path', () => {
+    put('db/in/a.md', '')
+    expect(markdownFiles(path.join(scratch, 'db', 'gone'), path.join(scratch, 'db', 'in'))).toEqual(
+      { files: [], outside: false, unreadable: false },
+    )
+  })
+})
+
+describe('markdownFiles when a stat fails', () => {
+  it.skipIf(process.platform === 'win32')(
+    'sets unreadable for a link whose target fails to stat, and does not throw',
+    () => {
+      const target = put('sf/target.md', '')
+      symlinkSync('target.md', path.join(scratch, 'sf', 'link.md'))
+      const dir = path.join(scratch, 'sf')
+      expect(markdownFiles(dir, scratch)).toEqual({
+        files: [target, path.join(dir, 'link.md')],
+        outside: false,
+        unreadable: false,
+      })
+      for (const code of ['EACCES', 'ENOENT']) {
+        faults.set(target, code)
+        try {
+          expect(markdownFiles(dir, scratch)).toEqual({
+            files: [target],
+            outside: false,
+            unreadable: true,
+          })
+        } finally {
+          faults.clear()
+        }
+      }
     },
   )
 })
@@ -459,6 +555,85 @@ describe('readJson', () => {
   )
 })
 
+describe('readJson when a stat fails', () => {
+  it('gives UNREADABLE for a failed stat, and null for a file that a process removed', () => {
+    const file = put('rs/a.json', '{"a":1}')
+    for (const [code, result] of [
+      ['EACCES', UNREADABLE],
+      ['ENOENT', null],
+    ] as const) {
+      faults.set(file, code)
+      try {
+        expect(readJson(file, scratch)).toBe(result)
+      } finally {
+        faults.clear()
+      }
+    }
+    expect(readJson(file, scratch)).toEqual({ data: { a: 1 } })
+  })
+})
+
+// Claude Code 2.1.246 and later loads a `plugin.json` that starts with a byte order mark (the
+// 2.1.246 entry of https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
+describe('readJson and a byte order mark', () => {
+  it('parses the text after a leading mark', () => {
+    const bound = path.join(scratch, 'bom')
+    expect(readJson(put('bom/a.json', '\u{FEFF}{"a":1}'), bound)).toEqual({ data: { a: 1 } })
+    // A mark at another place is text that does not parse.
+    expect(readJson(put('bom/end.json', '{"a":1}\u{FEFF}'), bound)).toEqual({ data: undefined })
+    expect(readJson(put('bom/two.json', '\u{FEFF}\u{FEFF}{}'), bound)).toEqual({ data: undefined })
+  })
+
+  it('reads the keys of a plugin.json with a leading mark', () => {
+    put('bom-p/.claude-plugin/plugin.json', '\u{FEFF}{"name":"p","skills":"./extra"}')
+    expect(readManifest(path.join(scratch, 'bom-p'), scratch)).toEqual({
+      name: 'p',
+      skills: './extra',
+    })
+  })
+})
+
+// A read of a path that is not a regular file gives UNREADABLE. A FIFO is the case that
+// matters: a read of it waits for a writer, and stops the lint run.
+describe('a path that is not a regular file', () => {
+  it('reads a regular file, and gives UNREADABLE for a directory', () => {
+    expect(readJson(put('special/a.json', '{"a":1}'), scratch)).toEqual({ data: { a: 1 } })
+    expect(frontmatterOfFile(put('special/a.md', '---\nname: a\n---\n'))).toEqual({ name: 'a' })
+    mkdirSync(path.join(scratch, 'special', 'dir.json'))
+    expect(readJson(path.join(scratch, 'special', 'dir.json'), scratch)).toBe(UNREADABLE)
+    expect(frontmatterOfFile(path.join(scratch, 'special', 'dir.json'))).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')('gives UNREADABLE for a device', () => {
+    expect(readJson('/dev/null', '/dev')).toBe(UNREADABLE)
+    expect(frontmatterOfFile('/dev/null')).toBe(UNREADABLE)
+  })
+
+  // A read that waits on the FIFO blocks the thread, and a test timeout cannot stop it. So a
+  // child process does the read, and `spawnSync` stops the child at its own timeout.
+  it('gives UNREADABLE for a FIFO, and does not wait for a writer', {
+    skip: process.platform === 'win32',
+    timeout: 30_000,
+  }, () => {
+    mkdirSync(path.join(scratch, 'fifo'), { recursive: true })
+    const fifo = path.join(scratch, 'fifo', 'pipe.md')
+    execFileSync(MAKE_FIFO, [fifo])
+    const source = pathToFileURL(path.join(import.meta.dirname, '../src/skill-tree.ts')).href
+    const probe = [
+      `import { frontmatterOfFile, readJson } from ${JSON.stringify(source)}`,
+      'const [fifo, bound] = process.argv.slice(1)',
+      'console.log(JSON.stringify([frontmatterOfFile(fifo), readJson(fifo, bound)].map(String)))',
+    ].join('\n')
+    // Node 22.13 to 22.17 needs the flag to import a .ts file.
+    const flags = process.features.typescript ? [] : ['--experimental-strip-types']
+    const args = [...flags, '--input-type=module', '-e', probe, fifo, scratch]
+    const child = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 10_000 })
+    expect(child.signal).toBeNull()
+    expect(child.status, child.stderr).toBe(0)
+    expect(child.stdout.trim()).toBe('["Symbol(unreadable)","Symbol(unreadable)"]')
+  })
+})
+
 describe('repositoryRoot', () => {
   it('gives the first directory at or above that holds .git, or the directory itself', () => {
     put('repo/.git/HEAD', '')
@@ -678,7 +853,7 @@ describe.skipIf(chmodCannotBlock)('a read that fails', () => {
   })
 
   it.skipIf(process.platform === 'win32')(
-    'sets unreadable for a link whose target cannot be reached, and not for a dangling link',
+    'sets unreadable for a link whose target cannot be reached, and for a dangling link',
     () => {
       put('deny/links/locked/f.md', '')
       mkdirSync(path.join(scratch, 'deny', 'links', 'at'))
@@ -689,7 +864,8 @@ describe.skipIf(chmodCannotBlock)('a read that fails', () => {
       withoutAccess(path.join(scratch, 'deny', 'links', 'locked'), () => {
         expect(markdownFiles(dir, scratch)).toEqual({ files: [], outside: false, unreadable: true })
       })
-      expect(markdownFiles(path.join(scratch, 'deny', 'links'), scratch).unreadable).toBe(false)
+      // A dangling link can lead anywhere, so the scan cannot see what is behind it.
+      expect(markdownFiles(path.join(scratch, 'deny', 'links'), scratch).unreadable).toBe(true)
     },
   )
 
