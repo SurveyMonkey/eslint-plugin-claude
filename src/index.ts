@@ -1624,8 +1624,8 @@ const plugin: Plugin = {
   configs: { recommended: [], strict: [] },
 }
 
-/** The blocks of files from `fileBlocksFor`, then one block for each rule
- *  block that `severity` turns on, with its files and language. Each block
+/** The blocks of files from `fileBlocksFor`, then one block for the `files`
+ *  and one for the `also` of each rule that `severity` turns on. Each block
  *  also registers the language plugins, so a consumer needs no other setup.
  *  The rule blocks come last, so they set the language of a file that globs
  *  of two languages match. */

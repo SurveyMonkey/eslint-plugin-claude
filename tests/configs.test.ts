@@ -6738,7 +6738,7 @@ const LANGUAGE_SETTINGS = {
   json: { language: 'json/json' },
 } as const
 
-// The language object that ESLint resolves for each language name.
+// The language object that ESLint resolves for each language of a target.
 const LANGUAGE_OBJECTS = { markdown: markdown.languages.gfm, json: json.languages.json }
 
 interface Target {
@@ -6836,8 +6836,8 @@ describe('files of each rule in recommended and strict', () => {
     }
   })
 
-  // A JSON file below `.claude/rules/` matches globs of both languages. The rule blocks set its
-  // language, as before the blocks of files. So `rules-md-extension` still reports it.
+  // A JSON file below `.claude/rules/` matches globs of both languages. The rule blocks come after
+  // the blocks of files, so they set its language. So `rules-md-extension` reports it.
   it('keeps the language of the rule blocks on a file that both languages match', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'claude-config-order-'))
     try {
