@@ -284,7 +284,8 @@ function fromYaml(
     if (path.includes(target)) {
       return { kind: 'other', loc }
     }
-    // `readFrontmatter` gives no result for an alias with no anchor, so `target` is set here.
+    // The type allows no `target`. `readFrontmatter` gives no result for an alias with no anchor,
+    // so this walk does not see one.
     return target === undefined || context.aliases.left-- <= 0
       ? undefined
       : fromYaml(target, context, fallback, loc)
