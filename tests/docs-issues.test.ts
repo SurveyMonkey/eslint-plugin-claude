@@ -366,6 +366,8 @@ describe('bodyOf', () => {
     expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
     expect(body.split('\n')[0]).toBe(api.markerOf(added))
     expect(body).toContain('- Possible move: `Near 0 ')
+    expect(body.match(/^- Possible move: /gm)).toHaveLength(api.MAX_MOVES)
+    expect(body).toContain('\n- 495 more possible moves. See the page.\n')
     expect(body).toContain('- Inventory rows that cite the block: Hooks: `a-rule-0`')
     // Each section and fence of the body is whole.
     expect(body).toContain('## References')
@@ -429,6 +431,15 @@ describe('bodyOf', () => {
     expect(body.split('\n')[0]).toBe(api.markerOf(long))
   })
 
+  it('fails for a moved body that does not fit (#218)', () => {
+    // A moved body has no short form. 2,000 rules give a footnote line each.
+    const rules = Array.from({ length: 2000 }, (_, i) => `a-rule-with-a-long-name-${i}`)
+    const f: Finding = { ...moved, rules }
+    expect(() => api.bodyOf(f, REPO)).toThrow(
+      `the issue body for ${api.keyOf(f)} does not fit in ${api.MAX_COMMENT} characters`,
+    )
+  })
+
   it('cuts a long text and says so', () => {
     const text = api.fence('y'.repeat(7000))
     expect(text).toContain('The text is cut at 6000 of 7000 characters.')
@@ -446,6 +457,13 @@ describe('bodyOf', () => {
     expect(body).not.toMatch(broken)
     expect(body).toBe(`a${'\u{1F600}'.repeat(2999)}`)
     expect(text).toContain('The text is cut at 6000 of 8001 characters.')
+  })
+
+  it('keeps a whole surrogate pair when the cut falls after it (#218)', () => {
+    // 4,000 emoji: unit 6,000 is the low half of an emoji.
+    const text = api.fence('\u{1F600}'.repeat(4000))
+    const body = text.slice(text.indexOf('\n') + 1, text.indexOf('\n```'))
+    expect(body).toBe('\u{1F600}'.repeat(3000))
   })
 
   it('cuts a long heading in a title before a surrogate pair (#218)', () => {
@@ -1285,41 +1303,36 @@ describe('the group comment path for tracked blocks', () => {
   // The block IDs of the tracked markers in a comment.
   const markedIn = (body: string) =>
     [...body.matchAll(/<!-- docs-watch-tracked:\S+#(b\d+):[0-9a-f]{64} -->/g)].map((m) => m[1])
-  const postedBody = (gh: ReturnType<typeof groupGh>) => {
-    const [post, ...rest] = gh.commentPosts()
-    expect(rest).toEqual([])
-    return (JSON.parse(post?.input ?? '{}') as { body: string }).body
-  }
+  const postedBodies = (gh: ReturnType<typeof groupGh>) =>
+    gh.commentPosts().map((post) => (JSON.parse(post.input ?? '{}') as { body: string }).body)
 
-  it('posts the blocks that fit, each marker with its text, the rest next run (#218)', async () => {
+  it('posts every block in one run, in comments that fit (#218)', async () => {
     const first = groupGh({ 10: { state: 'open' } })
     await live(first, many)
-    const body = postedBody(first)
-    const marked = markedIn(body)
-    expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
-    expect(marked.length).toBeGreaterThan(0)
-    expect(marked.length).toBeLessThan(30)
-    // Each marker has the section and the whole text of its block. No other
-    // block has a section.
-    for (const [i, t] of many.entries()) {
-      const section = `### \`Block ${i}\`\n`
-      expect(body.includes(section), t.blockId).toBe(marked.includes(t.blockId))
-    }
-    // Each block of the comment has its whole fence, and nothing is cut.
+    const bodies = postedBodies(first)
+    // A comment of three blocks takes about 47,000 characters, and a comment
+    // of four takes about 62,500. So each comment takes three blocks.
+    const ids = many.map((t) => t.blockId)
+    expect(bodies.map(markedIn)).toEqual(
+      Array.from({ length: 10 }, (_, i) => ids.slice(3 * i, 3 * i + 3)),
+    )
     const whole = `${'`'.repeat(5001)}text\n${'`'.repeat(5000)}\n${'`'.repeat(5001)}\n`
-    expect(body.split(whole)).toHaveLength(marked.length + 1)
-    expect(body).not.toContain('is cut at')
-    // The next run reads the markers of the first comment, and posts the next
-    // blocks. No block is in two comments.
-    const second = groupGh({ 10: { state: 'open', comments: [body] } })
+    for (const body of bodies) {
+      const marked = markedIn(body)
+      expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+      // Each marker has the section and the whole text of its block. No other
+      // block has a section, and nothing is cut.
+      for (const [i, t] of many.entries()) {
+        const section = `### \`Block ${i}\`\n`
+        expect(body.includes(section), t.blockId).toBe(marked.includes(t.blockId))
+      }
+      expect(body.split(whole)).toHaveLength(marked.length + 1)
+      expect(body).not.toContain('is cut at')
+    }
+    // The next run reads the markers of every comment, and posts nothing.
+    const second = groupGh({ 10: { state: 'open', comments: bodies } })
     await live(second, many)
-    const next = markedIn(postedBody(second))
-    expect(next.length).toBeGreaterThan(0)
-    expect(next.filter((id) => marked.includes(id))).toEqual([])
-    expect(many.map((t) => t.blockId).slice(0, marked.length + next.length)).toEqual([
-      ...marked,
-      ...next,
-    ])
+    expect(second.posts()).toEqual([])
   })
 
   it('fails before it posts for a tracked block that does not fit alone (#218)', async () => {

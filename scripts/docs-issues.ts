@@ -53,11 +53,11 @@
 // row cites, and that no map heading cites other than the page title. Each
 // section of those rows has a group issue (GROUP_ISSUES). The step reads the
 // state and the comments of each group issue. While a group issue is open,
-// it gets at most one comment for each run. The comment shows each new
-// block, the rows that cite it, and its text. It takes the new blocks in
-// order while the whole comment fits in MAX_COMMENT. The other blocks get
-// no marker, so the next run posts them.
-// Each block in the comment has a hidden marker
+// it gets the new blocks of each run. A comment shows each of its blocks,
+// the rows that cite it, and its text. A comment takes the new blocks in
+// order while the whole comment fits in MAX_COMMENT. The next comment of the
+// run takes the other blocks.
+// Each block in a comment has a hidden marker
 // <!-- docs-watch-tracked:<page>#<blockId>:<hash> -->, with the key of an
 // issue marker. The step does not post a block again while its marker is in
 // a comment of the issue. A tracked block can have a finding that names no
@@ -127,14 +127,14 @@ const GROUP_ISSUES: Record<string, number> = {
 }
 // The most characters of a comment, of a digest body and of the body of an
 // issue for one block. Each then stays under the GitHub limit of 65,536
-// characters. The step cuts no comment and no digest: it packs blocks
-// until the next block does not fit.
+// characters. The step cuts no comment and no digest as a whole: it packs
+// whole blocks. Each quoted text keeps its own cut.
 export const MAX_COMMENT = 60_000
-// The most characters of a heading or a block ID in the text of a body or a
-// comment. The marker keeps the full block ID.
+// The heading or the block ID in the text of a body or a comment is cut at
+// this many characters. The marker keeps the full block ID.
 export const MAX_NAME = 300
-// The most characters of a reason, and of a line of inventory rows. merge
-// makes a reason longer for each finding that it joins.
+// A reason, and a line of inventory rows, is cut at this many characters.
+// merge makes a reason longer for each finding that it joins.
 export const MAX_REASON = 2000
 // The most possible-move lines for one block.
 export const MAX_MOVES = 5
@@ -900,9 +900,9 @@ function urlOf(out: string, what: string): string {
   return url
 }
 
-// The first blocks, in order, whose comment fits in MAX_COMMENT. The step
-// writes no marker for the other blocks, so the next run posts them. A block
-// whose comment alone does not fit throws, because no run can post it.
+// The first blocks, in order, whose comment fits in MAX_COMMENT. The next
+// comment of the run takes the other blocks. A block whose comment alone does
+// not fit throws, because no comment can hold it.
 function packed(
   blocks: { tracked: Tracked; rules: string[] }[],
   section: string,
@@ -1012,14 +1012,14 @@ export async function openIssues({
     if (fresh.length < group.blocks.length) {
       log(`skip: #${issue} already has ${group.blocks.length - fresh.length} tracked block(s)`)
     }
-    const part = packed(fresh, group.section)
-    for (const b of fresh.slice(part.length)) {
-      log(
-        `later: ${keyOf(b.tracked)} does not fit in the comment on #${issue}. ` +
-          'The next run posts it.',
-      )
+    // Each comment takes the next blocks that fit. packed throws for a block
+    // that does not fit alone, so each comment takes one block or more.
+    let rest = fresh
+    while (rest.length > 0) {
+      const part = packed(rest, group.section)
+      comments.push({ issue, body: commentOf(part, group.section) })
+      rest = rest.slice(part.length)
     }
-    if (part.length > 0) comments.push({ issue, body: commentOf(part, group.section) })
   }
   const open = openBodies(repo, run).map((issue) => ({
     number: issue.number,
