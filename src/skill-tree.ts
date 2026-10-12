@@ -3,11 +3,11 @@
 // file out of the repository that holds the scope.
 //
 // A read has three results: content, absent (`ENOENT` or `ENOTDIR`), and
-// unreadable (any other code, such as `EACCES`). A failed read is not the
-// same as a file that is not there. A rule makes no report that rests on a
-// file that it cannot read. It also makes no report that rests on a file with
-// a real path out of the repository. The `.git` test in `repositoryRoot` uses
-// `existsSync`.
+// unreadable (any other code, such as `EACCES`, or a path that is not a
+// regular file). A failed read is not the same as a file that is not there.
+// A rule makes no report that rests on a file that it cannot read. It also
+// makes no report that rests on a file with a real path out of the
+// repository. The `.git` test in `repositoryRoot` uses `existsSync`.
 import {
   type BigIntStats,
   type Dirent,
@@ -16,7 +16,7 @@ import {
   readdirSync,
   readFileSync,
   realpathSync,
-  type Stats,
+  Stats,
   statSync,
 } from 'node:fs'
 import path from 'node:path'
@@ -48,8 +48,17 @@ export function statOf(file: string): Stats | null | Unreadable {
   }
 }
 
-/** The text of `file`, null when it is not there, or `UNREADABLE`. */
+/** The text of `file`, null when it is not there, or `UNREADABLE`. A path
+ *  that is not a regular file, such as a FIFO, a socket or a device, gives
+ *  `UNREADABLE`. A read of a FIFO can wait for a writer, and stop the lint run. */
 function textOf(file: string): string | null | Unreadable {
+  const stat = statOf(file)
+  if (!(stat instanceof Stats)) {
+    return stat
+  }
+  if (!stat.isFile()) {
+    return UNREADABLE
+  }
   try {
     return readFileSync(file, 'utf8')
   } catch (error) {
@@ -137,7 +146,8 @@ export const SKIPPED = new Set(['.git', 'node_modules'])
 
 /** The `.md` files of a scan. `outside` is true when the scan did not follow
  *  a link because its target is out of the bound. `unreadable` is true when
- *  the scan could not read a directory or a link. */
+ *  the scan could not read a directory or a link, or met a dangling link. A
+ *  dangling link can lead anywhere, so a file can be behind it. */
 export interface Scan {
   files: string[]
   outside: boolean
@@ -148,8 +158,10 @@ export interface Scan {
  *  or below `bound`. A link to a directory is followed once, and the real
  *  directory comes before a link to it. The walk skips `.git` and
  *  `node_modules`. A link to a file counts when the file exists. The result
- *  is empty when `dir` does not exist. When the scan cannot read a directory,
- *  it sets `unreadable` and keeps the files that it found. */
+ *  is empty when `dir` does not exist. When `dir` is a dangling link, or has
+ *  one in its path, the scan sets `unreadable`. When the scan cannot read a
+ *  directory or a link, or meets a dangling link, it sets `unreadable` and
+ *  keeps the files that it found. */
 export function markdownFiles(dir: string, bound: string): Scan {
   const scan: Scan = { files: [], outside: false, unreadable: false }
   walk(dir, bound, new Set<string>(), scan)
@@ -162,7 +174,15 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
     scan.unreadable = true
     return
   }
-  if (real === null || seen.has(real)) {
+  if (real === null) {
+    // A missing `dir` is empty. A dangling link in its path can lead anywhere. With the root of
+    // the file system as the bound, `missingOf` checks for such a link only.
+    if (missingOf(dir, path.parse(path.resolve(dir)).root) === UNREADABLE) {
+      scan.unreadable = true
+    }
+    return
+  }
+  if (seen.has(real)) {
     return
   }
   if (!isInside(real, bound)) {
@@ -189,16 +209,21 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
     if (entry.isDirectory()) {
       walk(full, bound, seen, scan)
     } else if (entry.isSymbolicLink()) {
+      // The entry is a link, so a null real path is a dangling link.
       const target = realOf(full)
-      if (target === UNREADABLE) {
-        scan.unreadable = true
-      }
       if (typeof target !== 'string') {
+        scan.unreadable = true
         continue
       }
       if (!isInside(target, bound)) {
         scan.outside = true
-      } else if (statSync(target).isDirectory()) {
+        continue
+      }
+      // A stat can fail after the real path resolves, as when a process removes the target.
+      const stat = statOf(target)
+      if (!(stat instanceof Stats)) {
+        scan.unreadable = true
+      } else if (stat.isDirectory()) {
         walk(full, bound, seen, scan)
       } else if (entry.name.endsWith('.md')) {
         scan.files.push(full)
@@ -321,13 +346,15 @@ export function missingOf(file: string, bound: string): null | Unreadable {
 }
 
 /** The parsed JSON of `file`, as `{ data }`. The result is:
- *  - `{ data }` with the parsed value, when `file` parses.
+ *  - `{ data }` with the parsed value, when `file` parses. A leading byte
+ *    order mark is not part of the text.
  *  - `{ data: undefined }`, when the text does not parse.
  *  - null, when `file` is not there and its path is in `bound`.
  *  - `UNREADABLE`, when `file` is a dangling link.
  *  - `UNREADABLE`, when a part of the path is a dangling link.
  *  - `UNREADABLE`, when `file` is not there and its path is out of `bound`.
  *  - `UNREADABLE`, when its real path is out of `bound`.
+ *  - `UNREADABLE`, when its real path is not a regular file, such as a FIFO.
  *  - `UNREADABLE`, when a read fails for another reason. */
 export function readJson(file: string, bound: string): { data: unknown } | null | Unreadable {
   const real = realOf(file)
@@ -344,7 +371,8 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
     return text
   }
   try {
-    return { data: JSON.parse(text) as unknown }
+    // Claude Code 2.1.246 and later loads a manifest that starts with a byte order mark.
+    return { data: JSON.parse(text.replace(/^\u{FEFF}/u, '')) as unknown }
   } catch {
     return { data: undefined }
   }

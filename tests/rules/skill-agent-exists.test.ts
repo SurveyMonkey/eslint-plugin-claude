@@ -538,3 +538,35 @@ describe.skipIf(process.platform === 'win32')(
     })
   },
 )
+
+// A dangling link can lead anywhere, so the agent can be behind it (ADR 001, Decision 14).
+describe.skipIf(process.platform === 'win32')('a link with no target', () => {
+  const skill = (tree: string, inside: string) =>
+    path.join(scratch, tree, inside, 'skills', 's', 'SKILL.md')
+  const ghost = (filename: string) =>
+    lintMarkdown('skill-agent-exists', fork('ghost'), filename).map((m) => m.messageId)
+
+  it('stays silent for a link with no target in the project agents directory', () => {
+    put('dead/.git/HEAD', '')
+    put('dead/.claude/agents/a.md', agentFile('a'))
+    const file = skill('dead', '.claude')
+    expect(ghost(file)).toEqual(['project'])
+    symlinkSync('missing.md', path.join(scratch, 'dead/.claude/agents/ghost.md'))
+    expect(ghost(file)).toEqual([])
+  })
+
+  it('stays silent for a link with no target in the plugin agents directory', () => {
+    put('deadp/.claude-plugin/plugin.json', '{"name": "dp"}')
+    put('deadp/agents/a.md', agentFile('a'))
+    const file = skill('deadp', '.')
+    expect(ghost(file)).toEqual(['plugin'])
+    symlinkSync('missing', path.join(scratch, 'deadp/agents/team'))
+    expect(ghost(file)).toEqual([])
+  })
+
+  it('stays silent when the agents directory of the plugin is a link with no target', () => {
+    put('deadroot/.claude-plugin/plugin.json', '{"name": "dr"}')
+    symlinkSync('missing', path.join(scratch, 'deadroot/agents'))
+    expect(ghost(skill('deadroot', '.'))).toEqual([])
+  })
+})
