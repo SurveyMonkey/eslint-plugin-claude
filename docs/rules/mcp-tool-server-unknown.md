@@ -51,8 +51,9 @@ Decision 14):
 - A local agent file that cannot be read, or a link in `.claude/agents/` out of the repository or
   with no target. The same holds for an `agents` folder that is not there, when the nearest part
   of its path that exists is out of the repository. An agent file with no frontmatter block
-  declares no server. An agent file with a block that does not parse is skipped by Claude Code. The rule still makes no report, because its
-  YAML parser can differ from the parser of Claude Code.
+  declares no server. An agent file with a block that does not parse is skipped by Claude Code.
+  The rule still makes no report, because its YAML parser can differ from the parser of Claude
+  Code.
 - In a plugin: a `.mcp.json` that cannot be read, and each string in `mcpServers` that leads to no
   `.json` file that reads, such as a `.mcpb` bundle, a URL or a file that is not there.
 

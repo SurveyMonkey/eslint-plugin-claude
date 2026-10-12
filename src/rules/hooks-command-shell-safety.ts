@@ -53,7 +53,8 @@ function quoteEnd(text: string, start: number): number {
  *  parenthesis in quotes, after a backslash or in a comment does not count. */
 function closingParen(text: string, open: number): number {
   let depth = 0
-  // The open `${` expansions, and the index of the last character after a backslash.
+  // The open `${` expansions, the index of the last character after a backslash, and whether a
+  // backtick substitution is open.
   let braces = 0
   let escaped = -1
   let tick = false
