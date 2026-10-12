@@ -1210,6 +1210,8 @@ describe('the group comment path for tracked blocks', () => {
       [{ sections: [{ section: 'Hooks', rules: [] }] }, 'a section with no rules'],
       [{ sections: [{ section: 'Hooks', rules: 'a' }] }, 'a section with no rules'],
       [{ sections: [{ section: 'Hooks', rules: ['a b'] }] }, 'a rule ID that is not valid'],
+      // A number whose text is a valid rule ID: only the type check refuses it.
+      [{ sections: [{ section: 'Hooks', rules: [7] }] }, 'a rule ID that is not valid'],
       [{ sections: [{ section: 'Hooks', rules: ['a', 'a'] }] }, 'or twice'],
     ]
     for (const [fields, message] of bad) {
