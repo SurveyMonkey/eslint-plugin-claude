@@ -325,7 +325,65 @@ describe(`${name}: frontmatter`, () => {
     expect(yaml('Stop: 1\n')).toEqual(['eventNotArray'])
     expect(yaml('Stop: true\n')).toEqual(['eventNotArray'])
     expect(yaml('Stop:\n')).toEqual(['eventNotArray'])
-    expect(yaml('Stop: &a []\nSessionEnd: *a\n')).toEqual(['eventNotArray'])
+  })
+
+  it('reads an alias as the node that it names', () => {
+    expect(yaml('Stop: &a []\nSessionEnd: *a\n')).toEqual([])
+    const list =
+      'PreToolUse: &p\n  - matcher: Bash\n    hooks:\n      - type: command\n        command: ./a.sh\n'
+    expect(yaml(`${list}PostToolUse: *p\n`)).toEqual([])
+    expect(yaml('Stop: &a x\nSessionEnd: *a\n')).toEqual(['eventNotArray', 'eventNotArray'])
+    expect(yaml('Stop: &a { k: 1 }\nSessionEnd: *a\n')).toEqual(['eventNotArray', 'eventNotArray'])
+    expect(yaml('Stop:\n  - hooks:\n      - &h { type: script }\n      - *h\n')).toEqual([
+      'typeInvalid',
+      'typeInvalid',
+    ])
+    expect(yaml('Stop: &a [x]\nSessionEnd: *a\n')).toEqual(['groupNotObject', 'groupNotObject'])
+  })
+
+  it('reports at the alias, and at the anchor for a fault inside the named node', () => {
+    const text = 'Stop: &a x\nSessionEnd: *a\n'
+    const found = lintMarkdown(name, frontmatter(text), FILES.skill)
+    expect(found.map(({ line, column }) => [line, column])).toEqual([
+      [5, 12],
+      [6, 15],
+    ])
+    const inner = 'Stop:\n  - hooks: &h [ { type: script } ]\nSessionEnd:\n  - hooks: *h\n'
+    const innerFound = lintMarkdown(name, frontmatter(inner), FILES.skill)
+    expect(innerFound.map(({ line, column }) => [line, column])).toEqual([
+      [6, 27],
+      [6, 27],
+    ])
+  })
+
+  it('reads an alias that names an ancestor as a node no rule reads, and is silent for an unknown anchor', () => {
+    expect(yaml('Stop: &a [*a]\n')).toEqual(['groupNotObject'])
+    expect(yaml('Stop: &a { k: *a }\n')).toEqual(['eventNotArray'])
+    expect(yaml('Stop: *missing\n')).toEqual([])
+  })
+
+  it('stops after a number of aliases, and does not expand a nest of them', () => {
+    const levels = Array.from({ length: 12 }, (_, i) => {
+      const refs = Array.from({ length: 10 }, () => `*l${i}`).join(', ')
+      return `l${i + 1}: &l${i + 1} [${refs}]\n`
+    })
+    const start = Date.now()
+    expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l12\n`)).toContain('eventNotArray')
+    expect(Date.now() - start).toBeLessThan(5000)
+  })
+
+  it('makes no report on an object that holds a merge key, as no docs page says what it means', () => {
+    const base = 'Stop:\n  - hooks:\n      - &base { type: command, command: ./a.sh }\n'
+    expect(yaml(`${base}      - <<: *base\n        timeout: x\n`)).toEqual(['fieldType'].slice(1))
+    expect(yaml(`${base}      - { <<: *base, type: script }\n`)).toEqual([])
+    expect(yaml('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n')).toEqual([])
+    expect(yaml('<<: { Stop: x }\nSessionEnd: x\n')).toEqual([])
+    expect(yaml('Stop: { <<: { k: 1 } }\n')).toEqual([])
+    expect(
+      yaml(
+        'Stop:\n  - hooks:\n      - { type: command, command: a, input: { <<: { k: 1 } } }\n      - { type: script }\n',
+      ),
+    ).toEqual(['typeInvalid'])
   })
 
   it('skips a key that is not a string', () => {
