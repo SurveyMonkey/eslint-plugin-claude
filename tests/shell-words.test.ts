@@ -250,6 +250,31 @@ describe('scanCommands', () => {
       ['rm', 'w'],
     ])
     expect(commandsOf('echo "$(a$#)" "$(a #b')).toEqual([['echo', '$(a$#)', '$(a #b']])
+    expect(commandsOf(`echo "$(# it's\n)" "$(a;# '\n)" "$(b|# '\n)" "$(c&# '\n)"; rm z`)).toEqual([
+      ['echo', `$(# it's\n)`, `$(a;# '\n)`, `$(b|# '\n)`, `$(c&# '\n)`],
+      ['rm', 'z'],
+    ])
+  })
+
+  it('reads a # right after a substitution as part of the word', () => {
+    expect(commandsOf('echo $(date)#x; rm -rf y')).toEqual([
+      ['echo', '$'],
+      ['date'],
+      ['#x'],
+      ['rm', '-rf', 'y'],
+    ])
+    expect(commandsOf('echo `date`#x; rm -rf y')).toEqual([
+      ['echo'],
+      ['date'],
+      ['#x'],
+      ['rm', '-rf', 'y'],
+    ])
+    expect(commandsOf('echo "$(echo $(date)#x)"; rm -rf y')).toEqual([
+      ['echo', '$(echo $(date)#x)'],
+      ['rm', '-rf', 'y'],
+    ])
+    // A `)` that closes a subshell ends a word, so a `#` after it starts a comment.
+    expect(commandsOf('(a)#b\nc')).toEqual([['a'], ['c']])
   })
 
   it('reads a # as a comment only where a word starts, and outside quotes', () => {
