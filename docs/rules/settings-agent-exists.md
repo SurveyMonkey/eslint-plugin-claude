@@ -53,6 +53,7 @@ The rule makes no report when it cannot see an agent. It makes no report in thes
 - A link leads out of the repository.
 - The project folder is a link that leads out of the repository.
 - A link in place of `.claude` or `agents/` has no target.
+- A link in `agents/`, at any depth, has no target.
 - The rule cannot read a folder or an agent file.
 
 An agent in a user folder (`~/.claude/agents/`) or in a plugin is not in the repository. Name such

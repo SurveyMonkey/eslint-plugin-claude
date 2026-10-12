@@ -62,7 +62,7 @@ above the scope that has a `.git` entry. Without one, it is the scope. The rule 
 that rests on a file that it cannot read. It makes no report in these cases:
 
 - It cannot list `commands/`.
-- A link in `commands/` leads out of the repository.
+- A link in `commands/` leads out of the repository, or has no target.
 - It cannot read a skill or command file.
 - The manifest of the plugin is unreadable, or has a `skills` key.
 

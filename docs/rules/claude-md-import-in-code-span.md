@@ -74,11 +74,18 @@ Follow @docs/style.md for the code style.
 
 ## Usage
 
-Put the rule in `rules`, in the config block that extends `claude/recommended`. See
-[Usage](../../README.md#usage) in the README.
+The rule does not compare the path of a file with its globs. An entry in the block that extends
+`claude/recommended` applies to each Markdown file that the config lints. So give the rule its
+files in a block of its own. See [Usage](../../README.md#usage) in the README.
 
 ```js
-'claude/claude-md-import-in-code-span': 'warn'
+export default defineConfig([
+  { plugins: { claude }, extends: ['claude/recommended'] },
+  {
+    files: ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md'],
+    rules: { 'claude/claude-md-import-in-code-span': 'warn' },
+  },
+])
 ```
 
 ## Sources

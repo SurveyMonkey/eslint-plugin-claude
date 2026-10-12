@@ -78,6 +78,11 @@ gives `OTEL_LOG_MANAGED_SETTINGS` the same exception. The docs name none, and an
 changes nothing. The other OpenTelemetry variables get a report
 for each value, and so does a value that is not a string.
 
+`CLAUDE_CODE_ENABLE_CFC` set to `1` turns Chrome integration on. Claude Code ignores that value in
+project and local settings, so a repository cannot connect Claude to your browser.[^chrome] The
+rule reports the value `1` in those files. The docs name no other value, so the rule makes
+no report on one. Examples are `0`, `true`, and a value that is not a string.
+
 ### Removed variables
 
 These variables have no effect. Claude Code removed them, or accepts them for compatibility:[^vars]
@@ -146,3 +151,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^ignored]: [All settings: Variables Claude Code ignores in env](https://code.claude.com/docs/en/settings-reference#variables-claude-code-ignores-in-env)
 [^vars]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)
+[^chrome]: [Use Claude Code with Chrome: Project settings can’t turn on Chrome](https://code.claude.com/docs/en/chrome#project-settings-can’t-turn-on-chrome)

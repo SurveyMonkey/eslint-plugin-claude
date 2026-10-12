@@ -72,22 +72,15 @@ modified: 2026-10-14T09:30:00Z
 
 ## Usage
 
-The `recommended` config configures no file that this rule checks. Add a block that gives the
-files and the language of the rule:
+The rule does not compare the path of a file with its globs. An entry in the block that extends
+`claude/recommended` applies to each Markdown file that the config lints. So give the rule its
+files in a block of its own. See [Usage](../../README.md#usage) in the README.
 
 ```js
-// eslint.config.js
-import { defineConfig } from 'eslint/config'
-import markdown from '@eslint/markdown'
-import claude from 'eslint-plugin-claude'
-
 export default defineConfig([
   { plugins: { claude }, extends: ['claude/recommended'] },
   {
     files: ['**/.claude/agent-memory/*/*.md'],
-    plugins: { claude, markdown },
-    language: 'markdown/gfm',
-    languageOptions: { frontmatter: 'yaml' },
     rules: { 'claude/memory-topic-frontmatter': 'warn' },
   },
 ])

@@ -143,6 +143,23 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
         PROJECT_FILES.map((filename) => ({ code: env({ [name]: value }), filename })),
       ),
     ),
+    // "Claude Code ignores 1 in project and local settings". The docs name no other value,
+    // so the rule is silent on one, and on any value in a managed file. A value that is not a
+    // string is for `settings-env-value-format`.
+    ...['0', '', 'true', ' 1', '10'].flatMap((value) =>
+      PROJECT_FILES.map((filename) => ({
+        code: env({ CLAUDE_CODE_ENABLE_CFC: value }),
+        filename,
+      })),
+    ),
+    ...MANAGED_FILES.map((filename) => ({
+      code: env({ CLAUDE_CODE_ENABLE_CFC: '1' }),
+      filename,
+    })),
+    ...PROJECT_FILES.map((filename) => ({
+      code: env({ CLAUDE_CODE_ENABLE_CFC: 1 }),
+      filename,
+    })),
     // The variables that the docs do not list stay silent in a project file: the resource
     // attributes and the interval, timeout and compression variables.
     ...PROJECT_FILES.map((filename) => ({
@@ -296,6 +313,20 @@ jsonTester.run('settings-env-ignored-var (invalid)', rule, {
       filename: '.claude/.settings.local.json',
       errors: [{ messageId: 'projectFiles' as const }],
     },
+    // "Claude Code ignores 1 in project and local settings". The report is on the key.
+    ...PROJECT_FILES.map((filename) => ({
+      code: env({ FOO: 'x', CLAUDE_CODE_ENABLE_CFC: '1' }),
+      filename,
+      errors: [
+        {
+          messageId: 'projectFilesValue' as const,
+          data: { name: 'CLAUDE_CODE_ENABLE_CFC', value: '1' },
+          line: 1,
+          column: 19,
+          endColumn: 19 + 'CLAUDE_CODE_ENABLE_CFC'.length + 2,
+        },
+      ],
+    })),
     // Only the values of the docs apply from a project file. Another value is dropped.
     ...SELECTORS.flatMap((name) =>
       ['otlp', 'console', '', 'none,otlp', '0'].map((value) => ({

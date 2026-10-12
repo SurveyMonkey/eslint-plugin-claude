@@ -7,10 +7,22 @@
 //
 // The tree is tolerant: a value of the wrong type is still a node. `hooks-config-schema`
 // reports it. The other rules read `handlersOf`, which gives the handlers of well-formed groups only.
+// A YAML value that no rule can read gives no tree at all (see `fromYaml`).
 import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
-import { isMap, isScalar, isSeq, parseDocument, type YAMLMap } from 'yaml'
+import {
+  type Alias,
+  isAlias,
+  isMap,
+  isScalar,
+  isSeq,
+  type Node,
+  parseDocument,
+  type Scalar,
+  visit,
+  type YAMLMap,
+} from 'yaml'
 import { classifyAgentFile } from './agent-files.ts'
 import {
   type HandlerText,
@@ -34,8 +46,8 @@ export interface HMember {
   value: HNode
 }
 
-/** A value of the config. A node of kind `other` is a value that no rule reads,
- *  such as a YAML alias. */
+/** A value of the config. A node of kind `other` is a value of no JSON type. An example is a
+ *  YAML alias that names its own ancestor. No rule reads into it. */
 export type HNode =
   | { kind: 'object'; loc: Loc; members: HMember[] }
   | { kind: 'array'; loc: Loc; items: HNode[] }
@@ -52,7 +64,8 @@ type SourceKind = 'settings' | 'plugin' | 'skill' | 'agent'
 
 export interface HookSource {
   kind: SourceKind
-  /** The `hooks` value. It is undefined when the file has no `hooks` key. */
+  /** The `hooks` value. It is undefined when the file has no `hooks` key, or when no rule can
+   *  read its YAML (see `fromYaml`). */
   hooks: HNode | undefined
   /** The whole file of a plugin `hooks.json`. Settings and frontmatter give undefined. */
   file: HNode | undefined
@@ -231,44 +244,119 @@ function fromJson(node: ValueNode): HNode {
 
 type At = (start: number, end: number) => Loc
 
-/** The node for a YAML node. A null node has no range, so it takes `fallback`. Any other node has a range. */
-function fromYaml(node: unknown, at: At, fallback: Loc): HNode {
+/** The node that `alias` names: the last node with its anchor before it in `marks`, as
+ *  `Alias.resolve` finds it. `Alias.resolve` with no context reads the whole document for each
+ *  alias, so a long list of aliases is slow. `marks` is the list that the listener finds once. */
+function targetOf(alias: Alias, marks: readonly Node[]): Node | undefined {
+  let target: Node | undefined
+  for (const mark of marks) {
+    if (mark === alias) {
+      break
+    }
+    if (mark.anchor === alias.source) {
+      target = mark
+    }
+  }
+  return target
+}
+
+/** The state of one `fromYaml` walk. `marks` holds each alias and each node with an anchor, in
+ *  document order. `path` holds the nodes that the walk is inside. `aliases` holds the count of
+ *  aliases that the walk can still read. All copies of the context share one `aliases` object, so
+ *  the count applies to the full walk. */
+interface YamlContext {
+  at: At
+  marks: readonly Node[]
+  path: readonly unknown[]
+  aliases: { left: number }
+}
+
+/** The count of aliases that one `hooks` value can read. The parser stops a file that uses an
+ *  anchor more than 100 times, but it counts no alias to an empty list. A nest of such aliases
+ *  multiplies its size at each level, so this limit stops it. An alias to an ancestor uses no
+ *  count. */
+const MAX_ALIASES = 1000
+
+/** The node for a YAML node, or undefined when no rule can read the value. A null node has no range,
+ *  so it takes `fallback`. Any other node has a range.
+ *
+ *  An alias reads as the node that it names. That node takes the location of the alias (`place`). A
+ *  node inside it keeps its own location. An alias that names an ancestor is kind `other`.
+ *
+ *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So an object
+ *  that holds one is undefined. An alias over the limit is undefined too. An undefined node makes
+ *  each object and list around it undefined, up to the whole `hooks` value. A rule that sees part of
+ *  the value can report a fault that is not there. An example is a missing `WorktreeRemove` hook. */
+function fromYaml(
+  node: unknown,
+  context: YamlContext,
+  fallback: Loc,
+  place?: Loc,
+): HNode | undefined {
   // A flow-map entry with a key and no value, such as `{ Stop }`, has a null value node.
   if (node === null) {
     return { kind: 'null', loc: fallback }
   }
+  const { at, path } = context
   const [start, end] = (node as { range: [number, number, number] }).range
-  const loc = at(start, end)
-  if (isMap(node)) {
-    return {
-      kind: 'object',
-      loc,
-      members: node.items.flatMap((pair) => {
-        if (!isScalar(pair.key) || typeof pair.key.value !== 'string') {
-          return []
-        }
-        const [keyStart, keyEnd] = pair.key.range as [number, number, number]
-        const keyLoc = at(keyStart, keyEnd)
-        return [{ key: pair.key.value, keyLoc, value: fromYaml(pair.value, at, keyLoc) }]
-      }),
+  const loc = place ?? at(start, end)
+  if (isAlias(node)) {
+    const target = targetOf(node, context.marks)
+    if (path.includes(target)) {
+      return { kind: 'other', loc }
     }
+    // The type of `target` includes undefined. `readFrontmatter` gives no result for an alias with
+    // no anchor before it, so this walk does not see one.
+    return target === undefined || context.aliases.left-- <= 0
+      ? undefined
+      : fromYaml(target, context, fallback, loc)
+  }
+  const inside = { ...context, path: [...path, node] }
+  if (isMap(node)) {
+    // A quoted `<<` is an ordinary key, and not a merge key.
+    const merge = node.items.some(
+      ({ key }) => isScalar(key) && key.type === 'PLAIN' && key.value === '<<',
+    )
+    if (merge) {
+      return undefined
+    }
+    const members: HMember[] = []
+    for (const pair of node.items) {
+      // An alias key reads as the string that it names, at the location of the alias.
+      const key = isAlias(pair.key) ? targetOf(pair.key, context.marks) : pair.key
+      if (!isScalar(key) || typeof key.value !== 'string') {
+        continue
+      }
+      const [keyStart, keyEnd] = (pair.key as Node).range as [number, number, number]
+      const keyLoc = at(keyStart, keyEnd)
+      const value = fromYaml(pair.value, inside, keyLoc)
+      if (value === undefined) {
+        return undefined
+      }
+      members.push({ key: key.value, keyLoc, value })
+    }
+    return { kind: 'object', loc, members }
   }
   if (isSeq(node)) {
-    return { kind: 'array', loc, items: node.items.map((item) => fromYaml(item, at, loc)) }
-  }
-  if (isScalar(node)) {
-    const value = node.value
-    if (typeof value === 'string') {
-      return { kind: 'string', loc, value }
+    const items: HNode[] = []
+    for (const item of node.items) {
+      const value = fromYaml(item, inside, loc)
+      if (value === undefined) {
+        return undefined
+      }
+      items.push(value)
     }
-    if (typeof value === 'number') {
-      return { kind: 'number', loc, value }
-    }
-    // The core schema of the parser reads a scalar as a string, a number, a Boolean or null.
-    return typeof value === 'boolean' ? { kind: 'boolean', loc, value } : { kind: 'null', loc }
+    return { kind: 'array', loc, items }
   }
-  // An alias.
-  return { kind: 'other', loc }
+  const value = (node as Scalar).value
+  if (typeof value === 'string') {
+    return { kind: 'string', loc, value }
+  }
+  if (typeof value === 'number') {
+    return { kind: 'number', loc, value }
+  }
+  // The core schema of the parser reads a scalar as a string, a number, a Boolean or null.
+  return typeof value === 'boolean' ? { kind: 'boolean', loc, value } : { kind: 'null', loc }
 }
 
 /** The kind of a frontmatter file that can hold hooks, or null. A skill is a `SKILL.md`
@@ -321,11 +409,20 @@ export function hooksListener(
         return
       }
       // `readFrontmatter` gives a result only when the YAML is a mapping.
-      const contents = parseDocument(node.value).contents as YAMLMap
-      const value = contents.get('hooks', true)
+      const doc = parseDocument(node.value)
+      const value = (doc.contents as YAMLMap).get('hooks', true)
+      const marks: Node[] = []
+      visit(doc, {
+        Node: (_key, mark) => {
+          if (isAlias(mark) || mark.anchor !== undefined) {
+            marks.push(mark)
+          }
+        },
+      })
+      const walk = { at: fm.at, marks, path: [], aliases: { left: MAX_ALIASES } }
       check({
         kind,
-        hooks: value === undefined ? undefined : fromYaml(value, fm.at, fm.at(0, 0)),
+        hooks: value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0)),
         file: undefined,
       })
     },

@@ -59,6 +59,17 @@ describe(RULE, () => {
     expect(lint(dir, MANIFEST, code).map((m) => m.message)).toEqual([message('gone')])
   })
 
+  // Claude Code 2.1.246 and later loads a plugin.json that starts with a byte order mark.
+  check('reads the keys of a plugin.json that starts with a byte order mark', () => {
+    const manifest = `\u{FEFF}${JSON.stringify({ name: 'p', skills: './extra' })}`
+    const { dir } = pluginTree(manifest, { 'extra/deploy/SKILL.md': SKILL() })
+    const code = (skill: string) => JSON.stringify([monitor(invoke(skill))])
+    expect(lint(dir, 'monitors/monitors.json', code('deploy'))).toEqual([])
+    expect(lint(dir, 'monitors/monitors.json', code('gone')).map((m) => m.message)).toEqual([
+      message('gone'),
+    ])
+  })
+
   check('reports a name in monitors/monitors.json', () => {
     const { dir } = pluginTree({ name: 'p' })
     const code = JSON.stringify([monitor(invoke('gone'))])
@@ -298,6 +309,17 @@ describe(`${RULE} (silent)`, () => {
     const elsewhere = tree({ 'SKILL.md': SKILL('deploy') }, false)
     const { dir, code, top } = pluginTree({ name: 'p', monitors: [monitor(invoke('deploy'))] })
     link(top, 'skills/x/SKILL.md', path.join(elsewhere, 'SKILL.md'))
+    expect(lint(dir, MANIFEST, code)).toEqual([])
+  })
+
+  // A dangling link can lead anywhere, so the command can be behind it (ADR 001, Decision 14).
+  linked('stays silent for a commands folder that holds a link with no target', () => {
+    const { dir, code, top } = pluginTree(
+      { name: 'p', monitors: [monitor(invoke('deploy'))] },
+      { 'commands/other.md': '' },
+    )
+    expect(lint(dir, MANIFEST, code).map((m) => m.message)).toEqual([message('deploy')])
+    link(top, 'commands/deploy.md', 'ghost.md')
     expect(lint(dir, MANIFEST, code)).toEqual([])
   })
 

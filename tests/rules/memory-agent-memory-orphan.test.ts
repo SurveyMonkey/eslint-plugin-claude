@@ -120,6 +120,17 @@ describe(`${RULE}: what the rule cannot read`, () => {
     expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
   })
 
+  // A dangling link can lead anywhere, so the subagent can be behind it (ADR 001, Decision 14).
+  it.skipIf(noLinks)('makes no report when a link in the repository has no target', () => {
+    const dir = tree({ '.claude/agents/other.md': agent('other') })
+    expect(ids(lintMemory(RULE, dir, FILE, '# Memory\n'))).toEqual(['orphan'])
+    link(dir, '.claude/agents/rev.md', 'missing.md')
+    expect(lintMemory(RULE, dir, FILE, '# Memory\n')).toEqual([])
+    const shared = tree({ '.claude/agents/other.md': agent('other') })
+    link(shared, '.claude/agents/team', '../../missing-team')
+    expect(lintMemory(RULE, shared, FILE, '# Memory\n')).toEqual([])
+  })
+
   it.skipIf(noLinks)('reads a subagent behind a link inside the repository', () => {
     const dir = tree({ 'real/agents/x.md': agent('rev'), 'real/.claude-plugin/plugin.json': '{}' })
     link(dir, 'alias', 'real')

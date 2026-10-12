@@ -106,21 +106,15 @@ Pass:
 
 ## Usage
 
-The `recommended` config configures `.mcp.json` and `plugin.json`, but not
-`managed-mcp.json`. To check all three files, add a block that gives the files and the language of the rule:
+The rule does not compare the path of a file with its globs. An entry in the block that extends
+`claude/recommended` applies to each JSON file that the config lints. So give the rule its
+files in a block of its own. See [Usage](../../README.md#usage) in the README.
 
 ```js
-// eslint.config.js
-import { defineConfig } from 'eslint/config'
-import json from '@eslint/json'
-import claude from 'eslint-plugin-claude'
-
 export default defineConfig([
   { plugins: { claude }, extends: ['claude/recommended'] },
   {
     files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
-    plugins: { claude, json },
-    language: 'json/json',
     rules: { 'claude/mcp-no-literal-secrets': 'warn' },
   },
 ])
