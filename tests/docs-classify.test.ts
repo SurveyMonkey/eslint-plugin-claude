@@ -564,9 +564,12 @@ describe('classify', () => {
 
     it('fails, and names the page and the id, for an unsafe id (#35)', async () => {
       const unsafe = HTML.replace('<h2 id="where-skills-live">', '<h2 id="where -->">')
-      await expect(classifyHtml(where, ['Choose where skills load'], unsafe)).rejects.toThrow(
-        new RegExp(`^${SKILLS}: line \\d+ has an HTML heading id that is not safe: "where -->"$`),
+      const error = await classifyHtml(where, ['Choose where skills load'], unsafe).then(
+        () => '',
+        (thrown: Error) => thrown.message,
       )
+      expect(error.startsWith(`${SKILLS}: line `)).toBe(true)
+      expect(error).toMatch(/: line \d+ has an HTML heading id that is not safe: "where -->"$/)
     })
   })
 

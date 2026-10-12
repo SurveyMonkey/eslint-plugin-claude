@@ -780,8 +780,8 @@ describe('update and check on a temporary tree', () => {
     expect(checked.code).toBe(1)
     const [error, ...rest] = JSON.parse(checked.out).errors as string[]
     expect(rest).toEqual([])
-    expect(error).toMatch(new RegExp(`^${URL_}: line \\d+ has an HTML heading id that is not safe`))
-    expect(error).toMatch(/: "hooks -->"$/)
+    expect(error?.startsWith(`${URL_}: line `)).toBe(true)
+    expect(error).toMatch(/: line \d+ has an HTML heading id that is not safe: "hooks -->"$/)
   })
 
   it('check exits 1 for a map hash that is not the snapshot hash (#35)', async () => {
