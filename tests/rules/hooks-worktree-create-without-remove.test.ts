@@ -120,6 +120,17 @@ describe(`${name}: a merge key`, () => {
         `${createYaml}WorktreeRemove:\n  - hooks:\n      - { type: command, command: ./r.sh, input: { <<: { a: 1 } } }\n`,
       ),
     ).toEqual([])
+    // One group or one handler that holds a merge key is sufficient, next to an item that is not.
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - <<: { hooks: [] }\n  - x\n`)).toEqual([])
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - <<: *c\n      - x\n`)).toEqual(
+      [],
+    )
+  })
+
+  it('reports when a handler item is a list that holds a merge key, as a list is no handler', () => {
+    expect(yaml(`${createYaml}WorktreeRemove:\n  - hooks:\n      - [ { <<: *c } ]\n`)).toEqual([
+      'noRemove',
+    ])
   })
 
   it('reports when the WorktreeRemove value or its handler list is a map with a merge key', () => {
