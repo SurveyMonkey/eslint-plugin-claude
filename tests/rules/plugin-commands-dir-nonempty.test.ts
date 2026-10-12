@@ -135,10 +135,10 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
   })
 
-  linked('reports a directory with a link without a target that is not Markdown', () => {
+  linked('stays silent for a directory with a link without a target that is not Markdown', () => {
     const { dir, code } = pluginTree({ name: 'p', commands: './cmds' }, { 'cmds/.gitkeep': '' })
     link(dir, 'cmds/notes.txt', 'ghost.txt')
-    expect(lint(dir, code).map((m) => m.message)).toEqual([message('./cmds')])
+    expect(lint(dir, code).map((m) => m.message)).toEqual([])
   })
 
   check.each([

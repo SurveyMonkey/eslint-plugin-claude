@@ -1,7 +1,12 @@
 // An `env` variable that a settings file cannot set
 // (docs/rules/settings-env-ignored-var.md). The lists are in `src/data/settings-env.ts`.
 import type { JSONRuleDefinition } from '@eslint/json'
-import { envIgnoredIn, removedEnvVarSince, turnsTelemetryOff } from '../data/settings-env.ts'
+import {
+  envIgnoredIn,
+  ignoresValueInProjectFiles,
+  removedEnvVarSince,
+  turnsTelemetryOff,
+} from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -11,7 +16,7 @@ const name = 'settings-env-ignored-var' as const
 
 const rule: JSONRuleDefinition<{
   RuleOptions: []
-  MessageIds: 'everyFile' | 'projectFiles' | 'removed'
+  MessageIds: 'everyFile' | 'projectFiles' | 'projectFilesValue' | 'removed'
 }> = {
   meta: {
     type: 'problem',
@@ -24,6 +29,8 @@ const rule: JSONRuleDefinition<{
       everyFile: 'Claude Code ignores "{{name}}" in the env block of every settings file.',
       projectFiles:
         'Claude Code ignores "{{name}}" in the env block of a project or local settings file. Set it in your shell, user settings, or managed settings.',
+      projectFilesValue:
+        'Claude Code ignores "{{name}}" set to "{{value}}" in the env block of a project or local settings file. Set it in your shell, user settings, or managed settings.',
       removed: 'Claude Code ignores "{{name}}" since v{{since}}. The variable has no effect.',
     },
   },
@@ -64,6 +71,16 @@ const rule: JSONRuleDefinition<{
               node: member.name,
               messageId: 'projectFiles',
               data: { name: variable },
+            })
+          } else if (
+            isProjectFile &&
+            value.type === 'String' &&
+            ignoresValueInProjectFiles(variable, value.value)
+          ) {
+            context.report({
+              node: member.name,
+              messageId: 'projectFilesValue',
+              data: { name: variable, value: value.value },
             })
           }
         }

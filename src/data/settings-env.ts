@@ -4,7 +4,7 @@
 // (https://code.claude.com/docs/en/settings-reference#variables-claude-code-ignores-in-env),
 // and the server-managed settings page
 // (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
-// checked on Claude Code 2.1.295 on 2026-10-08. Review these lists on or before 2027-04-08,
+// checked on Claude Code 2.1.296 on 2026-10-11. Review these lists on or before 2027-04-08,
 // the `stale_after` date of docs/rules/settings-env-credential.md.
 
 /** The variables that hold an authentication credential. Rows of the env vars reference:
@@ -279,6 +279,13 @@ const REMOVED_ENV_VARS = new Map<string, string>([
   ['CLAUDE_CODE_AUTO_BACKGROUND_WORKER_CHECKIN_SECONDS', '2.1.283'],
 ])
 
+/** The variables that Claude Code ignores in project and local settings for some values only,
+ *  and those values. The env vars reference says that Claude Code ignores `1` for
+ *  `CLAUDE_CODE_ENABLE_CFC`. The docs name no other value, so the match is exact. */
+const IGNORED_VALUES_IN_PROJECT_FILES = new Map<string, readonly string[]>([
+  ['CLAUDE_CODE_ENABLE_CFC', ['1']],
+])
+
 /** The files that Claude Code ignores the variable `name` in: every settings file, or the
  *  project and local files. It is undefined for a variable that a settings file may set. */
 export function envIgnoredIn(name: string): 'every-file' | 'project-files' | undefined {
@@ -298,6 +305,12 @@ export function turnsTelemetryOff(name: string, value: string): boolean {
   return TELEMETRY_OFF_VALUES.get(name)?.includes(value.toLowerCase()) ?? false
 }
 
+/** True when the docs say that Claude Code ignores the value `value` of the variable `name` in a
+ *  project or local file. */
+export function ignoresValueInProjectFiles(name: string, value: string): boolean {
+  return IGNORED_VALUES_IN_PROJECT_FILES.get(name)?.includes(value) ?? false
+}
+
 /** The Claude Code version from which the variable `name` has no effect, if it is removed. */
 export function removedEnvVarSince(name: string): string | undefined {
   return REMOVED_ENV_VARS.get(name)
@@ -307,7 +320,7 @@ export function removedEnvVarSince(name: string): string | undefined {
 // (https://code.claude.com/docs/en/prompt-caching#disable-prompt-caching) and the server-managed
 // settings page
 // (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
-// checked on Claude Code 2.1.296 on 2026-10-10.
+// checked on Claude Code 2.1.296 on 2026-10-11.
 
 /** A variable that Claude Code keeps for compatibility, and what to say about it. `summary`
  *  finishes a sentence that starts with the variable name. `value` is set when only that value is

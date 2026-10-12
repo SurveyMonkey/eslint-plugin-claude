@@ -46,9 +46,9 @@ The rule makes no report in these cases:
   `.claude-plugin/`, of `plugin.json` or of the directory can be out of the repository. The manifest
   can fail to parse. The rule can fail to list the directory or a subdirectory. A part of the path
   can be a link with no target.
-- A `.md` link in the directory can lead out of the repository, or can have no target. The rule
-  follows a link to a folder once, as the scan does, and skips `.git` and `node_modules`. It
-  cannot see a `.md` link with no target in a folder that it follows.
+- A link in the directory can lead out of the repository, or can have no target. A link with no
+  target can lead to a command, whatever its name. The rule looks in each folder at any depth. It
+  follows a link to a folder once, and skips `.git` and `node_modules`.
 - The plugin has no `commands` key. The rule does not check the default `commands/` directory.
 
 Fail: `"commands": "./cmds"` with only `cmds/.gitkeep` in the directory.
