@@ -47,8 +47,10 @@ reads only an exact-match value, so a regular expression gets no report.
 The agent and server checks rest on an absence, so they read inside the repository only (ADR 001, Decision 14).
 The rule makes no report for a kind of name when it cannot read one source of that kind. These cases count: a
 folder or a file with no read access, a link that leads out of the repository, a link with no target in the
-agents folder (an agent can hide behind it), and a `.mcp.json` that does not parse. The rule also makes no report when the repository has no agent
-file or no `.mcp.json`, because a user-level agent or a user-scope server can fill the gap.
+agents folder (an agent can hide behind it), and a `.mcp.json` that does not parse. An agents folder that is not
+there also counts. That occurs when the nearest part of its path that exists is out of the repository. The rule
+also makes no report when the repository has no agent file or no `.mcp.json`. A user-level agent or a user-scope
+server can fill the gap.
 
 The rule is `off` in `recommended`, because it is a heuristic. A user-level agent in `~/.claude/agents/`, a server
 in `~/.claude.json` and a tool of a newer Claude Code are outside the repository. The option `allow` lists such names.

@@ -106,7 +106,9 @@ function agentNameOf(fields: Record<string, unknown> | null): string | undefined
 
 /** The `name` of each agent file in `.claude/agents/` of `project` and of each folder above it. The result is
  *  undefined when a path cannot be read, when a link with no target can hide an agent, or when no agent file
- *  exists. */
+ *  exists. It is also undefined when a scan meets a link out of the repository. An agents folder that is not
+ *  there also gives undefined. That occurs when the nearest part of its path that exists is out of the
+ *  repository. */
 function agentNames(project: string, claude: string): string[] | undefined {
   const top = repositoryRoot(project)
   const bound = repositoryRoot(claude)

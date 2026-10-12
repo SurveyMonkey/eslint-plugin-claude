@@ -49,6 +49,8 @@ The rule makes no report in these cases:
   another folder match none.
 - The rule cannot read a file that may answer to the name. This includes an unreadable file, a
   link to nothing, a link out of the repository, and a `skills/` folder that is a link to nothing.
+  It also includes a `commands/` folder that is not there. That occurs when the nearest part of
+  its path that exists is out of the repository.
 - The file that answers to the name has frontmatter that does not parse. The rule reads it as a
   file that Claude can invoke.
 - Two files answer to the name, and one of them is not manual only.

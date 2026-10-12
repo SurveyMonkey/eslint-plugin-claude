@@ -35,6 +35,8 @@ put('outer/.claude/agents/outer.md', agentFile('outer'))
 put('outer/repo/.git/HEAD', '')
 put('outer/repo/.claude/agents/inrepo.md', agentFile('inrepo'))
 put('free/.claude/agents/free.md', agentFile('free'))
+// The skill file is there, so `.claude/` has a real path, as it has in use.
+put('free/deep/.claude/skills/s/SKILL.md', '# S\n')
 // A manifest with a `name` that is not a string, and one that does not parse.
 put('numeric/.claude-plugin/plugin.json', '{"name": 3}')
 put('numeric/agents/a.md', agentFile('a'))
@@ -495,8 +497,10 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
   })
 })
 
-// A project directory that is a link to a target out of the repository. The walk goes up the
-// path of the link, and stops at the repository that holds the link.
+// A project directory that is a link to a target out of the repository. The folder
+// `.claude/agents/` below the link is not there. The nearest part of its path that exists is out
+// of the repository. The rule cannot see the folder (ADR 001, Decision 14). So it makes no
+// report, whatever agent the field names.
 describe.skipIf(process.platform === 'win32')('a project directory that is a link', () => {
   const file = (() => {
     put('lnkwrap/repo/.git/HEAD', '')
@@ -506,15 +510,30 @@ describe.skipIf(process.platform === 'win32')('a project directory that is a lin
     symlinkSync('../../lnkproj-target', path.join(scratch, 'lnkwrap/repo/app'))
     return path.join(scratch, 'lnkwrap', 'repo', 'app', '.claude', 'skills', 's', 'SKILL.md')
   })()
-  // The walk must reach the agents of the repository that holds the link.
-  it('sees the agents above the link, up to the repository', () => {
-    expect(lintMarkdown('skill-agent-exists', fork('above-agent'), file)).toEqual([])
+  it('stays silent for each agent name, because the agents folder of the link is unseen', () => {
+    for (const agent of ['ghost', 'above-agent', 'beyond-agent']) {
+      expect(lintMarkdown('skill-agent-exists', fork(agent), file), agent).toEqual([])
+    }
   })
-  it('does not see the agents above the repository', () => {
-    expect(lintMarkdown('skill-agent-exists', fork('beyond-agent'), file)).toHaveLength(1)
-  })
-  it('reports a missing agent', () => {
-    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toHaveLength(1)
+})
+
+// A project `.claude/` that is a link out of the repository, with no `agents` folder in the
+// target. The folder is not there, and the nearest part of its path that exists is out of the
+// repository.
+describe.skipIf(process.platform === 'win32')('a .claude link out of the repository', () => {
+  it('stays silent when .claude is a link out of the repository, and reports when .claude is in it', () => {
+    put('lnkout/repo/.git/HEAD', '')
+    put('lnkout/target/skills/s/SKILL.md', '# S\n')
+    symlinkSync('../target', path.join(scratch, 'lnkout/repo/.claude'))
+    const file = path.join(scratch, 'lnkout', 'repo', '.claude', 'skills', 's', 'SKILL.md')
+    expect(lintMarkdown('skill-agent-exists', fork('ghost'), file)).toEqual([])
+    // The same tree with a real `.claude` folder: the agents folder is not there, and the report holds.
+    put('lnkin/repo/.git/HEAD', '')
+    put('lnkin/repo/.claude/skills/s/SKILL.md', '# S\n')
+    const inside = path.join(scratch, 'lnkin', 'repo', '.claude', 'skills', 's', 'SKILL.md')
+    expect(
+      lintMarkdown('skill-agent-exists', fork('ghost'), inside).map((m) => m.messageId),
+    ).toEqual(['project'])
   })
 })
 

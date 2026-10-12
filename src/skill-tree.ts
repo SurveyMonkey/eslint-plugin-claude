@@ -51,7 +51,7 @@ export function statOf(file: string): Stats | null | Unreadable {
 /** The text of `file`, null when it is not there, or `UNREADABLE`. A path
  *  that is not a regular file, such as a FIFO, a socket or a device, gives
  *  `UNREADABLE`. A read of a FIFO can wait for a writer, and stop the lint run. */
-function textOf(file: string): string | null | Unreadable {
+export function textOf(file: string): string | null | Unreadable {
   const stat = statOf(file)
   if (!(stat instanceof Stats)) {
     return stat
@@ -145,9 +145,13 @@ function frontmatterOf(text: string): Record<string, unknown> | null {
 export const SKIPPED = new Set(['.git', 'node_modules'])
 
 /** The `.md` files of a scan. `outside` is true when the scan did not follow
- *  a link because its target is out of the bound. `unreadable` is true when
- *  the scan could not read a directory or a link, or met a dangling link. A
- *  dangling link can lead anywhere, so a file can be behind it. */
+ *  a link because its target is out of the bound. It is also true for a `dir`
+ *  that is not there. That occurs when the real path of its nearest part that
+ *  exists is out of the bound. The scan cannot see out of the bound, so a
+ *  folder can be there. `unreadable` is true when the scan could not read a
+ *  directory or a link, or met a dangling link. A dangling link can lead
+ *  anywhere, so a file can be behind it. A dangling link in the path of `dir`
+ *  sets `unreadable`, not `outside`. */
 export interface Scan {
   files: string[]
   outside: boolean
@@ -159,9 +163,10 @@ export interface Scan {
  *  directory comes before a link to it. The walk skips `.git` and
  *  `node_modules`. A link to a file counts when the file exists. The result
  *  is empty when `dir` does not exist. When `dir` is a dangling link, or has
- *  one in its path, the scan sets `unreadable`. When the scan cannot read a
- *  directory or a link, or meets a dangling link, it sets `unreadable` and
- *  keeps the files that it found. */
+ *  one in its path, the scan sets `unreadable`. Otherwise it sets `outside` if
+ *  the real path of the nearest part of `dir` that exists is out of `bound`.
+ *  When the scan cannot read a directory or a link, or meets a dangling link,
+ *  it sets `unreadable` and keeps the files that it found. */
 export function markdownFiles(dir: string, bound: string): Scan {
   const scan: Scan = { files: [], outside: false, unreadable: false }
   walk(dir, bound, new Set<string>(), scan)
@@ -175,10 +180,13 @@ function walk(dir: string, bound: string, seen: Set<string>, scan: Scan): void {
     return
   }
   if (real === null) {
-    // A `dir` that is not there is empty. A dangling link in its path can lead anywhere. The
-    // bound is the root of the file system, so `missingOf` does not check the repository bound.
+    // A `dir` that is not there is empty, if its path is in the bound. A dangling link in its
+    // path can lead anywhere. The root of the file system as bound tells a dangling link from a
+    // path out of the bound.
     if (missingOf(dir, path.parse(path.resolve(dir)).root) === UNREADABLE) {
       scan.unreadable = true
+    } else if (missingOf(dir, bound) === UNREADABLE) {
+      scan.outside = true
     }
     return
   }
@@ -354,6 +362,7 @@ export function missingOf(file: string, bound: string): null | Unreadable {
  *  - `UNREADABLE`, when a part of the path is a dangling link.
  *  - `UNREADABLE`, when `file` is not there and its path is out of `bound`.
  *  - `UNREADABLE`, when its real path is out of `bound`.
+ *  - `UNREADABLE`, when a link in the path loses its target during the read.
  *  - `UNREADABLE`, when its real path is not a regular file, such as a FIFO.
  *  - `UNREADABLE`, when a read fails for another reason. */
 export function readJson(file: string, bound: string): { data: unknown } | null | Unreadable {
@@ -368,7 +377,9 @@ export function readJson(file: string, bound: string): { data: unknown } | null 
   }
   const text = textOf(real)
   if (typeof text !== 'string') {
-    return text
+    // `realOf` found a target, so null means that a process removed the target during the read. A
+    // link in the path is still an entry then, and `missingOf` tells it from a file that is gone.
+    return text === null ? missingOf(file, bound) : text
   }
   try {
     // Claude Code 2.1.246 and later loads a manifest that starts with a byte order mark. A JSON
