@@ -195,11 +195,10 @@ describe(`${name}: a merge key`, () => {
     expect(yaml(merged + sibling)).toEqual(['unlisted'])
   })
 
-  it('lists no variable for an allowedEnvVars item that is a map, as a map is never a name', () => {
-    expect(
-      yaml(
-        '      - { type: http, url: u, headers: { A: $X }, allowedEnvVars: [{ <<: { a: 1 } }] }\n',
-      ),
-    ).toEqual(['unlisted'])
+  it('is silent when an allowedEnvVars item holds a merge key, and reports its sibling', () => {
+    const merged =
+      '      - { type: http, url: u, headers: { A: $X }, allowedEnvVars: [{ <<: { a: 1 } }] }\n'
+    expect(yaml(merged)).toEqual([])
+    expect(yaml(merged + sibling)).toEqual(['unlisted'])
   })
 })

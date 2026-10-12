@@ -202,9 +202,12 @@ describe(`${name}: a merge key`, () => {
     ).toEqual(['ps1'])
   })
 
-  it('reads an args map that holds a merge key as shell form, as a map is never an array', () => {
-    expect(yaml('      - { type: command, command: ./a.ps1, args: { <<: { a: 1 } } }\n')).toEqual([
-      'ps1',
-    ])
+  it('is silent when args or shell holds a merge key, and reports a sibling', () => {
+    const sibling = '      - { type: command, command: ./b.ps1 }\n'
+    for (const field of ['args', 'shell']) {
+      const merged = `      - { type: command, command: ./a.ps1, ${field}: { <<: { a: 1 } } }\n`
+      expect(yaml(merged), field).toEqual([])
+      expect(yaml(merged + sibling), field).toEqual(['ps1'])
+    }
   })
 })

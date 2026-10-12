@@ -462,7 +462,9 @@ export interface HookGroup {
 
 /** The matcher groups of the source, in file order. A value of the wrong shape adds none: an
  *  event whose value is not an array, and a group that is not an object. A group that has no
- *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. */
+ *  `hooks` array is still a group, with no handlers. `hooks-config-schema` reports these. A
+ *  node of kind `unseen` adds none too, and no rule reports it. `handlers` also leaves out each
+ *  handler that holds an `unseen` node, because a rule cannot know how Claude Code runs it. */
 export function groupsOf(source: HookSource): HookGroup[] {
   const { hooks } = source
   if (hooks?.kind !== 'object') {
@@ -487,7 +489,9 @@ export function groupsOf(source: HookSource): HookGroup[] {
             matcher?.kind === 'string' ? { value: matcher.value, loc: matcher.loc } : undefined,
           handlers:
             inner?.kind === 'array'
-              ? inner.items.filter((item): item is HObject => item.kind === 'object')
+              ? inner.items.filter(
+                  (item): item is HObject => item.kind === 'object' && !holdsUnseen(item),
+                )
               : [],
         },
       ]
@@ -497,7 +501,8 @@ export function groupsOf(source: HookSource): HookGroup[] {
 
 /** The handlers of the source, in file order. A value of the wrong shape adds none:
  *  an event whose value is not an array, a group that is not an object or that has no
- *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type. */
+ *  `hooks` array, and a handler that is not an object. `hooks-config-schema` reports these. A handler may still lack a `type` or hold a field of the wrong type.
+ *  A handler that holds a node of kind `unseen` adds none (see `groupsOf`). */
 export function handlersOf(source: HookSource): HookHandler[] {
   return groupsOf(source).flatMap(({ event, matcher, handlers }) =>
     handlers.map((handler) => ({ source, event, matcher: matcher?.value, handler })),
