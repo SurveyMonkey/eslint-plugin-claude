@@ -7,7 +7,8 @@
 //
 // The tree is tolerant: a value of the wrong type is still a node. `hooks-config-schema`
 // reports it. The other rules read `handlersOf`, which gives the handlers of well-formed groups only.
-// A YAML value that no rule can read gives no tree at all (see `fromYaml`).
+// A YAML map that holds a merge key is a node that no rule reads. A YAML value over the alias limit
+// gives no tree at all (see `fromYaml`).
 import path from 'node:path'
 import type { MarkdownSourceCode } from '@eslint/markdown'
 import type { AST, Rule } from 'eslint'
@@ -47,7 +48,8 @@ export interface HMember {
 }
 
 /** A value of the config. A node of kind `other` is a value of no JSON type. An example is a
- *  YAML alias that names its own ancestor. No rule reads into it. */
+ *  YAML alias that names its own ancestor. No rule reads into it. A node of kind `unseen` is a YAML
+ *  map that holds a merge key (`<<`). No rule reads it as a value (see `fromYaml`). */
 export type HNode =
   | { kind: 'object'; loc: Loc; members: HMember[] }
   | { kind: 'array'; loc: Loc; items: HNode[] }
@@ -56,6 +58,7 @@ export type HNode =
   | { kind: 'boolean'; loc: Loc; value: boolean }
   | { kind: 'null'; loc: Loc }
   | { kind: 'other'; loc: Loc }
+  | { kind: 'unseen'; loc: Loc }
 
 export type HObject = Extract<HNode, { kind: 'object' }>
 
@@ -64,9 +67,12 @@ type SourceKind = 'settings' | 'plugin' | 'skill' | 'agent'
 
 export interface HookSource {
   kind: SourceKind
-  /** The `hooks` value. It is undefined when the file has no `hooks` key, or when no rule can
-   *  read its YAML (see `fromYaml`). */
+  /** The `hooks` value. It is undefined when the file has no `hooks` key, or when its YAML is over
+   *  the alias limit (see `fromYaml`). */
   hooks: HNode | undefined
+  /** True when the `hooks` value holds a node of kind `unseen`. A rule whose report rests on an
+   *  absence or a count makes no such report then. */
+  partial: boolean
   /** The whole file of a plugin `hooks.json`. Settings and frontmatter give undefined. */
   file: HNode | undefined
 }
@@ -262,13 +268,15 @@ function targetOf(alias: Alias, marks: readonly Node[]): Node | undefined {
 
 /** The state of one `fromYaml` walk. `marks` holds each alias and each node with an anchor, in
  *  document order. `path` holds the nodes that the walk is inside. `aliases` holds the count of
- *  aliases that the walk can still read. All copies of the context share one `aliases` object, so
- *  the count applies to the full walk. */
+ *  aliases that the walk can still read. `unseen.found` becomes true when the walk gives a node of
+ *  kind `unseen`. All copies of the context share one `aliases` object and one `unseen` object, so
+ *  each applies to the full walk. */
 interface YamlContext {
   at: At
   marks: readonly Node[]
   path: readonly unknown[]
   aliases: { left: number }
+  unseen: { found: boolean }
 }
 
 /** The count of aliases that one `hooks` value can read. The parser stops a file that uses an
@@ -283,10 +291,13 @@ const MAX_ALIASES = 1000
  *  An alias reads as the node that it names. That node takes the location of the alias (`place`). A
  *  node inside it keeps its own location. An alias that names an ancestor is kind `other`.
  *
- *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So an object
- *  that holds one is undefined. An alias over the limit is undefined too. An undefined node makes
- *  each object and list around it undefined, up to the whole `hooks` value. A rule that sees part of
- *  the value can report a fault that is not there. An example is a missing `WorktreeRemove` hook. */
+ *  No page of the Claude Code docs says what Claude Code does with a merge key (`<<`). So a map that
+ *  holds one is a node of kind `unseen`, and the walk does not read into it. Its siblings and the
+ *  nodes around it stay readable. A rule that reads an absence or a count reads `partial` of the
+ *  `HookSource`, because the unseen map can hide the thing that it counts.
+ *
+ *  An alias over the limit is undefined. An undefined node makes each object and list around it
+ *  undefined, up to the whole `hooks` value. */
 function fromYaml(
   node: unknown,
   context: YamlContext,
@@ -318,7 +329,8 @@ function fromYaml(
       ({ key }) => isScalar(key) && key.type === 'PLAIN' && key.value === '<<',
     )
     if (merge) {
-      return undefined
+      context.unseen.found = true
+      return { kind: 'unseen', loc }
     }
     const members: HMember[] = []
     for (const pair of node.items) {
@@ -384,7 +396,7 @@ export function hooksListener(
         if (hooksFileKind(context.filename) === 'plugin') {
           const file = fromJson(body)
           const hooks = file.kind === 'object' ? memberOf(file, 'hooks')?.value : undefined
-          check({ kind: 'plugin', hooks, file })
+          check({ kind: 'plugin', hooks, partial: false, file })
         }
         return
       }
@@ -395,6 +407,7 @@ export function hooksListener(
       check({
         kind: 'settings',
         hooks: member === undefined ? undefined : fromJson(member.value),
+        partial: false,
         file: undefined,
       })
     },
@@ -419,12 +432,15 @@ export function hooksListener(
           }
         },
       })
-      const walk = { at: fm.at, marks, path: [], aliases: { left: MAX_ALIASES } }
-      check({
-        kind,
-        hooks: value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0)),
-        file: undefined,
-      })
+      const walk = {
+        at: fm.at,
+        marks,
+        path: [],
+        aliases: { left: MAX_ALIASES },
+        unseen: { found: false },
+      }
+      const hooks = value === undefined ? undefined : fromYaml(value, walk, fm.at(0, 0))
+      check({ kind, hooks, partial: walk.unseen.found, file: undefined })
     },
   }
   // `Rule.RuleListener` types a node as an ESTree node. These nodes are not.

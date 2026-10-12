@@ -163,6 +163,20 @@ describe(`${name}: frontmatter`, () => {
     expect([found?.line, found?.column]).toEqual([5, 3])
   })
 
+  it('reports a near miss in a file where a handler holds a merge key', () => {
+    const code = frontmatter(
+      'Stop:\n  - hooks:\n      - &base { type: command, command: c }\n      - <<: *base\n        timeout: 5\nSesionStart: []\n',
+    )
+    const found = lintMarkdown(name, code, FILES.skill)
+    expect(found.map(({ messageId, line }) => [messageId, line])).toEqual([['nearMiss', 10]])
+  })
+
+  it('is silent when the hooks value itself holds a merge key', () => {
+    expect(markdownIds(name, frontmatter('<<: { Bogus: [] }\nBogus: []\n'), FILES.skill)).toEqual(
+      [],
+    )
+  })
+
   it('is silent in a plugin subagent, which ignores hooks, and when hooks is not an object', () => {
     expect(markdownIds(name, yamlOf('Bogus'), pluginAgent())).toEqual([])
     expect(markdownIds(name, '---\nname: s\nhooks: x\n---\n', FILES.skill)).toEqual([])

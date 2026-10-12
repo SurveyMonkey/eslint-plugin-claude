@@ -398,23 +398,81 @@ describe(`${name}: frontmatter`, () => {
     expect(yaml(`l0: &l0 []\n${levels.join('')}Stop: *l4\n`)).toEqual([])
   })
 
-  it('makes no report on a hooks value that holds a merge key, as no docs page says what it means', () => {
-    const base = 'Stop:\n  - hooks:\n      - &base { type: command, command: ./a.sh }\n'
+  // No docs page says how Claude Code reads a merge key (`<<`). So the rule reads no map that holds
+  // one, and reads each sibling of that map. Each case gives the report id and the line.
+  const at = (text: string) =>
+    lintMarkdown(name, frontmatter(text), FILES.skill).map(({ messageId, line }) => [
+      messageId,
+      line,
+    ])
+  const merged = '{ <<: { k: 1 } }'
+  const base = 'Stop:\n  - hooks:\n      - &base { type: command, command: ./a.sh }\n'
+
+  it('makes no report on a map that holds a merge key', () => {
     expect(yaml(`${base}      - { type: command, command: ./a.sh, timeout: x }\n`)).toEqual([
       'fieldType',
     ])
     expect(yaml(`${base}      - <<: *base\n        timeout: x\n`)).toEqual([])
     expect(yaml(`${base}      - { <<: *base, type: script }\n`)).toEqual([])
     expect(yaml('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n')).toEqual([])
+    expect(yaml(`Stop: ${merged}\n`)).toEqual([])
+    // Here the `hooks` value itself holds the merge key, so the rule reads no event.
     expect(yaml('<<: { Stop: x }\nSessionEnd: x\n')).toEqual([])
-    // A rule that sees the other events can report a fault that is not there, so the reader reads
-    // none of them.
-    expect(yaml('Stop: { <<: { k: 1 } }\nSessionEnd: x\n')).toEqual([])
+  })
+
+  it('reports a sibling event of an event that holds a merge key', () => {
+    expect(at(`Stop: ${merged}\nSessionEnd: x\n`)).toEqual([['eventNotArray', 6]])
+  })
+
+  it('reports a sibling group of a group that holds a merge key', () => {
+    expect(at('Stop:\n  - <<: { hooks: 1 }\n    matcher: [a]\n  - x\n')).toEqual([
+      ['groupNotObject', 8],
+    ])
+  })
+
+  it('reports a sibling matcher and a sibling handler list of a value that holds a merge key', () => {
     expect(
-      yaml(
-        'Stop:\n  - hooks:\n      - { type: command, command: a, input: { <<: { k: 1 } } }\n      - { type: script }\n',
+      at(`Stop:\n  - matcher: ${merged}\n    hooks: []\n  - matcher: 1\n    hooks: []\n`),
+    ).toEqual([['matcherType', 8]])
+    expect(at(`Stop:\n  - hooks: ${merged}\n  - matcher: a\n`)).toEqual([['handlersMissing', 7]])
+  })
+
+  it('reports a sibling handler of a handler that holds a merge key', () => {
+    expect(at(`${base}      - <<: *base\n        timeout: x\n      - x\n`)).toEqual([
+      ['handlerNotObject', 10],
+    ])
+    expect(
+      at(
+        `${base}      - <<: *base\n        timeout: x\n      - { type: command, command: ./b.sh, timeout: x }\n`,
       ),
-    ).toEqual([])
+    ).toEqual([['fieldType', 10]])
+  })
+
+  it('reports a sibling field of a field that holds a merge key', () => {
+    const two = (first: string, second: string) =>
+      at(`Stop:\n  - hooks:\n      - ${first}\n      - ${second}\n`)
+    expect(two(`{ type: ${merged} }`, '{ type: script }')).toEqual([['typeInvalid', 8]])
+    expect(
+      two(
+        `{ type: command, command: a, timeout: ${merged} }`,
+        '{ type: command, command: a, timeout: x }',
+      ),
+    ).toEqual([['fieldType', 8]])
+    expect(
+      two(
+        `{ type: command, command: a, args: [a, ${merged}] }`,
+        '{ type: command, command: a, args: [1] }',
+      ),
+    ).toEqual([['fieldType', 8]])
+    expect(two(`{ type: command, command: a, input: ${merged} }`, '{ type: script }')).toEqual([
+      ['typeInvalid', 8],
+    ])
+    expect(
+      two(
+        `{ type: command, command: a, shell: ${merged} }`,
+        '{ type: command, command: a, shell: zsh }',
+      ),
+    ).toEqual([['fieldValue', 8]])
   })
 
   it('reads a quoted << as an ordinary key', () => {
