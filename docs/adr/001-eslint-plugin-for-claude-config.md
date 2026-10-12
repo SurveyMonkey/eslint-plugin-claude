@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99, 235]
+related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99, 235, 236]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -120,8 +120,8 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    `eslint-plugin-eslint-plugin` and a parser that removes the TypeScript types, checks the rule
    definitions in `src/rules/` ([#235](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/235)).
    Biome cannot check the `meta` of a rule, such as a schema option with no description. The docs
-   generator of [#236](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/236) reads
-   `meta.defaultOptions`, so a default that only `create` applies cannot get into its docs. The
+   generator of [ADR 003](003-generate-rule-docs-with-eslint-doc-generator.md) reads `meta`,
+   with `meta.defaultOptions`. A default that only `create` applies does not get into the docs. The
    plugin's rules lint Claude Code configuration files in the repositories that install it.
 8. **`@eslint/markdown` and `@eslint/json` are `peerDependencies`, and `yaml` is a
    `dependency`.**
@@ -148,7 +148,9 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
 12. **Tests have two layers.** A RuleTester test under vitest covers each rule. One ESLint-class
     test runs each config over a tree in a temporary directory.
 13. **Each rule has one doc.** The doc is at `docs/rules/<rule>.md`, and `meta.docs.url` points to
-    it. The [rule inventory](../rules-inventory.md) stays the backlog of candidate rules.
+    it. A tool writes the parts of the doc that come from `meta`
+    ([ADR 003](003-generate-rule-docs-with-eslint-doc-generator.md)). The
+    [rule inventory](../rules-inventory.md) stays the backlog of candidate rules.
 14. **The plugin checks what a git repository holds.** It helps a team govern the Claude Code files
     that it writes and commits. It does not manage the Claude Code configuration of a user.
     - A rule reads no file out of the repository. The repository is the first directory at or

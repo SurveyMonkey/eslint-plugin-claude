@@ -18,6 +18,8 @@ pnpm lint        # biome ci, then eslint on src/rules/
 pnpm knip        # builds, then finds unused files, exports and dependencies
 pnpm build       # tsc -p tsconfig.build.json, writes dist/
 pnpm publint     # builds, then checks the packed package.json and exports
+pnpm docs:generate  # builds, then writes the generated parts of the docs
+pnpm docs:check     # builds, then fails when a generated part is out of date
 ```
 
 Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build rewrites it to
@@ -26,10 +28,10 @@ Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build 
 `pnpm lint` runs Biome on the source. Then ESLint, with `eslint-plugin-eslint-plugin`, checks the
 rule definitions in `src/rules/` (`eslint.config.mjs`, ADR 001 Decision 7). Each schema option
 needs a `description`. A rule with a schema option needs `meta.defaultOptions`, and `create`
-reads each default from it. `tests/default-options.test.ts` compares `meta.defaultOptions` with
-the Options of the rule doc. It also checks the descriptions of a schema that a rule imports,
-which the lint cannot see. Each module in `src/rules/` ends with `export default rule`. If a
-module does not, the lint finds no rule in it, and checks nothing
+reads each default from it. `pnpm docs:generate` writes the options list of each rule doc from
+`meta` (ADR 003). `tests/default-options.test.ts` checks the descriptions of a schema that a rule
+imports, which the lint cannot see. Each module in `src/rules/` ends with `export default rule`.
+If a module does not, the lint finds no rule in it, and checks nothing
 (`tests/rule-export-last.test.ts`).
 
 The pre-commit hooks (`lefthook.yml`) sort a staged `package.json`, then run Biome, tsc and the
@@ -43,10 +45,14 @@ Vitest tests related to the staged files. CI runs every check again, and the "Re
 - [ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md): why this is an ESLint plugin on
   `@eslint/markdown` and `@eslint/json`. See the [ADR index](docs/adr/index.md) for later ADRs.
 
-The Rules section of `README.md` has one table for each group of the rule inventory. Add a new
-rule to the table of its group. The first rule of a group adds a `###` heading and a table for
-that group. Keep the groups in the order of the inventory. Leave the Options cell of a rule
-empty when the rule has no option.
+eslint-doc-generator writes the rule list in the Rules section of `README.md`, and the header and
+options list of each rule doc
+([ADR 003](docs/adr/003-generate-rule-docs-with-eslint-doc-generator.md)). Do not edit these parts by hand. Add a new rule to the list of its group in
+`.eslint-doc-generatorrc.mjs`. Then run `pnpm docs:generate`. The `docs` check fails when a
+generated part does not agree with the code.
+
+Under the generated header, each rule doc has a `| Category | Files |` table. The Files cell
+gives the `files` globs of the rule. `tests/docs.test.ts` compares them.
 
 Each rule doc has a `## Usage` section before `## Options`, or before `## Sources` when there is
 no Options section. It gives the `rules` entry of the rule at its `recommended` severity. For a
@@ -98,9 +104,9 @@ A new rule that checks a number takes the number as a rule option (ADR 001, Deci
 - Where Claude Code acts at the default value, report with one message there. At another value,
   use a second message that names the value as the configured limit. Do not say that Claude Code
   acts at that value.
-- Name the option and its default in the rule row of `docs/rules-inventory.md`. Name them in the
-  Options section of the rule doc and in the Options column of the README rule table too. The
-  `recommended` and `strict` configs set no option.
+- Name the option and its default in the rule row of `docs/rules-inventory.md`, and in `meta`.
+  `pnpm docs:generate` writes them in the options list of the rule doc, and marks the rule in
+  the README list. The `recommended` and `strict` configs set no option.
 
 `tests/limit-options.test.ts` reads the `limit` rows of the inventory. It fails for a built
 rule that lacks the option that its row names.
