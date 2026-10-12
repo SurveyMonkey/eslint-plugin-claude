@@ -85,7 +85,9 @@ describe('hooksListener: a merge key in YAML', () => {
 
   it('leaves the whole value unread over the alias limit', () => {
     const rows = '  - { hooks: *a }\n'.repeat(1001)
-    const [source] = sourcesOf(frontmatter(`Stop:\n  - { hooks: &a [] }\n${rows}`))
-    expect(source?.hooks).toBeUndefined()
+    const sources = sourcesOf(frontmatter(`Stop:\n  - { hooks: &a [] }\n${rows}`))
+    // The rule still gets a source, with no `hooks` value.
+    expect(sources).toHaveLength(1)
+    expect(sources[0]?.hooks).toBeUndefined()
   })
 })

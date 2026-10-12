@@ -197,7 +197,7 @@ describe(`${name}: a merge key`, () => {
 
   it('is silent when an allowedEnvVars item holds a merge key, and reports its sibling', () => {
     const merged =
-      '      - { type: http, url: u, headers: { A: $X }, allowedEnvVars: [{ <<: { a: 1 } }] }\n'
+      '      - { type: http, url: u, headers: { A: $X }, allowedEnvVars: [B, { <<: { a: 1 } }] }\n'
     expect(yaml(merged)).toEqual([])
     expect(yaml(merged + sibling)).toEqual(['unlisted'])
   })
