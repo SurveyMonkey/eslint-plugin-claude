@@ -467,6 +467,25 @@ describe('checkPages', () => {
     ])
   })
 
+  it('reports a map hash that is not the snapshot hash as an error (#35)', async () => {
+    const snapshots = await snapshotOf(FIXTURE, headings)
+    const stored = snapshots.get(api.snapshotName(URL_))?.sources
+    const sources: SourceMap = {
+      'a-rule': [
+        { url: URL_, heading: 'hooks', hash: stored?.[0]?.hash },
+        { url: URL_, heading: 'Path rules', hash: 'f'.repeat(64) },
+      ],
+      // A source with no hash is new: no error.
+      'b-rule': [{ url: URL_, heading: 'hooks' }],
+    }
+    const report = await api.checkPages({ map: sources, snapshots, fetchText: serve(FIXTURE) })
+    expect(report.errors).toEqual([
+      `${URL_}: the map hash of "Path rules" for a-rule is not the snapshot hash`,
+    ])
+    // The page itself did not change.
+    expect(report.pages[0]?.status).toBe('unchanged')
+  })
+
   it('lists a changed block as changed and its neighbors as unchanged', async () => {
     const snapshots = await snapshotOf(FIXTURE, headings)
     const edited = FIXTURE.replace('an array mixing both', 'an array of both')
@@ -748,6 +767,21 @@ describe('update and check on a temporary tree', () => {
     expect(rest).toEqual([])
     expect(error).toMatch(new RegExp(`^${URL_}: line \\d+ has an HTML heading id that is not safe`))
     expect(error).toMatch(/: "hooks -->"$/)
+  })
+
+  it('check exits 1 for a map hash that is not the snapshot hash (#35)', async () => {
+    const root = tree(map('hooks'))
+    await run(['update', root], FIXTURE)
+    const file = path.join(root, 'docs/rule-sources.json')
+    const written = JSON.parse(readFileSync(file, 'utf8')) as SourceMap
+    const [source] = written['a-rule'] ?? []
+    if (source) source.hash = '0'.repeat(64)
+    writeFileSync(file, JSON.stringify(written))
+    const checked = await run(['check', root], FIXTURE)
+    expect(checked.code).toBe(1)
+    expect(JSON.parse(checked.out).errors).toEqual([
+      `${URL_}: the map hash of "hooks" for a-rule is not the snapshot hash`,
+    ])
   })
 
   it('update writes nothing when a heading is missing, and drops a stale snapshot', async () => {

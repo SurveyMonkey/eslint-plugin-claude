@@ -7,6 +7,8 @@
 //   It exits 0 when a page changed.
 //   It exits 1 when a fetch or a parse fails, or when the map cites no page.
 //   It exits 1 when a mapped heading is not on its page or is on it twice.
+//   It exits 1 when a `hash` in the map is not the hash of its source in the
+//   snapshot.
 //   It exits 1 for an unknown option, or for a map or snapshot file that it
 //   cannot read. Both modes exit 1 on any failure.
 // update writes the snapshot, and sets `hash` on each source in the map. A
@@ -345,6 +347,23 @@ export function comparePage(current: Snapshot, stored: Snapshot | undefined): Pa
   return { url: current.url, status: 'changed', blocks, sources }
 }
 
+// The map sources whose `hash` is not the hash of the source in the
+// snapshot. A source with no `hash`, or with no stored source, is new, so
+// it gives no error.
+function hashErrors(map: SourceMap, snapshots: Map<string, Snapshot>): string[] {
+  const errors: string[] = []
+  for (const [rule, sources] of Object.entries(map)) {
+    for (const { url, heading, hash } of sources) {
+      const stored = snapshots
+        .get(snapshotName(url))
+        ?.sources.find((source) => source.heading === heading)
+      if (hash === undefined || stored === undefined || stored.hash === hash) continue
+      errors.push(`${url}: the map hash of "${heading}" for ${rule} is not the snapshot hash`)
+    }
+  }
+  return errors
+}
+
 // Checks every cited page. Never throws: a failure goes in `errors`.
 export async function checkPages({
   map,
@@ -359,6 +378,7 @@ export async function checkPages({
   const errors: string[] = []
   const cited = pagesOf(map)
   if (cited.size === 0) errors.push('the map cites no page')
+  errors.push(...hashErrors(map, snapshots))
   for (const [url, headings] of cited) {
     try {
       const current = await readPage(url, headings, fetchText)
