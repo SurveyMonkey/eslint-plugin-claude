@@ -208,12 +208,21 @@ const longestRun = (text: string, char: string) => {
   return best
 }
 
+// The first `max` UTF-16 units of a text, or one unit fewer when the cut
+// falls between the two halves of a surrogate pair. The cut then keeps no
+// broken half.
+const cutAt = (text: string, max: number): string => {
+  const high = text.charCodeAt(max - 1)
+  const split = max > 0 && high >= 0xd800 && high <= 0xdbff
+  return text.slice(0, split ? max - 1 : max)
+}
+
 // Cuts a text to `max` characters and says so.
 const cap = (text: string, max: number) =>
   text.length <= max
     ? { text, note: '' }
     : {
-        text: text.slice(0, max),
+        text: cutAt(text, max),
         note: `The text is cut at ${max} of ${text.length} characters. Read the page for the rest.`,
       }
 
@@ -314,7 +323,7 @@ export function titleOf(f: Finding): string {
   const heading = neutralize(subject).replaceAll('\n', ' ')
   const room = MAX_TITLE - lead.length
   if (heading.length <= room) return `${lead}${heading}`
-  return `${lead}${heading.slice(0, room - 3).trimEnd()}...`
+  return `${lead}${cutAt(heading, room - 3).trimEnd()}...`
 }
 
 const WHY: Record<Kind, string> = {

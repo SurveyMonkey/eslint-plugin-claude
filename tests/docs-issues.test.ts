@@ -340,6 +340,25 @@ describe('bodyOf', () => {
     expect(text).toContain('The text is cut at 6000 of 7000 characters.')
     expect(text.length).toBeLessThan(6100)
   })
+
+  // A high half with no low half after it, or a low half with no high half
+  // before it.
+  const broken = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/
+
+  it('cuts a text before a surrogate pair, not between its two halves (#218)', () => {
+    // "a" and then 4,000 emoji: unit 6,000 is the high half of an emoji.
+    const text = api.fence(`a${'\u{1F600}'.repeat(4000)}`)
+    const body = text.slice(text.indexOf('\n') + 1, text.indexOf('\n```'))
+    expect(body).not.toMatch(broken)
+    expect(body).toBe(`a${'\u{1F600}'.repeat(2999)}`)
+    expect(text).toContain('The text is cut at 6000 of 8001 characters.')
+  })
+
+  it('cuts a long heading in a title before a surrogate pair (#218)', () => {
+    const title = api.titleOf({ ...update, rules: [], heading: `ab${'\u{1F600}'.repeat(40)}` })
+    expect(title).not.toMatch(broken)
+    expect(title).toBe(`docs: update for ab${'\u{1F600}'.repeat(23)}...`)
+  })
 })
 
 describe('diffLines', () => {
