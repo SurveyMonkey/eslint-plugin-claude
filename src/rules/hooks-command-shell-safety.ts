@@ -53,17 +53,36 @@ function quoteEnd(text: string, start: number): number {
  *  parenthesis in quotes, after a backslash or in a comment does not count. */
 function closingParen(text: string, open: number): number {
   let depth = 0
+  // The open `${` expansions, and the index of the last character after a backslash.
+  let braces = 0
+  let escaped = -1
+  let tick = false
   for (let i = open; i < text.length; i++) {
     const char = text.charAt(i)
     if (char === "'" || char === '"') {
       i = quoteEnd(text, i)
     } else if (char === '\\') {
       i++
-    } else if (char === '#' && /[\s(;|&]/.test(text.charAt(i - 1))) {
-      // A `#` that starts a word starts a comment, to the next new line. A quote in it is plain
-      // text. A `#` after `)` or a backtick stays in the word, as in `src/shell-words.ts`.
-      const end = text.indexOf('\n', i)
-      i = end === -1 ? text.length : end
+      escaped = i
+    } else if (char === '$' && text.charAt(i + 1) === '{') {
+      braces++
+      i++
+    } else if (char === '}' && braces > 0) {
+      braces--
+    } else if (char === '`') {
+      tick = !tick
+    } else if (
+      char === '#' &&
+      braces === 0 &&
+      escaped !== i - 1 &&
+      /[\s(;|&]/.test(text.charAt(i - 1))
+    ) {
+      // A `#` that starts a word starts a comment. A quote in it is plain text. The comment ends
+      // before the next new line, and in a backtick substitution also before the closing
+      // backtick. A `#` after `)` or a backtick stays in the word, as in `src/shell-words.ts`. A
+      // `#` in a `${...}` expansion, or after an escaped space, does not start a word.
+      const length = text.slice(i).search(tick ? /[\n`]/ : /\n/)
+      i = length === -1 ? text.length : i + length - 1
     } else if (char === '(') {
       depth++
     } else if (char === ')' && --depth === 0) {
