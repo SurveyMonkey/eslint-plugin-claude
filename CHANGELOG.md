@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.9.1](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.9.0...v0.9.1) (2026-10-12)
+
+
+### Bug Fixes
+
+* close four unseen and reader gaps found in the last bug round ([#262](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/262)) ([7c22df4](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/7c22df47fb2a65d459dd205cddd2236626bd6c76)), closes [#254](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/254) [#256](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/256) [#257](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/257) [#258](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/258)
+* configure the files of each off rule in the recommended config ([#247](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/247)) ([152b5ef](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/152b5ef38bed92e1c4f3f487b7f1c952e70e7b98)), closes [#238](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/238)
+* **docs-watch:** pack the group comment, cap issue bodies and harden heading ids ([#246](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/246)) ([6f640cf](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/6f640cf8d310b3bdc8e65f7df247e92e77065373)), closes [#35](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/35) [#218](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/218) [#219](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/219)
+* **hooks:** limit the merge key silence to the object that holds it ([#263](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/263)) ([d643f8f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/d643f8fdc17fbab3363c01c75d21d2d2402437ee)), closes [#252](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/252)
+* **hooks:** read YAML aliases, leave merge keys unread and skip shell comments ([#250](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/250)) ([a1742ac](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/a1742ac4fb360cdd81a83cc66cf85a79b6c65177)), closes [#226](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/226) [#227](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/227)
+* **settings:** report CLAUDE_CODE_ENABLE_CFC set to 1 in a project settings file ([#249](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/249)) ([d1fa6b2](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/d1fa6b2b364e36b82fa6db759161afabd00aa989)), closes [#130](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/130)
+* treat a dangling link and a special file in the skill tree as unseen ([#248](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/248)) ([a69f15c](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/a69f15c189e6deb7bd3fdbdde6f3cde32ab5a1d6)), closes [#225](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/225)
+
 ## [0.9.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.8.0...v0.9.0) (2026-10-11)
 
 
