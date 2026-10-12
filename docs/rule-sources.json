@@ -5781,6 +5781,11 @@
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
       "hash": "9de69d61eceec2763f26275389d46d633e54ef0762b0dc08aff82dad8805ca8e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/chrome",
+      "heading": "Project settings can’t turn on Chrome",
+      "hash": "a7222cdab216a3222241eba4a538abf4b4dcf686caafdbb89d9e132c284475c6"
     }
   ],
   "settings-env-numeric-spelling": [
