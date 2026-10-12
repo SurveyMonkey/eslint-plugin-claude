@@ -2,9 +2,13 @@
 
 An ESLint 10 flat-config plugin, published to npm as `eslint-plugin-claude`, that lints Claude
 Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recommended` and
-`strict`. Rules that enforce the conventions of one organization are out of scope. The plugin
-checks what a git repository holds: a rule reads no file out of the repository (ADR 001
-Decision 14).
+`strict`. Each rule keeps to the limits in [README Scope](README.md#scope) (ADR 001 Decisions 2
+and 14):
+
+- Its source is a page of the Claude Code docs.
+- It reports a measurable fault. Style, quality and a model judgment are not faults.
+- A convention of one organization is not a rule.
+- It reads no file out of the git repository.
 
 ## Design
 
