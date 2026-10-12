@@ -6831,8 +6831,16 @@ describe('files of each rule in recommended and strict', () => {
         expect({ language: block.language, languageOptions: block.languageOptions }).toEqual(
           LANGUAGE_SETTINGS[language],
         )
-        expect(block.plugins?.claude).toBe(plugin)
+        expect(block.plugins).toEqual({ claude: plugin, markdown, json })
       }
+    }
+    // The blocks of files come first, and no other block is without rules.
+    for (const config of ['recommended', 'strict'] as const) {
+      expect(plugin.configs[config].findIndex((c) => c.rules)).toBe(2)
+      expect(plugin.configs[config].filter((c) => !c.rules).map((c) => c.name)).toEqual([
+        `claude/${config}/markdown-files`,
+        `claude/${config}/json-files`,
+      ])
     }
   })
 
