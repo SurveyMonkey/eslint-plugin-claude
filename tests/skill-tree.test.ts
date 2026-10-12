@@ -624,11 +624,12 @@ describe('a path that is not a regular file', () => {
       'const [fifo, bound] = process.argv.slice(1)',
       'console.log(JSON.stringify([frontmatterOfFile(fifo), readJson(fifo, bound)].map(String)))',
     ].join('\n')
-    const child = spawnSync(process.execPath, ['--input-type=module', '-e', probe, fifo, scratch], {
-      encoding: 'utf8',
-      timeout: 10_000,
-    })
+    // Node 22.13 to 22.17 needs the flag to import a .ts file.
+    const flags = process.features.typescript ? [] : ['--experimental-strip-types']
+    const args = [...flags, '--input-type=module', '-e', probe, fifo, scratch]
+    const child = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 10_000 })
     expect(child.signal).toBeNull()
+    expect(child.status, child.stderr).toBe(0)
     expect(child.stdout.trim()).toBe('["Symbol(unreadable)","Symbol(unreadable)"]')
   })
 })
