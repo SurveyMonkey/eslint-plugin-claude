@@ -244,8 +244,9 @@ function fromJson(node: ValueNode): HNode {
 type At = (start: number, end: number) => Loc
 
 /** The state of one `fromYaml` walk. `marks` holds each alias and each node with an anchor, in
- *  document order. `path` holds the nodes that the walk is inside. `aliases` holds the count of aliases that the walk can still read. All copies of
- *  the context share one `aliases` object, so the count applies to the full walk. */
+ *  document order. `path` holds the nodes that the walk is inside. `aliases` holds the count of
+ *  aliases that the walk can still read. All copies of the context share one `aliases` object, so
+ *  the count applies to the full walk. */
 interface YamlContext {
   at: At
   marks: readonly Node[]
