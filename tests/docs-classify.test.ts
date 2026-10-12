@@ -561,6 +561,16 @@ describe('classify', () => {
         classifyHtml(where, ['Choose where skills load'], `${HTML}\n\`\`\`text\nopen\n`),
       ).rejects.toThrow(`${SKILLS}: a code fence is not closed`)
     })
+
+    it('fails, and names the page and the id, for an unsafe id (#35)', async () => {
+      const unsafe = HTML.replace('<h2 id="where-skills-live">', '<h2 id="where -->">')
+      const error = await classifyHtml(where, ['Choose where skills load'], unsafe).then(
+        () => '',
+        (thrown: Error) => thrown.message,
+      )
+      expect(error.startsWith(`${SKILLS}: line `)).toBe(true)
+      expect(error).toMatch(/: line \d+ has an HTML heading id that is not safe: "where -->"$/)
+    })
   })
 
   it('makes no call and no finding for an unchanged page', async () => {
@@ -1424,6 +1434,60 @@ describe('a moved section (#152)', () => {
         outcomes: [],
         note: 'moved, and no rule or inventory row cites it',
       },
+    ])
+  })
+
+  it('names the rule of the new block when nothing cites the old block (#219)', async () => {
+    // The map already cites the new heading. The old block has no citation.
+    const map: SourceMap = { ...cited, 'c-rule': [{ url: URL_, heading: 'command files' }] }
+    const moved = PAGE.replace('### `commands`', '### `command files`')
+    const jev = fakeJev(() => 1)
+    const stored = await watch.readPage(URL_, ['hooks'], serve(PAGE))
+    const output = await api.classify({
+      map,
+      inventory: new Map(),
+      snapshots: new Map([[watch.snapshotName(URL_), stored]]),
+      rules,
+      links: new Map(),
+      fetchText: serve(moved),
+      jev: { fetch: jev.fetch, key: KEY },
+    })
+    expect(jev.calls).toEqual([])
+    expect(output.results.filter((r) => r.change === 'moved')).toEqual([
+      {
+        page: URL_,
+        heading: 'commands',
+        blockId: 'commands',
+        change: 'moved',
+        outcomes: [],
+        note:
+          'moved, and no rule or inventory row cites the old block. ' +
+          'Rules that cite the new block: c-rule.',
+      },
+    ])
+  })
+
+  it('names the rows of the new block when nothing cites the old block (#219)', async () => {
+    // An inventory footnote already cites the new heading. The old block has
+    // no citation.
+    const inventory: Inventory = new Map([
+      [
+        URL_,
+        [
+          {
+            heading: 'command files',
+            anchor: 'command-files',
+            rows: [{ section: 'Skills and commands', rules: ['command-legacy-format'] }],
+          },
+        ],
+      ],
+    ])
+    const moved = PAGE.replace('### `commands`', '### `command files`')
+    const jev = fakeJev(() => 1)
+    const output = await run(cited, moved, { fetch: jev.fetch, key: KEY }, PAGE, inventory)
+    expect(output.results.filter((r) => r.change === 'moved').map((r) => r.note)).toEqual([
+      'moved, and no rule or inventory row cites the old block. ' +
+        'Rows that cite the new block: command-legacy-format.',
     ])
   })
 

@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 112, 137, 149, 150, 151, 152]
+related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -280,9 +280,17 @@ stores the text of a mapped block only.
   - no `TYPESAFE_API_KEY` when a block needs a call.
 
   The block split cannot read a code fence that is not closed. It also cannot read a line that
-  looks like an HTML heading in a form that it does not know.
+  looks like an HTML heading in a form that it does not know. It also cannot read an HTML
+  heading with an unsafe `id` (#35). A safe `id` has only lowercase letters, digits, `_` and
+  `-`. The block IDs of the cited pages use only these. The error names the page and the
+  `id`. The docs watch `check` uses the same block split, so `check` also exits 1.
+- `check` also exits 1 when a `hash` in `docs/rule-sources.json` is not the hash of its source
+  in the snapshot. A source with no `hash`, or with no source in the snapshot, gives no error.
 - A finding that is not valid, a failed `gh` call, or more than 20 new issues in one live run
   stops the issue step with exit 1. A digest issue counts as one issue. A dry run has no limit.
+  A `gh` call that prints no URL for a new issue or comment also stops the step. An issue body
+  that cannot fit in 60,000 characters stops the step before it writes. So does the comment of
+  one tracked block alone (Decision 8).
 - A check report that the workflow cannot read fails the job.
 
 ### 8. Issues open with the App token, as a Task, with the `claude-docs-change` label
@@ -296,28 +304,38 @@ with old and new text, the body shows a diff, then the full old section and the 
 in two collapsed parts. Docs text goes in a fence that is longer than any fence in the text. Each `@` and each `<!--` in docs text gets a
 word joiner, so the text makes no mention and no marker.
 
-**A tracked block gives a comment on its group issue.** `GROUP_ISSUES` in
-`scripts/docs-issues.ts` gives the group issue of each section of "Rules by group". A tracked
-block in a section with no group issue stops the step before it writes. While a group issue is
-open, a run posts at most one comment on it. The comment names each new tracked block and the
-rows of that section that cite it. It quotes the block text as an issue body does, but with no
-Before and After parts. It shows a diff, or the old and new texts when one has more than 1,000
-lines. Or it shows the new text only, or the old text of a removed block. When no text is
-available, a note says so. Each block has the hidden marker
-`<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`, with the key of Decision 5. The prefix is
-not `docs-watch:`, so the issue dedupe does not read it. The step reads the comments of each open
-group issue. It does not post a block again while its marker is in a comment.
+**A tracked block gives a comment on its group issue.** `GROUP_ISSUES` in `scripts/docs-issues.ts`
+gives the group issue of each section of "Rules by group". A tracked block in a section with no
+group issue stops the step before it writes. While a group issue is open, a run posts its new
+tracked blocks on it, in one comment or more. A comment names each of its blocks and the rows of
+that section that cite it. It quotes the block text as an issue body does, but with no Before and
+After parts. It shows a diff, or the old and new texts when one has more than 1,000 lines. Or it
+shows the new text only, or the old text of a removed block. When no text is available, a note says
+so. Each block has the hidden marker `<!-- docs-watch-tracked:<page>#<blockId>:<hash> -->`, with the
+key of Decision 5. The prefix is not `docs-watch:`, so the issue dedupe does not read it. The step
+reads the comments of each open group issue. It does not post a block again while its marker is in a
+comment.
 
-A tracked block opens no issue for a finding with no rule while one of its group issues is open.
-The comment takes its place. When all its group issues are closed, the finding opens its
-issue, with a line that names the inventory rows. A finding that names a rule opens its issue as
-before. Docs text in a comment gets the same fence and word joiners as an issue body. The markers
-come first. The step cuts the text after them so that the markers and the text take at most
-60,000 characters. A note of the cut follows, so the comment stays under the GitHub limit of
-65,536. A cut never removes a marker. Comments do not count toward the limit of 20 issues. A dry
-run prints each comment and posts none. The step also stops before it writes for four causes.
-The findings file has no `tracked` list. A tracked block is not valid. A tracked block is in the
-list twice. A group issue has a state that is not `open` or `closed`.
+A tracked block opens no issue for a finding with no rule while one of its group issues is open. The
+comment takes its place. When all its group issues are closed, the finding opens its issue, with a
+line that names the inventory rows. A finding that names a rule opens its issue as before. Docs text
+in a comment gets the same fence and word joiners as an issue body. The marker of each block in a
+comment comes first. The step does not cut a comment as a whole. A comment takes the new blocks in
+order while it takes at most 60,000 characters. It then stays under the GitHub limit of 65,536. The
+next comment of the run takes the other blocks. Thus each marker has the text of its block, and the
+run posts each new block (#218). A block whose comment alone passes 60,000 characters stops the step
+before it writes. Comments do not count toward the limit of 20 issues. A dry run prints each comment
+and posts none. The step also stops before it writes for four causes. The findings file has no
+`tracked` list. A tracked block is not valid. A tracked block is in the list twice. A group issue
+has a state that is not `open` or `closed`.
+
+**The size of an issue body.** The body of an issue for one block takes at most 60,000
+characters (#218). In the text, a heading or a block ID is cut at 300 characters. The marker
+keeps the full block ID. A reason and a line of inventory rows are each cut at 2,000
+characters. A block has at most five lines of possible moves, and a line counts the
+others. When the body with the Before and After parts passes 60,000 characters, the body has no
+Before and After parts. A body that still does not fit stops the step before it writes. A cut
+of a text never splits a character that takes two UTF-16 units.
 
 **The uncited blocks of a page share a digest issue.** After the dedupe and the group comment
 path, the step takes each `new-rule` and `needs-triage` finding that names no rule. A finding

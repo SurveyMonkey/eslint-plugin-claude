@@ -335,10 +335,141 @@ describe('bodyOf', () => {
     expect(body.length).toBeLessThan(60_000)
   })
 
+  it('keeps a body with a long reason and heading under the limit, with its marker (#218)', () => {
+    const long: Finding = {
+      ...update,
+      heading: `Heading ${'h'.repeat(70_000)}`,
+      reason: Array.from({ length: 2000 }, (_, i) => `Jev gives 0.9 for part ${i}`).join('; '),
+    }
+    const body = api.bodyOf(long, REPO)
+    expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+    expect(body.split('\n')[0]).toBe(api.markerOf(long))
+    expect(body).toContain('- Reason: Jev gives 0.9 for part 0; ')
+    expect(body).toMatch(/The reason is cut at \d+ of \d+ characters\./)
+    expect(body).toContain('<details><summary>After: the new section</summary>')
+  })
+
+  it('keeps a body with many possible moves and a long rows line under the limit (#218)', () => {
+    const near = Array.from({ length: 500 }, (_, i) => ({
+      heading: `Near ${i} ${'n'.repeat(500)}`,
+      blockId: `near-${i}`,
+    }))
+    const added: Finding = { ...newRule, possibleMoves: near }
+    const rows: Tracked = {
+      ...common,
+      // 6,000 rows make a line of about 80,000 characters.
+      sections: [
+        { section: 'Hooks', rules: Array.from({ length: 6000 }, (_, i) => `a-rule-${i}`) },
+      ],
+    }
+    const body = api.bodyOf(added, REPO, rows)
+    expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+    expect(body.split('\n')[0]).toBe(api.markerOf(added))
+    expect(body).toContain('- Possible move: `Near 0 ')
+    expect(body.match(/^- Possible move: /gm)).toHaveLength(api.MAX_MOVES)
+    expect(body).toContain('\n- 495 more possible moves. See the page.\n')
+    expect(body).toContain('- Inventory rows that cite the block: Hooks: `a-rule-0`')
+    // Each section and fence of the body is whole.
+    expect(body).toContain('## References')
+  })
+
+  it('keeps the worst-case body with a very long reason under the limit (#218)', () => {
+    const ticks = '`'.repeat(20_000)
+    const text = (word: string) =>
+      [ticks, ...Array.from({ length: 400 }, (_, i) => `${word} ${i} ${'`'.repeat(50)}`)].join('\n')
+    const rules = Array.from({ length: 12 }, (_, i) => `a-rule-with-a-long-name-${i}`)
+    const worst: Finding = {
+      ...update,
+      heading: 'h'.repeat(5000),
+      blockId: 'b'.repeat(200),
+      rules,
+      reason: 'r'.repeat(100_000),
+      oldText: text('old'),
+      newText: text('new'),
+    }
+    const body = api.bodyOf(worst, REPO)
+    expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+    expect(body.split('\n')[0]).toBe(api.markerOf(worst))
+    expect(body).toMatch(
+      /\n## References\n\n- https:\S+\n- \[ADR 002\]\(.+\)\n- \[Triage runbook\]\(.+\)\n$/,
+    )
+  })
+
+  it('drops the Before and After parts when the body does not fit with them (#218)', () => {
+    const ticks = '`'.repeat(20_000)
+    const text = (word: string) => [ticks, `${word} text`].join('\n')
+    // 200 rules make the marker and the Scope long.
+    const rules = Array.from({ length: 200 }, (_, i) => `a-rule-with-a-long-name-${i}`)
+    const f: Finding = { ...update, rules, oldText: text('old'), newText: text('new') }
+    const body = api.bodyOf(f, REPO)
+    expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+    expect(body.split('\n')[0]).toBe(api.markerOf(f))
+    expect(body).not.toContain('<details>')
+    expect(body).toContain('The diff of the block text, old to new, as quoted data:')
+    expect(body).toContain('- `claude/a-rule-with-a-long-name-199`')
+    // With 12 rules, the body keeps the two parts.
+    expect(api.bodyOf({ ...f, rules: rules.slice(0, 12) }, REPO)).toContain('<details>')
+  })
+
+  it('fails before it writes for a body that does not fit at all (#218)', async () => {
+    const rules = Array.from({ length: 2000 }, (_, i) => `a-rule-with-a-long-name-${i}`)
+    const f: Finding = { ...update, rules }
+    expect(() => api.bodyOf(f, REPO)).toThrow(
+      `the issue body for ${api.keyOf(f)} does not fit in ${api.MAX_COMMENT} characters`,
+    )
+    const gh = fakeGh()
+    await expect(
+      api.openIssues({ findings: [f], repo: REPO, run: gh.run, dryRun: false, log: quiet }),
+    ).rejects.toThrow('does not fit')
+    expect(gh.posts()).toEqual([])
+  })
+
+  it('keeps a moved body with a very long reason under the limit, with its marker (#218)', () => {
+    const long: Finding = { ...moved, reason: 'r'.repeat(100_000) }
+    const body = api.bodyOf(long, REPO)
+    expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+    expect(body.split('\n')[0]).toBe(api.markerOf(long))
+  })
+
+  it('fails for a moved body that does not fit (#218)', () => {
+    // A moved body has no short form. 2,000 rules give a footnote line each.
+    const rules = Array.from({ length: 2000 }, (_, i) => `a-rule-with-a-long-name-${i}`)
+    const f: Finding = { ...moved, rules }
+    expect(() => api.bodyOf(f, REPO)).toThrow(
+      `the issue body for ${api.keyOf(f)} does not fit in ${api.MAX_COMMENT} characters`,
+    )
+  })
+
   it('cuts a long text and says so', () => {
     const text = api.fence('y'.repeat(7000))
     expect(text).toContain('The text is cut at 6000 of 7000 characters.')
     expect(text.length).toBeLessThan(6100)
+  })
+
+  // A high half with no low half after it, or a low half with no high half
+  // before it.
+  const broken = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/
+
+  it('cuts a text before a surrogate pair, not between its two halves (#218)', () => {
+    // "a" and then 4,000 emoji: unit 6,000 is the high half of an emoji.
+    const text = api.fence(`a${'\u{1F600}'.repeat(4000)}`)
+    const body = text.slice(text.indexOf('\n') + 1, text.indexOf('\n```'))
+    expect(body).not.toMatch(broken)
+    expect(body).toBe(`a${'\u{1F600}'.repeat(2999)}`)
+    expect(text).toContain('The text is cut at 6000 of 8001 characters.')
+  })
+
+  it('keeps a whole surrogate pair when the cut falls after it (#218)', () => {
+    // 4,000 emoji: unit 6,000 is the low half of an emoji.
+    const text = api.fence('\u{1F600}'.repeat(4000))
+    const body = text.slice(text.indexOf('\n') + 1, text.indexOf('\n```'))
+    expect(body).toBe('\u{1F600}'.repeat(3000))
+  })
+
+  it('cuts a long heading in a title before a surrogate pair (#218)', () => {
+    const title = api.titleOf({ ...update, rules: [], heading: `ab${'\u{1F600}'.repeat(40)}` })
+    expect(title).not.toMatch(broken)
+    expect(title).toBe(`docs: update for ab${'\u{1F600}'.repeat(23)}...`)
   })
 })
 
@@ -740,6 +871,29 @@ describe('openIssues', () => {
       api.openIssues({ findings: [update], repo: REPO, run, dryRun: false, log: quiet }),
     ).rejects.toThrow('gh: HTTP 403')
   })
+
+  it('fails, and records no empty URL, when gh prints nothing for a new issue (#219)', async () => {
+    const calls: string[][] = []
+    const run: Run = (args) => {
+      calls.push(args)
+      if (args.includes('--paginate')) return ''
+      return calls.length === 2 ? `https://github.com/${REPO}/issues/7\n` : ' \n'
+    }
+    const logs: string[] = []
+    await expect(
+      api.openIssues({
+        findings: [update, { ...newRule, rules: ['a-rule'] }],
+        repo: REPO,
+        run,
+        dryRun: false,
+        log: (text) => logs.push(text),
+      }),
+    ).rejects.toThrow(
+      'gh printed no URL for the issue "feat: new rule candidate from Agent frontmatter"',
+    )
+    // The first issue opened, and stays. The second has no URL, so the step stops.
+    expect(logs).toEqual([`opened: https://github.com/${REPO}/issues/7`])
+  })
 })
 
 const HOOKS = 'https://code.claude.com/docs/en/hooks'
@@ -1138,21 +1292,74 @@ describe('the group comment path for tracked blocks', () => {
     expect(hostile).toContain('`````text')
   })
 
-  it('keeps a long comment under the GitHub limit, cuts it with a note, and keeps every marker', () => {
-    const blocks = Array.from({ length: 30 }, (_, i) => ({
-      tracked: { ...common, blockId: `b${i}`, newText: '`'.repeat(5000) },
-      rules: ['a-rule'],
-    }))
-    const body = api.commentOf(blocks, 'Hooks')
-    // The markers and the cut text take exactly 60,000 characters. The note of
-    // the cut comes after them.
-    const note = /\n\nThe text is cut at \d+ of \d+ characters\. Read the page for the rest\.\n$/
-    expect(api.MAX_COMMENT).toBe(60_000)
-    expect(body.length - (note.exec(body)?.[0].length ?? 0)).toBe(60_000)
-    expect(body.length).toBeLessThanOrEqual(65_536)
-    expect(body.match(/<!-- docs-watch-tracked:/g)).toHaveLength(30)
-    expect(body).toContain('Read the page for the rest.')
-    expect(api.commentOf(blocks.slice(0, 1), 'Hooks')).not.toContain('Read the page for the rest.')
+  // 30 tracked blocks of one group. Each quotes 5,000 backticks, so a fence
+  // of one block takes about 15,000 characters, and the 30 pass 60,000.
+  const many = Array.from({ length: 30 }, (_, i) => ({
+    ...common,
+    heading: `Block ${i}`,
+    blockId: `b${i}`,
+    newText: '`'.repeat(5000),
+  }))
+  // The block IDs of the tracked markers in a comment.
+  const markedIn = (body: string) =>
+    [...body.matchAll(/<!-- docs-watch-tracked:\S+#(b\d+):[0-9a-f]{64} -->/g)].map((m) => m[1])
+  const postedBodies = (gh: ReturnType<typeof groupGh>) =>
+    gh.commentPosts().map((post) => (JSON.parse(post.input ?? '{}') as { body: string }).body)
+
+  it('posts every block in one run, in comments that fit (#218)', async () => {
+    const first = groupGh({ 10: { state: 'open' } })
+    await live(first, many)
+    const bodies = postedBodies(first)
+    // A comment of three blocks takes about 47,000 characters, and a comment
+    // of four takes about 62,500. So each comment takes three blocks.
+    const ids = many.map((t) => t.blockId)
+    expect(bodies.map(markedIn)).toEqual(
+      Array.from({ length: 10 }, (_, i) => ids.slice(3 * i, 3 * i + 3)),
+    )
+    const whole = `${'`'.repeat(5001)}text\n${'`'.repeat(5000)}\n${'`'.repeat(5001)}\n`
+    for (const body of bodies) {
+      const marked = markedIn(body)
+      expect(body.length).toBeLessThanOrEqual(api.MAX_COMMENT)
+      // Each marker has the section and the whole text of its block. No other
+      // block has a section, and nothing is cut.
+      for (const [i, t] of many.entries()) {
+        const section = `### \`Block ${i}\`\n`
+        expect(body.includes(section), t.blockId).toBe(marked.includes(t.blockId))
+      }
+      expect(body.split(whole)).toHaveLength(marked.length + 1)
+      expect(body).not.toContain('is cut at')
+    }
+    // The next run reads the markers of every comment, and posts nothing.
+    const second = groupGh({ 10: { state: 'open', comments: bodies } })
+    await live(second, many)
+    expect(second.posts()).toEqual([])
+  })
+
+  it('fails before it posts for a tracked block that does not fit alone (#218)', async () => {
+    const huge = { ...common, page: `${HOOKS}?${'x'.repeat(api.MAX_COMMENT)}` }
+    const gh = groupGh({ 10: { state: 'open' } })
+    await expect(live(gh, [common, huge])).rejects.toThrow(
+      `does not fit in a comment of ${api.MAX_COMMENT} characters`,
+    )
+    expect(gh.posts()).toEqual([])
+  })
+
+  it('fails, and records no empty URL, when gh prints nothing for a new comment (#219)', async () => {
+    const gh = groupGh({ 10: { state: 'open' } })
+    const run: Run = (args, input) => (args.includes('POST') ? '' : gh.run(args, input))
+    const logs: string[] = []
+    await expect(
+      api.openIssues({
+        findings: [update],
+        tracked: [common],
+        repo: REPO,
+        run,
+        dryRun: false,
+        log: (text) => logs.push(text),
+      }),
+    ).rejects.toThrow('gh printed no URL for the comment on #10')
+    // The step stops before it opens the issue of the finding.
+    expect(logs.filter((line) => /^(opened|commented): /.test(line))).toEqual([])
   })
 
   it('fails before any gh call for a tracked block that is not valid', async () => {
@@ -1191,6 +1398,8 @@ describe('the group comment path for tracked blocks', () => {
       [{ sections: [{ section: 'Hooks', rules: [] }] }, 'a section with no rules'],
       [{ sections: [{ section: 'Hooks', rules: 'a' }] }, 'a section with no rules'],
       [{ sections: [{ section: 'Hooks', rules: ['a b'] }] }, 'a rule ID that is not valid'],
+      // A number whose text is a valid rule ID: only the type check refuses it.
+      [{ sections: [{ section: 'Hooks', rules: [7] }] }, 'a rule ID that is not valid'],
       [{ sections: [{ section: 'Hooks', rules: ['a', 'a'] }] }, 'or twice'],
     ]
     for (const [fields, message] of bad) {
@@ -1443,6 +1652,15 @@ describe('the moved kind (#152)', () => {
       '- Possible move: `Set variables in settings files` (block `set-variables-in-settings-files`) on the same page shares three or more words with this heading. The job did not match the two blocks as a move. See "A moved section" in the triage runbook.',
     )
     expect(api.bodyOf(update, REPO)).not.toContain('Possible move')
+    // Only a block with more than MAX_MOVES possible moves gets a count line.
+    expect(api.bodyOf(removal, REPO)).not.toContain('more possible moves')
+    const five = Array.from({ length: api.MAX_MOVES }, (_, i) => ({
+      heading: `Near ${i}`,
+      blockId: `near-${i}`,
+    }))
+    const body = api.bodyOf({ ...removal, possibleMoves: five }, REPO)
+    expect(body.match(/^- Possible move: /gm)).toHaveLength(api.MAX_MOVES)
+    expect(body).not.toContain('more possible moves')
   })
 
   it('refuses a moved finding whose hashes, texts or move do not fit its kind', () => {

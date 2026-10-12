@@ -7,6 +7,8 @@
 //   It exits 0 when a page changed.
 //   It exits 1 when a fetch or a parse fails, or when the map cites no page.
 //   It exits 1 when a mapped heading is not on its page or is on it twice.
+//   It exits 1 when a `hash` in the map is not the hash of its source in the
+//   snapshot.
 //   It exits 1 for an unknown option, or for a map or snapshot file that it
 //   cannot read. Both modes exit 1 on any failure.
 // update writes the snapshot, and sets `hash` on each source in the map. A
@@ -88,7 +90,8 @@ export function stripInline(text: string): string {
 }
 
 // The slug of a heading title: rendered text, lowercase, no punctuation, each
-// space a hyphen. A Markdown heading has this slug as its ID. The site also turns a dot into a hyphen, as in "plugin-json".
+// space a hyphen. A Markdown heading has this slug as its ID. The site also
+// turns a dot into a hyphen, as in "plugin-json".
 export function slugify(heading: string): string {
   return stripInline(heading)
     .toLowerCase()
@@ -106,6 +109,10 @@ const FENCE = /^[ \t]*(`{3,}|~{3,})/
 const HTML_OPEN = /^<h([1-6])((?:[ \t]+[a-z-]+="[^"]*")*)[ \t]*>$/
 const HTML_LIKE = /^\s*<h[1-6][\s>]/i
 const HTML_ID = /(?:^|[ \t])id="([^"]*)"/
+// The characters that an HTML heading `id` can have. The block IDs in the
+// snapshot of the cited pages use only these. An `id` with another
+// character, such as a space, `<` or `>`, is an error (see splitBlocks).
+const SAFE_ID = /^[a-z0-9_-]+$/
 // The most lines that may sit between the opening tag and the closing tag.
 const HTML_TITLE_LINES = 5
 
@@ -139,8 +146,9 @@ function readHtmlHeading(lines: string[], start: number) {
 // heading is its `id` attribute, which is the anchor of the site. `key` is
 // `id`, with a numeric suffix on the second and later blocks that share an ID.
 // It throws for a code fence that is not closed, and for a line that looks
-// like an HTML heading but is not in the form above. Setext headings and
-// indented Markdown headings are not supported.
+// like an HTML heading but is not in the form above. It also throws for an
+// HTML heading whose `id` has a character outside SAFE_ID. An empty `id` is
+// no ID. Setext headings and indented Markdown headings are not supported.
 //
 // The body of a block is its text after the heading. The heading of a
 // Markdown block is its first line. The heading of an HTML block is all its
@@ -160,6 +168,10 @@ export function splitBlocks(markdown: string): Block[] {
       fence = mark
     } else {
       const html = readHtmlHeading(lines, index)
+      if (html?.id && !SAFE_ID.test(html.id)) {
+        const id = JSON.stringify(html.id)
+        throw new Error(`line ${index + 1} has an HTML heading id that is not safe: ${id}`)
+      }
       if (html) {
         blocks.push({
           level: html.level,
@@ -335,6 +347,23 @@ export function comparePage(current: Snapshot, stored: Snapshot | undefined): Pa
   return { url: current.url, status: 'changed', blocks, sources }
 }
 
+// The map sources whose `hash` is not the hash of the source in the
+// snapshot. A source with no `hash`, or with no stored source, is new, so
+// it gives no error.
+function hashErrors(map: SourceMap, snapshots: Map<string, Snapshot>): string[] {
+  const errors: string[] = []
+  for (const [rule, sources] of Object.entries(map)) {
+    for (const { url, heading, hash } of sources) {
+      const stored = snapshots
+        .get(snapshotName(url))
+        ?.sources.find((source) => source.heading === heading)
+      if (hash === undefined || stored === undefined || stored.hash === hash) continue
+      errors.push(`${url}: the map hash of "${heading}" for ${rule} is not the snapshot hash`)
+    }
+  }
+  return errors
+}
+
 // Checks every cited page. Never throws: a failure goes in `errors`.
 export async function checkPages({
   map,
@@ -349,6 +378,7 @@ export async function checkPages({
   const errors: string[] = []
   const cited = pagesOf(map)
   if (cited.size === 0) errors.push('the map cites no page')
+  errors.push(...hashErrors(map, snapshots))
   for (const [url, headings] of cited) {
     try {
       const current = await readPage(url, headings, fetchText)
@@ -367,7 +397,8 @@ const list = (ids: string[]) =>
 export function renderMarkdown(report: Report): string {
   const lines = ['# Claude Code docs watch', '']
   lines.push(
-    `${report.changed} page(s) changed or new, ${report.unchanged} unchanged, ${report.errors.length} error(s).`,
+    `${report.changed} page(s) changed or new, ${report.unchanged} unchanged, ` +
+      `${report.errors.length} error(s).`,
     '',
   )
   for (const error of report.errors) lines.push(`- ERROR: ${error}`)
@@ -417,8 +448,8 @@ function readJson(file: string) {
 export const loadMap = (root: string): SourceMap => readJson(path.join(root, MAP_FILE))
 
 // Reads every cited page, then writes the snapshot and the map hashes. It
-// writes nothing when one page fails. It deletes the snapshot file of a page
-// that no rule cites now.
+// writes nothing when one page fails. After it writes the snapshot, it
+// deletes the snapshot file of a page that no rule cites now.
 export async function updateState({
   root,
   fetchText,
@@ -435,11 +466,12 @@ export async function updateState({
   }
   const dir = path.join(root, SNAPSHOT_DIR)
   mkdirSync(dir, { recursive: true })
+  // The new files come first. A failed write then deletes no stale file.
+  for (const page of current) writeFileSync(path.join(dir, snapshotName(page.url)), toJson(page))
   const keep = new Set(current.map((page) => snapshotName(page.url)))
   for (const file of readdirSync(dir)) {
     if (file.endsWith('.json') && !keep.has(file)) rmSync(path.join(dir, file))
   }
-  for (const page of current) writeFileSync(path.join(dir, snapshotName(page.url)), toJson(page))
   const hashes = new Map<string, string>()
   for (const page of current) {
     for (const source of page.sources) hashes.set(`${page.url}\n${source.heading}`, source.hash)

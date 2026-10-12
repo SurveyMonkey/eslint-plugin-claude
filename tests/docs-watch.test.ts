@@ -214,6 +214,38 @@ describe('HTML headings', () => {
     expect(block?.key).toBe('empty')
   })
 
+  it('stops for an HTML heading id with a character that is not safe (#35)', () => {
+    // The issue step makes an id inert in a marker and in a body. The parser
+    // also stops an unsafe id at its source.
+    for (const id of ['x-->', 'a b', '<b>', 'Upper', 'a.b', "it's", 'x&gt;']) {
+      const text = `# T\n\n<h2 id="${id}">\n  Title\n</h2>\n`
+      expect(() => api.splitBlocks(text), id).toThrow(
+        `line 3 has an HTML heading id that is not safe: ${JSON.stringify(id)}`,
+      )
+    }
+  })
+
+  it('takes each block id of the cited pages as a safe HTML heading id (#35)', () => {
+    const dir = path.join(ROOT, 'docs/docs-snapshot')
+    const files = readdirSync(dir).filter((file) => file.endsWith('.json'))
+    expect(files.length).toBeGreaterThan(0)
+    for (const file of files) {
+      const snapshot = JSON.parse(readFileSync(path.join(dir, file), 'utf8')) as Snapshot
+      for (const { id } of snapshot.blocks) {
+        const [, block] = api.splitBlocks(`# T\n<h2 id="${id}">\n  Title\n</h2>\n`)
+        expect(block?.id, `${file} ${id}`).toBe(id)
+      }
+    }
+  })
+
+  it('names the page and the id for an unsafe HTML heading id (#35)', async () => {
+    const id = 'x--><!-- docs-watch:new-rule:y -->'
+    const page = `# T\n\n<h2 id="${id}">\n  Title\n</h2>\n`
+    await expect(api.readPage(URL_, ['T'], serve(page))).rejects.toThrow(
+      `${URL_}: line 3 has an HTML heading id that is not safe: "${id}"`,
+    )
+  })
+
   it('reads the id attribute, and not an attribute that ends in id', () => {
     const both = api.splitBlocks('# T\n<h2 data-id="wrong" id="right">\n  Title\n</h2>\n')
     expect(both[1]?.key).toBe('right')
@@ -434,6 +466,39 @@ describe('checkPages', () => {
       'unchanged',
       'unchanged',
     ])
+  })
+
+  it('reports a map hash that is not the snapshot hash as an error (#35)', async () => {
+    const snapshots = await snapshotOf(FIXTURE, headings)
+    const stored = snapshots.get(api.snapshotName(URL_))?.sources
+    const sources: SourceMap = {
+      'a-rule': [
+        { url: URL_, heading: 'hooks', hash: stored?.[0]?.hash },
+        { url: URL_, heading: 'Path rules', hash: 'f'.repeat(64) },
+      ],
+      // A source with no hash is new: no error.
+      'b-rule': [{ url: URL_, heading: 'hooks' }],
+    }
+    const report = await api.checkPages({ map: sources, snapshots, fetchText: serve(FIXTURE) })
+    expect(report.errors).toEqual([
+      `${URL_}: the map hash of "Path rules" for a-rule is not the snapshot hash`,
+    ])
+    // The page itself did not change.
+    expect(report.pages[0]?.status).toBe('unchanged')
+  })
+
+  it('reports no map hash error for a source that the snapshot does not hold (#35)', async () => {
+    // The snapshot holds the source "hooks" only, and no file for the other page.
+    const snapshots = await snapshotOf(FIXTURE, ['hooks'])
+    const other = 'https://code.claude.com/docs/en/other'
+    const sources: SourceMap = {
+      'a-rule': [
+        { url: URL_, heading: 'Path rules', hash: 'f'.repeat(64) },
+        { url: other, heading: 'hooks', hash: 'f'.repeat(64) },
+      ],
+    }
+    const report = await api.checkPages({ map: sources, snapshots, fetchText: serve(FIXTURE) })
+    expect(report.errors).toEqual([])
   })
 
   it('lists a changed block as changed and its neighbors as unchanged', async () => {
@@ -707,6 +772,33 @@ describe('update and check on a temporary tree', () => {
     expect(JSON.parse(checked.out).errors[0]).toContain('is not on the page')
   })
 
+  it('check exits 1, and names the page and the id, for an unsafe id (#35)', async () => {
+    const root = tree(map('hooks'))
+    await run(['update', root], FIXTURE)
+    const page = FIXTURE.replace('### `hooks`', '<h3 id="hooks -->">\n  hooks\n</h3>')
+    const checked = await run(['check', root], page)
+    expect(checked.code).toBe(1)
+    const [error, ...rest] = JSON.parse(checked.out).errors as string[]
+    expect(rest).toEqual([])
+    expect(error?.startsWith(`${URL_}: line `)).toBe(true)
+    expect(error).toMatch(/: line \d+ has an HTML heading id that is not safe: "hooks -->"$/)
+  })
+
+  it('check exits 1 for a map hash that is not the snapshot hash (#35)', async () => {
+    const root = tree(map('hooks'))
+    await run(['update', root], FIXTURE)
+    const file = path.join(root, 'docs/rule-sources.json')
+    const written = JSON.parse(readFileSync(file, 'utf8')) as SourceMap
+    const [source] = written['a-rule'] ?? []
+    if (source) source.hash = '0'.repeat(64)
+    writeFileSync(file, JSON.stringify(written))
+    const checked = await run(['check', root], FIXTURE)
+    expect(checked.code).toBe(1)
+    expect(JSON.parse(checked.out).errors).toEqual([
+      `${URL_}: the map hash of "hooks" for a-rule is not the snapshot hash`,
+    ])
+  })
+
   it('update writes nothing when a heading is missing, and drops a stale snapshot', async () => {
     const root = tree(map('hooks'))
     await run(['update', root], FIXTURE)
@@ -754,6 +846,19 @@ describe('update and check on a temporary tree', () => {
       'down',
     )
     expect(readdirSync(path.join(partial, 'docs'))).toEqual(['rule-sources.json'])
+  })
+
+  it('update deletes no stale snapshot file when a write fails (#35)', async () => {
+    const root = tree(map('hooks'))
+    const dir = path.join(root, 'docs/docs-snapshot')
+    mkdirSync(dir)
+    // A stale page that no rule cites now, and a directory where the new file
+    // must go, so the write fails.
+    writeFileSync(path.join(dir, 'old-page.json'), '{}\n')
+    mkdirSync(path.join(dir, api.snapshotName(URL_)))
+    await expect(run(['update', root], FIXTURE)).rejects.toThrow(/EISDIR/)
+    expect(readdirSync(dir).sort()).toEqual(['old-page.json', api.snapshotName(URL_)].sort())
+    expect(readFileSync(path.join(dir, 'old-page.json'), 'utf8')).toBe('{}\n')
   })
 
   it('update stops for a map that cites no page, and keeps the snapshot', async () => {
