@@ -14,7 +14,8 @@ export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 const MAX_NESTING = 100
 
 /** The index of the `)` that closes the `(` at `open` in `line`, or the last index. A quote, a backslash, a
- *  backtick and a nested substitution inside keep their own level. */
+ *  backtick and a nested substitution inside keep their own level. A comment inside ends at the next
+ *  new line. */
 function closingParen(line: string, open: number, nesting = 0): number {
   if (nesting > MAX_NESTING) {
     return line.length - 1
@@ -34,6 +35,12 @@ function closingParen(line: string, open: number, nesting = 0): number {
       i = closingTick(line, i)
     } else if (char === '\\') {
       i++
+    } else if (char === '#' && /[\s(;|&]/.test(line.charAt(i - 1))) {
+      // A `#` that starts a word starts a comment, to the next new line. A quote or a
+      // parenthesis in it is plain text. A `#` after a `)` is not one: the reader does not know
+      // if that `)` closes a substitution, which the word goes on after.
+      const end = line.indexOf('\n', i)
+      i = end === -1 ? line.length : end
     } else if (char === '(') {
       depth++
     } else if (char === ')' && --depth === 0) {
@@ -83,8 +90,10 @@ export interface Command {
 }
 
 /** The simple commands of a shell line. A command ends at `;`, `&`, `|`, a parenthesis, a backtick or a new line
- *  that no backslash joins. A quote or a backslash joins characters into one word. A quote is not part of the
- *  word. A command substitution in double quotes is part of the word, and holds quotes of its own. */
+ *  that no backslash joins. A `#` that starts a word starts a comment. The reader skips it to the next
+ *  new line, or in backticks to the closing backtick. A backslash in a comment joins no lines. A quote
+ *  or a backslash joins characters into one word. A quote is not part of the word. A command
+ *  substitution in double quotes is part of the word, and holds quotes of its own. */
 export function scanCommands(line: string): Command[] {
   const commands: Command[] = []
   let words: string[] = []
@@ -96,6 +105,8 @@ export function scanCommands(line: string): Command[] {
   let substitutions = 0
   let amp = false
   let ticks = false
+  // True when the character before is the end of a command substitution. The word goes on after it.
+  let closed = false
   const endWord = () => {
     if (open) {
       words.push(word)
@@ -117,6 +128,8 @@ export function scanCommands(line: string): Command[] {
   }
   for (let i = 0; i < line.length; i++) {
     const char = line.charAt(i)
+    const glued = closed
+    closed = false
     if (quote === "'" && char !== "'") {
       word += char
     } else if (char === '\\' && quote !== "'") {
@@ -145,16 +158,23 @@ export function scanCommands(line: string): Command[] {
     } else if (char === "'" || char === '"') {
       quote = char
       open = true
+    } else if (char === '#' && !open && !glued) {
+      // A comment ends before the next new line. In a backtick substitution it also ends before
+      // the closing backtick. Each character in it, such as a quote, is plain text.
+      const length = line.slice(i).search(ticks ? /[\n`]/ : /\n/)
+      i = length === -1 ? line.length : i + length - 1
     } else if (char === '(') {
       endCommand()
       levels.push(line.charAt(i - 1) === '$')
       substitutions += levels[levels.length - 1] ? 1 : 0
     } else if (char === ')') {
       endCommand()
-      substitutions -= levels.pop() ? 1 : 0
+      closed = levels.pop() === true
+      substitutions -= closed ? 1 : 0
     } else if (char === '`') {
       endCommand()
       ticks = !ticks
+      closed = !ticks
     } else if (char === '|') {
       // `||` is a list operator, and `|` or `|&` is a pipe. The second `|` of `||` ends no command.
       endCommand(line.charAt(i + 1) !== '|')

@@ -212,6 +212,83 @@ describe('scanCommands', () => {
     ])
   })
 
+  it('skips a comment to the end of its line, whatever quote it holds', () => {
+    expect(commandsOf("echo a # it's here\nrm -rf x")).toEqual([
+      ['echo', 'a'],
+      ['rm', '-rf', 'x'],
+    ])
+    expect(commandsOf('echo a # say "hi\nrm x')).toEqual([
+      ['echo', 'a'],
+      ['rm', 'x'],
+    ])
+    expect(commandsOf('echo a # a `b\nrm x')).toEqual([
+      ['echo', 'a'],
+      ['rm', 'x'],
+    ])
+    expect(commandsOf('# only a comment')).toEqual([])
+    expect(commandsOf('a;# c ; d\nb\r\nc')).toEqual([['a'], ['b'], ['c']])
+    expect(commandsOf('a # b\\\nc')).toEqual([['a'], ['c']])
+  })
+
+  it('ends a comment in backticks at the closing backtick', () => {
+    // Bash reads the body of a backtick pair first, so a comment in it ends there.
+    expect(commandsOf('echo `echo a # b`; rm -rf x')).toEqual([
+      ['echo'],
+      ['echo', 'a'],
+      ['rm', '-rf', 'x'],
+    ])
+    expect(commandsOf("echo `# it's`; rm y")).toEqual([['echo'], ['rm', 'y']])
+  })
+
+  it('skips a comment in a command substitution in double quotes', () => {
+    expect(commandsOf(`echo "$(echo a # it's\n)"; rm z`)).toEqual([
+      ['echo', `$(echo a # it's\n)`],
+      ['rm', 'z'],
+    ])
+    expect(commandsOf('echo "$(echo a # )\n)"\nrm w')).toEqual([
+      ['echo', '$(echo a # )\n)'],
+      ['rm', 'w'],
+    ])
+    expect(commandsOf('echo "$(a$#)" "$(a #b')).toEqual([['echo', '$(a$#)', '$(a #b']])
+    expect(commandsOf(`echo "$(# it's\n)" "$(a;# '\n)" "$(b|# '\n)" "$(c&# '\n)"; rm z`)).toEqual([
+      ['echo', `$(# it's\n)`, `$(a;# '\n)`, `$(b|# '\n)`, `$(c&# '\n)`],
+      ['rm', 'z'],
+    ])
+  })
+
+  it('reads a # right after a substitution as part of the word', () => {
+    expect(commandsOf('echo $(date)#x; rm -rf y')).toEqual([
+      ['echo', '$'],
+      ['date'],
+      ['#x'],
+      ['rm', '-rf', 'y'],
+    ])
+    expect(commandsOf('echo `date`#x; rm -rf y')).toEqual([
+      ['echo'],
+      ['date'],
+      ['#x'],
+      ['rm', '-rf', 'y'],
+    ])
+    expect(commandsOf('echo "$(echo $(date)#x)"; rm -rf y')).toEqual([
+      ['echo', '$(echo $(date)#x)'],
+      ['rm', '-rf', 'y'],
+    ])
+    // A `)` that closes a subshell ends a word, so a `#` after it starts a comment.
+    expect(commandsOf('(a)#b\nc')).toEqual([['a'], ['c']])
+    expect(commandsOf('echo $(date) #x; rm -rf y\nc')).toEqual([['echo', '$'], ['date'], ['c']])
+  })
+
+  it('reads a # as a comment only where a word starts, and outside quotes', () => {
+    expect(commandsOf('echo a#b "# c" \'# d\' \\# e ""#f')).toEqual([
+      ['echo', 'a#b', '# c', '# d', '#', 'e', '#f'],
+    ])
+    expect(commandsOf(`echo $# \${#x} "\${#y}" $(echo #z\nb)`)).toEqual([
+      ['echo', '$#', `\${#x}`, `\${#y}`, '$'],
+      ['echo'],
+      ['b'],
+    ])
+  })
+
   it('stops at a depth, and does not throw or hang on a line of unclosed groups', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'"$('.repeat(20_000)}`)).toHaveLength(1)
