@@ -57,5 +57,5 @@ and 14):
 The check names in `.github/workflows/ci.yml` and `codeql.yml` are a contract. The rulesets
 "Require CI" and "Require CodeQL" require each name by exact string. A rename does not fail the
 build: the required check never reports, and every pull request waits. Update the ruleset in the
-same change. A new name, such as `docs-snapshot`, is the exception: a person adds it to the
+same change. A new name, such as `docs-snapshot`, is the exception. A person adds it to the
 ruleset after the merge that adds its job.

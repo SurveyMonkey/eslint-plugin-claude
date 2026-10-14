@@ -170,13 +170,14 @@ dry run, against the live docs. Then it runs `check` on the head state. It fails
 - The dry run would open an issue or post a group issue comment. The log names the kind, the
   page, the block and the hash of each block. Run the docs watch workflow with
   `workflow_dispatch`, triage what it opens, run `update` again, and push.
-- The head snapshot is not the live docs, or `check` has an error. The docs changed after
-  `update`. Run `update` again, and push.
+- The head snapshot is not the live docs. The docs changed after `update`. Run `update` again,
+  and push.
+- `check` on the head has an error. Read the error. Correct the map, or run the check again.
 - `TYPESAFE_API_KEY` is not set. A pull request from a fork or from Dependabot gets no secret.
 - A step throws, or gives a report that the gate cannot read.
 
-The classifier reads the base map. So a page or a heading that the pull request cites for the
-first time is not classified. The
+The classifier reads the base map. So it does not classify a page or a heading that the pull
+request cites for the first time. The
 [triage runbook](docs/runbooks/docs-watch-triage.md#when-the-docs-snapshot-check-fails) has
 the recovery steps.
 
