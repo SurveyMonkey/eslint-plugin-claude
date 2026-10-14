@@ -164,7 +164,7 @@ or group issue comment names. The commands are in [commands.md](commands.md).
 3. Phase 2 can find a `gone:` key, a `moved` marker, or a `duplicate heading` or
    `unknown heading` change. Then `update` fails. In the worktree, fix the footnote of that
    block, as the runbook section "A moved section" says. If the fix needs more than a footnote
-   change, do not do Phase 7. Give the reason in the report.
+   change, remove the worktree and its branch, and stop Phase 7. Give the reason in the report.
 4. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`. Commit
    `docs/rule-sources.json` and `docs/docs-snapshot/`. Add each footnote file of step 3.
 5. Push, and open the pull request ready for review, not as a draft. CodeQL runs only on a
