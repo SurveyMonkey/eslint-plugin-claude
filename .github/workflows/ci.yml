@@ -19,7 +19,8 @@ concurrency:
 # does not fail the build: the required check simply never reports, and
 # every pull request waits. Update the ruleset in the same change.
 # `docs-snapshot` is new. A person adds it to the ruleset after the merge
-# that adds the job: a name that no job reports blocks every pull request.
+# that adds the job. A required name that no job reports blocks every pull
+# request.
 jobs:
   test:
     name: test (node ${{ matrix.node }})
@@ -99,7 +100,8 @@ jobs:
   # once when the diff does not change the docs watch state. Else it runs the
   # docs watch again, in dry run, against the base state. It fails when the
   # pull request stores a docs change that no issue or group issue comment
-  # names, or when the head snapshot is not the live docs.
+  # names. It also fails when the head snapshot is not the live docs. On a
+  # push it passes, and on another event it fails.
   docs-snapshot:
     name: docs-snapshot
     runs-on: ubuntu-latest
@@ -109,8 +111,15 @@ jobs:
       issues: read
     steps:
       - name: Pass on a push
-        if: github.event_name != 'pull_request'
+        if: github.event_name == 'push'
         run: echo "docs-snapshot runs on a pull request only. A push has no base to compare. Pass."
+      - name: Fail on another event
+        if: github.event_name != 'push' && github.event_name != 'pull_request'
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          echo "docs-snapshot has no step for the event $EVENT. Add one."
+          exit 1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: github.event_name == 'pull_request'
         with:
