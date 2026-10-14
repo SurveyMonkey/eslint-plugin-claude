@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219]
+related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219, 293]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -196,6 +196,27 @@ The snapshot stays in `docs/docs-snapshot/` and the map stays in `docs/rule-sour
 job never writes them and never commits. A person, or a triage pull request, runs
 `node scripts/docs-watch.ts update`. Until then, each run sees the same change again. The
 dedupe key below stops a second issue for it.
+
+`update` writes the live hash of each block of each cited page. It does not compare a hash with
+an issue. So a refresh can store a change that no job run reported (#293). The `docs-snapshot`
+check of CI (`scripts/docs-verify.ts`) is the gate on a refresh. It runs on each pull request,
+and passes at once when the diff does not change `docs/docs-snapshot/` or
+`docs/rule-sources.json`. Else it does these steps:
+
+1. It copies the base map, inventory, rule docs and snapshot to a temporary root.
+2. It classifies the live pages against that base state, then runs the issue step in dry run.
+   It fails when the dry run would open an issue or post a group issue comment. The dedupe of
+   the job decides each block. An issue that the pull request closes is open until the merge, so
+   it still counts.
+3. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
+   check has an error. The two steps read each page once. So the check compares the stored
+   hashes with the text that the dry run read.
+
+The classifier reads the base map. So it does not read a page that the pull request cites for
+the first time. It classifies a heading that the pull request cites for the first time as a
+block that no rule cites. The author reads that page or heading to write the footnote, and that
+is its review. The gate reads issues with the `GITHUB_TOKEN` and `issues: read`. It writes
+nothing.
 
 ### 5. The dedupe key is a hidden marker with the block hash
 
@@ -398,3 +419,7 @@ The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
 - An open digest stops an issue for each block that it names. A new block of the page in a
   later run gets an issue of its own, or a new digest with the other new blocks.
 - A new Jev version needs a new run of the spike before the pin moves.
+- The `docs-snapshot` check (Decision 4) needs `TYPESAFE_API_KEY` in a `pull_request` run of CI.
+  A pull request from a fork or from Dependabot gets no secret. When it changes the snapshot or
+  the map, the check fails closed. A docs change during a pull request also fails the check, and
+  the author runs `update` again. Each run of the check that changes the state costs Jev calls.

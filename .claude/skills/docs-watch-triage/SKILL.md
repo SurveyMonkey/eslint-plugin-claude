@@ -147,3 +147,5 @@ Use the `gh:issues` skill when it is available. If it is not, use the commands i
    For each one, say why.
 3. Say which blocks need the snapshot refresh. A pull request that resolves a work item
    does that with the runbook steps. Until then, the job finds the same change at each run.
+   The refresh pull request must pass the `docs-snapshot` check. It fails when the refresh
+   stores a change that no open issue or group issue comment names.
