@@ -66,8 +66,8 @@ names no rule can be one section of a digest issue.
    writes `docs/docs-snapshot/` and the `hash` of each source in `docs/rule-sources.json`. Read
    the diff of both files before you commit.
 
-   The `docs-snapshot` check of CI then runs the docs watch again, in dry run, against the
-   snapshot of the base branch. It fails when the pull request stores a docs change that no open
+   The `docs-snapshot` check of CI then runs the docs watch again in dry run, on the base
+   state. It fails when the pull request stores a docs change that no open
    issue or group issue comment names. It also fails when the stored snapshot is not the live
    docs. See
    [When the docs-snapshot check fails](#when-the-docs-snapshot-check-fails).
@@ -82,18 +82,22 @@ The log names each failure. Do the steps for the failure that it names.
 
 - **The dry run would open an issue or post a comment.** The log names the kind, the page, the
   block and the hash of each block. The docs changed after the last job run, or a block changed
-  again after its issue opened.
+  again after its issue opened. A `needs-triage` line also gives its reason. If the reason is a
+  failed Jev request, examine `TYPESAFE_API_KEY`, and run the check again.
   1. Run the docs watch workflow with `workflow_dispatch`:
      `gh workflow run docs-watch.yml`.
   2. Triage the issues and comments that it opens.
   3. Run `node scripts/docs-watch.ts update` again, and push.
-- **The head snapshot is not the live docs.** The docs changed after you ran `update`. Run
-  `node scripts/docs-watch.ts update` again, and push. A new change can then fail the dry run.
+- **The head snapshot is not the live docs.** The docs changed after you ran `update`, or the
+  map changed and `update` did not run. Run `node scripts/docs-watch.ts update` again, and push.
+  A new change can then fail the dry run.
 - **The check of the head has an error.** The log gives each error. A map hash that is not the
-  snapshot hash needs `update` again. For a failed fetch, run the check again.
+  snapshot hash needs `update` again. Correct a heading that is not on the page, or that the
+  page shows more than one time. Correct it in the map and the footnote. `update` gives the same
+  error until then. For a failed fetch, run the check again.
 - **No `TYPESAFE_API_KEY`.** A pull request from a fork or from Dependabot gets no secret. A
   maintainer pushes the snapshot change from a branch of this repository.
-- **The dry run failed, or the check of the head failed.** A step threw, or gave a report that
+- **The dry run failed, or the check of the head failed.** A step threw, or gave an output that
   the gate cannot read. The gate fails closed. Read the error, and run the check again when the
   cause is gone.
 

@@ -168,16 +168,21 @@ request. It passes at once when the diff does not change `docs/docs-snapshot/` o
 dry run, against the live docs. Then it runs `check` on the head state. It fails in these cases:
 
 - The dry run would open an issue or post a group issue comment. The log names the kind, the
-  page, the block and the hash of each block. Run the docs watch workflow with
-  `workflow_dispatch`, triage what it opens, run `update` again, and push.
-- The head snapshot is not the live docs. The docs changed after `update`. Run `update` again,
+  page, the block and the hash of each block. A `needs-triage` block also has its reason. Run
+  the docs watch workflow with `workflow_dispatch`, triage what it opens, run `update` again,
   and push.
-- `check` on the head has an error. Read the error. Correct the map, or run the check again.
+- The head snapshot is not the live docs. The docs changed after `update`, or the map changed
+  and `update` did not run. Run `update` again, and push.
+- `check` on the head has an error. Read the error. A map hash that is not the snapshot hash
+  needs `update` again. Correct a heading that is not on the page, or that the page shows more
+  than one time. Correct it in the map and the footnote. For a failed fetch, run the check
+  again.
 - `TYPESAFE_API_KEY` is not set. A pull request from a fork or from Dependabot gets no secret.
-- A step throws, or gives a report that the gate cannot read.
+- A step throws, or gives an output that the gate cannot read.
 
-The classifier reads the base map. So it does not classify a page or a heading that the pull
-request cites for the first time. The
+The classifier reads the base map. So it does not read a page that the pull request cites for
+the first time. It classifies a heading that the pull request cites for the first time as a
+block that no rule cites. The
 [triage runbook](docs/runbooks/docs-watch-triage.md#when-the-docs-snapshot-check-fails) has
 the recovery steps.
 

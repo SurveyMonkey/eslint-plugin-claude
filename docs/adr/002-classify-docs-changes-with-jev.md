@@ -209,11 +209,12 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
    the job decides each block. An issue that the pull request closes is open until the merge, so
    it still counts.
 3. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
-   check has an error. The two steps read each page once, so the stored hashes are the hashes
-   that the dry run read.
+   check has an error. The two steps read each page once. So the check compares the stored
+   hashes with the text that the dry run read.
 
-The classifier reads the base map. So it does not classify a page or a heading that the pull
-request cites for the first time. The author reads that page to write the footnote, and that
+The classifier reads the base map. So it does not read a page that the pull request cites for
+the first time. It classifies a heading that the pull request cites for the first time as a
+block that no rule cites. The author reads that page or heading to write the footnote, and that
 is its review. The gate reads issues with the `GITHUB_TOKEN` and `issues: read`. It writes
 nothing.
 
