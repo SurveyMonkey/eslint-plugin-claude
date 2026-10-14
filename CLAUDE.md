@@ -24,7 +24,8 @@ and 14):
 - `docs/rule-sources.json` maps each rule to its docs sources. `docs/docs-snapshot/` holds the
   hashes of the last docs text. Only a reviewed pull request changes them. The `docs-snapshot`
   check (`scripts/docs-verify.ts`) runs the docs watch on the base state in dry run. It fails a
-  pull request that stores a change with no issue, or a snapshot that is not the live docs.
+  pull request that stores a change that no issue or group issue comment names. It also fails a
+  snapshot that is not the live docs.
 - `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
 
 ## Code
