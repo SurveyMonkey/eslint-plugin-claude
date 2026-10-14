@@ -18,6 +18,8 @@ concurrency:
 # by exact string. Renaming one, or changing a Node version in the matrix,
 # does not fail the build: the required check simply never reports, and
 # every pull request waits. Update the ruleset in the same change.
+# `docs-snapshot` is new. A person adds it to the ruleset after the merge
+# that adds the job: a name that no job reports blocks every pull request.
 jobs:
   test:
     name: test (node ${{ matrix.node }})
@@ -91,3 +93,41 @@ jobs:
           cache: true
           require-lockfile: true
       - run: ${{ matrix.run }}
+
+  # The docs watch gate (scripts/docs-verify.ts). It runs on each pull
+  # request, because a required check cannot use a path filter. It passes at
+  # once when the diff does not change the docs watch state. Else it runs the
+  # docs watch again, in dry run, against the base state. It fails when the
+  # pull request stores a docs change that no issue or group issue comment
+  # names, or when the head snapshot is not the live docs.
+  docs-snapshot:
+    name: docs-snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - name: Pass on a push
+        if: github.event_name != 'pull_request'
+        run: echo "docs-snapshot runs on a pull request only. A push has no base to compare. Pass."
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: github.event_name == 'pull_request'
+        with:
+          persist-credentials: false
+          # The gate reads the base commit, and the diff from the base.
+          fetch-depth: 0
+      - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        if: github.event_name == 'pull_request'
+        with:
+          cache: true
+          require-lockfile: true
+      # The TypeSafe key goes to this step only. A pull request from a fork
+      # or from Dependabot gets no secret, so a change to the state fails.
+      - name: Check the docs snapshot against the base and the live docs
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GH_TOKEN: ${{ github.token }}
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+        run: node scripts/docs-verify.ts "$BASE_SHA"
