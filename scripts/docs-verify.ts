@@ -3,7 +3,8 @@
 // Usage: node scripts/docs-verify.ts <base> [root] [--repo owner/name]
 // base is the ref or SHA of the base of the pull request. root defaults to
 // this repository, with the head of the pull request at HEAD.
-// It reads the paths that changed from base to HEAD (`git diff base...HEAD`).
+// It reads the paths that changed from base to HEAD (`git diff base...HEAD`,
+// with no rename detection, so a file moved out of the snapshot counts).
 //   When no path is in docs/docs-snapshot/, and docs/rule-sources.json did
 //   not change, it prints one line and exits 0.
 // Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
@@ -16,12 +17,14 @@
 //   would open an issue or post a comment, and names each block. The job's
 //   own dedupe decides each block, so the daily job and the gate agree.
 // Then it runs the docs watch check on the head map and the head snapshot.
-//   It exits 1 when a page changed or the check has an error: the docs
-//   changed after `update`, so the author runs `update` again.
+//   It exits 1 when a page changed: the docs changed after `update`. It
+//   also exits 1 when the check has an error, such as a failed fetch.
 // The two steps read each page once, so the head hashes are the hashes that
 // the dry run read. The repository comes from --repo, $GITHUB_REPOSITORY or
-// `gh repo view`. gh reads issues only. The gate writes nothing to GitHub.
-// It fails closed: a step that throws, or a report with no count, exits 1.
+// `gh repo view`. gh only reads. The gate writes nothing to GitHub.
+// It fails closed: a step that throws, or an output that the gate cannot
+// read, exits 1. git gets no GIT_ variable that points it at another
+// repository, as under a git hook.
 // It prints a summary, and adds it to $GITHUB_STEP_SUMMARY when that is set.
 // It removes the temporary root when it ends.
 import { execFileSync } from 'node:child_process'
@@ -50,11 +53,30 @@ const BASE_PATHS = [MAP_FILE, 'docs/rules-inventory.md', 'docs/rules', SNAPSHOT_
 
 type Out = { write: (text: string) => unknown }
 
+// The variables that point git at a repository, or change how it reads
+// config or paths. Git sets some of them when it runs a hook. The list is
+// the list of src/git-state.ts.
+const LOCATION = [
+  'GIT_DIR',
+  'GIT_WORK_TREE',
+  'GIT_INDEX_FILE',
+  'GIT_COMMON_DIR',
+  'GIT_OBJECT_DIRECTORY',
+  'GIT_ALTERNATE_OBJECT_DIRECTORIES',
+  'GIT_PREFIX',
+  'GIT_NAMESPACE',
+]
+const AMBIENT =
+  /^GIT_(CONFIG_(PARAMETERS|COUNT|KEY_\d+|VALUE_\d+)|(LITERAL|GLOB|NOGLOB|ICASE)_PATHSPECS)$/
+
 // Runs git in the root, and returns stdout as bytes.
 const gitIn =
   (root: string) =>
   (args: string[]): Buffer =>
     execFileSync('git', ['-C', root, ...args], {
+      env: Object.fromEntries(
+        Object.entries(process.env).filter(([k]) => !LOCATION.includes(k) && !AMBIENT.test(k)),
+      ),
       maxBuffer: 256 * 1024 * 1024,
       stdio: ['ignore', 'pipe', 'pipe'],
     })
@@ -189,11 +211,20 @@ async function checkHead(
     if (report.changed === 0 && report.errors.length === 0) {
       return { lines: ['The head snapshot is the live docs.'], failures: [] }
     }
-    const message =
-      `${report.changed} page(s) of the head snapshot are not the live docs, and the check ` +
-      `has ${report.errors.length} error(s). The docs changed after \`update\`. ` +
-      'Run `node scripts/docs-watch.ts update` again, and push.'
-    return { lines: [message, ...report.errors.map((e) => `- ${e}`)], failures: [message] }
+    const lines: string[] = []
+    if (report.changed > 0) {
+      lines.push(
+        `${report.changed} page(s) of the head snapshot are not the live docs. ` +
+          'The docs changed after `update`. Run `node scripts/docs-watch.ts update` again, and push.',
+      )
+    }
+    if (report.errors.length > 0) {
+      lines.push(
+        `The check of the head has ${report.errors.length} error(s):`,
+        ...report.errors.map((e) => `- ${e}`),
+      )
+    }
+    return { lines, failures: lines.slice(0, 1) }
   } catch (error) {
     const message = `The check of the head failed: ${(error as Error).message}`
     return { lines: [message], failures: [message] }
@@ -226,7 +257,7 @@ export async function main(
   const root = path.resolve(rootArg ?? path.join(import.meta.dirname, '..'))
   const out = deps.out ?? process.stdout
   const git = gitIn(root)
-  const changed = git(['diff', '--name-only', '-z', `${base}...HEAD`])
+  const changed = git(['diff', '--no-renames', '--name-only', '-z', `${base}...HEAD`])
     .toString('utf8')
     .split('\0')
   if (!changed.some((file) => file === MAP_FILE || file.startsWith(SNAPSHOT_DIR))) {
