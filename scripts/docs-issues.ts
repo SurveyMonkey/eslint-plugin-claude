@@ -167,13 +167,17 @@ export const keyOf = (f: Pick<Finding, 'page' | 'blockId' | 'oldHash' | 'newHash
 export const trackedMarkerOf = (t: Tracked): string => `<!-- docs-watch-tracked:${keyOf(t)} -->`
 const TRACKED_MARKER = /<!-- docs-watch-tracked:(\S+?) -->/g
 
+// The key in each tracked marker of a comment body.
+export const trackedMarkersIn = (body: string): string[] =>
+  [...body.matchAll(TRACKED_MARKER)].map((m) => m[1] ?? '')
+
 export const markerOf = (f: Finding): string =>
   `<!-- docs-watch:${f.kind}:${keyOf(f)}${f.rules.length > 0 ? ` rules=${f.rules.join(',')}` : ''} -->`
 
 // The key and the rules in each marker of an issue body.
 const MARKER =
   /<!-- docs-watch:(?:rule-update|rule-removal|new-rule|needs-triage|moved):(\S+?)(?: rules=([a-z0-9,-]+))? -->/g
-const markersIn = (body: string): { key: string; rules: string[] }[] =>
+export const markersIn = (body: string): { key: string; rules: string[] }[] =>
   [...body.matchAll(MARKER)].map((m) => ({
     key: m[1] ?? '',
     rules: m[2] === undefined ? [] : m[2].split(','),
