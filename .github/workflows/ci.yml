@@ -99,9 +99,8 @@ jobs:
   # request, because a required check cannot use a path filter. It passes at
   # once when the diff does not change the docs watch state. Else it runs the
   # docs watch again, in dry run, against the base state. It fails when the
-  # pull request stores a docs change that no issue or group issue comment
-  # names. It also fails when the head snapshot is not the live docs. On a
-  # push it passes, and on another event it fails.
+  # pull request stores a docs change that no open issue or group issue
+  # comment names. It also fails when the head snapshot is not the live docs.
   docs-snapshot:
     name: docs-snapshot
     runs-on: ubuntu-latest
@@ -110,6 +109,8 @@ jobs:
       contents: read
       issues: read
     steps:
+      # On a push the job passes. A trigger that a later change adds fails
+      # until the job has a step for it.
       - name: Pass on a push
         if: github.event_name == 'push'
         run: echo "docs-snapshot runs on a pull request only. A push has no base to compare. Pass."
