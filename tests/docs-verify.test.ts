@@ -57,7 +57,7 @@ for (const name of Object.keys(process.env)) {
   if (name.startsWith('GIT_')) delete process.env[name]
 }
 
-// git with no user or system config, so a hook or a signing key on this
+// git with no user or system config, so a hook or a signature key on this
 // machine does not change the result.
 const git = (root: string, ...args: string[]) =>
   execFileSync(
