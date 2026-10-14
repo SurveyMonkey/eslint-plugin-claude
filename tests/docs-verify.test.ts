@@ -426,6 +426,25 @@ describe('the base state and the page reads', () => {
     expect(text).toContain(`- tracked: ${URL_} block commands, hash ${headHash(root, 'commands')}`)
   })
 
+  it('asks Jev with the base rule docs, not the head rule docs', async () => {
+    const { root, base } = await repoWith(async (dir) => {
+      const file = path.join(dir, 'docs/rules/a-rule.md')
+      const text = readFileSync(file, 'utf8')
+      writeFileSync(file, text.replace('checks hook names', 'checks a head change'))
+      await refresh(serve(EDIT_HOOKS))(dir)
+    })
+    const jev = fakeJev()
+    const { code } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: jev.fetch,
+      run: fakeGh().run,
+    })
+    expect(code).toBe(0)
+    const asked = JSON.stringify(jev.calls)
+    expect(asked).toContain('The rule a-rule checks hook names.')
+    expect(asked).not.toContain('checks a head change')
+  })
+
   it('names a removed block by its old hash', async () => {
     let old: string | undefined
     const { root, base } = await repoWith(async (dir) => {
