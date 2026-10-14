@@ -1,6 +1,6 @@
 ---
 name: docs-watch-triage
-description: Triage a batch of claude-docs-change issues that the docs watch opened, with no code change. Checks each block against the snapshot and the rule coverage. Decides one of five outcomes, and writes the result to the issues. Then opens one snapshot refresh pull request with auto-merge, which closes the decided issues. Use when two or more docs watch issues are open and you must decide each one.
+description: Triage a batch of claude-docs-change issues that the docs watch opened, with no code change. Checks each block against the snapshot and the rule coverage. Decides one of five outcomes, and writes the result to the issues. Then it opens one refresh pull request with auto-merge. That pull request stores the snapshot and closes the decided issues. Use when two or more docs watch issues are open and you must decide each one.
 ---
 
 # Docs watch triage
@@ -56,7 +56,7 @@ For each other marker:
   next run opens no new issue for the block.
 - **The snapshot differs or has no entry for the block.** The snapshot is old. If you close the
   issue, the next run opens a new issue for the same block. Write the block in the list for the
-  refresh pull request (Phase 6).
+  refresh pull request (Phase 7).
 - **The live text differs from the quoted text.** The page changed again after the issue
   opened. Fetch the live page (`<page>.md`) and decide on that text.
 
@@ -146,9 +146,9 @@ Use the `gh:issues` skill when it is available. If it is not, use the commands i
    Read each value back from GitHub after the write. Read Priority on the web page of the issue.
 2. List the open issues with the label. Only the issues that wait for the refresh can stay open.
    For each one, say why.
-3. Give the refresh pull request of Phase 7: its number, its auto-merge state, and its
-   checks. If Phase 7 did not open one, say why, and name the open refresh pull request if
-   one blocked it.
+3. Write the report after Phase 7. Give the refresh pull request: its number, its auto-merge
+   state, and its checks. If Phase 7 did not open one, say why, and name the open refresh
+   pull request if one blocked it.
 
 ## Phase 7: Refresh
 
@@ -159,23 +159,23 @@ or group issue comment names. The commands are in [commands.md](commands.md).
 
 1. Look for an open pull request from `docs-watch-refresh`. If one is open, do not open a
    second. Report it, and stop. The next session reads its checks first.
-2. Phase 2 can find a `gone:` key, a `moved` marker, or a `duplicate heading` or
-   `unknown heading` change. Then `update` fails. Fix the footnote of that block in this pull
-   request, as the runbook section "A moved section" says, and close its issue here. If the fix
-   needs more than a footnote change, do not do Phase 7. Give the reason in the report.
-3. Make a worktree from the default branch, on the branch `docs-watch-refresh`. Install the
+2. Make a worktree from the default branch, on the branch `docs-watch-refresh`. Install the
    dependencies.
+3. Phase 2 can find a `gone:` key, a `moved` marker, or a `duplicate heading` or
+   `unknown heading` change. Then `update` fails. In the worktree, fix the footnote of that
+   block, as the runbook section "A moved section" says. If the fix needs more than a footnote
+   change, do not do Phase 7. Give the reason in the report.
 4. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`. Commit
-   `docs/rule-sources.json` and `docs/docs-snapshot/`, with a footnote fix of step 2 if there
-   is one.
+   `docs/rule-sources.json` and `docs/docs-snapshot/`. Add each footnote file of step 3.
 5. Push, and open the pull request ready for review, not as a draft. CodeQL runs only on a
    pull request that is ready. The body has one `Closes #<n>` line for each
-   `claude-docs-change` issue that this session decided and left open, digests included. It
-   names the open work items with no closing keyword.
+   `claude-docs-change` issue that this session decided and left open. That includes digests
+   and the issue of a footnote fix in step 3. It names the other open work items with no
+   closing keyword.
 6. Turn on auto-merge with squash.
-7. Read the checks once. If `docs-snapshot` fails, it names the blocks. Do one loop: run the
-   docs-watch workflow, and wait for it to end. Triage the issues that it opens, with Phases 1
-   to 5. Run `update` again, push to the same branch, and add a `Closes` line for each new
-   issue that you leave open.
+7. Wait for the checks to end. If `docs-snapshot` fails, it names the blocks. Do one loop: run
+   the docs-watch workflow, and wait for it to end. Triage the issues that it opens, with
+   Phases 1 to 5. Run `update` again, push to the same branch, and add a `Closes` line for
+   each new issue that you leave open.
 8. If `docs-snapshot` fails again, stop. Auto-merge waits. The report names the blocks.
 9. Remove the worktree. GitHub deletes the branch when the pull request merges.

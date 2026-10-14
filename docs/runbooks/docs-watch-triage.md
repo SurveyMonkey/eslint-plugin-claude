@@ -30,7 +30,7 @@ This runbook covers the pull request side. To decide a batch of issues with no c
 the `docs-watch-triage` skill (`.claude/skills/docs-watch-triage/SKILL.md`). It closes, retitles
 or opens issues, and adds scope notes to group issues. At its end, it opens one refresh pull
 request on the branch `docs-watch-refresh`, with auto-merge. That pull request stores the
-snapshot, and closes each issue that the session decided with a comment only. A pull request
+snapshot, and closes each issue that the session decided and left open. A pull request
 from this runbook then resolves each work item.
 
 ## The five kinds of issue
@@ -57,7 +57,7 @@ names no rule can be one section of a digest issue.
 3. Read the rule doc `docs/rules/<rule>.md` for each rule in the Scope section.
 4. Decide, with the table above. For a moved section, do the steps in the next section first.
 5. Open one pull request that makes the change. After a triage refresh, a work item needs
-   `update` only when it adds a citation, or when the docs changed again. Then refresh the
+   `update` only when it adds or changes a citation, or when the docs changed again. Then refresh the
    snapshot in the same pull request:
 
    ```sh
@@ -77,7 +77,8 @@ names no rule can be one section of a digest issue.
    [When the docs-snapshot check fails](#when-the-docs-snapshot-check-fails).
 6. Close the issue with that pull request, for example with `Closes #<number>` in its body.
 
-Close an issue only in the pull request that refreshes the snapshot. The job reads open issues
+Close an issue only in a pull request that refreshes the snapshot, or when the snapshot
+already holds its hash. The job reads open issues
 only. If you close an issue and the snapshot stays old, the next run opens the issue again.
 
 ## When the docs-snapshot check fails
@@ -108,8 +109,8 @@ The log names each failure. Do the steps for the failure that it names.
 An issue that the pull request closes is open until the merge. So its marker still stops a new
 issue for its block.
 
-The triage refresh pull request has auto-merge. When its check fails, it stays open, and
-auto-merge waits. The triage skill does one loop of the steps above. The next session reads the
+A refresh pull request from the triage skill has auto-merge. When its check fails, it stays
+open, and auto-merge waits. The skill does one loop of the first item above. The next session reads the
 open refresh pull request first, and opens no second one.
 
 ## A digest issue

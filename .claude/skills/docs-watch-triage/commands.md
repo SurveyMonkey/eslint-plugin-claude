@@ -68,7 +68,10 @@ gh issue view <n> --json title,issueType,labels,state,parent,milestone
 
 ## Phase 7: Refresh
 
-Replace `<root>` with the repository root, and `<wt>` with `<root>/.claude/worktrees/docs-watch-refresh`.
+Replace `<root>` with the repository root. Replace `<wt>` with
+`<root>/.claude/worktrees/docs-watch-refresh`. Replace `<file>` with a file that holds the pull
+request body, with its `Closes #<n>` lines. These commands do not need the repository root as
+the working directory.
 
 ```sh
 gh pr list --head docs-watch-refresh --state open --json number,url,autoMergeRequest
@@ -78,24 +81,27 @@ pnpm --dir <wt> install --frozen-lockfile
 pnpm --dir <wt> docs:seed
 node <wt>/scripts/docs-watch.ts update <wt>
 git -C <wt> add docs/rule-sources.json docs/docs-snapshot
+git -C <wt> add docs/rules docs/rules-inventory.md
 git -C <wt> commit -m 'docs(docs-watch): refresh the docs snapshot'
 git -C <wt> push -u origin docs-watch-refresh
 gh pr create --base main --head docs-watch-refresh --title 'docs(docs-watch): refresh the docs snapshot' --body-file <file>
 gh pr merge <n> --auto --squash
-gh pr checks <n>
+gh pr checks <n> --watch
 ```
 
 The first command prints `[]` when no refresh is open. `gh pr create` opens a pull request that
 is ready unless you give `--draft`. Do not give it. The commit runs the pre-commit hook.
 
-For one loop after a `docs-snapshot` failure:
+For one loop after a `docs-snapshot` failure: the listed run must start after `gh workflow run`.
+If its `createdAt` is older, list again.
 
 ```sh
 gh workflow run docs-watch.yml --ref main
-gh run list --workflow docs-watch.yml --limit 1 --json databaseId,status
+gh run list --workflow docs-watch.yml --event workflow_dispatch --branch main --limit 1 --json databaseId,status,createdAt
 gh run watch <run id> --exit-status
 node <wt>/scripts/docs-watch.ts update <wt>
 git -C <wt> add docs/rule-sources.json docs/docs-snapshot
+git -C <wt> add docs/rules docs/rules-inventory.md
 git -C <wt> commit -m 'docs(docs-watch): refresh the docs snapshot again'
 git -C <wt> push
 gh pr edit <n> --body-file <file>

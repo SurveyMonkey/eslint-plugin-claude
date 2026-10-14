@@ -219,7 +219,7 @@ is its review. The gate reads issues with the `GITHUB_TOKEN` and `issues: read`.
 nothing.
 
 The `docs-watch-triage` skill ends with one refresh pull request on the branch
-`docs-watch-refresh` (#307). It closes each issue that the session decided with a comment only.
+`docs-watch-refresh` (#307). It closes each issue that the session decided and left open.
 That pull request merges by auto-merge, with squash. The required checks, `docs-snapshot` among
 them, take the place of a person review for it. Only one refresh pull request is open at a time:
 the skill opens no second one while one is open.
