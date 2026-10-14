@@ -25,8 +25,7 @@ and 14):
   block hashes of the last docs, and the text of each cited section. Only a reviewed pull request
   changes them. The `docs-snapshot` check (`scripts/docs-verify.ts`) runs the docs watch on the
   base state in dry run. It fails a pull request that stores a change that no open issue or group
-  issue comment names. It also fails a
-  snapshot that is not the live docs.
+  issue comment names. It also fails a snapshot that is not the live docs.
 - `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
 
 ## Code
