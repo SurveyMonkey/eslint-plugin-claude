@@ -3,10 +3,18 @@
 // temporary directory. They inject the docs fetch, the Jev fetch and the gh
 // runner, so no test reaches the network or GitHub.
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Answers, JevFetch, Request } from '../scripts/docs-classify.ts'
 import type { Run } from '../scripts/docs-issues.ts'
@@ -26,6 +34,7 @@ const KEY = 'test-key-not-real-0123'
 const EDIT_HOOKS = PAGE.replace('an array mixing both', 'an array of both')
 const EDIT_COMMANDS = PAGE.replace('or an object map', 'or a map')
 const EDIT_BOTH = EDIT_HOOKS.replace('or an object map', 'or a map')
+const NO_COMMANDS = PAGE.replace(/### `commands`\n[\s\S]*?(?=### `hooks`)/, '')
 
 const cited: SourceMap = { 'a-rule': [{ url: URL_, heading: 'hooks' }] }
 
@@ -46,6 +55,7 @@ const INVENTORY = [
 
 const dirs: string[] = []
 afterEach(() => {
+  vi.unstubAllEnvs()
   for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true })
 })
 
@@ -201,6 +211,9 @@ describe('a diff that does not touch the docs watch state', () => {
   it('passes at once, with no fetch, no Jev call and no gh call', async () => {
     const { root, base } = await repoWith((dir) => {
       writeFileSync(path.join(dir, 'README.md'), '# Readme\n')
+      // A near miss: the name starts with the snapshot directory name.
+      mkdirSync(path.join(dir, 'docs/docs-snapshot-old'))
+      writeFileSync(path.join(dir, 'docs/docs-snapshot-old/x.json'), '{}\n')
       writeFileSync(path.join(dir, 'docs/rules/a-rule.md'), '# a-rule, changed\n')
     })
     const jev = fakeJev()
@@ -222,15 +235,13 @@ describe('a diff that does not touch the docs watch state', () => {
 })
 
 describe('a diff that changes the snapshot', () => {
-  it('fails with no TYPESAFE_API_KEY, and names the cause', async () => {
+  it.each([
+    ['empty', { TYPESAFE_API_KEY: '' }],
+    ['not set', {}],
+  ])('fails when TYPESAFE_API_KEY is %s, and names the cause', async (_, env) => {
     const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
     const gh = fakeGh()
-    const { code, text } = await verify(
-      root,
-      base,
-      { fetchText: failFetch, run: gh.run },
-      { TYPESAFE_API_KEY: '' },
-    )
+    const { code, text } = await verify(root, base, { fetchText: failFetch, run: gh.run }, env)
     expect(code).toBe(1)
     expect(text).toContain('TYPESAFE_API_KEY is not set')
     expect(text).toContain('A pull request from a fork or from Dependabot gets no secret')
@@ -240,6 +251,7 @@ describe('a diff that changes the snapshot', () => {
   it('fails when the dry run would open an issue, and names the block', async () => {
     const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
     const summary = path.join(root, 'summary.md')
+    writeFileSync(summary, 'an earlier step\n')
     const { code, text } = await verify(
       root,
       base,
@@ -252,9 +264,9 @@ describe('a diff that changes the snapshot', () => {
     expect(text).toContain(`- rule-update: ${URL_} block hooks, hash ${hash}`)
     expect(text).toContain('The dry run would open 1 issue(s) and post 0 comment(s).')
     expect(text).not.toContain(KEY)
-    expect(readFileSync(summary, 'utf8')).toContain(
-      `- rule-update: ${URL_} block hooks, hash ${hash}`,
-    )
+    const written = readFileSync(summary, 'utf8')
+    expect(written.startsWith('an earlier step\n')).toBe(true)
+    expect(written).toContain(`- rule-update: ${URL_} block hooks, hash ${hash}`)
   })
 
   it('fails when the dry run would post only a tracked comment', async () => {
@@ -311,7 +323,9 @@ describe('a diff that changes the snapshot', () => {
     )
     expect(code).toBe(0)
     expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
-    expect(gh.calls[0]).toEqual([
+    expect(text).not.toContain('- rule-update:')
+    expect(text).not.toContain('- tracked:')
+    expect(gh.calls).toContainEqual([
       'repo',
       'view',
       '--json',
@@ -323,14 +337,11 @@ describe('a diff that changes the snapshot', () => {
 
   it('fails when the head snapshot is not the live docs, and says to run update again', async () => {
     const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const gh = fakeGh({ groups: { 50: { state: 'closed', comments: [] } } })
     const { code, text } = await verify(
       root,
       base,
-      {
-        fetchText: serve(EDIT_BOTH),
-        fetch: fakeJev().fetch,
-        run: fakeGh({ groups: { 50: { state: 'closed', comments: [] } } }).run,
-      },
+      { fetchText: serve(EDIT_BOTH), fetch: fakeJev().fetch, run: gh.run },
       { TYPESAFE_API_KEY: KEY, GITHUB_REPOSITORY: REPO },
       [],
     )
@@ -338,6 +349,8 @@ describe('a diff that changes the snapshot', () => {
     expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
     expect(text).toContain('1 page(s) of the head snapshot are not the live docs')
     expect(text).toContain('Run `node scripts/docs-watch.ts update` again')
+    // GITHUB_REPOSITORY names the repository, so gh does not.
+    expect(gh.calls.map((args) => args.slice(0, 2))).not.toContainEqual(['repo', 'view'])
   })
 
   it('fails when the check of the head gives an error', async () => {
@@ -354,7 +367,10 @@ describe('a diff that changes the snapshot', () => {
       run: fakeGh().run,
     })
     expect(code).toBe(1)
+    expect(text).toContain('The check of the head has 1 error(s):')
     expect(text).toContain(`- ${URL_}: the map hash of "hooks" for a-rule is not the snapshot hash`)
+    // The docs did not change, so the gate does not say so.
+    expect(text).not.toContain('The docs changed after')
   })
 
   it('fails when the head map cannot be read', async () => {
@@ -390,6 +406,100 @@ describe('a diff that changes the snapshot', () => {
     expect(code).toBe(0)
     expect(jev.calls).toEqual([])
     expect(text).toContain('The head snapshot is the live docs.')
+  })
+})
+
+describe('the base state and the page reads', () => {
+  it('classifies with the base inventory, not the head inventory', async () => {
+    // The head removes the inventory row of `commands`. The base still has
+    // it, so the block is tracked, and the dry run would post a comment.
+    const { root, base } = await repoWith(async (dir) => {
+      writeFileSync(path.join(dir, 'docs/rules-inventory.md'), '## Rules by group\n')
+      await refresh(serve(EDIT_COMMANDS))(dir)
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_COMMANDS),
+      fetch: fakeJev().fetch,
+      run: fakeGh({ groups: { 50: { state: 'open', comments: [] } } }).run,
+    })
+    expect(code).toBe(1)
+    expect(text).toContain(`- tracked: ${URL_} block commands, hash ${headHash(root, 'commands')}`)
+  })
+
+  it('names a removed block by its old hash', async () => {
+    let old: string | undefined
+    const { root, base } = await repoWith(async (dir) => {
+      old = headHash(dir, 'commands')
+      await refresh(serve(NO_COMMANDS))(dir)
+    })
+    expect(NO_COMMANDS).not.toContain('### `commands`')
+    expect(old).toMatch(/^[0-9a-f]{64}$/)
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(NO_COMMANDS),
+      fetch: fakeJev().fetch,
+      run: fakeGh({ groups: { 50: { state: 'open', comments: [] } } }).run,
+    })
+    expect(code).toBe(1)
+    expect(text).toContain(`- tracked: ${URL_} block commands, hash gone:${old}`)
+  })
+
+  it('reads each page once, so the head check sees the text that the dry run read', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    // The first read gets the text of the head snapshot. A later read gets
+    // newer text.
+    const reads: string[] = []
+    const fetchText: FetchText = async (url) => {
+      reads.push(url)
+      return reads.length === 1 ? EDIT_HOOKS : EDIT_BOTH
+    }
+    const { code, text } = await verify(root, base, {
+      fetchText,
+      fetch: fakeJev().fetch,
+      run: fakeGh().run,
+    })
+    expect(code).toBe(0)
+    expect(reads).toEqual([`${URL_}.md`])
+    expect(text).toContain('The head snapshot is the live docs.')
+  })
+
+  it('removes its temporary root', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const temp = mkdtempSync(path.join(tmpdir(), 'docs-verify-tmp-'))
+    dirs.push(temp)
+    vi.stubEnv('TMPDIR', temp)
+    expect(tmpdir()).toBe(temp)
+    const { code } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev().fetch,
+      run: fakeGh().run,
+    })
+    expect(code).toBe(0)
+    expect(readdirSync(temp)).toEqual([])
+  })
+})
+
+describe('the diff of the base and the head', () => {
+  it('counts a snapshot file that the pull request moves out of the snapshot', async () => {
+    const { root, base } = await repoWith((dir) => {
+      renameSync(path.join(dir, SNAPSHOT), path.join(dir, 'docs/old-snapshot.json'))
+    })
+    const { code, text } = await verify(root, base, {}, {})
+    expect(code).toBe(1)
+    expect(text).toContain('TYPESAFE_API_KEY is not set')
+  })
+
+  it('reads the root, not the repository that GIT_DIR names, as under a git hook', async () => {
+    const { root, base } = await repoWith((dir) => {
+      writeFileSync(path.join(dir, 'README.md'), '# Readme\n')
+    })
+    const decoy = mkdtempSync(path.join(tmpdir(), 'docs-verify-decoy-'))
+    dirs.push(decoy)
+    git(decoy, 'init', '-q')
+    vi.stubEnv('GIT_DIR', path.join(decoy, '.git'))
+    vi.stubEnv('GIT_INDEX_FILE', path.join(decoy, '.git/index'))
+    const { code, text } = await verify(root, base, {}, {}, [])
+    expect(code).toBe(0)
+    expect(text).toContain('Pass.')
   })
 })
 
