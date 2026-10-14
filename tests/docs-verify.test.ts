@@ -252,13 +252,16 @@ describe('a diff that changes the snapshot', () => {
     const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
     const summary = path.join(root, 'summary.md')
     writeFileSync(summary, 'an earlier step\n')
+    const gh = fakeGh()
     const { code, text } = await verify(
       root,
       base,
-      { fetchText: serve(EDIT_HOOKS), fetch: fakeJev({ alters: 0.84 }).fetch, run: fakeGh().run },
-      { TYPESAFE_API_KEY: KEY, GITHUB_STEP_SUMMARY: summary },
+      { fetchText: serve(EDIT_HOOKS), fetch: fakeJev({ alters: 0.84 }).fetch, run: gh.run },
+      { TYPESAFE_API_KEY: KEY, GITHUB_STEP_SUMMARY: summary, GITHUB_REPOSITORY: 'other/repo' },
     )
     expect(code).toBe(1)
+    // --repo names the repository, so gh and GITHUB_REPOSITORY do not.
+    expect(gh.calls.map((args) => args.slice(0, 2))).not.toContainEqual(['repo', 'view'])
     const hash = headHash(root, 'hooks')
     expect(hash).toMatch(/^[0-9a-f]{64}$/)
     expect(text).toContain(`- rule-update: ${URL_} block hooks, hash ${hash}`)
@@ -387,6 +390,37 @@ describe('a diff that changes the snapshot', () => {
     expect(text).toContain('rule-sources.json')
   })
 
+  it('names the reason of a needs-triage block, such as a failed Jev request', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const jevDown: JevFetch = async () => new Response('', { status: 401 })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: jevDown,
+      wait: async () => {},
+      run: fakeGh().run,
+    })
+    expect(code).toBe(1)
+    expect(text).toContain(
+      `- needs-triage: ${URL_} block hooks, hash ${headHash(root, 'hooks')}: The Jev request failed`,
+    )
+    expect(text).toContain('401')
+  })
+
+  it('fails both steps when the page fetch fails', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const { code, text } = await verify(root, base, {
+      fetchText: async () => {
+        throw new Error('ECONNRESET')
+      },
+      fetch: fakeJev().fetch,
+      run: fakeGh().run,
+    })
+    expect(code).toBe(1)
+    expect(text).toContain('The dry run failed: ECONNRESET')
+    expect(text).toContain('The check of the head has 1 error(s):')
+    expect(text).toContain('- ECONNRESET')
+  })
+
   it('does not classify a page that the head map cites and the base map does not', async () => {
     const pages = { [`${URL_}.md`]: PAGE, [`${SKILLS_URL}.md`]: SKILLS }
     const { root, base } = await repoWith(async (dir) => {
@@ -502,23 +536,46 @@ describe('the diff of the base and the head', () => {
     const { root, base } = await repoWith((dir) => {
       renameSync(path.join(dir, SNAPSHOT), path.join(dir, 'docs/old-snapshot.json'))
     })
+    // Rename detection on, whatever the config of this machine says.
+    const config = path.join(root, 'renames.gitconfig')
+    writeFileSync(config, '[diff]\n\trenames = true\n')
+    vi.stubEnv('GIT_CONFIG_GLOBAL', config)
     const { code, text } = await verify(root, base, {}, {})
     expect(code).toBe(1)
     expect(text).toContain('TYPESAFE_API_KEY is not set')
   })
 
-  it('reads the root, not the repository that GIT_DIR names, as under a git hook', async () => {
-    const { root, base } = await repoWith((dir) => {
-      writeFileSync(path.join(dir, 'README.md'), '# Readme\n')
-    })
+  // Each row makes a git call of the gate fail, or read another repository,
+  // when the gate keeps the variable. A git hook can set each one.
+  it.each<[string, (decoy: string) => Record<string, string>]>([
+    ['GIT_DIR', (d) => ({ GIT_DIR: `${d}/.git`, GIT_INDEX_FILE: `${d}/.git/index` })],
+    ['GIT_COMMON_DIR', (d) => ({ GIT_COMMON_DIR: `${d}/.git` })],
+    ['GIT_OBJECT_DIRECTORY', (d) => ({ GIT_OBJECT_DIRECTORY: `${d}/.git/objects` })],
+    ['GIT_CONFIG_PARAMETERS', (d) => ({ GIT_CONFIG_PARAMETERS: `'diff.orderFile'='${d}/none'` })],
+    [
+      'GIT_CONFIG_COUNT',
+      (d) => ({
+        GIT_CONFIG_COUNT: '1',
+        GIT_CONFIG_KEY_0: 'diff.orderFile',
+        GIT_CONFIG_VALUE_0: `${d}/none`,
+      }),
+    ],
+    ['GIT_ICASE_PATHSPECS', () => ({ GIT_ICASE_PATHSPECS: '1' })],
+    ['GIT_GLOB_PATHSPECS', () => ({ GIT_GLOB_PATHSPECS: '1' })],
+  ])('reads the root and the base files with %s set, as under a git hook', async (_, vars) => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
     const decoy = mkdtempSync(path.join(tmpdir(), 'docs-verify-decoy-'))
     dirs.push(decoy)
     git(decoy, 'init', '-q')
-    vi.stubEnv('GIT_DIR', path.join(decoy, '.git'))
-    vi.stubEnv('GIT_INDEX_FILE', path.join(decoy, '.git/index'))
-    const { code, text } = await verify(root, base, {}, {}, [])
+    for (const [name, value] of Object.entries(vars(decoy))) vi.stubEnv(name, value)
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev().fetch,
+      run: fakeGh().run,
+    })
+    expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
+    expect(text).toContain('docs-snapshot: pass')
     expect(code).toBe(0)
-    expect(text).toContain('Pass.')
   })
 })
 
@@ -543,9 +600,13 @@ describe('the gate fails closed', () => {
     expect(text).toContain('The dry run failed: Jev is down')
   })
 
-  it('fails when the classifier gives no findings or tracked list', async () => {
+  it.each([
+    ['no list', { model: 'jev-1.13.0' }],
+    ['no tracked list', { model: 'jev-1.13.0', findings: [] }],
+    ['no findings list', { model: 'jev-1.13.0', tracked: [] }],
+  ])('fails when the classifier gives %s', async (_, output) => {
     const { code, text } = await steps({
-      classify: async () => ({ model: 'jev-1.13.0' }) as never,
+      classify: async () => output as never,
     })
     expect(code).toBe(1)
     expect(text).toContain(
@@ -563,9 +624,13 @@ describe('the gate fails closed', () => {
     expect(text).toContain('The dry run failed: gh: HTTP 401')
   })
 
-  it('fails when the issue step gives no wouldOpen or wouldComment count', async () => {
+  it.each([
+    ['no count', { opened: [], skipped: 0, commented: [] }],
+    ['no wouldComment count', { wouldOpen: 0 }],
+    ['no wouldOpen count', { wouldComment: 0 }],
+  ])('fails when the issue step gives %s', async (_, report) => {
     const { code, text } = await steps({
-      openIssues: async () => ({ opened: [], skipped: 0, commented: [] }) as never,
+      openIssues: async () => report as never,
     })
     expect(code).toBe(1)
     expect(text).toContain(
@@ -580,6 +645,34 @@ describe('the command line', () => {
       'usage: docs-verify.ts <base> [root] [--repo owner/name]',
     )
     await expect(api.main(['main', '--dry-run'], {})).rejects.toThrow('unknown option --dry-run')
+  })
+
+  // An empty base gives an empty diff, and git reads `-S` as an option. Each
+  // would pass a head that changes the snapshot.
+  it.each([
+    ['an empty base', ['']],
+    ['a base that starts with a dash', ['-S']],
+    ['a third argument', ['main', '.', 'extra']],
+  ])('refuses %s', async (_, argv) => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    expect(base).toMatch(/^[0-9a-f]{40}$/)
+    await expect(api.main([...argv, root].slice(0, 3), {})).rejects.toThrow(
+      'usage: docs-verify.ts <base> [root] [--repo owner/name]',
+    )
+  })
+
+  it('refuses --repo with no value', async () => {
+    await expect(api.main(['main', '.', '--repo'], {})).rejects.toThrow(
+      '--repo needs a value, owner/name',
+    )
+    await expect(api.main(['main', '--repo', '--other'], {})).rejects.toThrow(
+      '--repo needs a value, owner/name',
+    )
+  })
+
+  it('refuses a base that is not a commit', async () => {
+    const { root } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    await expect(api.main(['no-such-ref', root], {})).rejects.toThrow('rev-parse')
   })
 
   it('exits 1 when it fails, as a script', () => {
