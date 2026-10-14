@@ -32,7 +32,7 @@ and 14):
 
 - Source is TypeScript in `src/`, built by `tsc` to `dist/` (`.claude/rules/type-ts.md`). Tests
   are in `tests/`, and follow the `testing` skill. The `docs-watch-triage` skill decides a batch
-  of docs watch issues.
+  of docs watch issues. It then opens one refresh pull request with auto-merge.
 - `CONTRIBUTING.md` has the commands, the hooks and the release flow. Run `pnpm lint`,
   `pnpm typecheck`, `pnpm test`, `pnpm knip` and `pnpm docs:check` before you push.
 - A new rule needs footnotes in `docs/rules/<rule>.md` that link to its docs sources. The form

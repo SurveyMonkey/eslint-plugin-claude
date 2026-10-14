@@ -65,3 +65,45 @@ gh issue view <n> --json title,issueType,labels,state,parent,milestone
 ```
 
 `gh issue view` has no field for Priority. Read it on the web page of the issue.
+
+## Phase 7: Refresh
+
+Replace `<root>` with the repository root, and `<wt>` with `<root>/.claude/worktrees/docs-watch-refresh`.
+
+```sh
+gh pr list --head docs-watch-refresh --state open --json number,url,autoMergeRequest
+git -C <root> fetch origin main
+git -C <root> worktree add <wt> -b docs-watch-refresh origin/main
+pnpm --dir <wt> install --frozen-lockfile
+pnpm --dir <wt> docs:seed
+node <wt>/scripts/docs-watch.ts update <wt>
+git -C <wt> add docs/rule-sources.json docs/docs-snapshot
+git -C <wt> commit -m 'docs(docs-watch): refresh the docs snapshot'
+git -C <wt> push -u origin docs-watch-refresh
+gh pr create --base main --head docs-watch-refresh --title 'docs(docs-watch): refresh the docs snapshot' --body-file <file>
+gh pr merge <n> --auto --squash
+gh pr checks <n>
+```
+
+The first command prints `[]` when no refresh is open. `gh pr create` opens a pull request that
+is ready unless you give `--draft`. Do not give it. The commit runs the pre-commit hook.
+
+For one loop after a `docs-snapshot` failure:
+
+```sh
+gh workflow run docs-watch.yml --ref main
+gh run list --workflow docs-watch.yml --limit 1 --json databaseId,status
+gh run watch <run id> --exit-status
+node <wt>/scripts/docs-watch.ts update <wt>
+git -C <wt> add docs/rule-sources.json docs/docs-snapshot
+git -C <wt> commit -m 'docs(docs-watch): refresh the docs snapshot again'
+git -C <wt> push
+gh pr edit <n> --body-file <file>
+```
+
+After the push:
+
+```sh
+git -C <root> worktree remove <wt>
+git -C <root> branch -D docs-watch-refresh
+```
