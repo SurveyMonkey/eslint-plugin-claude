@@ -3,8 +3,9 @@
 // Usage: node scripts/docs-verify.ts <base> [root] [--repo owner/name]
 // base is the ref or SHA of the base of the pull request. root defaults to
 // this repository, with the head of the pull request at HEAD.
-// It reads the paths that changed from base to HEAD (`git diff base...HEAD`,
-// with no rename detection, so a file moved out of the snapshot counts).
+// A base that is empty, starts with a dash or is not a commit stops the gate.
+// It reads the paths that changed from base to HEAD (`git diff base...HEAD`).
+// It does not detect a rename, so a file moved out of the snapshot counts.
 //   When no path is in docs/docs-snapshot/, and docs/rule-sources.json did
 //   not change, it prints one line and exits 0.
 // Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
@@ -14,17 +15,21 @@
 //   docs/docs-snapshot/. It classifies the live pages against that base
 //   state (scripts/docs-classify.ts). Then it runs the issue step in dry run
 //   on the findings (scripts/docs-issues.ts). It exits 1 when the dry run
-//   would open an issue or post a comment, and names each block. The job's
-//   own dedupe decides each block, so the daily job and the gate agree.
+//   would open an issue or post a comment, and names each block. It gives
+//   the reason of a needs-triage block, such as a failed Jev request. The
+//   job's own dedupe decides each block, so the daily job and the gate agree.
 // Then it runs the docs watch check on the head map and the head snapshot.
-//   It exits 1 when a page changed: the docs changed after `update`. It
-//   also exits 1 when the check has an error, such as a failed fetch.
-// The two steps read each page once, so the head hashes are the hashes that
-// the dry run read. The repository comes from --repo, $GITHUB_REPOSITORY or
+//   It exits 1 when a page changed: the docs changed after `update`, or the
+//   map changed and `update` did not run. It also exits 1 when the check has
+//   an error, such as a failed fetch.
+// The two steps read each page once. So the head check compares the head
+// snapshot with the text that the dry run read.
+// The repository comes from --repo, $GITHUB_REPOSITORY or
 // `gh repo view`. gh only reads. The gate writes nothing to GitHub.
 // It fails closed: a step that throws, or an output that the gate cannot
 // read, exits 1. It removes each GIT_ variable that points git at another
-// repository. A git hook sets some of them.
+// repository, or changes how git reads config or paths. A git hook sets
+// some of them.
 // It prints a summary, and adds it to $GITHUB_STEP_SUMMARY when that is set.
 // It removes the temporary root when it ends.
 import { execFileSync } from 'node:child_process'
@@ -128,7 +133,9 @@ function namedBlocks(output: Output, log: string[]): string[] {
   const lines: string[] = []
   for (const [key, group] of byKey) {
     const f = merge(group)
-    if (openKeys.has(key)) lines.push(line(f.kind, f))
+    // A needs-triage block names its reason, such as a failed Jev request.
+    const why = f.kind === 'needs-triage' ? `: ${f.reason}` : ''
+    if (openKeys.has(key)) lines.push(`${line(f.kind, f)}${why}`)
   }
   for (const t of output.tracked) {
     if (commentKeys.has(keyOf(t))) lines.push(line('tracked', t))
@@ -185,7 +192,7 @@ async function dryRun({
       return {
         lines,
         failures: [
-          'The pull request stores a docs change that no issue or group issue comment names. ' +
+          'The pull request stores a docs change that no open issue or group issue comment names. ' +
             'Run the docs watch workflow, triage what it opens, then run `update` again.',
         ],
       }
@@ -215,7 +222,8 @@ async function checkHead(
     if (report.changed > 0) {
       lines.push(
         `${report.changed} page(s) of the head snapshot are not the live docs. ` +
-          'The docs changed after `update`. Run `node scripts/docs-watch.ts update` again, and push.',
+          'The docs changed after `update`, or the map changed and `update` did not run. ' +
+          'Run `node scripts/docs-watch.ts update` again, and push.',
       )
     }
     if (report.errors.length > 0) {
@@ -246,18 +254,31 @@ export async function main(
 ): Promise<number> {
   const args: string[] = []
   let repoFlag: string | undefined
+  const usage = 'usage: docs-verify.ts <base> [root] [--repo owner/name]'
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i] as string
-    if (arg === '--repo') repoFlag = argv[++i]
-    else if (arg.startsWith('--')) throw new Error(`unknown option ${arg}`)
+    if (arg === '--repo') {
+      repoFlag = argv[++i]
+      if (repoFlag === undefined || repoFlag === '' || repoFlag.startsWith('-')) {
+        throw new Error('--repo needs a value, owner/name')
+      }
+    } else if (arg.startsWith('--')) throw new Error(`unknown option ${arg}`)
     else args.push(arg)
   }
   const [base, rootArg] = args
-  if (base === undefined) throw new Error('usage: docs-verify.ts <base> [root] [--repo owner/name]')
+  // An empty base makes `...HEAD`, which is HEAD...HEAD, an empty diff. git
+  // reads a base that starts with a dash as an option. Both would pass.
+  if (args.length > 2 || base === undefined || base === '' || base.startsWith('-')) {
+    throw new Error(usage)
+  }
   const root = path.resolve(rootArg ?? path.join(import.meta.dirname, '..'))
   const out = deps.out ?? process.stdout
   const git = gitIn(root)
-  const changed = git(['diff', '--no-renames', '--name-only', '-z', `${base}...HEAD`])
+  // The commit of the base. It throws when the base is not a commit.
+  const baseSha = git(['rev-parse', '--verify', '--end-of-options', `${base}^{commit}`])
+    .toString('utf8')
+    .trim()
+  const changed = git(['diff', '--no-renames', '--name-only', '-z', `${baseSha}...HEAD`])
     .toString('utf8')
     .split('\0')
   if (!changed.some((file) => file === MAP_FILE || file.startsWith(SNAPSHOT_DIR))) {
@@ -285,7 +306,7 @@ export async function main(
     const fetchText = fetchOnce(deps.fetchText ?? fetchMarkdown)
     const baseRoot = mkdtempSync(path.join(tmpdir(), 'docs-verify-'))
     try {
-      copyBase(git, base, baseRoot)
+      copyBase(git, baseSha, baseRoot)
       const dry = await dryRun({
         baseRoot,
         repo,
