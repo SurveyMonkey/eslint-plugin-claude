@@ -67,8 +67,9 @@ names no rule can be one section of a digest issue.
    the diff of both files before you commit.
 
    The `docs-snapshot` check of CI then runs the docs watch again, in dry run, against the
-   snapshot of the base branch. It fails when the pull request stores a docs change that no open issue or
-   group issue comment names. It also fails when the stored snapshot is not the live docs. See
+   snapshot of the base branch. It fails when the pull request stores a docs change that no open
+   issue or group issue comment names. It also fails when the stored snapshot is not the live
+   docs. See
    [When the docs-snapshot check fails](#when-the-docs-snapshot-check-fails).
 6. Close the issue with that pull request, for example with `Closes #<number>` in its body.
 
@@ -93,7 +94,8 @@ The log names each failure. Do the steps for the failure that it names.
 - **No `TYPESAFE_API_KEY`.** A pull request from a fork or from Dependabot gets no secret. A
   maintainer pushes the snapshot change from a branch of this repository.
 - **The dry run failed, or the check of the head failed.** A step threw, or gave a report that
-  the gate cannot read. The gate fails closed. Read the error, and run the check again when the cause is gone.
+  the gate cannot read. The gate fails closed. Read the error, and run the check again when the
+  cause is gone.
 
 An issue that the pull request closes is open until the merge. So its marker still stops a new
 issue for its block.

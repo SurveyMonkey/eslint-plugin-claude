@@ -23,8 +23,8 @@
 // the dry run read. The repository comes from --repo, $GITHUB_REPOSITORY or
 // `gh repo view`. gh only reads. The gate writes nothing to GitHub.
 // It fails closed: a step that throws, or an output that the gate cannot
-// read, exits 1. git gets no GIT_ variable that points it at another
-// repository, as under a git hook.
+// read, exits 1. It removes each GIT_ variable that points git at another
+// repository. A git hook sets some of them.
 // It prints a summary, and adds it to $GITHUB_STEP_SUMMARY when that is set.
 // It removes the temporary root when it ends.
 import { execFileSync } from 'node:child_process'
