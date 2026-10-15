@@ -49,6 +49,7 @@ jsonTester.run('settings-schema (valid)', rule, {
         effortLevel: 'xhigh',
         maxEffortLevel: 'max',
         alwaysThinkingEnabled: true,
+        idleCompaction: false,
         availableModels: ['sonnet', 'opus'],
         fallbackModel: ['opus'],
         modelOverrides: { 'claude-opus-4-8': 'arn:aws:bedrock:x' },
@@ -486,6 +487,8 @@ jsonTester.run('settings-schema (types)', rule, {
       type('verbose', 'a Boolean'),
       type('disableAllHooks', 'a Boolean'),
     ),
+    // `idleCompaction`, a Boolean key of Claude Code 2.1.290 (#279), with a string.
+    bad({ idleCompaction: 'false' }, type('idleCompaction', 'a Boolean')),
     // A managed key that takes the JSON Boolean `true` only.
     bad(
       {
