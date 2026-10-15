@@ -24,8 +24,12 @@ const isStringList = (value: unknown): boolean =>
 
 const quoted = (values: readonly string[]): string => values.map((v) => `\`${v}\``).join(', ')
 
-/** The fault in the value of the known field `key`, or null. */
-function valueProblem(key: string, value: unknown): Problem | null {
+// The docs give `autoCompactWindow` as a plain integer from 100000 to 1000000. YAML reads `1.5e5`
+// as a number, so the rule reads the text of the value.
+const PLAIN_INTEGER = /^\d+$/
+
+/** The fault in the value of the known field `key`, or null. `text` is the value as written. */
+function valueProblem(key: string, value: unknown, text: string): Problem | null {
   const wrong = (expected: string): Problem => ({ messageId: 'wrongType', data: { key, expected } })
   if (STRING_FIELDS.includes(key)) {
     return typeof value === 'string' ? null : wrong('a string')
@@ -40,6 +44,11 @@ function valueProblem(key: string, value: unknown): Problem | null {
   }
   if (key === 'maxTurns') {
     return Number.isInteger(value) && (value as number) > 0 ? null : wrong('a positive integer')
+  }
+  if (key === 'autoCompactWindow') {
+    return PLAIN_INTEGER.test(text) && Number(text) >= 100000 && Number(text) <= 1000000
+      ? null
+      : wrong('a plain integer from 100000 to 1000000')
   }
   if (key === 'skills') {
     return isStringList(value) ? null : wrong('a list of skill names')
@@ -149,7 +158,11 @@ const rule: MarkdownRuleDefinition<{
           if (value === null || value === undefined) {
             continue
           }
-          const problem = valueProblem(key, value)
+          const text = context.sourceCode.text.slice(
+            fm.base + field.valueStart,
+            fm.base + field.valueEnd,
+          )
+          const problem = valueProblem(key, value, text)
           if (problem !== null) {
             context.report({ loc: fm.at(field.valueStart, field.valueEnd), ...problem })
           }
