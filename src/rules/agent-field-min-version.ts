@@ -13,11 +13,12 @@ import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 const name = 'agent-field-min-version' as const
 
 // The first Claude Code version for each check. The frontmatter table of the
-// sub-agents page gives the first two. The changelog gives the other two: the
+// sub-agents page gives the first three. The changelog gives the other two: the
 // `manual` alias in v2.1.200 (for the CLI and `defaultMode`), and the Boolean
 // forms in v2.1.218 (for skill and plugin files). The rule applies the last two
 // versions to agent files by inference.
 const OMIT_CLAUDE_MD = '2.1.271'
+const AUTO_COMPACT_WINDOW = '2.1.296'
 const CACHE_TTL = '2.1.248'
 const MANUAL_ALIAS = '2.1.200'
 const BOOLEAN_FORMS = '2.1.218'
@@ -85,6 +86,9 @@ const rule: MarkdownRuleDefinition<{
           const value = fm.data[key]
           if (key === 'omitClaudeMd' && isSet(value)) {
             needs(fm.at(keyStart, keyEnd), key, OMIT_CLAUDE_MD)
+          }
+          if (key === 'autoCompactWindow' && isSet(value)) {
+            needs(fm.at(keyStart, keyEnd), key, AUTO_COMPACT_WINDOW)
           }
           if (key === 'experimental' && isMap(value) && isSet(value.cacheTtl)) {
             needs(fm.at(keyStart, keyEnd), 'experimental.cacheTtl', CACHE_TTL)

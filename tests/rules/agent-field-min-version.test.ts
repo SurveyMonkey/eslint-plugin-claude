@@ -1,5 +1,5 @@
-// The sub-agents page marks `omitClaudeMd` (v2.1.271) and
-// `experimental.cacheTtl` (v2.1.248) with the version that adds them. The
+// The sub-agents page marks `omitClaudeMd` (v2.1.271), `autoCompactWindow`
+// (v2.1.296) and `experimental.cacheTtl` (v2.1.248) with the version that adds them. The
 // changelog adds the `manual` alias of `permissionMode` in v2.1.200, and the
 // Boolean forms in v2.1.218. The rule is inactive without `minVersion`.
 import { describe, expect, it } from 'vitest'
@@ -25,11 +25,14 @@ markdownTester.run('agent-field-min-version', ruleOf('agent-field-min-version'),
     file('omitClaudeMd: true\n', '2.1.271'),
     file('omitClaudeMd: true\n', '2.2.0'),
     file('experimental:\n  cacheTtl: 5m\n', '2.1.248'),
+    file('autoCompactWindow: 200000\n', '2.1.296'),
+    file('autoCompactWindow: 200000\n', '2.1.296', pluginAgent()),
     file('permissionMode: manual\n', '2.1.200'),
     file('background: yes\n', '2.1.218'),
     file('background: yes\n', '3.0.0'),
     // A field with no value, and a near miss of each field.
     file('omitClaudeMd:\n', '2.1.0'),
+    file('autoCompactWindow:\n', '2.1.0'),
     file('experimental:\n', '2.1.0'),
     file('experimental: on\n', '2.1.0'),
     file('experimental:\n  cacheTtl:\n', '2.1.0'),
@@ -63,6 +66,29 @@ markdownTester.run('agent-field-min-version', ruleOf('agent-field-min-version'),
           column: 1,
           endLine: 4,
           endColumn: 13,
+        },
+      ],
+    },
+    {
+      ...file('autoCompactWindow: 200000\n', '2.1.295'),
+      errors: [
+        {
+          messageId: 'needsVersion',
+          data: { field: 'autoCompactWindow', required: '2.1.296', minVersion: '2.1.295' },
+          line: 4,
+          column: 1,
+          endLine: 4,
+          endColumn: 18,
+        },
+      ],
+    },
+    // Plugin agents support the field.
+    {
+      ...file('autoCompactWindow: 200000\n', '2.1.295', pluginAgent()),
+      errors: [
+        {
+          messageId: 'needsVersion',
+          data: { field: 'autoCompactWindow', required: '2.1.296', minVersion: '2.1.295' },
         },
       ],
     },

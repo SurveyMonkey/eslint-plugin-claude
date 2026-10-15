@@ -44,6 +44,33 @@ const positiveWhole: EnvForm = {
   accepts: (value) => PLAIN_DIGITS.test(value) && Number(value) > 0,
 }
 
+/** True when `value` is in plain digits, from `min` to `max`. */
+const isPlainFrom = (value: string, min: number, max: number) =>
+  PLAIN_DIGITS.test(value) && Number(value) >= min && Number(value) <= max
+
+const plainFrom = (min: number, max: number): EnvForm => ({
+  expected: `a whole number from ${min} to ${max} in plain digits`,
+  accepts: (value) => isPlainFrom(value, min, max),
+})
+
+const plainWhole: EnvForm = {
+  expected: 'a whole number in plain digits',
+  accepts: (value) => PLAIN_DIGITS.test(value),
+}
+
+// A numeric variable takes these spellings, unless its row says plain digits only.
+const NUMBER_SPELLING = /^\d+(?:_\d+)*$|^\d+(?:\.\d+)?[eE][+-]?\d+$/
+
+/** True when `value` spells a whole number: plain digits, digits with separators, or scientific
+ *  notation such as `2e3`. */
+const isWholeNumber = (value: string) =>
+  NUMBER_SPELLING.test(value) && Number.isInteger(Number(value.replaceAll('_', '')))
+
+const POSITIVE_WHOLE_NUMBER: EnvForm = {
+  expected: 'a positive whole number',
+  accepts: (value) => isWholeNumber(value) && Number(value.replaceAll('_', '')) > 0,
+}
+
 const oneOf = (expected: string, values: readonly string[]): EnvForm => ({
   expected,
   accepts: (value) => values.includes(value),
@@ -148,6 +175,26 @@ const FORMS = new Map<string, EnvForm>([
   ['MCP_SDK_GENERATION', oneOf('v1 or v2', ['v1', 'v2'])],
   ['MCP_PROTOCOL_NEGOTIATION', oneOf('auto or legacy', ['auto', 'legacy'])],
   ['CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH', positiveWhole],
+  // Claude Code raises a value below 100000 to 100000, so a low value is valid.
+  ['CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS', POSITIVE_WHOLE_NUMBER],
+  ['CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION', POSITIVE_WHOLE_NUMBER],
+  ['CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS', positiveWhole],
+  ['CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS', positiveWhole],
+  ['CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS', plainFrom(500, 32000)],
+  ['CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS', plainFrom(32000, 64000)],
+  // `0` turns the check-ins off.
+  ['CLAUDE_CODE_GOAL_CHECKIN_MINUTES', plainFrom(0, 10080)],
+  ['CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS', plainFrom(1, 256)],
+  // For these two, `0` removes the limit or turns the refill off.
+  ['CLAUDE_CODE_WEBFETCH_DEADLINE_MS', plainWhole],
+  ['CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR', plainWhole],
+  [
+    'CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE',
+    {
+      expected: 'a comma-separated list of whole seconds from 1 to 86400 in plain digits',
+      accepts: (value) => value.split(',').every((entry) => isPlainFrom(entry, 1, 86400)),
+    },
+  ],
   ['CLAUDE_CODE_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
   ['CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
   [
@@ -414,31 +461,20 @@ export const PRIVACY_TOGGLE_ENV_VARS: readonly string[] = [
 
 // The variables of the heuristic env rules. Sources: the rows of the env vars reference, and the
 // MCP page (https://code.claude.com/docs/en/mcp#mcp-output-limits-and-warnings), checked on Claude
-// Code 2.1.296 on 2026-10-10. The docs state these forms less firmly than those in `FORMS`: they
-// give a unit and a default. The text above the table says that a numeric variable accepts a
-// scientific or digit-separator spelling, unless its row says plain digits only, and none of
-// these rows says so. So these forms are not in `FORMS`, and `settings-env-value-format` does not
-// report them.
-
-const NUMBER_SPELLING = /^\d+(?:_\d+)*$|^\d+(?:\.\d+)?[eE][+-]?\d+$/
-
-/** True when `value` spells a whole number: plain digits, digits with separators, or scientific
- *  notation such as `2e3`. */
-const isWholeNumber = (value: string) =>
-  NUMBER_SPELLING.test(value) && Number.isInteger(Number(value.replaceAll('_', '')))
+// Code 2.1.296 on 2026-10-10. The docs state these forms less firmly than those in `FORMS`. A row
+// in `FORMS` gives a form, such as plain digits or a range. These rows give only a unit and a
+// default, or the values to set. So these forms are not in `FORMS`, and
+// `settings-env-value-format` does not report them. The text above the table says that a numeric
+// variable accepts a scientific spelling or digit separators. A row that says plain digits is the
+// exception, and none of these rows says so.
 
 const WHOLE_MILLISECONDS: EnvForm = {
   expected: 'a whole number of milliseconds',
   accepts: isWholeNumber,
 }
 
-const POSITIVE_WHOLE_TOKENS: EnvForm = {
-  expected: 'a positive whole number',
-  accepts: (value) => isWholeNumber(value) && Number(value.replaceAll('_', '')) > 0,
-}
-
 const HEURISTIC_FORMS = new Map<string, EnvForm>([
-  ['MAX_MCP_OUTPUT_TOKENS', POSITIVE_WHOLE_TOKENS],
+  ['MAX_MCP_OUTPUT_TOKENS', POSITIVE_WHOLE_NUMBER],
   ['MCP_TIMEOUT', WHOLE_MILLISECONDS],
   ['MCP_TOOL_TIMEOUT', WHOLE_MILLISECONDS],
   // The reference says to set `0` to turn the idle check or the move to a background task off.
