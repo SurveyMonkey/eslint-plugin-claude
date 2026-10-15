@@ -24,10 +24,11 @@ generated:
 
 ## Rule details
 
-Claude Code refuses a command name or a frontmatter `name` that holds one of these
-characters:[^characters][^refused]
+Claude Code refuses a command name or a frontmatter `name` that holds characters such as
+these:[^characters][^refused]
 
-- A zero-width space (U+200B or U+FEFF), or a control character (`Cc`).
+- A zero-width space (U+200B), or a control character (`Cc`). The rule also counts U+FEFF, because
+  its Unicode name is ZERO WIDTH NO-BREAK SPACE.
 - A private-use character (`Co`), such as a glyph from an icon font, or an unassigned character
   (`Cn`).
 - A character that changes the text direction (`Bidi_Control`).
@@ -40,8 +41,9 @@ The rule reports these cases:
 - A skill folder in `.claude/skills/`. Claude Code does not load the skill. Rename the folder.
 - A command file, or a folder below `commands/`. Claude Code does not load the command. Rename
   the file or the folder. The name of a file is its name without `.md`.
-- The frontmatter `name` of a skill. The skill loads, but the `/` menu does not show the `name`
-  value, and the value does not invoke the skill. Edit the `name` field.
+- The frontmatter `name` of a skill, or of a command file in a plugin. The skill loads. But the
+  `/` menu does not show the `name` value, and the value does not invoke the skill. Edit the
+  `name` field.
 
 The message gives the first character that Claude Code refuses, by its code point.
 
@@ -49,10 +51,14 @@ The rule does not report a folder in the `skills/` directory of a plugin. Claude
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It
 still reports the `name` field of a plugin skill, and the file or folder name of a plugin command.
 
-The docs name the zero-width space only. So the rule does not report a zero-width joiner, which
-is also a part of many emoji. The rule does not read the `name` field of a command file, because
-a command file takes no `name`. [`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports
-it.
+The docs give examples, not a full list. The rule reports only the classes above. So it does not
+report a zero-width joiner, which is also a part of many emoji. The rule does not read the `name`
+field of a command file in `.claude/commands/`, because that file takes no `name`.
+[`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports it.
+
+The rule does not check the limit of 256 characters on a name.[^refused] It does not read the
+plugin manifest. So it does not check a skill or command at a manifest `skills` or `commands`
+path, and it reports a file in `commands/` that a manifest `commands` key replaces.
 
 The rule checks the files that the other skill rules check:
 
@@ -65,7 +71,8 @@ The rule checks the files that the other skill rules check:
 Fail: `.claude/skills/deploy<prod>/SKILL.md`, `.claude/commands/run  tests.md`, a `SKILL.md`
 with `name: " deploy"`.
 
-Pass: `.claude/skills/deploy app/SKILL.md`, `plugins/ops/skills/deploy<prod>/SKILL.md`.
+Pass: `.claude/skills/deploy app/SKILL.md`, and `plugins/ops/skills/deploy<prod>/SKILL.md` with a
+manifest in `plugins/ops/.claude-plugin/`.
 
 ## Usage
 

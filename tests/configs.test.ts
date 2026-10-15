@@ -580,7 +580,7 @@ const TREE: Record<string, string> = {
     '---\ndisable-model-invocation: true\nuser-invocable: false\n---\n',
   '.claude/skills/synced/SKILL.md': '# Synced\n',
   // `skill-name-characters`: a zero-width space in a folder, two spaces in a command file and `<`
-  // in a `name`. A plugin `skills/` folder takes the zero-width space.
+  // in a `name`. A plugin `skills/` folder with a zero-width space gives no report.
   '.claude/skills/chars\u200Bone/SKILL.md': '---\ndescription: d\n---\n',
   '.claude/skills/chars-angle/SKILL.md': '---\nname: chars<angle>\ndescription: d\n---\n',
   '.claude/commands/chars  two.md': '---\ndescription: d\n---\n',

@@ -26,10 +26,10 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 - **455 candidate rules** in 9 groups. 338 rules go in `recommended`: 204 at `error` and 134 at
   `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 141 rules have the category `no-op`. The file loads,
-  but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
+  but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 438 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 439 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -113,7 +113,7 @@ below covers one kind of configuration file, and each rule name starts with its 
 
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
-| `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 77 |
+| `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
 | `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 141 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
@@ -258,7 +258,7 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 | `skill-paths-glob-valid` | SKILL: each `paths` glob is valid. An unescaped `[` forms a bracket expression. Brace expansion of the whole list stays within `maxExpanded` 1,000 patterns and `maxBytes` 4 MiB. A failing pattern matches nothing. | recommended | error | no-op | – | [^skills-frontmatter-reference] [^memory-path-specific-rules] [^changelog-claude-code-changelog] |
 | `skill-file-layout` | Each directory under `.claude/skills/` or `<plugin>/skills/` holds a file named exactly `SKILL.md`. No loose `.md` file sits directly in `skills/` (such as `.claude/skills/name.md`). Neither form is discovered. | recommended | error | load | – | [^skills-create-your-first-skill] [^plugins-components-skills] [^debug-your-config-check-common-causes] |
 | `skill-reserved-name` | Outside a plugin: no skill folder named `synced` (any case); no skill folder, frontmatter `name`, or CMD file or subfolder named `anthropic-skills` or starting `anthropic-skills:`. Claude Code skips each one. | recommended | error | load | – | [^skills-create-your-first-skill] [^skills-when-a-synced-skill-name-matches-another-command] |
-| `skill-name-characters` | SKILL, CMD: no character that Claude Code refuses in a skill folder, a CMD file or subfolder, or a skill frontmatter `name`. The classes are a zero-width space, a control character, a private-use or unassigned character, and a direction control. The other classes are a blank other than one plain space between words, and `<` or `>`. A refused folder or file name stops the load. A refused `name` is not in the `/` menu. A folder in a plugin `skills/` directory is not checked: Claude Code changes the characters to hyphens there. | recommended | error | load | – | [^skills-characters-a-skill-name-cant-hold] [^errors-skill-or-command-name-refused] |
+| `skill-name-characters` | SKILL, CMD: no refused character in a skill folder, a CMD file or subfolder, or a frontmatter `name`. The classes are a zero-width space, a control character, a private-use or unassigned character, and a direction control. The other classes are a blank other than one plain space between words, and `<` or `>`. A refused folder or file name stops the load. A refused `name` is not in the `/` menu. A folder in a plugin `skills/` directory is not checked: Claude Code changes the characters to hyphens there. | recommended | error | load | – | [^skills-characters-a-skill-name-cant-hold] [^errors-skill-or-command-name-refused] |
 | `skill-name-unique` | In one scope (repo `.claude/`, one plugin), effective command names are unique: frontmatter `name`, else directory name; CMD path with `/` as `:`. Compare ignoring case, spacing, invisible chars, fullwidth and dash variants. A command that shares a skill's name never runs. (cross-file) | recommended | error | consistency | – | [^skills-resolve-skills-that-share-a-name] [^skills-how-a-skill-gets-its-command-name] [^skills-when-a-synced-skill-name-matches-another-command] |
 | `skill-plugin-root-shadowed` | A `<plugin>/SKILL.md` exists only when the plugin has no `skills/` directory and `plugin.json` has no `skills` key. Otherwise the root file does not load. (cross-file) | recommended | error | no-op | – | [^plugins-components-skills] |
 | `skill-plugin-vars-outside-plugin` | Non-plugin SKILL and CMD bodies and `allowed-tools` do not use `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_DATA}`. They are substituted only in plugin skills and stay literal text elsewhere. | recommended | error | no-op | – | [^skills-available-string-substitutions] |
