@@ -434,6 +434,7 @@ import * as skillLoopReferenceInvocable from './rules/skill-loop-reference-invoc
 import * as skillMaxLines from './rules/skill-max-lines.ts'
 import * as skillMetadataReservedKeys from './rules/skill-metadata-reserved-keys.ts'
 import * as skillModelOverride from './rules/skill-model-override.ts'
+import * as skillNameCharacters from './rules/skill-name-characters.ts'
 import * as skillNameShadowsBuiltin from './rules/skill-name-shadows-builtin.ts'
 import * as skillNameUnique from './rules/skill-name-unique.ts'
 import * as skillNoBom from './rules/skill-no-bom.ts'
@@ -551,6 +552,7 @@ const modules = [
   { target: skillAgentExists.target, default: skillAgentExists.default },
   { target: skillNameUnique.target, default: skillNameUnique.default },
   { target: skillPathsGlobValid.target, default: skillPathsGlobValid.default },
+  { target: skillNameCharacters.target, default: skillNameCharacters.default },
   { target: skillBooleanLiteral.target, default: skillBooleanLiteral.default },
   { target: skillDescriptionPresent.target, default: skillDescriptionPresent.default },
   {
@@ -1214,6 +1216,7 @@ const recommended: Record<RuleName, Severity> = {
   'skill-agent-exists': 'error',
   'skill-name-unique': 'error',
   'skill-paths-glob-valid': 'error',
+  'skill-name-characters': 'error',
   'skill-boolean-literal': 'warn',
   'skill-description-present': 'warn',
   'skill-invocation-redundant-fields': 'warn',

@@ -26,6 +26,7 @@ const GROUPS = [
       'skill-agent-exists',
       'skill-name-unique',
       'skill-paths-glob-valid',
+      'skill-name-characters',
       'skill-boolean-literal',
       'skill-description-present',
       'skill-invocation-redundant-fields',

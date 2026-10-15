@@ -7248,6 +7248,18 @@
       "hash": "c80b1a82c987c26029dbd4c44b5d63dde6536d9ec44543dbd5d23e383e677181"
     }
   ],
+  "skill-name-characters": [
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Characters a skill name can't hold",
+      "hash": "5e207b3876db1bedd516e70b9a30dadaaad8d273ff952fb4b2ef042d750a0bfe"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Skill or command name refused",
+      "hash": "dfc199c2f329cf67b45c2c22e207067e8a1769b5b4fa13ac95a305ed30363c05"
+    }
+  ],
   "skill-name-shadows-builtin": [
     {
       "url": "https://code.claude.com/docs/en/skills",
