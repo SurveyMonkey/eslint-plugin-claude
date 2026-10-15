@@ -800,6 +800,8 @@ describe('the gate fails closed', () => {
 
   // A would-open body with the marker of a block, as the issue step logs it.
   const OPEN_LOG = `would open: a title\n\n<!-- docs-watch:rule-update:${URL_}#hooks:${'a'.repeat(64)} rules=a-rule -->`
+  // A would-comment body with the tracked marker of a block.
+  const COMMENT_LOG = `would comment on #50:\n\n<!-- docs-watch-tracked:${URL_}#hooks:${'a'.repeat(64)} -->`
 
   it.each([
     [
@@ -839,6 +841,7 @@ describe('the gate fails closed', () => {
     ['an issue count with no logged issue', [], 1, 0],
     ['a comment count with no logged comment', [], 0, 1],
     ['a logged issue with no count', [OPEN_LOG], 0, 0],
+    ['a logged comment with no count', [COMMENT_LOG], 0, 0],
     ['a logged issue with no marker', ['would open: a title\n\nno marker'], 1, 0],
     ['a logged comment with no marker', ['would comment on #50:\n\nno marker'], 0, 1],
   ])('fails when the issue step gives %s', async (_, lines: string[], wouldOpen, wouldComment) => {
