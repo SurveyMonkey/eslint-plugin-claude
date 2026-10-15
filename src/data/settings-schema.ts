@@ -144,6 +144,7 @@ const BOOLEAN_KEYS = [
   'fastModePerSessionOptIn',
   'fileCheckpointingEnabled',
   'forceRemoteSettingsRefresh',
+  'idleCompaction',
   'includeCoAuthoredBy',
   'includeGitInstructions',
   'inputNeededNotifEnabled',
