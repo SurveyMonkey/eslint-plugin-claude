@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/network-config",
-  "hash": "5d68a5a22f75e626aafca1e5a2530b3b6cdca502e4d036f9f487398614fe6d8f",
+  "hash": "1218795f91b6850fb53000ddf538b35e463d52b373bf19cfd37872e24b5d0316",
   "blocks": [
     {
       "id": "enterprise-network-configuration",
@@ -58,8 +58,8 @@
     },
     {
       "id": "streaming-idle-watchdogs",
-      "hash": "fb8ed9ab975ea6055fd089a10e4e94de938e4fdec61027ad4e1afb241568debf",
-      "bodyHash": "4f8c8d704faf29f334f54a95909c9cc4296fcad0effe520e1b173aba0411c368"
+      "hash": "042fee44418c9a83a1807623c4aaf648d13416053ee4e1773ca02c16f51af038",
+      "bodyHash": "5a50e7fa7cb05f447c94fb6b86a5324cc05168216e7789f7e70b393bed8af6d1"
     },
     {
       "id": "network-access-requirements",

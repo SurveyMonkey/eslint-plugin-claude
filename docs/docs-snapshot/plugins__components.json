@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/components",
-  "hash": "37a3ce71801730ffdc22cd5e9dcac29f0dab259f395df772af953e192fd888ba",
+  "hash": "735298101629f7e87d311b277b08abea995a975172f88446ba52726f52c25e10",
   "blocks": [
     {
       "id": "add-components-to-a-plugin",
@@ -44,8 +44,8 @@
     },
     {
       "id": "frontmatter-fields-in-plugin-agents",
-      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281",
-      "bodyHash": "5ba097a4861f97dcd57139af3a8185ec5776e14631be43adf458b0f7edfa25e3"
+      "hash": "554c3223374165504d56e323a3cdbeeb637a699788bda54637b0181646860213",
+      "bodyHash": "258c7d557faab5ce0fc80e1ae985e865abbc96db806152989c092b5513088a5e"
     },
     {
       "id": "hooks",
@@ -142,8 +142,8 @@
     {
       "heading": "Frontmatter fields in plugin agents",
       "id": "frontmatter-fields-in-plugin-agents",
-      "hash": "77044230fffde497a192cbb069fdf0a55fe54c2062c25f61db4026005104b281",
-      "text": "#### Frontmatter fields in plugin agents\n\nA plugin agent's frontmatter follows these rules:\n\n* **Supported fields**: `name`, `description`, `model`, `effort`, `maxTurns`, `tools`, `disallowedTools`, `skills`, `memory`, `background`, `omitClaudeMd`, `isolation`, `color`, and the `cacheTtl` key of `experimental`. The only valid `isolation` value is `\"worktree\"`. See [supported frontmatter fields](/docs/en/sub-agents#supported-frontmatter-fields) for what each one does\n* **Ignored fields**: `permissionMode`, `hooks`, `mcpServers`, and `initialPrompt`. An agent file can't add hooks or MCP servers on its own, so add those as plugin [hooks](#hooks) and [MCP servers](#mcp-servers) instead\n* **Frontmatter that doesn't parse**: the agent still loads with every field ignored. It's named after the file, and its description reads `Agent from my-plugin plugin`. Run [`claude plugin validate`](/docs/en/plugins/cli-reference#plugin-validate) in your shell to find these files\n\nFor what each field does and the precedence rules, see [Subagents](/docs/en/sub-agents#supported-frontmatter-fields)."
+      "hash": "554c3223374165504d56e323a3cdbeeb637a699788bda54637b0181646860213",
+      "text": "#### Frontmatter fields in plugin agents\n\nA plugin agent's frontmatter follows these rules:\n\n* **Supported fields**: `name`, `description`, `model`, `effort`, `maxTurns`, `autoCompactWindow`, `tools`, `disallowedTools`, `skills`, `memory`, `background`, `omitClaudeMd`, `isolation`, `color`, and the `cacheTtl` key of `experimental`. The only valid `isolation` value is `\"worktree\"`. See [supported frontmatter fields](/docs/en/sub-agents#supported-frontmatter-fields) for what each one does\n* **Ignored fields**: `permissionMode`, `hooks`, `mcpServers`, and `initialPrompt`. An agent file can't add hooks or MCP servers on its own, so add those as plugin [hooks](#hooks) and [MCP servers](#mcp-servers) instead\n* **Frontmatter that doesn't parse**: the agent still loads with every field ignored. It's named after the file, and its description reads `Agent from my-plugin plugin`. Run [`claude plugin validate`](/docs/en/plugins/cli-reference#plugin-validate) in your shell to find these files\n\nFor what each field does and the precedence rules, see [Subagents](/docs/en/sub-agents#supported-frontmatter-fields)."
     },
     {
       "heading": "Organize agents in subfolders",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "bf275283d954443212f10ddb6b8fa250ebc943d4b087757dc763996655ecdd7f",
+  "hash": "d28fbfce1925693bcca6448782bdb106b618e7a62f1352cb64d40bc3834bbc03",
   "blocks": [
     {
       "id": "error-reference",
@@ -9,8 +9,8 @@
     },
     {
       "id": "find-your-error",
-      "hash": "76b2090044dcf057e4e47b6a9ab8df9dd8850967d8c4f9a06bec44c190431cf2",
-      "bodyHash": "b6bf39451ecb68f52459688e669bc1a3e585632b4515217b252bdf934cd4769d"
+      "hash": "f4d22669b5f5739a153f93989860a46ee570cf64301639f0bff1c5c8252337f0",
+      "bodyHash": "9187b674e69961612f9ba0e270705b37b9bc1888660a569c9e6c16e3547b3bb2"
     },
     {
       "id": "automatic-retries",
@@ -24,8 +24,8 @@
     },
     {
       "id": "tune-retry-behavior",
-      "hash": "1605a176882327677dc822cab3147cd67da76865d5d69d38a87cae360062e2cb",
-      "bodyHash": "35a9c5e971791e4291bc3e51e35015132f4de54b0da5f384712fbb6d2cdb9695"
+      "hash": "0ac7af952515a0823104fc941d359e8d01cf7f73c7282bff3cdd16d621ba648d",
+      "bodyHash": "5e1ccde1bbf2f91cfc4d4fdeeae4fd6ab4937990cf0bc51d6e918b23f4e2f384"
     },
     {
       "id": "server-errors",
@@ -374,8 +374,8 @@
     },
     {
       "id": "host-not-allowed-in-a-cloud-session",
-      "hash": "2c79074d60d680be54be722a5a33a5d811092a1f5258283892d8846dc86ff49e",
-      "bodyHash": "674a8ff3a7c523f99bfade36a73094686f15c7a61619ab1e860005195cc4fd6d"
+      "hash": "bfbcf76a6921635f371730a1876c2dd1d8bc133584d21fd206a87345efd1241f",
+      "bodyHash": "ae6c8b82f013f5d7279c103500b4a358c562ae4a91ea4dc76d21b99e15f1c95b"
     },
     {
       "id": "the-proxy-refused-the-connection",
@@ -386,6 +386,11 @@
       "id": "the-cloud-environments-service-returned-an-empty-or-unexpected-response",
       "hash": "6c2d1032ed1820c3efb1ee28d39a44a7d95865769e8721bb88dfeb11c25d28c5",
       "bodyHash": "190155ca5d9b74e0140257e3975566578508c60930770754539ef1bff64630b9"
+    },
+    {
+      "id": "failed-to-fetch-session-from-sessions-api",
+      "hash": "97d23b5f3d32a169c1a6637c3b2f31d80a9be1c5b3b58006e7c64ccd802e0b72",
+      "bodyHash": "fffaf545dd37caaa42825ba791039244ccd191c4feffa62007663f7c28865875"
     },
     {
       "id": "couldnt-reconnect-to-your-remote-control-session",
@@ -438,6 +443,11 @@
       "bodyHash": "7b13afbd8af7527330f1bdcda160d3b3387e5383c3eb51945edd2ea58d556c6a"
     },
     {
+      "id": "request-rejected-as-unprocessable-by-the-model",
+      "hash": "6077dbceeab5587b123c917a11528fca96719bbaf88ce63d8dcf3b975f1be35b",
+      "bodyHash": "123897ce761d3e803f79ed2a7a5ec914db9719b6a1da0f055faafa18e8f219d3"
+    },
+    {
       "id": "pdf-errors",
       "hash": "f575d73cb17dda4011f042dafbaa5d7ed16f1210c58049e206c1702b56aa47d4",
       "bodyHash": "b692957cbff3345a9747d836356b22a1a2363f49d4f3a87e8695bb9ec76d2334"
@@ -451,6 +461,11 @@
       "id": "tool-input-schema-is-invalid",
       "hash": "c953284ae55b6df5c7d6b937449798348755f80cf23e26cd6f084d1ad797c7b0",
       "bodyHash": "091a5a5f1df951b88483eaba94afdeef2aaaab8cfed1a0d5127d6f98b250962d"
+    },
+    {
+      "id": "mcp-tool-name-over-128-characters",
+      "hash": "345cd3137cdf32bbd65fe48897d8ab48259c6b8bef62f7bb4909c1a15954abee",
+      "bodyHash": "514a5b1a201a3e33999950179c85054b95d0320f159243b98d0a66bcd5c04235"
     },
     {
       "id": "tool-use-name-over-200-characters",
@@ -604,8 +619,23 @@
     },
     {
       "id": "cloud-sessions-are-disabled-by-your-organizations-policy",
-      "hash": "b42e82882277a425f7af80057eb1da443b0be807a1c1b2d5e2421f9ccd9c8824",
-      "bodyHash": "0e619917d9a2eb6c1a0662e379434a370fac24359905a7e7486a9e62b5262b94"
+      "hash": "ad9fe53f9e463d73cb3f52615578f2367f6b97d6c5cc1455400b676a2e539c91",
+      "bodyHash": "ca01ca9f157a64908b1eea7c52ae02a5a1c8d139144b0cedcb4eeff233455c4b"
+    },
+    {
+      "id": "cloud-sessions-use-your-claude-ai-login",
+      "hash": "f94e40f75664ed9e4143bb48c7e2ea4ce1f7b4227a8860ea9f29544da712576c",
+      "bodyHash": "d8038e3e16ab26021c6a1878fbeb77f7005f9009abca14b5841794d671e289ac"
+    },
+    {
+      "id": "couldnt-verify-your-organizations-policy-for-cloud-sessions",
+      "hash": "d80eb170d727d5caa31b5946d445087a0659a714b1977bccb468e26b1df63a89",
+      "bodyHash": "4cdb0f4c343f6609117a0a583184e4b6c48c13f80d0d4cc8afc3fe6e27d610ff"
+    },
+    {
+      "id": "nothing-was-stashed-because-a-folder-replaced-a-tracked-file",
+      "hash": "7630645109dc5e9ad15bc0862ba0040072838f0d89d63abce44fbd34b271cacb",
+      "bodyHash": "36a1c81cc011dc7aec9fed4a35f802d0710d8dffd42acfb668a58316eb97503a"
     },
     {
       "id": "the-json-schema-value-is-not-a-valid-json-schema",
@@ -809,8 +839,8 @@
     },
     {
       "id": "claude-code-couldnt-restart",
-      "hash": "b14adbcb092dc6bc3e8a2485fc37499234ee97663fc0e46ac1124f9323a9eed2",
-      "bodyHash": "a0091cf220e2bd3d3c8863efcba399b21f78235f271f6e7cafd6164bf8558ce7"
+      "hash": "f2e18b181c3ea8b844ccecaf0d6cdb85da48340b8df296293709b34ad61140f7",
+      "bodyHash": "ae8a32e6884806696b5c523de5dc6b5d682a04e90e29f7ac6a4473ee24463c6d"
     },
     {
       "id": "couldnt-open-claude-desktop",
@@ -1198,9 +1228,19 @@
       "bodyHash": "fba91072dae334ac42fef9802b54915c0ca0889a720c163dd4caf8d5ffd39a89"
     },
     {
+      "id": "hook-needs-quotes-around-a-path-with-a-space",
+      "hash": "b330a4a9b6ae2c0edfb66903af4becc41593e5ecc049f66dbff77c51b8d65142",
+      "bodyHash": "b1893e3294780f4e19c78cd6729308de247900450328bfa1ba90fc08957d68b1"
+    },
+    {
       "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4",
       "bodyHash": "7ee4c03e787f80c4d63df8e481ccb9837493bf911891b434eba5059f435f1dac"
+    },
+    {
+      "id": "skill-or-command-name-refused",
+      "hash": "dfc199c2f329cf67b45c2c22e207067e8a1769b5b4fa13ac95a305ed30363c05",
+      "bodyHash": "4491ab6c10a5e5e3856addec1348408c0710c3a8ecaca25e1b360777dc92492c"
     },
     {
       "id": "workspace-has-not-been-trusted",

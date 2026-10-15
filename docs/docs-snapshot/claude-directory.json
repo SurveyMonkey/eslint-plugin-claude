@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/claude-directory",
-  "hash": "93f1978339d3a4811e42de406e885c40c865b385760eab07683c0fa254e4f6b3",
+  "hash": "7462382d58a4aef384801da176d3d92ea456b80956188d5f6585dd7599caa051",
   "blocks": [
     {
       "id": "explore-the--claude-directory",
@@ -104,8 +104,8 @@
     },
     {
       "id": "frontmatter-fields-by-file",
-      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70",
-      "bodyHash": "f0a357c0f6882e8546d783c18c4e04d83cd3ba8ced285809cde6246617344b8a"
+      "hash": "ad9df6d7413af0f762173c8e133754b61333e4065d3794d3871b72305286ac5d",
+      "bodyHash": "9f79fa69257efa2eda3b28388c74e04d1b994cfb1b27b2616ebe5204bf38313f"
     },
     {
       "id": "troubleshoot-configuration",
@@ -157,8 +157,8 @@
     {
       "heading": "Frontmatter fields by file",
       "id": "frontmatter-fields-by-file",
-      "hash": "fb1bc657081468a1e702e102e3f10a37cd317ce9252277000ea0eb6263cd6b70",
-      "text": "## Frontmatter fields by file\n\nSkills, command files, subagents, output styles, and rules read their configuration from YAML [frontmatter](/docs/en/glossary#frontmatter) at the top of the file, and each accepts its own set of fields. This table lists the field names for each file and links to the reference that describes them.\n\n| File | Frontmatter fields | Reference |\n| - | - | - |\n| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Skill frontmatter](/docs/en/skills#frontmatter-reference) |\n| `commands/*.md` | The skill fields except `name` and `paths` | [Skill frontmatter](/docs/en/skills#frontmatter-reference) |\n| `agents/*.md` | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental` | [Subagent frontmatter](/docs/en/sub-agents#supported-frontmatter-fields) |\n| `output-styles/*.md` | `name`, `description`, `keep-coding-instructions`, `force-for-plugin` | [Output style frontmatter](/docs/en/output-styles#frontmatter) |\n| `rules/*.md` | `paths` | [Rule frontmatter](/docs/en/memory#rules-frontmatter-reference) |\n\nAgents shipped in a [plugin](/docs/en/plugins/components#agents) honor a subset of the subagent fields."
+      "hash": "ad9df6d7413af0f762173c8e133754b61333e4065d3794d3871b72305286ac5d",
+      "text": "## Frontmatter fields by file\n\nSkills, command files, subagents, output styles, and rules read their configuration from YAML [frontmatter](/docs/en/glossary#frontmatter) at the top of the file, and each accepts its own set of fields. This table lists the field names for each file and links to the reference that describes them.\n\n| File | Frontmatter fields | Reference |\n| - | - | - |\n| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Skill frontmatter](/docs/en/skills#frontmatter-reference) |\n| `commands/*.md` | The skill fields except `name` and `paths` | [Skill frontmatter](/docs/en/skills#frontmatter-reference) |\n| `agents/*.md` | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `autoCompactWindow`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental` | [Subagent frontmatter](/docs/en/sub-agents#supported-frontmatter-fields) |\n| `output-styles/*.md` | `name`, `description`, `keep-coding-instructions`, `force-for-plugin` | [Output style frontmatter](/docs/en/output-styles#frontmatter) |\n| `rules/*.md` | `paths` | [Rule frontmatter](/docs/en/memory#rules-frontmatter-reference) |\n\nAgents shipped in a [plugin](/docs/en/plugins/components#agents) honor a subset of the subagent fields."
     },
     {
       "heading": "What's not shown",

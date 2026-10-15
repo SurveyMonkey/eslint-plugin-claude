@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/memory",
-  "hash": "52c9ce2203d522ab02f6f5d9e6bede9998a9a71c9b2bf58fd237ca689e013161",
+  "hash": "1ebf1bdc299fe03a8f7566f2da60b2bfca2bd0be7ccf5aa715e75171ac1e5a46",
   "blocks": [
     {
       "id": "how-claude-remembers-your-project",
@@ -69,8 +69,8 @@
     },
     {
       "id": "path-specific-rules",
-      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202",
-      "bodyHash": "5fe225e8d53cf0d648a9c757e9434c556a8ec57009596ac35a18d65a1d7e542d"
+      "hash": "60f6650969328f848991834cf8c40912fdebdc07c2b8e8819e4b02a4b7603bda",
+      "bodyHash": "58fe911cc6799189487f23688b807d02f4e8303369f5bda779f13b5820b677f4"
     },
     {
       "id": "rules-frontmatter-reference",
@@ -109,8 +109,8 @@
     },
     {
       "id": "when-claude-code-reads-agents-md",
-      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0",
-      "bodyHash": "8f342aa1886005229f4bc28151923d45280dcb38dec02a66435d33b56778d40f"
+      "hash": "bbaba0e7267bc374e86b5a55f3bc2e35a251c57f7d48c791a80d1b1a3085b521",
+      "bodyHash": "f6c96f680180d194dfc4ade7317e76936d9a2a9d5550126086dc382dca4ec541"
     },
     {
       "id": "choose-which-instruction-files-load",
@@ -194,8 +194,8 @@
     },
     {
       "id": "my-claude-md-is-too-large",
-      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f",
-      "bodyHash": "86eecbd52dac14b625a2fc48293fd3a2f03e1bddae513265c42aa321f7081061"
+      "hash": "0974c7eaf8f34f73ab2bebfb887f40c7923c900df549b633bb5db75cbb047220",
+      "bodyHash": "9008da2b236037453c84eea11ff6ef77e8aedc8447e79517ea851598a9869be5"
     },
     {
       "id": "instructions-seem-lost-after-compact",
@@ -218,8 +218,8 @@
     {
       "heading": "When Claude Code reads AGENTS.md",
       "id": "when-claude-code-reads-agents-md",
-      "hash": "a3e9565c6632589e344871dd33f2ea62f5edb6f35483254d267dd226574f7aa0",
-      "text": "### When Claude Code reads AGENTS.md\n\nBy default, Claude reads `AGENTS.md` only when you have no `CLAUDE.md` in your working directory or above it. Here's which of your files count for that check:\n\n* **Count, so Claude reads them instead of `AGENTS.md`**: a `CLAUDE.md`, `.claude/CLAUDE.md`, or `CLAUDE.local.md` in your working directory or any directory above it\n* **Don't count, and keep loading alongside `AGENTS.md`**: your `~/.claude/CLAUDE.md`, your organization's managed `CLAUDE.md`, and `.claude/rules/` files\n\nWhen none count, here's what Claude reads and how you can tell:\n\n* **At session start**: every `AGENTS.md` and `.claude/AGENTS.md` in your working directory and the directories above it. In an interactive session you see a line such as `no CLAUDE.md found; AGENTS.md loaded: /home/you/repo/AGENTS.md` in the conversation\n* **As Claude works in subdirectories**: a subdirectory's `AGENTS.md`, when Claude opens a file there with the Read tool and that subdirectory has none of the three `CLAUDE.md` files of its own\n* **Inside each `AGENTS.md`**: [`@path` imports](#import-additional-files) are expanded, [`claudeMdExcludes`](#exclude-specific-claude-md-files) patterns apply, and subagents that [skip project instructions](/docs/en/sub-agents#what-loads-at-startup) skip these files too\n* **Not read**: `AGENTS.local.md`, `AGENTS.override.md`, or anything under a `.agents/` directory\n\n<Note>\n  Because `CLAUDE.local.md` counts, adding one to keep your own uncommitted instructions in a project that relies on `AGENTS.md` stops Claude from reading `AGENTS.md` for you. To keep your `CLAUDE.local.md` and still have Claude read `AGENTS.md`, set **Project instructions** to [`claude-md-and-agents-md`](#choose-which-instruction-files-load).\n</Note>"
+      "hash": "bbaba0e7267bc374e86b5a55f3bc2e35a251c57f7d48c791a80d1b1a3085b521",
+      "text": "### When Claude Code reads AGENTS.md\n\nBy default, Claude reads `AGENTS.md` only when you have no `CLAUDE.md` in your working directory or above it. Here's which of your files count for that check:\n\n* **Count, so Claude reads them instead of `AGENTS.md`**: a `CLAUDE.md`, `.claude/CLAUDE.md`, or `CLAUDE.local.md` in your working directory or any directory above it\n* **Don't count, and keep loading alongside `AGENTS.md`**: your `~/.claude/CLAUDE.md`, your organization's managed `CLAUDE.md`, and `.claude/rules/` files\n\nWhen none count, here's what Claude reads and how you can tell:\n\n* **At session start**: every `AGENTS.md` and `.claude/AGENTS.md` in your working directory and the directories above it. In an interactive session you see a line such as `no CLAUDE.md found; AGENTS.md loaded: /home/you/repo/AGENTS.md` in the conversation\n* **As Claude works in subdirectories**: a subdirectory's `AGENTS.md`, when Claude opens a file there with the Read tool and that subdirectory has none of the three `CLAUDE.md` files of its own\n* **Inside each `AGENTS.md`**: [`@path` imports](#import-additional-files) are expanded, [`claudeMdExcludes`](#exclude-specific-claude-md-files) patterns apply, and subagents that [start without project instructions](/docs/en/sub-agents#what-loads-at-startup) start without these files too\n* **Not read**: `AGENTS.local.md`, `AGENTS.override.md`, or anything under a `.agents/` directory\n\n<Note>\n  Because `CLAUDE.local.md` counts, adding one to keep your own uncommitted instructions in a project that relies on `AGENTS.md` stops Claude from reading `AGENTS.md` for you. To keep your `CLAUDE.local.md` and still have Claude read `AGENTS.md`, set **Project instructions** to [`claude-md-and-agents-md`](#choose-which-instruction-files-load).\n</Note>"
     },
     {
       "heading": "Share one file with other coding tools",
@@ -236,8 +236,8 @@
     {
       "heading": "My CLAUDE.md is too large",
       "id": "my-claude-md-is-too-large",
-      "hash": "5e808345e719653dfb8258a98da8007ef5ae952a62c7a8477c9f99df886f3e3f",
-      "text": "### My CLAUDE.md is too large\n\nFiles over 200 lines consume more context and may reduce adherence. Claude Code skips a file over 4 MiB. Use [path-scoped rules](#path-specific-rules) to load instructions only when Claude works with matching files, or trim content that isn't needed in every session. Splitting into [`@path` imports](#import-additional-files) helps organization but doesn't reduce context, since imported files load at launch.\n\nIf one of your instruction files is over the recommended length, you see a warning at startup and when you run `/status`. You also see a warning when files that are each within that length add up past a combined limit at session start. Each CLAUDE.md, rules file, and `@path` import counts as a separate file.\n\nThe [`/doctor`](/docs/en/commands#all-commands) checkup proposes trims for a checked-in CLAUDE.md: it cuts content Claude can derive from the codebase, such as directory layouts, dependency lists, and architecture overviews, and keeps pitfalls, rationale, and conventions that differ from tool defaults. The trim check requires Claude Code v2.1.206 or later."
+      "hash": "0974c7eaf8f34f73ab2bebfb887f40c7923c900df549b633bb5db75cbb047220",
+      "text": "### My CLAUDE.md is too large\n\nFiles over 200 lines consume more context and may reduce adherence. Claude Code skips a file over 4 MiB. Use [path-scoped rules](#path-specific-rules) to load instructions only when Claude works with matching files, or trim content that isn't needed in every session. Splitting into [`@path` imports](#import-additional-files) helps organization but doesn't reduce context, since imported files load at launch.\n\nIf one of your instruction files is over the recommended length, you see a warning at startup and when you run `/status`. You also see a warning when files that are each within that length add up past a combined limit at session start. Each CLAUDE.md, rules file, and `@path` import counts as a separate file.\n\nThe [`/doctor`](/docs/en/commands#all-commands) checkup proposes trims for a checked-in CLAUDE.md: it cuts content Claude can derive from the codebase, such as directory layouts, dependency lists, and architecture overviews, and keeps pitfalls, rationale, and conventions that differ from tool defaults."
     },
     {
       "heading": "Set up rules",
@@ -332,8 +332,8 @@
     {
       "heading": "Path-specific rules",
       "id": "path-specific-rules",
-      "hash": "d3ec57fdeb48e42d1f6bfe9572baafad960a34b34c94e3f31f1b61e342f9c202",
-      "text": "#### Path-specific rules\n\nRules can be scoped to specific files using YAML frontmatter with the `paths` field. These conditional rules only apply when Claude is working with files matching the specified patterns.\n\n```markdown theme={null}\n---\npaths:\n  - \"src/api/**/*.ts\"\n---\n\n# API Development Rules\n\n- All API endpoints must include input validation\n- Use the standard error response format\n- Include OpenAPI documentation comments\n```\n\nRules without a `paths` field are loaded unconditionally and apply to all files. A path-scoped rule loads when Claude uses the Read, Write, or Edit tool on a matching file. It also loads when Claude views a matching file with a Bash command that [counts as a read](/docs/en/tools-reference#edit-tool-behavior), such as `cat` or `head` on a single file. Matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.\n\nUse glob patterns in the `paths` field to match files by extension, directory, or any combination:\n\n| Pattern | Matches |\n| - | - |\n| `**/*.ts` | All TypeScript files in any directory |\n| `src/**/*` | All files under `src/` directory |\n| `*.md` | Markdown files in the project root |\n| `src/components/*.tsx` | React components in a specific directory |\n\nYou can specify multiple patterns and use brace expansion to match multiple extensions in one pattern:\n\n```markdown theme={null}\n---\npaths:\n  - \"src/**/*.{ts,tsx}\"\n  - \"lib/**/*.ts\"\n  - \"tests/**/*.test.ts\"\n---\n```\n\nEach brace group multiplies the number of expanded patterns: `src/*.{ts,tsx}` expands to two patterns, and `{a,b}/{c,d}/*.{ts,tsx}` to eight. To keep expansion bounded, a rule's whole `paths` list shares one budget of 1,000 expanded patterns and 4 MiB, and patterns without braces don't count against it.\n\nClaude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files. Before v2.1.217, a `paths` value with many brace groups stalled or crashed the CLI at startup.\n\nGlob syntax treats `[` as the start of a bracket expression such as `[abc]`. A pattern with a `[` that can't be read as a bracket expression, such as `photos [2024/**`, is invalid: it matches nothing, and the rule's other patterns keep working. To match a literal `[` in a file name, escape it as `photos \\[2024/**`. Before v2.1.207, one invalid pattern made the Read tool fail for every file the rule was evaluated against, instead of matching nothing."
+      "hash": "60f6650969328f848991834cf8c40912fdebdc07c2b8e8819e4b02a4b7603bda",
+      "text": "#### Path-specific rules\n\nRules can be scoped to specific files using YAML frontmatter with the `paths` field. These conditional rules only apply when Claude is working with files matching the specified patterns.\n\n```markdown theme={null}\n---\npaths:\n  - \"src/api/**/*.ts\"\n---\n\n# API Development Rules\n\n- All API endpoints must include input validation\n- Use the standard error response format\n- Include OpenAPI documentation comments\n```\n\nRules without a `paths` field are loaded unconditionally and apply to all files. A path-scoped rule loads when Claude uses the Read, Write, or Edit tool on a matching file. It also loads when Claude views a matching file with a Bash command that [counts as a read](/docs/en/tools-reference#edit-tool-behavior), such as `cat` or `head` on a single file. Matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.\n\nUse glob patterns in the `paths` field to match files by extension, directory, or any combination:\n\n| Pattern | Matches |\n| - | - |\n| `**/*.ts` | All TypeScript files in any directory |\n| `src/**/*` | All files under `src/` directory |\n| `*.md` | Markdown files in the project root |\n| `src/components/*.tsx` | React components in a specific directory |\n\nYou can specify multiple patterns and use brace expansion to match multiple extensions in one pattern:\n\n```markdown theme={null}\n---\npaths:\n  - \"src/**/*.{ts,tsx}\"\n  - \"lib/**/*.ts\"\n  - \"tests/**/*.test.ts\"\n---\n```\n\nEach brace group multiplies the number of expanded patterns: `src/*.{ts,tsx}` expands to two patterns, and `{a,b}/{c,d}/*.{ts,tsx}` to eight. To keep expansion bounded, a rule's whole `paths` list shares one budget of 1,000 expanded patterns and 4 MiB, and patterns without braces don't count against it.\n\nClaude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files. Before v2.1.217, a `paths` value with many brace groups stalled or crashed the CLI at startup.\n\nGlob syntax treats `[` as the start of a bracket expression such as `[abc]`. A pattern with a `[` that can't be read as a bracket expression, such as `photos [2024/**`, is invalid: it matches nothing, and the rule's other patterns keep working. To match a literal `[` in a file name, escape it as `photos \\[2024/**`."
     }
   ]
 }

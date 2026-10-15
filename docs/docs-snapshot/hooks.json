@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "31754d5adce5052af35acf85dc2ed207bb082b7dbf87f25218047b10a024a073",
+  "hash": "f5957ad68ec47adaed8c2462a0cb9fb04ccc979e066b3eec96f5342ec51728cc",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -124,8 +124,8 @@
     },
     {
       "id": "exit-code-output",
-      "hash": "9abbcf1e1ea280971a8e063d82df3f136c0a7277228ed1d8c2c4cceced0d0598",
-      "bodyHash": "acd68c52ee456d8470a77a9026f2dc99626bb900ee7bceb70b216818911601f1"
+      "hash": "8afbcd7acfff314747257d301fa455e5c36246b81d100f879265969e2681d0dc",
+      "bodyHash": "158e092fdf07222ce0496c4678547d95afdaebf171512d93f070e0acb420708c"
     },
     {
       "id": "exit-code-0",
@@ -146,6 +146,11 @@
       "id": "timeouts",
       "hash": "dfe97d089291e108884b69e368d95bac0359985159d30e56ff19c37b1efb1c8b",
       "bodyHash": "000144e8a98be2592507592106c2ff0ebfb917ec3b3cbbcc25ce49dd87c74e53"
+    },
+    {
+      "id": "hooks-that-start-a-background-process",
+      "hash": "e6b9a03f6409c4f88e75cd3eecb7cd1efc3540fe53565f066ce875238d1ced3e",
+      "bodyHash": "7c755d56f83a6171d0af7a39163fc6d50290ddbf4e20ee265c0db109f72fc140"
     },
     {
       "id": "block-the-action-when-a-hook-fails",
@@ -299,8 +304,8 @@
     },
     {
       "id": "pretooluse",
-      "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4",
-      "bodyHash": "2441bcfc887513a70495d8004ef7ba6292c36b7e5871f2d9323e5eba76c9a1ba"
+      "hash": "81a5682164c1caa3943384e7eec0ff93d465fa6e1ffb2f116a7fee1a7dc747c2",
+      "bodyHash": "db957bac931395f1611e41ada32bf5da052d3b1b055db1649b41cf6d5b1b2f04"
     },
     {
       "id": "pretooluse-input",
@@ -649,8 +654,8 @@
     },
     {
       "id": "precompact",
-      "hash": "6a75e75badffcf89732f28dc4bc7d13d1e7fbb4847e3c8aff875fa530846eb59",
-      "bodyHash": "c6c6b7d3ae5fb92ffb1572e8683aec4e9db871eba9d14867390fa294ab473b11"
+      "hash": "0b6a520ebaa975775cb73d2ce79f365efd3a9693f03a48e1c0c743c5c4916435",
+      "bodyHash": "3c9c3a0db0c9c0ca03648761c3589e19eb2bbd887676602c941a6e2003cf1d21"
     },
     {
       "id": "precompact-input",
@@ -659,8 +664,8 @@
     },
     {
       "id": "postcompact",
-      "hash": "edd8863a34515043f224066007c922a8e411b064055b284b8deaffcb4503919d",
-      "bodyHash": "d9d5d1247336786b45ff460d6088890e8138b072f34891a30ed85e21f42bd69b"
+      "hash": "7dbf9cbfc17d83108bfd24ec3a116498b3ec826c1d0e26fa467678184082f5ba",
+      "bodyHash": "ff8c56691f0feca204c0fd761c7374c06a4c6761481be4fe3107e0d089e1d9eb"
     },
     {
       "id": "postcompact-input",
@@ -799,8 +804,8 @@
     },
     {
       "id": "how-async-hooks-execute",
-      "hash": "5558cece94a9f61ddd90a91aa20320858ecf5fad3adfe8a0bb0668290fd4fcea",
-      "bodyHash": "77500a77be6da79ad201b5ce00d426d8fae02d16f55eb380a127c5224ce623b8"
+      "hash": "bd15eeec10f8a38983522d656ec8fb4f89d7ef16ce43539e0dc5549f136a913f",
+      "bodyHash": "6f1ba9a63ecfa0bc0f1b234139d0129ec64b2306fcbdc78595e2604a4b41ec39"
     },
     {
       "id": "run-tests-after-file-changes",
@@ -1080,8 +1085,8 @@
     {
       "heading": "PreToolUse",
       "id": "pretooluse",
-      "hash": "c524402053db5c76a344230ac864ef98bbe04a7cca37a08b6f804b4651e579d4",
-      "text": "### PreToolUse\n\nRuns after Claude creates tool parameters and before processing the tool call. Matches on any tool name except `EndConversation`: built-in tools such as `Bash`, `PowerShell`, `Edit`, `Write`, `Read`, `Glob`, `Grep`, `Agent`, `Workflow`, `WebFetch`, `WebSearch`, `AskUserQuestion`, and `ExitPlanMode`, and any [MCP tool names](#match-mcp-tools).\n\nTo run a hook when a specific file changes on disk, whatever wrote it, use [FileChanged](#filechanged) instead of matching file-editing tools by name. Unlike PreToolUse, Claude Code runs FileChanged hooks after the change, and they have no decision control, so they can't block the write.\n\n<Warning>\n  PreToolUse runs only when Claude calls a tool. Files you [reference with `@` in your prompt](/docs/en/common-workflows#reference-files-and-directories) are added without any tool call: Claude Code inserts their contents while building the prompt, so no PreToolUse hook fires for them, including hooks matching `Read`. To block specific paths from `@` references, use a [`Read` deny rule](/docs/en/permissions#read-and-edit) instead.\n\n  PreToolUse also doesn't fire for [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior).\n</Warning>\n\nUse [PreToolUse decision control](#pretooluse-decision-control) to allow, deny, ask, or defer the tool call.\n\nAn [Agent SDK callback hook](/docs/en/agent-sdk/hooks) on `PreToolUse` that exceeds its timeout blocks the tool call, and Claude receives an error result naming the timeout. An explicit deny returned by another hook still takes precedence."
+      "hash": "81a5682164c1caa3943384e7eec0ff93d465fa6e1ffb2f116a7fee1a7dc747c2",
+      "text": "### PreToolUse\n\nRuns after Claude creates tool parameters and before processing the tool call. Matches on any tool name except `EndConversation`: built-in tools such as `Bash`, `PowerShell`, `Edit`, `Write`, `Read`, `Glob`, `Grep`, `Agent`, `Workflow`, `WebFetch`, `WebSearch`, `AskUserQuestion`, and `ExitPlanMode`, and any [MCP tool names](#match-mcp-tools).\n\nTo run a hook when a specific file changes on disk, whatever wrote it, use [FileChanged](#filechanged) instead of matching file-editing tools by name. Unlike PreToolUse, Claude Code runs FileChanged hooks after the change, and they have no decision control, so they can't block the write.\n\n<Warning>\n  PreToolUse runs only when Claude calls a tool. By default, files you [reference with `@` in your prompt](/docs/en/common-workflows#reference-files-and-directories) are added without any tool call. Claude Code inserts their contents while building the prompt, so no PreToolUse hook fires for them, including hooks matching `Read`. PreToolUse also doesn't fire for [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior).\n\n  You can block specific paths from `@` references, or turn the insertion off:\n\n  * **Block specific paths**: add a [`Read` deny rule](/docs/en/permissions#read-and-edit) for them\n  * **Turn the insertion off**: set [`CLAUDE_CODE_DISABLE_FILE_MENTIONS=1`](/docs/en/env-vars#variables) in your shell, user settings, or managed settings. Claude then gets the mentioned paths with a note to read them using its file tools. If it does, your matching PreToolUse hooks run. The variable requires Claude Code v2.1.299 or later, and Claude Code ignores it in project and local settings.\n</Warning>\n\nUse [PreToolUse decision control](#pretooluse-decision-control) to allow, deny, ask, or defer the tool call.\n\nAn [Agent SDK callback hook](/docs/en/agent-sdk/hooks) on `PreToolUse` that exceeds its timeout blocks the tool call, and Claude receives an error result naming the timeout. An explicit deny returned by another hook still takes precedence."
     },
     {
       "heading": "PermissionRequest input",
@@ -1110,8 +1115,8 @@
     {
       "heading": "Exit code output",
       "id": "exit-code-output",
-      "hash": "9abbcf1e1ea280971a8e063d82df3f136c0a7277228ed1d8c2c4cceced0d0598",
-      "text": "### Exit code output\n\nYour hook's exit code tells Claude Code whether to continue with the action that triggered the hook, such as a tool call or a prompt. A run that finishes has one of three outcomes:\n\n* **Success**: your hook exits 0. Claude Code applies any [JSON output](#json-output) fields your hook printed, and the action goes ahead unless those fields block or deny it.\n* **Blocking error**: your hook exits 2. On [events that can block](#exit-code-2-behavior-per-event), Claude Code stops the action.\n* **Non-blocking error**: your hook exits with any other code, or fails in some other way, such as not starting or printing invalid JSON. The action goes ahead, and on events such as `PreToolUse` you see a `<hook name> hook error` notice in the transcript. If you want a failed hook to block the action, set [`onFailure: \"block\"`](#block-the-action-when-a-hook-fails).\n\nWhat your hook prints to stdout can change the outcome. For example, if a `PreToolUse` hook exits 1 but prints JSON that passes validation, the run is a success and the JSON fields decide what happens. To find your hook's outcome on an event such as `PreToolUse`, match what it printed to stdout in the first column with its exit code along the top:\n\n| Stdout | Exit 0 | Exit 2 | Any other exit code |\n| :- | :- | :- | :- |\n| JSON object that passes [schema validation](#json-output) | Success. The fields apply | Blocking error. Claude Code still reads the fields, but they can't override the block | Success. Claude Code ignores the exit code, and the fields alone decide. With [`onFailure: \"block\"`](#block-the-action-when-a-hook-fails), this counts as a failure |\n| JSON that [can't be parsed](#exit-code-0) or fails schema validation | Non-blocking error. The notice carries the parse or validation message | Blocking error. Your stderr is the reason | Non-blocking error. The notice carries the parse or validation message |\n| [Plain text](#exit-code-0), or nothing | Success | Blocking error. Your stderr is the reason | Non-blocking error. The notice carries the first line of your stderr |\n\nSome events have their own rules:\n\n* **`WorktreeCreate`**: any non-zero exit code makes worktree creation fail, whatever your JSON says.\n* **`WorktreeRemove`**: any non-zero exit code makes worktree removal fail if the directory still exists afterward.\n* **`Stop`, `SubagentStop`, `TaskCompleted`, and a plugin's `UserPromptSubmit` hook**: when your hook exits 2 with nothing on stdout and its stderr says a file is missing, such as `No such file or directory`, Claude Code treats the run as a non-blocking error.\n* **`Elicitation` and `ElicitationResult`**: Claude Code applies your `hookSpecificOutput` when your hook exits 0, and ignores it on any other exit code.\n* **Events that discard hook output, such as `StopFailure`**: Claude Code ignores your JSON on any exit code, apart from side-effect fields like `terminalSequence`, which still fire.\n\nTo check what exit code 2 does on your event, see [Exit code 2 behavior per event](#exit-code-2-behavior-per-event). To check which decision fields it honors, see [Decision control](#decision-control)."
+      "hash": "8afbcd7acfff314747257d301fa455e5c36246b81d100f879265969e2681d0dc",
+      "text": "### Exit code output\n\nYour hook's exit code tells Claude Code whether to continue with the action that triggered the hook, such as a tool call or a prompt. A run that finishes has one of three outcomes:\n\n* **Success**: your hook exits 0. Claude Code applies any [JSON output](#json-output) fields your hook printed, and the action goes ahead unless those fields block or deny it. [Hooks that start a background process](#hooks-that-start-a-background-process) covers the exception.\n* **Blocking error**: your hook exits 2. On [events that can block](#exit-code-2-behavior-per-event), Claude Code stops the action.\n* **Non-blocking error**: your hook exits with any other code, or fails in some other way, such as not starting or printing invalid JSON. The action goes ahead, and on events such as `PreToolUse` you see a `<hook name> hook error` notice in the transcript. If you want a failed hook to block the action, set [`onFailure: \"block\"`](#block-the-action-when-a-hook-fails).\n\nWhat your hook prints to stdout can change the outcome. For example, if a `PreToolUse` hook exits 1 but prints JSON that passes validation, the run is a success and the JSON fields decide what happens. To find your hook's outcome on an event such as `PreToolUse`, match what it printed to stdout in the first column with its exit code along the top:\n\n| Stdout | Exit 0 | Exit 2 | Any other exit code |\n| :- | :- | :- | :- |\n| JSON object that passes [schema validation](#json-output) | Success. The fields apply | Blocking error. Claude Code still reads the fields, but they can't override the block | Success. Claude Code ignores the exit code, and the fields alone decide. With [`onFailure: \"block\"`](#block-the-action-when-a-hook-fails), this counts as a failure |\n| JSON that [can't be parsed](#exit-code-0) or fails schema validation | Non-blocking error. The notice carries the parse or validation message | Blocking error. Your stderr is the reason | Non-blocking error. The notice carries the parse or validation message |\n| [Plain text](#exit-code-0), or nothing | Success | Blocking error. Your stderr is the reason | Non-blocking error. The notice carries the first line of your stderr |\n\nSome events have their own rules:\n\n* **`WorktreeCreate`**: any non-zero exit code makes worktree creation fail, whatever your JSON says.\n* **`WorktreeRemove`**: any non-zero exit code makes worktree removal fail if the directory still exists afterward.\n* **`Stop`, `SubagentStop`, `TaskCompleted`, and a plugin's `UserPromptSubmit` hook**: when your hook exits 2 with nothing on stdout and its stderr says a file is missing, such as `No such file or directory`, Claude Code treats the run as a non-blocking error.\n* **`Elicitation` and `ElicitationResult`**: Claude Code applies your `hookSpecificOutput` when your hook exits 0, and ignores it on any other exit code.\n* **Events that discard hook output, such as `StopFailure`**: Claude Code ignores your JSON on any exit code, apart from side-effect fields like `terminalSequence`, which still fire.\n\nTo check what exit code 2 does on your event, see [Exit code 2 behavior per event](#exit-code-2-behavior-per-event). To check which decision fields it honors, see [Decision control](#decision-control)."
     },
     {
       "heading": "PostToolUse decision control",
