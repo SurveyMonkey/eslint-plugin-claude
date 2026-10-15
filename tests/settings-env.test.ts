@@ -119,11 +119,28 @@ describe('the value forms, against the docs', () => {
       'CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL',
       'CLAUDE_CODE_EFFORT_LEVEL',
       'CLAUDE_CODE_SHELL',
+      'CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS',
+      'CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION',
+      'CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS',
+      'CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS',
+      'CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS',
+      'CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS',
+      'CLAUDE_CODE_GOAL_CHECKIN_MINUTES',
+      'CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS',
+      'CLAUDE_CODE_WEBFETCH_DEADLINE_MS',
+      'CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR',
+      'CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE',
     ]) {
       expect(VARIABLES).toContain(`| \`${name}\` |`)
     }
     expect(VARIABLES).toContain('maximum: 150000')
     expect(VARIABLES).toContain('from `100000` to `1000000`')
+    // The ranges of the plain-digit forms.
+    expect(VARIABLES).toContain('from 500 to 32000 in plain digits')
+    expect(VARIABLES).toContain('from 32000 to 64000 in plain digits')
+    expect(VARIABLES).toContain('at most `10080`')
+    expect(VARIABLES).toContain('from `1` to `256`')
+    expect(VARIABLES).toContain('from `1` to `86400`')
   })
 
   it('names the kinds of the memory limit as the tools reference does', () => {
