@@ -28,7 +28,7 @@ The rule also lints the managed settings files: `managed-settings.json` and each
 
 The rule format table of the tools reference lists the tools that take a specifier: `Bash`, `Monitor`, `PowerShell`,
 `Read`, `Grep`, `Glob`, `LSP`, `Edit`, `Write`, `NotebookEdit`, `Skill`, `Agent` and `WebFetch`. `WebSearch` is in the
-table with "No specifier". A tool that the table does not list, such as `ExitPlanMode` or `ShareOnboardingGuide`, accepts the
+table with "No specifier".[^websearch] A tool that the table does not list, such as `ExitPlanMode` or `ShareOnboardingGuide`, accepts the
 bare tool name only.[^tools] `Task`, the old name of `Agent`, and `Cd` also take a specifier.[^task][^cd]
 
 The rule reports a rule with parentheses for a built-in tool that takes no specifier. A deny or ask rule can match a
@@ -85,6 +85,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
+[^websearch]: [Tools reference: WebSearch tool behavior](https://code.claude.com/docs/en/tools-reference#websearch-tool-behavior)
 [^tools]: [Tools reference: Configure tools with permission rules and hooks](https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks)
 [^param]: [Configure permissions: Match by input parameter](https://code.claude.com/docs/en/permissions#match-by-input-parameter)
 [^task]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)
