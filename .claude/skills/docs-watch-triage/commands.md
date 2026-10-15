@@ -83,14 +83,17 @@ node <wt>/scripts/docs-watch.ts update <wt>
 git -C <wt> add docs/rule-sources.json docs/docs-snapshot
 git -C <wt> add docs/rules docs/rules-inventory.md
 git -C <wt> commit -m 'docs(docs-watch): refresh the docs snapshot'
+pnpm --dir <wt> exec vitest run tests/settings-env.test.ts tests/rules/settings-key-scope.test.ts
 git -C <wt> push -u origin docs-watch-refresh
 gh pr create --base main --head docs-watch-refresh --title 'docs(docs-watch): refresh the docs snapshot' --body-file <file>
 gh pr merge <n> --auto --squash
 gh pr checks <n> --watch
 ```
 
-The first command prints `[]` when no refresh is open. `gh pr create` opens a pull request that
-is ready unless you give `--draft`. Do not give it. The commit runs the pre-commit hook.
+The first command prints `[]` when no refresh is open. If the `vitest` command fails, do not
+push and open no pull request. Run the two commands of the last block, then stop. See step 5 of
+Phase 7 in SKILL.md. `gh pr create` opens a pull request that is ready unless you give
+`--draft`. Do not give it. The commit runs the pre-commit hook.
 
 For one loop after a `docs-snapshot` failure: the listed run must start after `gh workflow run`.
 If its `createdAt` is older, list again.
@@ -107,7 +110,7 @@ git -C <wt> push
 gh pr edit <n> --body-file <file>
 ```
 
-After the push:
+Remove the worktree after the push, or after a failed `vitest` command:
 
 ```sh
 git -C <root> worktree remove <wt>
