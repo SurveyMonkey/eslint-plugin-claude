@@ -192,7 +192,7 @@ const FORMS = new Map<string, EnvForm>([
     'CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE',
     {
       expected: 'a comma-separated list of whole seconds from 1 to 86400 in plain digits',
-      accepts: (value) => value.split(',').every((entry) => isPlainFrom(entry.trim(), 1, 86400)),
+      accepts: (value) => value.split(',').every((entry) => isPlainFrom(entry, 1, 86400)),
     },
   ],
   ['CLAUDE_CODE_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
@@ -462,10 +462,10 @@ export const PRIVACY_TOGGLE_ENV_VARS: readonly string[] = [
 // The variables of the heuristic env rules. Sources: the rows of the env vars reference, and the
 // MCP page (https://code.claude.com/docs/en/mcp#mcp-output-limits-and-warnings), checked on Claude
 // Code 2.1.296 on 2026-10-10. The docs state these forms less firmly than those in `FORMS`: they
-// give a unit and a default. The text above the table says that a numeric variable accepts a
-// scientific or digit-separator spelling, unless its row says plain digits only, and none of
-// these rows says so. So these forms are not in `FORMS`, and `settings-env-value-format` does not
-// report them.
+// give a unit and a default, and do not say what Claude Code does with another value. So these
+// forms are not in `FORMS`, and `settings-env-value-format` does not report them. The text above
+// the table says that a numeric variable accepts a scientific or digit-separator spelling, unless
+// its row says plain digits only. None of these rows says so.
 
 const WHOLE_MILLISECONDS: EnvForm = {
   expected: 'a whole number of milliseconds',

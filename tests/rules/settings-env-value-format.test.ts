@@ -216,11 +216,23 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
   },
   {
     // "one or more comma-separated waits in whole seconds from 1 to 86400, such as 600 or
-    // 600,1800,3600 ... Takes plain digits only". A space around an entry is a choice of the
-    // plugin, as for the other lists.
+    // 600,1800,3600 ... Takes plain digits only; any other value or spelling reads as unset". A
+    // space is not a plain digit.
     name: 'CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE',
-    pass: ['600', '600,1800,3600', '1', '86400', '600, 1800'],
-    fail: ['0', '86401', '600,', '600,,1800', '600;1800', '600,0', '1e3', '10m'],
+    pass: ['600', '600,1800,3600', '1', '86400'],
+    fail: [
+      '0',
+      '86401',
+      '600,',
+      '600,,1800',
+      '600;1800',
+      '600,0',
+      '1e3',
+      '10m',
+      '600, 1800',
+      '600 ,1800',
+      ' 600',
+    ],
     expected: 'a comma-separated list of whole seconds from 1 to 86400 in plain digits',
   },
   {
