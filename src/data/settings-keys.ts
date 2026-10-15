@@ -199,6 +199,7 @@ const ANY_FILE: readonly string[] = [
   'gcpAuthRefresh',
   'hooks',
   'httpHookAllowedEnvVars',
+  'idleCompaction',
   'includeCoAuthoredBy',
   'includeGitInstructions',
   'inputNeededNotifEnabled',
