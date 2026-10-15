@@ -19,5 +19,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # CodeQL fails when its init and analyze steps run different versions,
+    # so one pull request updates every github/codeql-action step.
+    groups:
+      codeql-action:
+        patterns:
+          - 'github/codeql-action*'
     commit-message:
       prefix: ci
