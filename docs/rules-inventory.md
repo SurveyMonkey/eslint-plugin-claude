@@ -992,7 +992,7 @@ Covers the root `.mcp.json`, plugin `.mcp.json` and `plugin.json` `mcpServers`, 
 - Scope of `claude plugin validate`: it checks plugin `.mcp.json`, `mcpServers` `.json` files and inline `mcpServers` on v2.1.281+ (dropped entries, undeclared `${user_config.KEY}`, invalid remote `url` as errors; insecure URL and literal credential header as warnings). It never reads the root `.mcp.json` or `.lsp.json`, and checks `lspServers` paths only on v2.1.283+ [^plugins-manifest-reference-validate-the-manifest] [^plugins-components-lsp-servers].
 - The `.mcp.json` rules also apply to a committed `managed-mcp.json`, which "uses the same format as a project `.mcp.json`" [^managed-mcp-deploy-managed-mcpjson]. The agents group reuses `mcp-server-schema` for inline `mcpServers` in agent frontmatter.
 - Conflict, relative paths: debug-your-config says relative `command`/`args` paths resolve against the launch directory [^debug-your-config-check-mcp-servers]; channels-reference tells a project `.mcp.json` to use a relative path [^channels-reference-example-build-a-webhook-receiver]. I chose the stricter reading and flag them, as warn, because they fail only on launch from another directory.
-- Server-name charset: the docs state it for `claude mcp` commands, pasted JSON blocks and Desktop import, not for a hand-edited `.mcp.json` key [^mcp-from-an-mcpservers-json-block]. So `mcp-server-name-format` is warn practice, not error.
+- Server-name charset: the docs state it for `claude mcp` commands, pasted JSON blocks and Desktop import, not for a hand-edited `.mcp.json` key [^mcp-add-a-server-from-an-mcpservers-json-block]. So `mcp-server-name-format` is warn practice, not error.
 - Partial lists: reserved names ("including"), covered credential variables ("such as") and Anthropic-hosted hosts ("include") are partial. Each rule takes an option to extend its list [^mcp-configuration-warnings] [^mcp-credential-variables-that-read-as-empty].
 - `mcp-remote-url-empty` is limited to the root `.mcp.json`, because the docs endorse an empty `url` as a plugin placeholder [^mcp-server-status-detail].
 - `mcp-oauth-transport`: the stdio quote names the CLI flags; `add-json` takes the same values "in an `oauth` object", so I treat the object the same [^mcp-use-pre-configured-oauth-credentials].
@@ -1458,7 +1458,7 @@ Other names a rule may contain:
 [^settings-reference-env]: [All settings: env](https://code.claude.com/docs/en/settings-reference#env)
 [^env-vars-precedence]: [Environment variables: Precedence](https://code.claude.com/docs/en/env-vars#precedence)
 [^settings-reference-variables-claude-code-ignores-in-env]: [All settings: Variables Claude Code ignores in env](https://code.claude.com/docs/en/settings-reference#variables-claude-code-ignores-in-env)
-[^env-vars-in-settings-files]: [Environment variables: In settings files](https://code.claude.com/docs/en/env-vars#in-settings-files)
+[^env-vars-in-settings-files]: [Environment variables: Set variables in settings files](https://code.claude.com/docs/en/env-vars#set-variables-in-settings-files)
 [^chrome-project-settings-cant-turn-on-chrome]: [Use Claude Code with Chrome: Project settings can’t turn on Chrome](https://code.claude.com/docs/en/chrome#project-settings-can’t-turn-on-chrome)
 [^settings-reference-bashoutputmaxchars]: [All settings: bashOutputMaxChars](https://code.claude.com/docs/en/settings-reference#bashoutputmaxchars)
 [^model-config-set-a-default-model-for-new-sessions]: [Model configuration: Set a default model for new sessions](https://code.claude.com/docs/en/model-config#set-a-default-model-for-new-sessions)
@@ -1622,7 +1622,6 @@ Other names a rule may contain:
 [^mcp-quickstart-edit-mcpjson-directly]: [Connect to MCP servers: Edit .mcp.json directly](https://code.claude.com/docs/en/mcp-quickstart#edit-mcpjson-directly)
 [^plugins-troubleshooting-server-is-configured-but-never-connects]: [Troubleshoot plugins: Server is configured but never connects](https://code.claude.com/docs/en/plugins/troubleshooting#server-is-configured-but-never-connects)
 [^mcp-configuration-warnings]: [Connect Claude Code to tools via MCP: Configuration warnings](https://code.claude.com/docs/en/mcp#configuration-warnings)
-[^mcp-from-an-mcpservers-json-block]: [Connect Claude Code to tools via MCP: From an mcpServers JSON block](https://code.claude.com/docs/en/mcp#from-an-mcpservers-json-block)
 [^mcp-add-a-server-from-an-mcpservers-json-block]: [Connect Claude Code to tools via MCP: Add a server from an mcpServers JSON block](https://code.claude.com/docs/en/mcp#add-a-server-from-an-mcpservers-json-block)
 [^errors-could-not-import-a-server-from-claude-desktop]: [Error reference: Could not import a server from Claude Desktop](https://code.claude.com/docs/en/errors#could-not-import-a-server-from-claude-desktop)
 [^mcp-plugin-provided-mcp-servers]: [Connect Claude Code to tools via MCP: Plugin-provided MCP servers](https://code.claude.com/docs/en/mcp#plugin-provided-mcp-servers)
