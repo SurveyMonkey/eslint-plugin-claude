@@ -17,8 +17,8 @@ afterAll(() => rmSync(scratch, { recursive: true, force: true }))
 
 const skillIn = (folder: string) => `.claude/skills/${folder}/SKILL.md`
 const commandAt = (file: string) => `.claude/commands/${file}`
-// A YAML double-quoted value with an escape for each character outside printable ASCII, so that
-// each character can be in a `name`.
+// A YAML double-quoted value. Each character outside printable ASCII gets an escape, so that each
+// character can be in a `name`.
 const quoted = (value: string) =>
   `"${[...value]
     .map((char) => {
@@ -35,7 +35,7 @@ const named = (value: string, filename = skillIn('s')) => ({
   filename,
 })
 
-// One name for each class of the docs, the code point that the message gives, and the class
+// Names for each class of the docs, the code point that the message gives, and the class
 // text. The code points come from the Unicode tables, not from the rule.
 const ZERO_WIDTH = 'a zero-width space'
 const CONTROL = 'a control character'
@@ -51,18 +51,27 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['a\u0007b', 'U+0007', CONTROL],
   ['a\tb', 'U+0009', CONTROL],
   ['a\u007Fb', 'U+007F', CONTROL],
+  // A C1 control character.
+  ['a\u0085b', 'U+0085', CONTROL],
   ['ab', 'U+E000', PRIVATE_USE],
   // An icon font glyph in plane 15. The rule reads the name by code point, not by UTF-16 unit.
   ['a\u{F0000}b', 'U+F0000', PRIVATE_USE],
+  ['a\u{100000}b', 'U+100000', PRIVATE_USE],
   // A noncharacter stays unassigned in each Unicode version.
   ['a﷐b', 'U+FDD0', UNASSIGNED],
   ['a\u{10FFFF}b', 'U+10FFFF', UNASSIGNED],
+  // Plane 5 has no assigned character, and the code point is not a noncharacter.
+  ['a\u{50000}b', 'U+50000', UNASSIGNED],
   ['a‮b', 'U+202E', DIRECTION],
   ['a‏b', 'U+200F', DIRECTION],
   ['a⁦b', 'U+2066', DIRECTION],
+  ['a\u061Cb', 'U+061C', DIRECTION],
   ['a b', 'U+00A0', BLANK],
   ['a　b', 'U+3000', BLANK],
   ['a b', 'U+2028', BLANK],
+  ['a\u2029b', 'U+2029', BLANK],
+  // A plain space before another blank is not the fault. The blank is.
+  ['a \u00A0b', 'U+00A0', BLANK],
   ['a  b', 'U+0020', SPACE],
   [' a', 'U+0020', SPACE],
   ['a ', 'U+0020', SPACE],
@@ -70,9 +79,9 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['a>b', 'U+003E', ANGLE],
 ]
 
-// Names with no character of the five classes: one plain space between words, letters of other
-// scripts, and an emoji with a zero-width joiner. Of the zero-width characters, the docs name the
-// zero-width space only.
+// Names with no character of the five classes. They hold one plain space between words, letters of
+// other scripts, an emoji with a zero-width joiner, or a zero-width non-joiner. The rule reports
+// only the classes that the docs name.
 const GOOD = [
   'deploy',
   'deploy app',
@@ -81,6 +90,7 @@ const GOOD = [
   '日本語',
   'a:b',
   'family-\u{1F468}\u200D\u{1F469}\u200D\u{1F467}',
+  'a\u200Cb',
 ]
 
 const at = (code: string, kind: string) => ({ code, kind })
@@ -96,7 +106,7 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       code: '# S\n',
       filename: path.join(plugin, 'skills', name, 'SKILL.md'),
     })),
-    // A command file takes no `name`, so the rule reads none.
+    // A command file in `.claude/commands/` takes no `name`, so the rule reads none.
     named('a<b', commandAt('c.md')),
     // The frontmatter `name` is not a string, or the YAML does not parse.
     { code: '---\nname: [a<b]\n---\n', filename: skillIn('s') },
@@ -159,11 +169,16 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
         { messageId: 'command', data: { name: 'c​d', ...at('U+200B', ZERO_WIDTH) } },
       ],
     },
-    // A plugin command file and a plugin skill `name` are not exempt.
+    // A plugin command file, the `name` of a plugin command and a plugin skill `name` are not
+    // exempt.
     {
       code: '# C\n',
       filename: path.join(plugin, 'commands', 'a  b.md'),
       errors: [{ messageId: 'command', data: { name: 'a  b', ...at('U+0020', SPACE) } }],
+    },
+    {
+      ...named('a<b', path.join(plugin, 'commands', 'c.md')),
+      errors: [{ messageId: 'name', data: { name: 'a<b', ...at('U+003C', ANGLE) } }],
     },
     {
       ...named('a<b', path.join(plugin, 'skills', 's', 'SKILL.md')),

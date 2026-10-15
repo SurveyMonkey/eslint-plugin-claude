@@ -11,7 +11,8 @@ import { readFrontmatter } from '../skill-frontmatter.ts'
 const name = 'skill-name-characters' as const
 
 /** Each class of characters in the docs, with the text of the message.
- *  `kindAt` checks a plain space before it reads the classes. */
+ *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so the rule counts it
+ *  as a zero-width space. `kindAt` checks a plain space before it reads the classes. */
 const CLASSES: [RegExp, string][] = [
   [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
   [/\p{Cc}/u, 'a control character'],
@@ -90,8 +91,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }
         }
       },
       yaml(node) {
-        // A command file takes no `name`. `skill-frontmatter-schema` reports one.
-        const fm = file.kind === 'skill' ? readFrontmatter(context.sourceCode, node) : null
+        // A command file in `.claude/commands/` takes no `name`. `skill-frontmatter-schema`
+        // reports one. A plugin command file takes the same fields as a skill.
+        const named = file.kind === 'skill' || file.plugin
+        const fm = named ? readFrontmatter(context.sourceCode, node) : null
         const field = fm?.fields.get('name')
         const value = fm?.data.name
         if (!fm || !field || typeof value !== 'string') {
