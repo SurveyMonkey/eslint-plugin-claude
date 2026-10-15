@@ -64,8 +64,9 @@ A variable that is not in the table has no form, and any string is valid.
 | `ANTHROPIC_DEFAULT_*_MODEL_SUPPORTED_CAPABILITIES`, `ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES` | A comma-separated list of `effort`, `xhigh_effort`, `max_effort`, `thinking`, `adaptive_thinking`, `interleaved_thinking`[^capabilities] |
 
 The rule compares a value as written. It also accepts a few spellings that the docs do not
-state. A list entry may have spaces around it. The size suffix and the words of the memory limit
-have any letter case. A path has `\` or `/` between its parts, and may end in `.exe`.
+state. A list entry may have spaces around it, except in `CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE`.
+The size suffix and the words of the memory limit have any letter case. A path has `\` or `/`
+between its parts, and may end in `.exe`.
 
 ### What the rule does not check
 
