@@ -10,15 +10,15 @@ import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-name-characters' as const
 
-/** Each class of characters in the docs, with the text of the message. A
- *  plain space is not in a class. `kindAt` checks it. */
+/** Each class of characters in the docs, with the text of the message.
+ *  `kindAt` checks a plain space before it reads the classes. */
 const CLASSES: [RegExp, string][] = [
   [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
   [/\p{Cc}/u, 'a control character'],
   [/\p{Co}/u, 'a private-use character'],
   [/\p{Cn}/u, 'an unassigned character'],
   [/\p{Bidi_Control}/u, 'a character that changes the text direction'],
-  [/[^\P{Z} ]/u, 'a blank that is not a plain space'],
+  [/\p{Z}/u, 'a blank that is not a plain space'],
   [/[<>]/u, 'an angle bracket'],
 ]
 
