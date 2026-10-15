@@ -58,8 +58,7 @@ const plainWhole: EnvForm = {
   accepts: (value) => PLAIN_DIGITS.test(value),
 }
 
-// The text above the table of the env vars reference says that a numeric variable also takes
-// scientific and digit-separator spellings, unless its row says plain digits only.
+// A numeric variable takes these spellings, unless its row says plain digits only.
 const NUMBER_SPELLING = /^\d+(?:_\d+)*$|^\d+(?:\.\d+)?[eE][+-]?\d+$/
 
 /** True when `value` spells a whole number: plain digits, digits with separators, or scientific
