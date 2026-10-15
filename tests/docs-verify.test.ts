@@ -105,10 +105,14 @@ const servePages =
 
 const refresh = (live: FetchText) => (root: string) => watch.updateState({ root, fetchText: live })
 
-// Makes a repository with the docs state of `live` in a base commit. Then
-// `change` edits the tree, and a head commit stores the edit. Returns the
-// root and the SHA of the base commit.
-async function repoWith(change: (root: string) => unknown, live: FetchText = serve(PAGE)) {
+// Makes a repository with the docs state of `live` and the map in a base
+// commit. Then `change` edits the tree, and a head commit stores the edit.
+// Returns the root and the SHA of the base commit.
+async function repoWith(
+  change: (root: string) => unknown,
+  live: FetchText = serve(PAGE),
+  map: SourceMap = cited,
+) {
   const root = mkdtempSync(path.join(tmpdir(), 'docs-verify-'))
   dirs.push(root)
   mkdirSync(path.join(root, 'docs/rules'), { recursive: true })
@@ -118,7 +122,7 @@ async function repoWith(change: (root: string) => unknown, live: FetchText = ser
   )
   writeFileSync(path.join(root, 'docs/rules/index.md'), '# Rules\n')
   writeFileSync(path.join(root, 'docs/rules-inventory.md'), INVENTORY)
-  writeFileSync(path.join(root, 'docs/rule-sources.json'), `${JSON.stringify(cited)}\n`)
+  writeFileSync(path.join(root, 'docs/rule-sources.json'), `${JSON.stringify(map)}\n`)
   await watch.updateState({ root, fetchText: live })
   git(root, 'init', '-q', '-b', 'main')
   git(root, 'add', '-A')
@@ -443,6 +447,145 @@ describe('a diff that changes the snapshot', () => {
   })
 })
 
+// The gate asks if a person saw the text of a block, so it matches a block
+// by its key only (#316). Jev can give a different answer in each run, so
+// the rules of a finding can change while its key stays.
+describe('a block whose key an open issue or a group issue comment has', () => {
+  // b-rule cites the page title, so it names each block of the page. The
+  // commands block stays tracked, and its finding names b-rule.
+  const whole: SourceMap = {
+    ...cited,
+    'b-rule': [{ url: URL_, heading: 'Plugin manifest reference' }],
+  }
+
+  it('passes a block that an open issue has with other rules, and names its new rules', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const key = `${URL_}#hooks:${headHash(root, 'hooks')}`
+    const gh = fakeGh({
+      issues: [{ number: 282, body: `<!-- docs-watch:rule-update:${key} rules=other-rule -->\n` }],
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The dry run would open 1 issue(s) and post 0 comment(s).')
+    expect(text).toContain(`- accepted: ${key}, held by #282, new rules: a-rule\n`)
+    expect(text).not.toContain('- rule-update:')
+    expect(text).toContain('docs-snapshot: pass')
+    expect(code).toBe(0)
+  })
+
+  it('passes a block that a group issue comment has, and names its new rules', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_COMMANDS)), serve(PAGE), whole)
+    const key = `${URL_}#commands:${headHash(root, 'commands')}`
+    const gh = fakeGh({
+      groups: { 50: { state: 'open', comments: [`<!-- docs-watch-tracked:${key} -->`] } },
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_COMMANDS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The dry run would open 1 issue(s) and post 0 comment(s).')
+    expect(text).toContain(`- accepted: ${key}, held by #50, new rules: b-rule\n`)
+    expect(code).toBe(0)
+  })
+
+  it('does not take a tracked comment from a closed group issue', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_COMMANDS)), serve(PAGE), whole)
+    const key = `${URL_}#commands:${headHash(root, 'commands')}`
+    const gh = fakeGh({
+      groups: { 50: { state: 'closed', comments: [`<!-- docs-watch-tracked:${key} -->`] } },
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_COMMANDS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain(
+      `- rule-update: ${URL_} block commands, hash ${headHash(root, 'commands')}`,
+    )
+    expect(text).not.toContain('- accepted:')
+    expect(code).toBe(1)
+  })
+
+  it('passes a tracked comment block that an open issue has, with no new rules', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_COMMANDS)))
+    const key = `${URL_}#commands:${headHash(root, 'commands')}`
+    const gh = fakeGh({
+      issues: [{ number: 301, body: `<!-- docs-watch:new-rule:${key} -->\n` }],
+      groups: { 50: { state: 'open', comments: [] } },
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_COMMANDS),
+      fetch: fakeJev().fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The dry run would open 0 issue(s) and post 1 comment(s).')
+    expect(text).toContain(`- accepted: ${key}, held by #301\n`)
+    expect(text).not.toContain('- tracked:')
+    expect(code).toBe(0)
+  })
+
+  it('names a block once when the dry run would put it in an issue and a comment', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_COMMANDS)), serve(PAGE), whole)
+    const key = `${URL_}#commands:${headHash(root, 'commands')}`
+    const gh = fakeGh({
+      issues: [{ number: 282, body: `<!-- docs-watch:new-rule:${key} rules=other-rule -->\n` }],
+      groups: { 50: { state: 'open', comments: [] } },
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_COMMANDS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The dry run would open 1 issue(s) and post 1 comment(s).')
+    expect(text.split('- accepted:')).toHaveLength(2)
+    expect(text).toContain(`- accepted: ${key}, held by #282, new rules: b-rule\n`)
+    expect(code).toBe(0)
+  })
+
+  it('fails a block when the open issue has the block with another hash', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const old = `${URL_}#hooks:${'a'.repeat(64)}`
+    const gh = fakeGh({
+      issues: [{ number: 282, body: `<!-- docs-watch:rule-update:${old} rules=a-rule -->\n` }],
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain(`- rule-update: ${URL_} block hooks, hash ${headHash(root, 'hooks')}`)
+    expect(text).not.toContain('- accepted:')
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
+  })
+
+  it('fails a mix, and names only the block with no key match', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_BOTH)))
+    const hooks = `${URL_}#hooks:${headHash(root, 'hooks')}`
+    const gh = fakeGh({
+      issues: [
+        { number: 282, body: `<!-- docs-watch:rule-update:${hooks} rules=other-rule -->\n` },
+      ],
+      groups: { 50: { state: 'open', comments: [] } },
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_BOTH),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The dry run would open 1 issue(s) and post 1 comment(s).')
+    expect(text).toContain(`- tracked: ${URL_} block commands, hash ${headHash(root, 'commands')}`)
+    expect(text).not.toContain('- rule-update:')
+    expect(text).toContain(`- accepted: ${hooks}, held by #282, new rules: a-rule\n`)
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
+  })
+})
+
 describe('the base state and the page reads', () => {
   it('classifies with the base inventory, not the head inventory', async () => {
     // The head removes the inventory row of `commands`. The base still has
@@ -635,6 +778,62 @@ describe('the gate fails closed', () => {
     expect(code).toBe(1)
     expect(text).toContain(
       'The dry run failed: the issue step report has no wouldOpen or wouldComment count',
+    )
+  })
+
+  // A would-open body with the marker of a block, as the issue step logs it.
+  const OPEN_LOG = `would open: a title\n\n<!-- docs-watch:rule-update:${URL_}#hooks:${'a'.repeat(64)} rules=a-rule -->`
+
+  it.each([
+    [
+      'the open issue read throws',
+      () => {
+        throw new Error('gh: HTTP 502')
+      },
+      'gh: HTTP 502',
+    ],
+    ['the open issue read gives a line that is not JSON', () => 'not json', 'JSON'],
+  ])('fails when %s in the key match', async (_, run: Run, message) => {
+    const { code, text } = await steps({
+      openIssues: async ({ log }) => {
+        log(OPEN_LOG)
+        return { opened: [], skipped: 0, wouldOpen: 1, commented: [], wouldComment: 0 }
+      },
+      run,
+    })
+    expect(code).toBe(1)
+    expect(text).toContain('The dry run failed:')
+    expect(text).toContain(message)
+  })
+
+  it('fails a logged block with no key match that the findings do not name', async () => {
+    const { code, text } = await steps({
+      openIssues: async ({ log }) => {
+        log(OPEN_LOG)
+        return { opened: [], skipped: 0, wouldOpen: 1, commented: [], wouldComment: 0 }
+      },
+    })
+    expect(text).not.toContain('- accepted:')
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
+  })
+
+  it.each([
+    ['an issue count with no logged issue', [], 1, 0],
+    ['a comment count with no logged comment', [], 0, 1],
+    ['a logged issue with no count', [OPEN_LOG], 0, 0],
+    ['a logged issue with no marker', ['would open: a title\n\nno marker'], 1, 0],
+    ['a logged comment with no marker', ['would comment on #50:\n\nno marker'], 0, 1],
+  ])('fails when the issue step gives %s', async (_, lines: string[], wouldOpen, wouldComment) => {
+    const { code, text } = await steps({
+      openIssues: async ({ log }) => {
+        for (const line of lines) log(line)
+        return { opened: [], skipped: 0, wouldOpen, commented: [], wouldComment }
+      },
+    })
+    expect(code).toBe(1)
+    expect(text).toContain(
+      'The dry run failed: the issue step log does not name one block or more for each issue and comment',
     )
   })
 })
