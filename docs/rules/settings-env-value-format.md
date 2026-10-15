@@ -7,7 +7,7 @@ related_issues: [14]
 stale_after: 2027-04-08
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 ---
 
 # claude/settings-env-value-format
@@ -42,7 +42,15 @@ A variable that is not in the table has no form, and any string is valid.
 
 | Variable | The value must be |
 |----------|-------------------|
-| `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS`, `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` | A positive whole number in plain digits. Claude Code ignores any other spelling[^vars] |
+| `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS`, `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH`, `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` | A positive whole number in plain digits. Claude Code ignores any other spelling[^vars] |
+| `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS` | A positive whole number in plain digits[^vars] |
+| `CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION` | A positive whole number. The rows do not say plain digits, so `2e5` and `200_000` are valid. Claude Code raises an idle threshold below 100000 to 100000[^vars] |
+| `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` | A whole number from 500 to 32000 in plain digits[^vars] |
+| `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS` | A whole number from 32000 to 64000 in plain digits[^vars] |
+| `CLAUDE_CODE_GOAL_CHECKIN_MINUTES` | A whole number from 0 to 10080 in plain digits. `0` turns the check-ins off[^vars] |
+| `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS` | A whole number from 1 to 256 in plain digits[^vars] |
+| `CLAUDE_CODE_WEBFETCH_DEADLINE_MS`, `CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR` | A whole number in plain digits. `0` is valid[^vars] |
+| `CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE` | A comma-separated list of whole seconds from 1 to 86400 in plain digits, such as `600,1800`. A space is not valid[^vars] |
 | `CLAUDE_CODE_AUTO_COMPACT_WINDOW` | A plain integer from 100000 to 1000000. A value such as `500k` reads as `500`[^vars] |
 | `BASH_MAX_OUTPUT_LENGTH` | At most 150000, the maximum[^vars] |
 | `CLAUDE_CODE_TOOL_MEMORY_LIMIT` | A size in plain digits with an optional `K`, `M`, `G` or `T` suffix, or `0`, `off`, `false`, `no`, `none`[^memory] |
@@ -56,8 +64,9 @@ A variable that is not in the table has no form, and any string is valid.
 | `ANTHROPIC_DEFAULT_*_MODEL_SUPPORTED_CAPABILITIES`, `ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES` | A comma-separated list of `effort`, `xhigh_effort`, `max_effort`, `thinking`, `adaptive_thinking`, `interleaved_thinking`[^capabilities] |
 
 The rule compares a value as written. It also accepts a few spellings that the docs do not
-state. A list entry may have spaces around it. The size suffix and the words of the memory limit
-have any letter case. A path has `\` or `/` between its parts, and may end in `.exe`.
+state. A list entry may have spaces around it, except in `CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE`.
+The size suffix and the words of the memory limit have any letter case. A path has `\` or `/`
+between its parts, and may end in `.exe`.
 
 ### What the rule does not check
 

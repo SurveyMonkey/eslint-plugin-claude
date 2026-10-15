@@ -4,7 +4,7 @@
 // Sources: the Frontmatter reference tables,
 // https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields and
 // https://code.claude.com/docs/en/output-styles#frontmatter, checked on
-// Claude Code 2.1.285. Review these lists on or before 2027-04-01, the
+// Claude Code 2.1.296 on 2026-10-14. Review these lists on or before 2027-04-01, the
 // `stale_after` date of docs/rules/agent-frontmatter-schema.md and
 // docs/rules/output-style-frontmatter-schema.md.
 
@@ -17,6 +17,7 @@ export const AGENT_FIELDS = [
   'model',
   'permissionMode',
   'maxTurns',
+  'autoCompactWindow',
   'skills',
   'mcpServers',
   'hooks',
