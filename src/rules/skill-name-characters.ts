@@ -24,14 +24,13 @@ const CLASSES: [RegExp, string][] = [
 
 /** The text of the class of the character at `index` of `chars`, or
  *  undefined when Claude Code takes the character. A plain space is a fault
- *  at the start or the end, or next to another space. */
+ *  at the start or the end, or before another space. */
 function kindAt(chars: string[], index: number): string | undefined {
   const char = chars[index] as string
   if (char !== ' ') {
     return CLASSES.find(([pattern]) => pattern.test(char))?.[1]
   }
-  const edge = index === 0 || index === chars.length - 1
-  return edge || chars[index - 1] === ' ' || chars[index + 1] === ' '
+  return index === 0 || index === chars.length - 1 || chars[index + 1] === ' '
     ? 'a space at the start or end, or next to another space'
     : undefined
 }
