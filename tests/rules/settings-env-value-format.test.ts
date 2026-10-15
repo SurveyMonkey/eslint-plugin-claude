@@ -139,6 +139,91 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'a positive whole number in plain digits',
   },
   {
+    // "Accepts a positive whole number, and anything else is ignored. Values below 100000 are
+    // raised to 100000". The row does not say plain digits, so the text above the table lets
+    // it take `2e5` and `200_000`.
+    name: 'CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS',
+    pass: ['1', '99999', '100000', '200000', '2e5', '200_000'],
+    fail: ['0', '-1', '1.5', '2.5e-1', '200k', '0e5', 'many'],
+    expected: 'a positive whole number',
+  },
+  {
+    // "Accepts a positive whole number with no upper bound. Anything else is ignored".
+    name: 'CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION',
+    pass: ['1', '200', '1000000', '1e3', '1_000'],
+    fail: ['0', '-5', '2.5', 'none'],
+    expected: 'a positive whole number',
+  },
+  {
+    // "Give a positive whole number in plain digits, such as 1800000".
+    name: 'CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS',
+    pass: ['1', '1800000'],
+    fail: ['0', '-1', '1.5', '1.8e6', '1_800_000', '30m'],
+    expected: 'a positive whole number in plain digits',
+  },
+  {
+    // "Takes plain digits only; 0, negative values, and other spellings keep the default".
+    name: 'CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS',
+    pass: ['1', '3000'],
+    fail: ['0', '-3000', '3e3', '3s'],
+    expected: 'a positive whole number in plain digits',
+  },
+  {
+    // "Give whole milliseconds from 500 to 32000 in plain digits; Claude Code treats any other
+    // value as unset".
+    name: 'CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS',
+    pass: ['500', '1000', '32000'],
+    fail: ['499', '32001', '0', '5e2', '1000.0', '1s'],
+    expected: 'a whole number from 500 to 32000 in plain digits',
+  },
+  {
+    // "Give whole milliseconds from 32000 to 64000 in plain digits".
+    name: 'CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS',
+    pass: ['32000', '48000', '64000'],
+    fail: ['31999', '64001', '4e4', '64_000'],
+    expected: 'a whole number from 32000 to 64000 in plain digits',
+  },
+  {
+    // "Set 0 to turn check-ins off. Give whole minutes in plain digits, at most 10080".
+    name: 'CLAUDE_CODE_GOAL_CHECKIN_MINUTES',
+    pass: ['0', '30', '10080'],
+    fail: ['10081', '-1', '1.5', '3e1', '30m'],
+    expected: 'a whole number from 0 to 10080 in plain digits',
+  },
+  {
+    // "from 1 to 256 ... Takes plain digits only; out-of-range values and other spellings keep
+    // the default".
+    name: 'CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS',
+    pass: ['1', '16', '256'],
+    fail: ['0', '257', '1e1', '16.0'],
+    expected: 'a whole number from 1 to 256 in plain digits',
+  },
+  {
+    // "Set to 0 to remove the limit. Takes plain digits only; a decimal or any other spelling
+    // keeps the default".
+    name: 'CLAUDE_CODE_WEBFETCH_DEADLINE_MS',
+    pass: ['0', '300000'],
+    fail: ['-1', '1.5', '3e5', '300_000', '5m'],
+    expected: 'a whole number in plain digits',
+  },
+  {
+    // "the default is 0, which turns refill off. Takes plain digits only; any other spelling
+    // reads as unset".
+    name: 'CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR',
+    pass: ['0', '100'],
+    fail: ['-1', '1e2', '1_00', 'ten'],
+    expected: 'a whole number in plain digits',
+  },
+  {
+    // "one or more comma-separated waits in whole seconds from 1 to 86400, such as 600 or
+    // 600,1800,3600 ... Takes plain digits only". A space around an entry is a choice of the
+    // plugin, as for the other lists.
+    name: 'CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE',
+    pass: ['600', '600,1800,3600', '1', '86400', '600, 1800'],
+    fail: ['0', '86401', '600,', '600,,1800', '600;1800', '600,0', '1e3', '10m'],
+    expected: 'a comma-separated list of whole seconds from 1 to 86400 in plain digits',
+  },
+  {
     // "Set 5m or 1h, the only values Claude Code accepts".
     name: 'CLAUDE_CODE_PROMPT_CACHE_TTL',
     pass: ['5m', '1h'],
