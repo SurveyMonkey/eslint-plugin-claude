@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/scheduled-tasks",
-  "hash": "6b09276b81cdcbbc9867a05c8f3edc988e296281775f371419d0a26d0f174f9e",
+  "hash": "8cb643f43a143fdbd8aee53fb63070d2ac473ac5046f5a301b7fb6e502c0f127",
   "blocks": [
     {
       "id": "run-prompts-on-a-schedule",
@@ -24,8 +24,8 @@
     },
     {
       "id": "let-claude-choose-the-interval",
-      "hash": "d6f75ad34e00f9fa7df31b03ec920bd4c8de6377ba5acb5143cedb0e9d6eb9fb",
-      "bodyHash": "32543bb94dde5665ab44015e736245aa95d356bcf9a9f12fca4d88696617f4a0"
+      "hash": "96f27924c2ad41df9937572c6eecd4318b580cb3f59af4b19c909eae633dd891",
+      "bodyHash": "839bc9ccc6e7a16b8e9c7d587c261a4da77ab079e9d43ad19b5dfd5e7d58471b"
     },
     {
       "id": "run-the-built-in-maintenance-prompt",
@@ -49,8 +49,8 @@
     },
     {
       "id": "manage-scheduled-tasks",
-      "hash": "9c1cf5aaf12b9461b0eed754e42f65bb1554020879358211e2c2c48c472ce60a",
-      "bodyHash": "3e70019fa00b2cc13bac9dfc8f2821b2ddf1b5841e173feade522b448943714d"
+      "hash": "ec7a6efcf645522d38f46154b270340cae2ed0aeda4d53add33ea700744fa5e5",
+      "bodyHash": "d3208d41475c1a0c06626a2be04cc6b87d5b9ae0d07f7be39b96906a4634378e"
     },
     {
       "id": "how-scheduled-tasks-run",
@@ -59,8 +59,8 @@
     },
     {
       "id": "jitter",
-      "hash": "a1a99074443a84955030ea50d02274611252d7db721ed2c9f6aab09e77cbc4ef",
-      "bodyHash": "6dc1a49b4d439a1e12df60b95eb065ee4af2a5c8c2c865fb2f6c194df5b7b311"
+      "hash": "20d15bd92390570638e8e8825f5a3c134e101f8895cb9d1437c9806476333da9",
+      "bodyHash": "20f1b3792d923854e2c06cc2483389ceb0348d6c9953304cea1484feb717cdc9"
     },
     {
       "id": "how-late-a-recurring-task-runs",

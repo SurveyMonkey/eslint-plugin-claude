@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/mods/reference",
-  "hash": "662a6a6066a0dade433e1c52e410b300240ea9ccd01b96b79dfa6876be40a71c",
+  "hash": "dbdb742602611908f5506d4e6f40ff47b5c6df1c5460ec7be5bbe347c73a3df5",
   "blocks": [
     {
       "id": "mods-reference",
@@ -14,8 +14,8 @@
     },
     {
       "id": "the-hook-function",
-      "hash": "0ae47fe97598ae830024e3fc0fa6555987646265c34b8d9dcd431f4ab88f9e8b",
-      "bodyHash": "5e2ae5fc191a7dfe9bd551777165f9043461c5e70f569a65469879863e709680"
+      "hash": "d8a62eab11a2d96d78628a5e255133916ed9ec0a84624a1b5c4c4e91d1af6839",
+      "bodyHash": "747c50c55ddc144fe162cca566d5880d9c70ce62b93d5fc2e6a30fc31d9d6887"
     },
     {
       "id": "events",
@@ -36,6 +36,11 @@
       "id": "prompts-and-what-claude-reads",
       "hash": "ae951fedb07f1279ecbe0e845010fba5a2d080eba88d4cf8cc0a192afa7a7564",
       "bodyHash": "a5f02f60d090a7dc3b495416fc685f5861093071868b3817652c09a2854be407"
+    },
+    {
+      "id": "skill-prompt-fields",
+      "hash": "d2b10fd9bbd6b543945d615ac112ad44706aad2cbdd63fce36f15549fb8073bc",
+      "bodyHash": "177541db116f5e6f673d1851688b3ad16bfef01a45eb2437763e92de012ece34"
     },
     {
       "id": "commands-and-configuration",

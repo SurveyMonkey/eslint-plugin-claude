@@ -1,11 +1,11 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "64b179bbd125a9fa55717b755e956f4067f1e4ec5f27a8860742a6a24dfd7993",
+  "hash": "320420019ef6584aa61d1b3e30c91f07885c9dc90b5a184f68f1f0ca13c59b50",
   "blocks": [
     {
       "id": "tools-reference",
-      "hash": "4528a01d4d1f0c8b3e0e66b855aa8e4c5a9008db7d9004a3c95c0efff8e1cf57",
-      "bodyHash": "d10dae1147ffb04824a60c8c4c94338b7291e8f27ec3b8adb90280c53c01a35f"
+      "hash": "278a9b7791395717b8d081e037748a4765eda2ecb0ba5252557239eb61a785f6",
+      "bodyHash": "66bb2d90bd8d3b349e9640ccf31ad4a65fb2fdc244fe3fbd4db71fd4f72b3847"
     },
     {
       "id": "configure-tools-with-permission-rules-and-hooks",
@@ -199,8 +199,8 @@
     },
     {
       "id": "task-tool-availability",
-      "hash": "a3e12d0dbc8c9569bc07f59a21d550c7e795b88bbc0fdff55aa9e662a7ed7c4a",
-      "bodyHash": "643ccdd03b72752eacfe34a219965eb1b47be417673d898a5b0a179c9a9a5a89"
+      "hash": "b2ef6102654026e09facb931eb4b1151bb99e455d087c15d4d3271fad9d12077",
+      "bodyHash": "9aaaec6d97af2bcf41599db18285e72241432d8376e0db5d5e62e3c8ba2c7460"
     },
     {
       "id": "webfetch-tool-behavior",
@@ -214,8 +214,8 @@
     },
     {
       "id": "websearch-tool-behavior",
-      "hash": "09da690747a86a64cba8cba54feb9aabbee00018ac633c31f0653990368394c7",
-      "bodyHash": "66acca651a4771e58ef843b20f310ab01293a324873aa83c1fea1274fec86cd7"
+      "hash": "4b641de2e0fa4a02456d59e0409d7a260cf9f8450019bb3cc55f9efc7554d0b5",
+      "bodyHash": "eae5f6d856bf064c792999c79780e1ff92717d4aa7842c2064598cdab77dfc51"
     },
     {
       "id": "session-search-limit",

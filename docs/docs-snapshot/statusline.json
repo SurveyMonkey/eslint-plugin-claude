@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/statusline",
-  "hash": "70800ec65a20b6d025fae667157751e5b44678784f64511be1f5fbb4552d5fc0",
+  "hash": "bbe651578fa8edf2ec5a1db3a0823c56d7708248c3d35dc7587b67c4246bb356",
   "blocks": [
     {
       "id": "customize-your-status-line",
@@ -129,8 +129,8 @@
     },
     {
       "id": "task-fields",
-      "hash": "c2f9e1965dfc75055cb755c6b86c6948a46bffe2c5b8448375db522c80e8b32c",
-      "bodyHash": "929b0234157ce7fc9d5b5e3f0dfc9577ffe564cd934cdb5c6ad8d68856e2fdf1"
+      "hash": "3a32bf16af12181207f118ee2977f9e4599fcf42c9a0661928b1f1c5e0f1ec09",
+      "bodyHash": "637fe63945555e3534e9de6c42ff9b405d54a4719f45ffe5c8e679f574a3f301"
     },
     {
       "id": "tips",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugin-evals",
-  "hash": "943a63ef6fd88dd8c6451e344436b44e4294bf0f92f2047a784a1fd9c4b9f51d",
+  "hash": "c3c71f1c70be562641b20a72951e47ba678a2940fbaa8322e99a7f408917af42",
   "blocks": [
     {
       "id": "test-plugins-with-evals",
@@ -114,8 +114,8 @@
     },
     {
       "id": "run-evals-in-ci",
-      "hash": "8aaf20771d588b0fef605b88b628d19864accbf7ee1c5f8e910e86aff5021ffb",
-      "bodyHash": "8a01d5522fd8d14d737e821d5cb977e4f3d9aa58d15cbf1244e2b365596e4f9f"
+      "hash": "22981db35bd739c97ddf8165f68055c951453825f5601909b15dc0e74ace5329",
+      "bodyHash": "4fcc09b672d06bc803c883d7abf9835d7226dc88108971359d9d7a0f516986d7"
     },
     {
       "id": "read-the-results",
@@ -129,8 +129,8 @@
     },
     {
       "id": "json-result",
-      "hash": "2fb425869fbf6558a762d6915605220926970f00e4278a0a7602caea67942f6b",
-      "bodyHash": "db70cfcd52d502b8ba89058363c8993b2320a54a1f53f3d0bdf40bc36d6b4ebf"
+      "hash": "fc57fc2ba60349c07fc4a3e7be497d184d9fe3888e8324b83b7856d477856d03",
+      "bodyHash": "a40932b985bf03816f8b023ee8451ef77ea3f39493a85fd0df405664fab60f55"
     },
     {
       "id": "security",
@@ -213,6 +213,11 @@
       "bodyHash": "ad2debf2306ee30fa6d289a5601d3f3b339eb0be7045c605d416e309f8c3af8d"
     },
     {
+      "id": "cannot-be-evaluated-where-sessions-load-it",
+      "hash": "acbb8928d5e9b17b15d0a0a542ef41bbf0ba4576f0aa1758ff9ed3fcf9c7b43c",
+      "bodyHash": "2210ee79a8666914eb219e7deb1539930a4aa31c7a7d0d8986b9a36a438c35cf"
+    },
+    {
       "id": "no-eval-cases-found",
       "hash": "d259c750f79c12e2385bafdbc5629abb4bd375d112dfc17bb2743a4bf2345f21",
       "bodyHash": "7743f53537465351dddf47f82f6da590f781346395d528ff5730c808d8ff0a96"
@@ -244,8 +249,8 @@
     },
     {
       "id": "the-run-exits-1-but-the-results-look-fine",
-      "hash": "6e2eb8cd40f2c647772086c093f0ec0e3067507f4b73155be43d3393cc6a2875",
-      "bodyHash": "e106b1d708e6296bef94acfeeb6c15087933eb5896c74b9f8a554e34d4212347"
+      "hash": "a8b72995b9b81241a5fdf44d06dfeee2acdcfd2d1948a26a8676036de247154e",
+      "bodyHash": "bb00f4d098adb85386b7a8afe53cda8a9316e16fc9d2eedc888c1a30707ea546"
     },
     {
       "id": "json-output-path-must-end-in-json",
@@ -258,9 +263,14 @@
       "bodyHash": "b4a021eb85787a0824ee7182a469530d562fca11cbaaa2cfc9f3e9999a170a7f"
     },
     {
+      "id": "runs-ended-on-an-api-error",
+      "hash": "f5d0ac27d4058a9d816fab1c7d70f935b6f5946a0fbd9ea4f84691ee894b3f72",
+      "bodyHash": "156cb0d76d3eb31f113698342760de990002257495c376988f77f27f2258f62c"
+    },
+    {
       "id": "runs-fail-with-a-usage-limit-or-rate-limit-error-partway-through",
-      "hash": "79f52c631ed1bea710143a695b5e6ef507409d336c089ac8df886df86bce0814",
-      "bodyHash": "baa00be82f8d7ad5a1405920a6d47cd6bb69db1d68b98ee0eeea5bbccc378d59"
+      "hash": "0d3365e223fbb073899bede82fd19d9a6bb17b3ae2ad2b24bc53bd2d7f6361b8",
+      "bodyHash": "bec439c68d446019a0720ca5ae4701eb68f5f24e4334aa722401611e0db06c61"
     },
     {
       "id": "mock-call-budget-exceeded",

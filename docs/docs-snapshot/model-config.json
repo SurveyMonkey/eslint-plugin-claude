@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/model-config",
-  "hash": "8f65d1b1463bc7e24fa0eeeadd290278162b1f26c56be6190a1db510de8d7ca0",
+  "hash": "76f91c1cf8ccc291c772d5aae23841868f30fda204062a72343833c4a9e33723",
   "blocks": [
     {
       "id": "model-configuration",
@@ -208,13 +208,13 @@
     },
     {
       "id": "set-the-auto-compact-window",
-      "hash": "b0f2d18f2dbdd34afd6fc2696fe8a71a6506963e2cc8f096da90b0d0d9adb9f8",
-      "bodyHash": "8c79500467e5f13375017a94003649e4ed16425a19247fd51bcc6820395d9cf7"
+      "hash": "4286f17f1e3474abd8f2fc6a37dc8b1b832f62f744a060190d45764ab4fd95e0",
+      "bodyHash": "a59cee384813793e9ba0caf9f55df0d3834e91c1101b2aa0604659ad473a8d90"
     },
     {
       "id": "default-auto-compact-thresholds",
-      "hash": "529e9f8947fd19d909576a538f84bd4590e0bc2824200301897c49295da554d9",
-      "bodyHash": "d84cc7d0220d608728a922b574c1977af6040ecf4a13f0f6c799c8254d35a957"
+      "hash": "2930adecc34a46e09e1ad91969cb2c0b7a06f8ad556690449984eacf2af469bc",
+      "bodyHash": "c13d692fe017ddc245aedc95f406b9aa86186158d2864b2198bd1b2af9ceab74"
     },
     {
       "id": "correct-the-window-for-a-gateway-or-custom-model-id",

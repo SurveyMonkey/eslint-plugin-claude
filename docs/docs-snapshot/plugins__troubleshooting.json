@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "f1e8f6fdee70ecbf5271d21f3dc34a8edf80b20dd2ad6a57cb729fa713fb3ab9",
+  "hash": "d72efaeaa78437561bda1d77ddce118fc146a85856f07274bba198b98526ea09",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -214,8 +214,8 @@
     },
     {
       "id": "dependency-errors",
-      "hash": "31ff5e80278365a1bf7f914ea5a647752076e420706fa5ca6179245a52a7e8f9",
-      "bodyHash": "fa27bd86746e2f96c8b2518b31c85b0baa930b799d23cc9185878e2704db0024"
+      "hash": "91a339116e9584c58f63a6dfdf235c853935e4f381969af8ae96413b6bde1e75",
+      "bodyHash": "3976666d929d0ace66dd4e0e97df1c48032b062a94454e595ef972d5722bd1b5"
     },
     {
       "id": "plugin-installed-but-not-working",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/dependencies",
-  "hash": "3f27eab4fb844a86a274cbdbcc6534b600744f637e33cfe0d6959e49b720be5a",
+  "hash": "a29a982a1fddb4dbaa361f5c996d4b444fceee116b86bf33720d92e5137ae97e",
   "blocks": [
     {
       "id": "plugin-dependencies",
@@ -66,6 +66,11 @@
       "id": "combine-constraints-from-several-plugins",
       "hash": "265022d5ec0c7eaf06e4d3b258300221e8a5881e2b4c7a6497754df466c73446",
       "bodyHash": "e380a586bf563457a5bfa411160d6cc5c243302f4cf078b7088a177e57b96b4a"
+    },
+    {
+      "id": "dependencies-when-your-plugin-loads-from-claude-ai",
+      "hash": "09c317309afa4651cd870f9e8b639b453d046761d735fbbbff5b4069a89cad1d",
+      "bodyHash": "5e3477357ed1d04bfd177c028ae5b01a6a10a81c57d4fcb73bef0c95e5e07c8e"
     },
     {
       "id": "see-also",
