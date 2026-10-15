@@ -59,10 +59,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }
     schema: [],
     messages: {
       folder:
-        '`{{name}}` holds {{kind}}, {{code}}. Claude Code does not load this skill. Rename the folder.',
+        '`{{name}}` holds {{kind}} ({{code}}). Claude Code does not load this skill. Rename the folder.',
       command:
-        '`{{name}}` holds {{kind}}, {{code}}. Claude Code does not load this command. Rename the file or folder.',
-      name: '`{{name}}` holds {{kind}}, {{code}}. The `/` menu does not show this name, and the name does not invoke the skill. Edit the `name` field.',
+        '`{{name}}` holds {{kind}} ({{code}}). Claude Code does not load this command. Rename the file or folder.',
+      name: '`{{name}}` holds {{kind}} ({{code}}). The `/` menu does not show this name, and the name does not invoke the skill. Edit the `name` field.',
     },
   },
   create(context) {
