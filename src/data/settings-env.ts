@@ -243,11 +243,12 @@ const IGNORED_IN_PROJECT_FILES: readonly (string | RegExp)[] = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
-  // The timers of an unanswered dialog, and the attachment switch.
+  // The timers of an unanswered dialog, the attachment switch, and the file mention switch.
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
   'CLAUDE_AFK_TIMEOUT_MS',
   'CLAUDE_AFK_COUNTDOWN_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
+  'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
 ]
 
 /** The values that still apply from a project or local file, because they turn telemetry off:

@@ -90,6 +90,7 @@ const PROJECT_ONLY = [
   'CLAUDE_AFK_TIMEOUT_MS',
   'CLAUDE_AFK_COUNTDOWN_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
+  'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
 ]
 
 // "Removed ... and now a no-op", with the version of the env vars reference.
