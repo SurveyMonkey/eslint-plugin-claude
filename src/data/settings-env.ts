@@ -462,7 +462,7 @@ export const PRIVACY_TOGGLE_ENV_VARS: readonly string[] = [
 // The variables of the heuristic env rules. Sources: the rows of the env vars reference, and the
 // MCP page (https://code.claude.com/docs/en/mcp#mcp-output-limits-and-warnings), checked on Claude
 // Code 2.1.296 on 2026-10-10. The docs state these forms less firmly than those in `FORMS`: they
-// give a unit and a default, and do not say what Claude Code does with another value. So these
+// give a unit and a default, and do not say what Claude Code does with another spelling. So these
 // forms are not in `FORMS`, and `settings-env-value-format` does not report them. The text above
 // the table says that a numeric variable accepts a scientific or digit-separator spelling, unless
 // its row says plain digits only. None of these rows says so.
