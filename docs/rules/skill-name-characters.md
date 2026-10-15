@@ -41,9 +41,8 @@ The rule reports these cases:
 - A skill folder in `.claude/skills/`. Claude Code does not load the skill. Rename the folder.
 - A command file, or a folder below `commands/`. Claude Code does not load the command. Rename
   the file or the folder. The name of a file is its name without `.md`.
-- The frontmatter `name` of a skill, or of a command file in a plugin. The skill loads. But the
-  `/` menu does not show the `name` value, and the value does not invoke the skill. Edit the
-  `name` field.
+- The frontmatter `name` of a skill. The skill loads. But the `/` menu does not show the `name`
+  value, and the value does not invoke the skill. Edit the `name` field.
 
 The message gives the first character that Claude Code refuses, by its code point.
 
@@ -53,12 +52,13 @@ still reports the `name` field of a plugin skill, and the file or folder name of
 
 The docs give examples, not a full list. The rule reports only the classes above. So it does not
 report a zero-width joiner, which is also a part of many emoji. The rule does not read the `name`
-field of a command file in `.claude/commands/`, because that file takes no `name`.
-[`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports it.
+field of a command file. A command gets its name from its path, and the docs give the `name`
+effect for a skill only.
 
 The rule does not check the limit of 256 characters on a name.[^refused] It does not read the
 plugin manifest. So it does not check a skill or command at a manifest `skills` or `commands`
-path. It also reports a file in `commands/` when a manifest `commands` key replaces that folder.
+path. When a manifest `commands` key replaces `commands/`, Claude Code does not load the files
+there. The rule still reports them.
 
 The rule checks the files that the other skill rules check:
 

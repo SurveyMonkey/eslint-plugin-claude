@@ -65,6 +65,7 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['a‮b', 'U+202E', DIRECTION],
   ['a‏b', 'U+200F', DIRECTION],
   ['a⁦b', 'U+2066', DIRECTION],
+  ['a\u2069b', 'U+2069', DIRECTION],
   ['a\u061Cb', 'U+061C', DIRECTION],
   ['a b', 'U+00A0', BLANK],
   ['a　b', 'U+3000', BLANK],
@@ -79,9 +80,9 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['a>b', 'U+003E', ANGLE],
 ]
 
-// Names with no character of the five classes. They hold one plain space between words, or letters
-// of other scripts. Two hold a zero-width joiner in an emoji, or a zero-width non-joiner. The rule
-// reports only the classes that the docs name.
+// Names with no character of the classes of the rule. They hold one plain space between words, or
+// letters of other scripts. Two hold a zero-width joiner in an emoji, or a zero-width non-joiner.
+// The rule reports only the classes that the docs name.
 const GOOD = [
   'deploy',
   'deploy app',
@@ -106,8 +107,9 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       code: '# S\n',
       filename: path.join(plugin, 'skills', name, 'SKILL.md'),
     })),
-    // A command file in `.claude/commands/` takes no `name`, so the rule reads none.
+    // A command gets its name from its path, so the rule reads no `name` in a command file.
     named('a<b', commandAt('c.md')),
+    named('a<b', path.join(plugin, 'commands', 'c.md')),
     // The frontmatter `name` is not a string, or the YAML does not parse.
     { code: '---\nname: [a<b]\n---\n', filename: skillIn('s') },
     { code: '---\nname: 3\n---\n', filename: skillIn('s') },
@@ -169,16 +171,11 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
         { messageId: 'command', data: { name: 'c​d', ...at('U+200B', ZERO_WIDTH) } },
       ],
     },
-    // A plugin command file, the `name` of a plugin command and a plugin skill `name` are not
-    // exempt.
+    // A plugin command file and a plugin skill `name` are not exempt.
     {
       code: '# C\n',
       filename: path.join(plugin, 'commands', 'a  b.md'),
       errors: [{ messageId: 'command', data: { name: 'a  b', ...at('U+0020', SPACE) } }],
-    },
-    {
-      ...named('a<b', path.join(plugin, 'commands', 'c.md')),
-      errors: [{ messageId: 'name', data: { name: 'a<b', ...at('U+003C', ANGLE) } }],
     },
     {
       ...named('a<b', path.join(plugin, 'skills', 's', 'SKILL.md')),

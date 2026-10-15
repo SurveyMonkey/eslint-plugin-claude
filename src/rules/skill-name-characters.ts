@@ -91,10 +91,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }
         }
       },
       yaml(node) {
-        // A command file in `.claude/commands/` takes no `name`. `skill-frontmatter-schema`
-        // reports one. A plugin command file takes the same fields as a skill.
-        const named = file.kind === 'skill' || file.plugin
-        const fm = named ? readFrontmatter(context.sourceCode, node) : null
+        // The docs give the `name` effect for a skill only. A command takes its name
+        // from its path (skills.md, "How a skill gets its command name").
+        const fm = file.kind === 'skill' ? readFrontmatter(context.sourceCode, node) : null
         const field = fm?.fields.get('name')
         const value = fm?.data.name
         if (!fm || !field || typeof value !== 'string') {
