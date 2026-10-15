@@ -4,7 +4,7 @@ description: How a person or a Claude Code session triages the issues that the d
 owner: brianespinosa
 created: 2026-09-29
 stale_after: 2027-03-29
-related_issues: [25, 149, 151, 152, 293, 307]
+related_issues: [25, 149, 151, 152, 293, 307, 312]
 generated:
   by: claude-code
   at: 2026-10-14T00:00:00Z
@@ -80,6 +80,9 @@ names no rule can be one section of a digest issue.
 Close an issue only in a pull request that refreshes the snapshot, or when the snapshot
 already holds its hash. The job reads open issues
 only. If you close an issue and the snapshot stays old, the next run opens the issue again.
+
+A work item can merge before the snapshot holds its block. Its pull request runs no `update`.
+It writes `Part of #<n>`, not `Closes`, for the issue. The refresh pull request closes the issue.
 
 ## When the docs-snapshot check fails
 
