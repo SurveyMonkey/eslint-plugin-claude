@@ -451,6 +451,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'skill-max-lines',
     'skill-metadata-reserved-keys',
     'skill-model-override',
+    'skill-name-characters',
     'skill-name-shadows-builtin',
     'skill-name-unique',
     'skill-no-bom',

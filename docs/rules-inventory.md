@@ -23,7 +23,7 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **454 candidate rules** in 9 groups. 337 rules go in `recommended`: 203 at `error` and 134 at
+- **455 candidate rules** in 9 groups. 338 rules go in `recommended`: 204 at `error` and 134 at
   `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 141 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
@@ -132,7 +132,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 454 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 455 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -162,7 +162,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
-| Skills and commands | 15 | 13 | 9 | 37 |
+| Skills and commands | 16 | 13 | 9 | 38 |
 | Subagents and output styles | 16 | 14 | 12 | 42 |
 | Hooks | 19 | 16 | 21 | 56 |
 | Plugin manifest and layout | 27 | 19 | 9 | 55 |
@@ -171,9 +171,9 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 18 | 19 | 14 | 51 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **203** | **134** | **117** | **454** |
+| **Total** | **204** | **134** | **117** | **455** |
 
-By severity, 203 rules are `error` and 251 are `warn`: the 134 `recommended` `warn` rules and
+By severity, 204 rules are `error` and 251 are `warn`: the 134 `recommended` `warn` rules and
 the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -244,7 +244,7 @@ Decisions on the open questions, made in review of this document:
 
 ### Skills and commands
 
-Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 37 rules: 15 error and 13 warn in `recommended`, and 9 heuristic or opt-in rules `off`.
+Rules for skill directories and their `SKILL.md` files (project, nested, plugin `skills/`, and a plugin-root `SKILL.md`), their supporting files, and legacy command files (`.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`). 38 rules: 16 error and 13 warn in `recommended`, and 9 heuristic or opt-in rules `off`.
 
 Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKILL.md`, `<plugin>/SKILL.md`. CMD = `**/.claude/commands/**/*.md`, `<plugin>/commands/**/*.md`. A rule applies to SKILL only unless its Checks cell names CMD.
 
@@ -258,6 +258,7 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 | `skill-paths-glob-valid` | SKILL: each `paths` glob is valid. An unescaped `[` forms a bracket expression. Brace expansion of the whole list stays within `maxExpanded` 1,000 patterns and `maxBytes` 4 MiB. A failing pattern matches nothing. | recommended | error | no-op | – | [^skills-frontmatter-reference] [^memory-path-specific-rules] [^changelog-claude-code-changelog] |
 | `skill-file-layout` | Each directory under `.claude/skills/` or `<plugin>/skills/` holds a file named exactly `SKILL.md`. No loose `.md` file sits directly in `skills/` (such as `.claude/skills/name.md`). Neither form is discovered. | recommended | error | load | – | [^skills-create-your-first-skill] [^plugins-components-skills] [^debug-your-config-check-common-causes] |
 | `skill-reserved-name` | Outside a plugin: no skill folder named `synced` (any case); no skill folder, frontmatter `name`, or CMD file or subfolder named `anthropic-skills` or starting `anthropic-skills:`. Claude Code skips each one. | recommended | error | load | – | [^skills-create-your-first-skill] [^skills-when-a-synced-skill-name-matches-another-command] |
+| `skill-name-characters` | SKILL, CMD: no character that Claude Code refuses in a skill folder, a CMD file or subfolder, or a skill frontmatter `name`. The classes are a zero-width space, a control character, a private-use or unassigned character, and a direction control. The other classes are a blank other than one plain space between words, and `<` or `>`. A refused folder or file name stops the load. A refused `name` is not in the `/` menu. A folder in a plugin `skills/` directory is not checked: Claude Code changes the characters to hyphens there. | recommended | error | load | – | [^skills-characters-a-skill-name-cant-hold] [^errors-skill-or-command-name-refused] |
 | `skill-name-unique` | In one scope (repo `.claude/`, one plugin), effective command names are unique: frontmatter `name`, else directory name; CMD path with `/` as `:`. Compare ignoring case, spacing, invisible chars, fullwidth and dash variants. A command that shares a skill's name never runs. (cross-file) | recommended | error | consistency | – | [^skills-resolve-skills-that-share-a-name] [^skills-how-a-skill-gets-its-command-name] [^skills-when-a-synced-skill-name-matches-another-command] |
 | `skill-plugin-root-shadowed` | A `<plugin>/SKILL.md` exists only when the plugin has no `skills/` directory and `plugin.json` has no `skills` key. Otherwise the root file does not load. (cross-file) | recommended | error | no-op | – | [^plugins-components-skills] |
 | `skill-plugin-vars-outside-plugin` | Non-plugin SKILL and CMD bodies and `allowed-tools` do not use `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_DATA}`. They are substituted only in plugin skills and stay literal text elsewhere. | recommended | error | no-op | – | [^skills-available-string-substitutions] |
@@ -1106,6 +1107,8 @@ Other names a rule may contain:
 [^features-overview-understand-how-features-layer]: [Extend Claude Code: Understand how features layer](https://code.claude.com/docs/en/features-overview#understand-how-features-layer)
 [^scheduled-tasks-run-a-prompt-repeatedly-with-loop]: [Run prompts on a schedule: Run a prompt repeatedly with /loop](https://code.claude.com/docs/en/scheduled-tasks#run-a-prompt-repeatedly-with-loop)
 [^desktop-scheduled-tasks-manage-scheduled-tasks]: [Schedule recurring tasks in Claude Code Desktop: Manage scheduled tasks](https://code.claude.com/docs/en/desktop-scheduled-tasks#manage-scheduled-tasks)
+[^skills-characters-a-skill-name-cant-hold]: [Extend Claude with skills: Characters a skill name can't hold](https://code.claude.com/docs/en/skills#characters-a-skill-name-cant-hold)
+[^errors-skill-or-command-name-refused]: [Error reference: Skill or command name refused](https://code.claude.com/docs/en/errors#skill-or-command-name-refused)
 [^sub-agents-subagent-files-claude-code-skips]: [Create custom subagents: Subagent files Claude Code skips](https://code.claude.com/docs/en/sub-agents#subagent-files-claude-code-skips)
 [^sub-agents-frontmatter-reference]: [Create custom subagents: Frontmatter reference](https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields)
 [^sub-agents-check-an-agents-directory-before-a-session]: [Create custom subagents: Check an agents directory before a session](https://code.claude.com/docs/en/sub-agents#check-an-agents-directory-before-a-session)

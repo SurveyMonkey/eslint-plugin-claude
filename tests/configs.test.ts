@@ -579,6 +579,12 @@ const TREE: Record<string, string> = {
   '.claude/skills/unreachable/SKILL.md':
     '---\ndisable-model-invocation: true\nuser-invocable: false\n---\n',
   '.claude/skills/synced/SKILL.md': '# Synced\n',
+  // `skill-name-characters`: a zero-width space in a folder, two spaces in a command file and `<`
+  // in a `name`. A plugin `skills/` folder takes the zero-width space.
+  '.claude/skills/chars\u200Bone/SKILL.md': '---\ndescription: d\n---\n',
+  '.claude/skills/chars-angle/SKILL.md': '---\nname: chars<angle>\ndescription: d\n---\n',
+  '.claude/commands/chars  two.md': '---\ndescription: d\n---\n',
+  'plugins/p/skills/chars\u200Bplugin/SKILL.md': '---\ndescription: d\n---\n',
   '.claude/skills/vars/SKILL.md': `Run ${pluginRoot}/run.sh\n`,
   '.claude/skills/bang/SKILL.md': 'KEY=!`cmd`\n',
   '.claude/skills/tools/SKILL.md': '---\nallowed-tools: AskUserQuestion\n---\n',
@@ -3875,6 +3881,11 @@ const EXPECTED = [
   '.claude/skills/schema/SKILL.md: claude/skill-frontmatter-schema@2',
   '.claude/skills/schema/SKILL.md: claude/skill-name-unique@2',
   '.claude/skills/synced/SKILL.md: claude/skill-reserved-name@2',
+  // `skill-name-characters`. The plugin folder `chars\u200Bplugin` gives no report.
+  '.claude/commands/chars  two.md: claude/command-legacy-format@1',
+  '.claude/commands/chars  two.md: claude/skill-name-characters@2',
+  '.claude/skills/chars-angle/SKILL.md: claude/skill-name-characters@2',
+  '.claude/skills/chars\u200Bone/SKILL.md: claude/skill-name-characters@2',
   '.claude/skills/t/SKILL.md: claude/skill-description-max-length@1',
   '.claude/skills/tools/SKILL.md: claude/skill-allowed-tools-ineffective@2',
   '.claude/skills/twin-a/SKILL.md: claude/skill-name-unique@2',
@@ -5659,7 +5670,7 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   },
 ]
 
-// The skill rules of #8, in the order of the `modules` list. Each is an error.
+// The skill rules of #8 and #304, in the order of the `modules` list. Each is an error.
 const NEW_RULES = [
   'skill-frontmatter-position',
   'skill-frontmatter-schema',
@@ -5676,6 +5687,7 @@ const NEW_RULES = [
   'skill-agent-exists',
   'skill-name-unique',
   'skill-paths-glob-valid',
+  'skill-name-characters',
 ]
 
 // The trees of the description rules. The repository has a `.git` entry, as a real one has. A rule

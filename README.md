@@ -116,6 +116,7 @@ default if it has one.
 | [skill-agent-exists](docs/rules/skill-agent-exists.md)                               | Name an agent that exists in the `agent` field of a skill                      | ✅ 🔒 |      | ⚙️ |
 | [skill-name-unique](docs/rules/skill-name-unique.md)                                 | Give each skill and command in one scope its own name                          | ✅ 🔒 |      |    |
 | [skill-paths-glob-valid](docs/rules/skill-paths-glob-valid.md)                       | Use valid globs in the `paths` field of a skill                                | ✅ 🔒 |      |    |
+| [skill-name-characters](docs/rules/skill-name-characters.md)                         | Do not put a character that Claude Code refuses in a skill or command name     | ✅ 🔒 |      |    |
 | [skill-boolean-literal](docs/rules/skill-boolean-literal.md)                         | Write a Boolean field of a skill as true or false                              |      | ✅ 🔒 | ⚙️ |
 | [skill-description-present](docs/rules/skill-description-present.md)                 | Set a description on a skill                                                   |      | ✅ 🔒 |    |
 | [skill-invocation-redundant-fields](docs/rules/skill-invocation-redundant-fields.md) | Remove a field that the invocation settings of a skill make useless            |      | ✅ 🔒 |    |
