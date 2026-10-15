@@ -782,6 +782,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 - CLAUDE_CODE_TOOL_MEMORY_LIMIT: digits with optional K, M, G, T, or `0`, `off`, `false`, `no`, `none`. CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE: comma list of mcp, lsp, hooks, plugin, helper, agent, or `none`, `all-new`.
 - ENABLE_TOOL_SEARCH: `true`, `false`, `auto`, `auto:N` (N 0 to 100). MCP_SDK_GENERATION: `v1`, `v2`. MCP_PROTOCOL_NEGOTIATION: `auto`, `legacy`.
 - CLAUDE_CODE_PROMPT_CACHE_TTL, CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL: `5m`, `1h`. CLAUDE_CODE_EFFORT_LEVEL: a level or `auto`, never `ultracode`.
+- CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH, CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS, CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS: positive, plain digits. CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS, CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION: positive whole number. CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS 500 to 32000, CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS 32000 to 64000, CLAUDE_CODE_GOAL_CHECKIN_MINUTES 0 to 10080, CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS 1 to 256: plain digits. CLAUDE_CODE_WEBFETCH_DEADLINE_MS, CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR: plain digits, `0` valid. CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE: comma list of 1 to 86400, plain digits.
 - CLAUDE_CODE_SHELL: path to a `bash` or `zsh` binary. ANTHROPIC_DEFAULT_*_SUPPORTED_CAPABILITIES: comma list of effort, xhigh_effort, max_effort, thinking, adaptive_thinking, interleaved_thinking.
 
 ##### A.5 Value constraints (`settings-schema`, keys this group owns)
