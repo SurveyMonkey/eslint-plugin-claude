@@ -17,11 +17,12 @@
 //   on the findings (scripts/docs-issues.ts). The step logs each issue and
 //   comment that it would make, with the key of each block.
 // Then it reads the markers of the open issues and the tracked markers of
-//   the open group issues. It uses the gh reads of the issue step. It
+//   the open group issues. It makes the same gh reads as the issue step. It
 //   accepts a block when one of them has its key. It does not compare the
 //   rules (#316).
 //   Jev can give a different answer in each run, so the rules can change.
-//   The daily job still opens an issue for a new rule.
+//   The daily job still opens an issue or posts a comment for each
+//   accepted block.
 //   It exits 1 when a block has no key match, and names each such block. It
 //   gives the reason of a needs-triage block, such as a failed Jev request.
 //   It names each accepted block, the issues that have its key, and the
@@ -271,7 +272,7 @@ async function dryRun({
     if (accepted.length > 0) {
       lines.push(
         'An open issue or group issue comment has the key of each block below. ' +
-          'The gate accepts these blocks. The daily job opens an issue for each new rule.',
+          'The gate accepts these blocks. The daily job still opens an issue or posts a comment for each of them.',
         ...accepted,
       )
     }

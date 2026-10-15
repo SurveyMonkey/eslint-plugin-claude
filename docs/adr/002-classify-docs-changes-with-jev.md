@@ -207,8 +207,9 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 2. It classifies the live pages against that base state, then runs the issue step in dry run.
    The dry run names each block that it would put in an issue or a group issue comment. The
    gate accepts such a block when the marker of an open issue or group issue comment has its
-   key. It does not compare the rules. It fails for each other block. An issue that the pull
-   request closes is open until the merge, so it still counts.
+   key. It does not compare the rules. It fails when another block has no key match, and names
+   each such block. An issue that the pull request closes is open until the merge, so it still
+   counts.
 3. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
    check has an error. The two steps read each page once. So the check compares the stored
    hashes with the text that the dry run read.
@@ -217,7 +218,7 @@ The gate matches a block by its key only, because Jev can give a different answe
 (#316). A rule can then cross a threshold for a block that a person already decided. The key
 tells the gate that a person saw the text. The summary names each accepted block, the issues
 that have its key, and the rules that they do not name. The daily job keeps the dedupe of
-Decision 5, so it opens an issue for each new rule.
+Decision 5. So it still opens an issue or posts a comment for each accepted block.
 
 The classifier reads the base map. So it does not read a page that the pull request cites for
 the first time. It classifies a heading that the pull request cites for the first time as a
