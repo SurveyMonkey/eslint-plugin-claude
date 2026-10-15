@@ -68,6 +68,9 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
     file('autoCompactWindow: 100000\n'),
     file('autoCompactWindow: 1000000\n'),
     file('autoCompactWindow: 200000 # tokens\n'),
+    // The docs say that Claude Code reads `200k` as 200, so it reads the digits of a string. A
+    // string of plain digits in the range is valid.
+    ...['"200000"', "'1000000'", '!!str 100000'].map((v) => file(`autoCompactWindow: ${v}\n`)),
     // An empty value is an absent field.
     file('name:\ndescription:\ntools:\nmaxTurns:\nexperimental:\nautoCompactWindow:\n'),
     { code: '# No frontmatter\n', filename: local },
@@ -152,9 +155,22 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
       ...file(`maxTurns: ${v}\n`),
       errors: [wrong('maxTurns', 'a positive integer')],
     })),
-    // The docs say that Claude Code reads `200k` as 200. A scientific or hexadecimal number, or a
-    // quoted number, is not a plain integer.
-    ...['200k', '99999', '1000001', '1.5e5', '0x30d40', '"200000"', '0'].map((v) => ({
+    // The docs say that Claude Code reads `200k` as 200. A scientific, hexadecimal or signed number
+    // is not a plain integer, and neither is a string that is not plain digits.
+    ...[
+      '200k',
+      '99999',
+      '1000001',
+      '1.5e5',
+      '0x30d40',
+      '+200000',
+      '0',
+      '"200k"',
+      '"99999"',
+      '"1000001"',
+      '" 200000"',
+      'true',
+    ].map((v) => ({
       ...file(`autoCompactWindow: ${v}\n`),
       errors: [
         {

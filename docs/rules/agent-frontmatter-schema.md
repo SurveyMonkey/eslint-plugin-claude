@@ -41,8 +41,9 @@ The rule reports these faults, on the narrowest part of the key or value:
   comma-separated string or a list of strings. `model` is a string that is not blank. `maxTurns` is a
   positive integer. The subagent table gives no type, and only the SDK table says `number`.[^sdk] `skills` is a list of strings. `background` and `omitClaudeMd` are Booleans.
   `experimental` is a map. `autoCompactWindow` is a plain integer from `100000` to
-  `1000000`.[^fields] The rule reads the value as written, so `200k`, `1.5e5` and `"200000"`
-  get a report. Claude Code reads `200k` as 200, and then ignores the field.
+  `1000000`.[^fields] The rule reads a number as written, so `1.5e5` and `0x30d40` get a report.
+  Claude Code reads `200k` as 200, and then ignores the field. So a string must be plain digits in
+  the range: `200k` gets a report, and `"200000"` does not.
 - **Value.** `permissionMode` is `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`,
   `plan` or `manual`. `memory` is `user`, `project` or `local`. `effort` is `low`, `medium`, `high`,
   `xhigh` or `max`. `isolation` is `worktree`.[^plugin] `color` is `red`, `blue`, `green`, `yellow`,
