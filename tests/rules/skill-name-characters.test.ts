@@ -95,6 +95,8 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     { code: '---\nname: 3\n---\n', filename: skillIn('s') },
     { code: '---\nname: "a<b\n---\n', filename: skillIn('s') },
     { code: '---\ndescription: d\n---\n', filename: skillIn('s') },
+    // A key that is an alias has a value but no location, as in `skill-reserved-name`.
+    { code: '---\nk: &k name\n*k : a<b\n---\n', filename: skillIn('s') },
     // Not a skill or command file.
     { code: '# S\n', filename: 'docs/a​b/SKILL.md' },
     { code: '# S\n', filename: 'docs/a<b.md' },
