@@ -73,7 +73,15 @@ const BAD: [name: string, code: string, kind: string][] = [
 // Names with no character of the five classes: one plain space between words, letters of other
 // scripts, and an emoji with a zero-width joiner. Of the zero-width characters, the docs name the
 // zero-width space only.
-const GOOD = ['deploy', 'deploy app', 'a b c', 'café', '日本語', 'a:b', 'family-👨‍👩‍👧']
+const GOOD = [
+  'deploy',
+  'deploy app',
+  'a b c',
+  'café',
+  '日本語',
+  'a:b',
+  'family-\u{1F468}\u200D\u{1F469}\u200D\u{1F467}',
+]
 
 const at = (code: string, kind: string) => ({ code, kind })
 
