@@ -81,9 +81,8 @@ Close an issue only in a pull request that refreshes the snapshot, or when the s
 already holds its hash. The job reads open issues
 only. If you close an issue and the snapshot stays old, the next run opens the issue again.
 
-A work item pull request that runs no `update` refers to its issue as `Part of #<n>`, with no
-closing keyword, while the snapshot does not hold its block. The refresh pull request closes
-the issue.
+A work item can merge before the snapshot holds its block. Its pull request runs no `update`.
+It writes `Part of #<n>`, not `Closes`, for the issue. The refresh pull request closes the issue.
 
 ## When the docs-snapshot check fails
 

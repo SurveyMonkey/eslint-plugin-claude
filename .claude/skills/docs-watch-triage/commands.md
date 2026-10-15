@@ -91,8 +91,9 @@ gh pr checks <n> --watch
 ```
 
 The first command prints `[]` when no refresh is open. If the `vitest` command fails, do not
-push. Remove the worktree and its branch with the commands after the push. `gh pr create` opens a pull request that
-is ready unless you give `--draft`. Do not give it. The commit runs the pre-commit hook.
+push and open no pull request. Run the two commands of the last block, then stop. See step 5 of
+Phase 7 in SKILL.md. `gh pr create` opens a pull request that is ready unless you give
+`--draft`. Do not give it. The commit runs the pre-commit hook.
 
 For one loop after a `docs-snapshot` failure: the listed run must start after `gh workflow run`.
 If its `createdAt` is older, list again.
@@ -109,7 +110,7 @@ git -C <wt> push
 gh pr edit <n> --body-file <file>
 ```
 
-After the push:
+Remove the worktree after the push, or after a failed `vitest` command:
 
 ```sh
 git -C <root> worktree remove <wt>
