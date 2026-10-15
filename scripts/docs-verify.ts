@@ -14,10 +14,19 @@
 //   docs/rule-sources.json, docs/rules-inventory.md, docs/rules/ and
 //   docs/docs-snapshot/. It classifies the live pages against that base
 //   state (scripts/docs-classify.ts). Then it runs the issue step in dry run
-//   on the findings (scripts/docs-issues.ts). It exits 1 when the dry run
-//   would open an issue or post a comment, and names each block. It gives
-//   the reason of a needs-triage block, such as a failed Jev request. The
-//   job's own dedupe decides each block, so the daily job and the gate agree.
+//   on the findings (scripts/docs-issues.ts). The step logs each issue and
+//   comment that it would make, with the key of each block.
+// Then it reads the markers of the open issues and the tracked markers of
+//   the open group issues. It makes the same gh reads as the issue step. It
+//   accepts a block when one of them has its key. It does not compare the
+//   rules (#316).
+//   Jev can give a different answer in each run, so the rules can change.
+//   The daily job still opens an issue or posts a comment for each
+//   accepted block.
+//   It exits 1 when a block has no key match, and names each such block. It
+//   gives the reason of a needs-triage block, such as a failed Jev request.
+//   It names each accepted block, the issues that have its key, and the
+//   rules that their markers do not name.
 // Then it runs the docs watch check on the head map and the head snapshot.
 //   It exits 1 when a page changed: the docs changed after `update`, or the
 //   map changed and `update` did not run. It also exits 1 when the check has
@@ -47,7 +56,17 @@ import { fileURLToPath } from 'node:url'
 import type { Finding, JevFetch, Output } from './docs-classify.ts'
 import { classify, loadInventory, loadRules } from './docs-classify.ts'
 import type { Run } from './docs-issues.ts'
-import { ghRunner, keyOf, markersIn, merge, openIssues, trackedMarkersIn } from './docs-issues.ts'
+import {
+  ghRunner,
+  groupOf,
+  keyOf,
+  markersIn,
+  merge,
+  openBodies,
+  openIssues,
+  readGroup,
+  trackedMarkersIn,
+} from './docs-issues.ts'
 import type { FetchText } from './docs-watch.ts'
 import { checkPages, fetchMarkdown, loadMap, loadSnapshots } from './docs-watch.ts'
 
@@ -113,34 +132,94 @@ function fetchOnce(fetchText: FetchText): FetchText {
   }
 }
 
-// One line for each block that the dry run would put in an issue or in a
-// group issue comment. The step logs each body, and each body holds the
-// marker of each block, so the markers name the blocks.
-function namedBlocks(output: Output, log: string[]): string[] {
-  const openKeys = new Set(
-    log
-      .filter((text) => text.startsWith('would open: '))
-      .flatMap((text) => markersIn(text).map((marker) => marker.key)),
-  )
-  const commentKeys = new Set(
-    log.filter((text) => text.startsWith('would comment on ')).flatMap(trackedMarkersIn),
-  )
+// The issues that have each key: an open issue with a marker of the key,
+// or an open group issue with a tracked marker of the key. The rules are the
+// rules of those markers. A tracked marker names no rule. These are the gh
+// reads of the issue step.
+function heldKeys(
+  output: Output,
+  repo: string,
+  run: Run,
+): Map<string, { issues: Set<number>; rules: Set<string> }> {
+  const held = new Map<string, { issues: Set<number>; rules: Set<string> }>()
+  const hold = (key: string, issue: number, rules: string[]) => {
+    const entry = held.get(key) ?? { issues: new Set<number>(), rules: new Set<string>() }
+    entry.issues.add(issue)
+    for (const rule of rules) entry.rules.add(rule)
+    held.set(key, entry)
+  }
+  for (const issue of openBodies(repo, run)) {
+    for (const m of markersIn(String(issue.body ?? ''))) hold(m.key, issue.number, m.rules)
+  }
+  const groups = new Set(output.tracked.flatMap((t) => t.sections.map((s) => groupOf(s.section))))
+  for (const issue of groups) {
+    for (const key of readGroup(repo, issue, run).keys) hold(key, issue, [])
+  }
+  return held
+}
+
+// The blocks that the dry run would put in an issue or in a group issue
+// comment. The step logs each body, and each body holds the marker of each
+// block, so the markers name the blocks. A comment marker names no rule.
+// It throws when the log does not name a block for each issue and comment
+// of the report. Then a log that names no block cannot pass.
+function loggedBlocks(
+  log: string[],
+  report: { wouldOpen: number; wouldComment: number },
+): { open: { key: string; rules: string[] }[]; comment: string[] } {
+  const opens = log.filter((text) => text.startsWith('would open: ')).map(markersIn)
+  const comments = log.filter((text) => text.startsWith('would comment on ')).map(trackedMarkersIn)
+  if (
+    opens.length !== report.wouldOpen ||
+    comments.length !== report.wouldComment ||
+    [...opens, ...comments].some((markers) => markers.length === 0)
+  ) {
+    throw new Error('the issue step log does not name one block or more for each issue and comment')
+  }
+  return { open: opens.flat(), comment: comments.flat() }
+}
+
+// The count of the blocks with no key match. One line for each of them
+// that the findings or the tracked list name, and one line for each
+// accepted block. The count, not the lines, fails the gate.
+function namedBlocks(
+  output: Output,
+  blocks: ReturnType<typeof loggedBlocks>,
+  held: ReturnType<typeof heldKeys>,
+): { unmatched: number; failed: string[]; accepted: string[] } {
+  const openKeys = new Set(blocks.open.map((m) => m.key).filter((key) => !held.has(key)))
+  const commentKeys = new Set(blocks.comment.filter((key) => !held.has(key)))
   const byKey = new Map<string, Finding[]>()
   for (const f of output.findings) byKey.set(keyOf(f), [...(byKey.get(keyOf(f)) ?? []), f])
   // The hash of a removed block is `gone:` and its old hash, as in its key.
   const line = (kind: string, block: Pick<Finding, 'page' | 'blockId' | 'oldHash' | 'newHash'>) =>
     `- ${kind}: ${block.page} block ${block.blockId}, hash ${block.newHash ?? `gone:${block.oldHash}`}`
-  const lines: string[] = []
+  const failed: string[] = []
   for (const [key, group] of byKey) {
     const f = merge(group)
     // A needs-triage block names its reason, such as a failed Jev request.
     const why = f.kind === 'needs-triage' ? `: ${f.reason}` : ''
-    if (openKeys.has(key)) lines.push(`${line(f.kind, f)}${why}`)
+    if (openKeys.has(key)) failed.push(`${line(f.kind, f)}${why}`)
   }
   for (const t of output.tracked) {
-    if (commentKeys.has(keyOf(t))) lines.push(line('tracked', t))
+    if (commentKeys.has(keyOf(t))) failed.push(line('tracked', t))
   }
-  return lines
+  const accepted: string[] = []
+  const seen = new Set<string>()
+  for (const { key, rules } of [
+    ...blocks.open,
+    ...blocks.comment.map((key) => ({ key, rules: [] })),
+  ]) {
+    const entry = held.get(key)
+    if (entry === undefined || seen.has(key)) continue
+    seen.add(key)
+    const issues = [...entry.issues].map((n) => `#${n}`).join(', ')
+    const fresh = rules.filter((rule) => !entry.rules.has(rule))
+    accepted.push(
+      `- accepted: ${key}, held by ${issues}${fresh.length > 0 ? `, new rules: ${fresh.join(', ')}` : ''}`,
+    )
+  }
+  return { unmatched: openKeys.size + commentKeys.size, failed, accepted }
 }
 
 // Classifies the live pages against the base state, then runs the issue
@@ -184,11 +263,20 @@ async function dryRun({
     if (!Number.isInteger(report?.wouldOpen) || !Number.isInteger(report?.wouldComment)) {
       throw new Error('the issue step report has no wouldOpen or wouldComment count')
     }
+    const blocks = loggedBlocks(log, report)
+    const { unmatched, failed, accepted } = namedBlocks(output, blocks, heldKeys(output, repo, run))
     const lines = [
       `The dry run would open ${report.wouldOpen} issue(s) and post ${report.wouldComment} comment(s).`,
-      ...namedBlocks(output, log),
+      ...failed,
     ]
-    if (report.wouldOpen > 0 || report.wouldComment > 0) {
+    if (accepted.length > 0) {
+      lines.push(
+        'An open issue or group issue comment has the key of each block below. ' +
+          'The gate accepts these blocks. The daily job still opens an issue or posts a comment for each of them.',
+        ...accepted,
+      )
+    }
+    if (unmatched > 0) {
       return {
         lines,
         failures: [

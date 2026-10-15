@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307]
+related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -205,12 +205,20 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 
 1. It copies the base map, inventory, rule docs and snapshot to a temporary root.
 2. It classifies the live pages against that base state, then runs the issue step in dry run.
-   It fails when the dry run would open an issue or post a group issue comment. The dedupe of
-   the job decides each block. An issue that the pull request closes is open until the merge, so
-   it still counts.
+   The dry run names each block that it would put in an issue or a group issue comment. The
+   gate accepts such a block when the marker of an open issue or group issue comment has its
+   key. It does not compare the rules. It fails when another block has no key match, and names
+   each such block. An issue that the pull request closes is open until the merge, so it still
+   counts.
 3. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
    check has an error. The two steps read each page once. So the check compares the stored
    hashes with the text that the dry run read.
+
+The gate matches a block by its key only, because Jev can give a different answer in each run
+(#316). A rule can then cross a threshold for a block that a person already decided. The key
+tells the gate that a person saw the text. The summary names each accepted block, the issues
+that have its key, and the rules that they do not name. The daily job keeps the dedupe of
+Decision 5. So it still opens an issue or posts a comment for each accepted block.
 
 The classifier reads the base map. So it does not read a page that the pull request cites for
 the first time. It classifies a heading that the pull request cites for the first time as a

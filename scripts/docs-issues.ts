@@ -835,7 +835,7 @@ export function validateTracked(value: unknown): asserts value is Tracked {
 }
 
 // The group issue of an inventory section. Throws for a section with none.
-function groupOf(section: string): number {
+export function groupOf(section: string): number {
   const issue = Object.hasOwn(GROUP_ISSUES, section) ? GROUP_ISSUES[section] : undefined
   if (issue === undefined) {
     throw new Error(
@@ -847,7 +847,11 @@ function groupOf(section: string): number {
 
 // The state of a group issue, and the keys of the tracked markers in its
 // comments. A closed issue gets no comment, so its comments are not read.
-function readGroup(repo: string, issue: number, run: Run): { open: boolean; keys: Set<string> } {
+export function readGroup(
+  repo: string,
+  issue: number,
+  run: Run,
+): { open: boolean; keys: Set<string> } {
   const state = run(['api', `repos/${repo}/issues/${issue}`, '--jq', '.state']).trim()
   if (state !== 'open' && state !== 'closed') {
     throw new Error(`issue #${issue} has a state that is not open or closed: ${state}`)
