@@ -79,9 +79,9 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['a>b', 'U+003E', ANGLE],
 ]
 
-// Names with no character of the five classes. They hold one plain space between words, letters of
-// other scripts, an emoji with a zero-width joiner, or a zero-width non-joiner. The rule reports
-// only the classes that the docs name.
+// Names with no character of the five classes. They hold one plain space between words, or letters
+// of other scripts. Two hold a zero-width joiner in an emoji, or a zero-width non-joiner. The rule
+// reports only the classes that the docs name.
 const GOOD = [
   'deploy',
   'deploy app',

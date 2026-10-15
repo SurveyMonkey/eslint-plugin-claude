@@ -58,7 +58,7 @@ field of a command file in `.claude/commands/`, because that file takes no `name
 
 The rule does not check the limit of 256 characters on a name.[^refused] It does not read the
 plugin manifest. So it does not check a skill or command at a manifest `skills` or `commands`
-path, and it reports a file in `commands/` that a manifest `commands` key replaces.
+path. It also reports a file in `commands/` when a manifest `commands` key replaces that folder.
 
 The rule checks the files that the other skill rules check:
 
