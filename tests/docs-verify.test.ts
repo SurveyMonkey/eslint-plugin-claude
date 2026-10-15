@@ -298,6 +298,7 @@ describe('a diff that changes the snapshot', () => {
     })
     expect(code).toBe(0)
     expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
+    expect(text).not.toContain('The gate accepts')
     expect(text).toContain('The head snapshot is the live docs.')
     expect(text).toContain('docs-snapshot: pass')
   })
@@ -470,9 +471,25 @@ describe('a block whose key an open issue or a group issue comment has', () => {
       run: gh.run,
     })
     expect(text).toContain('The dry run would open 1 issue(s) and post 0 comment(s).')
+    expect(text).toContain('The gate accepts these blocks.')
     expect(text).toContain(`- accepted: ${key}, held by #282, new rules: a-rule\n`)
     expect(text).not.toContain('- rule-update:')
     expect(text).toContain('docs-snapshot: pass')
+    expect(code).toBe(0)
+  })
+
+  it('names only the rules that the open issue does not name', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)), serve(PAGE), whole)
+    const key = `${URL_}#hooks:${headHash(root, 'hooks')}`
+    const gh = fakeGh({
+      issues: [{ number: 282, body: `<!-- docs-watch:rule-update:${key} rules=a-rule -->\n` }],
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(text).toContain(`- accepted: ${key}, held by #282, new rules: b-rule\n`)
     expect(code).toBe(0)
   })
 
