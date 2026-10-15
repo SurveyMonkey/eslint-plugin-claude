@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219, 293]
+related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -218,6 +218,12 @@ block that no rule cites. The author reads that page or heading to write the foo
 is its review. The gate reads issues with the `GITHUB_TOKEN` and `issues: read`. It writes
 nothing.
 
+The `docs-watch-triage` skill ends with one refresh pull request on the branch
+`docs-watch-refresh` (#307). It closes each issue that the session decided and left open.
+That pull request merges by auto-merge, with squash. The required checks, `docs-snapshot` among
+them, take the place of a person review for it. Only one refresh pull request is open at a time:
+the skill opens no second one while one is open.
+
 ### 5. The dedupe key is a hidden marker with the block hash
 
 Each issue body starts with
@@ -423,3 +429,7 @@ The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
   A pull request from a fork or from Dependabot gets no secret. When it changes the snapshot or
   the map, the check fails closed. A docs change during a pull request also fails the check, and
   the author runs `update` again. Each run of the check that changes the state costs Jev calls.
+- The triage refresh merges with no person review (Decision 4). The project has one developer,
+  and the rulesets "Require CI" and "Require CodeQL" have no review rule. A second developer,
+  or a review rule, reopens this part of the decision. A refresh whose check fails stays open,
+  and auto-merge waits until the next triage session.

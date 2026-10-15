@@ -23,16 +23,17 @@ and 14):
   It opens a digest for the uncited blocks of one page.
 - `docs/rule-sources.json` maps each rule to its docs sources. `docs/docs-snapshot/` holds the
   block hashes of the last docs, and the text of each cited section. Only a reviewed pull request
-  changes them. The `docs-snapshot` check (`scripts/docs-verify.ts`) runs the docs watch on the
-  base state in dry run. It fails a pull request that stores a change that no open issue or group
-  issue comment names. It also fails a snapshot that is not the live docs.
+  changes them. The triage refresh is the one exception (ADR 002 Decision 4). The
+  `docs-snapshot` check (`scripts/docs-verify.ts`) runs the docs watch on the base state in dry
+  run. It fails a pull request that stores a change that no open issue or group issue comment
+  names. It also fails a snapshot that is not the live docs.
 - `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
 
 ## Code
 
 - Source is TypeScript in `src/`, built by `tsc` to `dist/` (`.claude/rules/type-ts.md`). Tests
   are in `tests/`, and follow the `testing` skill. The `docs-watch-triage` skill decides a batch
-  of docs watch issues.
+  of docs watch issues. It then opens one refresh pull request with auto-merge.
 - `CONTRIBUTING.md` has the commands, the hooks and the release flow. Run `pnpm lint`,
   `pnpm typecheck`, `pnpm test`, `pnpm knip` and `pnpm docs:check` before you push.
 - A new rule needs footnotes in `docs/rules/<rule>.md` that link to its docs sources. The form
