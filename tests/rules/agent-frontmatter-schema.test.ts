@@ -156,7 +156,8 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
       errors: [wrong('maxTurns', 'a positive integer')],
     })),
     // The docs say that Claude Code reads `200k` as 200. A scientific, hexadecimal or signed number
-    // is not a plain integer, and neither is a string that is not plain digits.
+    // is not a plain integer, and neither is a string that is not plain digits. A value out of the
+    // range, a Boolean or a list is also a fault.
     ...[
       '200k',
       '99999',
@@ -170,6 +171,7 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
       '"1000001"',
       '" 200000"',
       'true',
+      '[200000]',
     ].map((v) => ({
       ...file(`autoCompactWindow: ${v}\n`),
       errors: [
