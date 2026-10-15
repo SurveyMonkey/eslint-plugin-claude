@@ -85,10 +85,11 @@ only. If you close an issue and the snapshot stays old, the next run opens the i
 
 The log names each failure. Do the steps for the failure that it names.
 
-- **The dry run would open an issue or post a comment.** The log names the kind, the page, the
-  block and the hash of each block. The docs changed after the last job run, or a block changed
-  again after its issue opened. A `needs-triage` line also gives its reason. If the reason is a
-  failed Jev request, examine `TYPESAFE_API_KEY`, and run the check again.
+- **The dry run would open an issue or post a comment for a block with no key match.** No open
+  issue or group issue comment has its key: its page, block and hash. The log names the kind,
+  the page, the block and the hash of each block. The docs changed after the last job run, or a
+  block changed again after its issue opened. A `needs-triage` line also gives its reason. If
+  the reason is a failed Jev request, examine `TYPESAFE_API_KEY`, and run the check again.
   1. Run the docs watch workflow with `workflow_dispatch`:
      `gh workflow run docs-watch.yml`.
   2. Triage the issues and comments that it opens.

@@ -18,7 +18,8 @@
 //   comment that it would make, with the key of each block.
 // Then it reads the markers of the open issues and the tracked markers of
 //   the open group issues. It uses the gh reads of the issue step. It
-//   accepts a block when one of them has its key, whatever its rules (#316).
+//   accepts a block when one of them has its key. It does not compare the
+//   rules (#316).
 //   Jev can give a different answer in each run, so the rules can change.
 //   The daily job still opens an issue for a new rule.
 //   It exits 1 when a block has no key match, and names each such block. It

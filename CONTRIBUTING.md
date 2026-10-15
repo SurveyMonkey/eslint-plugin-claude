@@ -167,10 +167,11 @@ request. It passes at once when the diff does not change `docs/docs-snapshot/` o
 `docs/rule-sources.json`. Else it runs the classifier on the base state, and the issue step in
 dry run, against the live docs. Then it runs `check` on the head state. It fails in these cases:
 
-- The dry run would open an issue or post a group issue comment. The log names the kind, the
-  page, the block and the hash of each block. A `needs-triage` block also has its reason. Run
-  the docs watch workflow with `workflow_dispatch`, triage what it opens, run `update` again,
-  and push.
+- The dry run would open an issue or post a group issue comment for a block. No open issue or
+  group issue comment has the key of that block. The rules do not count. The log names the
+  kind, the page, the block and the hash of each block. A `needs-triage` block also has its
+  reason. Run the docs watch workflow with `workflow_dispatch`, triage what it opens, run
+  `update` again, and push.
 - The head snapshot is not the live docs. The docs changed after `update`, or the map changed
   and `update` did not run. Run `update` again, and push.
 - `check` on the head has an error. Read the error. A map hash that is not the snapshot hash
