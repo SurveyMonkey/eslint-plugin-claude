@@ -149,6 +149,9 @@ Use the `gh:issues` skill when it is available. If it is not, use the commands i
 3. Write the report after Phase 7. Give the refresh pull request: its number, its auto-merge
    state, and its checks. If Phase 7 did not open one, say why, and name the open refresh
    pull request if one blocked it.
+4. Name each work item that blocks a refresh, and say why. A work item blocks a refresh when
+   a drift test of Phase 7 step 5 reads the data that it changes. The refresh cannot open
+   until that work item merges.
 
 ## Phase 7: Refresh
 
@@ -167,15 +170,21 @@ or group issue comment names. The commands are in [commands.md](commands.md).
    change, remove the worktree and its branch, and stop Phase 7. Give the reason in the report.
 4. Run `pnpm docs:seed`, then `node scripts/docs-watch.ts update`. Commit
    `docs/rule-sources.json` and `docs/docs-snapshot/`. Add each footnote file of step 3.
-5. Push, and open the pull request ready for review, not as a draft. CodeQL runs only on a
+5. Run the drift tests in the worktree: `tests/settings-env.test.ts` and
+   `tests/rules/settings-key-scope.test.ts`. They compare `src/data/` with the section text in
+   `docs/docs-snapshot/`. If one fails, open no pull request. Name the failed test and the work
+   item that fixes it. Remove the worktree and its branch. Stop Phase 7. The report says which
+   work items must merge first.
+6. Push, and open the pull request ready for review, not as a draft. CodeQL runs only on a
    pull request that is ready. The body has one `Closes #<n>` line for each
    `claude-docs-change` issue that this session decided and left open. That includes digests
-   and the issue of a footnote fix in step 3. It names the other open work items with no
+   and the issue of a footnote fix in step 3. It also has a `Closes` line for each work item
+   whose fix has merged while its marker is still open. It names the other open work items with no
    closing keyword.
-6. Turn on auto-merge with squash.
-7. Wait for the checks to end. If `docs-snapshot` fails, it names the blocks. Do one loop: run
+7. Turn on auto-merge with squash.
+8. Wait for the checks to end. If `docs-snapshot` fails, it names the blocks. Do one loop: run
    the docs-watch workflow, and wait for it to end. Triage the issues that it opens, with
    Phases 1 to 5. Run `update` again, push to the same branch, and add a `Closes` line for
    each new issue that you leave open.
-8. If `docs-snapshot` fails again, stop. Auto-merge waits. The report names the blocks.
-9. Remove the worktree. GitHub deletes the branch when the pull request merges.
+9. If `docs-snapshot` fails again, stop. Auto-merge waits. The report names the blocks.
+10. Remove the worktree. GitHub deletes the branch when the pull request merges.
