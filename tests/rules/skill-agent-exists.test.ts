@@ -35,7 +35,7 @@ put('outer/.claude/agents/outer.md', agentFile('outer'))
 put('outer/repo/.git/HEAD', '')
 put('outer/repo/.claude/agents/inrepo.md', agentFile('inrepo'))
 put('free/.claude/agents/free.md', agentFile('free'))
-// The skill file is there, so `.claude/` has a real path, as it has in use.
+// The skill file is there, so `.claude/` exists, as it does in use.
 put('free/deep/.claude/skills/s/SKILL.md', '# S\n')
 // A manifest with a `name` that is not a string, and one that does not parse.
 put('numeric/.claude-plugin/plugin.json', '{"name": 3}')
