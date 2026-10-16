@@ -276,6 +276,86 @@ describe('decide on the real Jev answers from the spike', () => {
   }
 })
 
+describe('decide on the held-out Jev answers', () => {
+  type HeldCase = { id: string; cited: string | null; label: string; removed?: boolean }
+  const read = <T>(name: string): T =>
+    JSON.parse(readFileSync(path.join(FIXTURES, 'docs-classify', name), 'utf8')) as T
+  const { cases } = read<{ cases: HeldCase[] }>('heldout-cases.json')
+  const key = read<Record<string, { case: string; label: string }>>('heldout-key.json')
+  const sonnet = read<{ labels: { case: string; label: string }[] }>('heldout-sonnet-labels.json')
+  const saved = read<{ results: Record<string, { answers?: Answers }> }>(
+    'heldout-jev-responses.json',
+  ).results
+  const blindIds = Object.keys(key)
+  const blindIdOf = (caseId: string) => blindIds.find((id) => key[id]?.case === caseId) as string
+
+  // The result of each case at the current thresholds. It is read by hand from
+  // the saved answers: an answer at or above 0.5 is a yes, an answer at or
+  // below the `no` value is a no, and an answer between them goes to a person.
+  // Only h04 (alters 0.41) is between the bands. h19 (requirement 0.34) was
+  // between them at the 0.2 of the first run, and is a no at 0.4.
+  const expected: Record<string, string> = {
+    h01: 'no-change', // alters 0.14
+    h02: 'rule-removal', // obsolete 0.87
+    h03: 'rule-removal', // removed block, no call
+    h04: 'needs-triage', // alters 0.41
+    h05: 'new-rule', // requirement 0.84
+    h06: 'rule-update', // alters 0.89
+    h07: 'rule-update', // alters 0.87
+    h08: 'new-rule', // requirement 0.59
+    h09: 'new-rule', // requirement 0.90
+    h10: 'rule-removal', // obsolete 0.77
+    h11: 'new-rule', // requirement 0.81
+    h12: 'no-change', // requirement 0.06
+    h13: 'rule-update', // alters 0.92
+    h14: 'no-change', // alters 0.05
+    h15: 'no-change', // requirement 0.03
+    h16: 'rule-update', // alters 0.94
+    h17: 'no-change', // alters 0.15
+    h18: 'no-change', // requirement 0.19
+    h19: 'no-change', // requirement 0.34
+    h20: 'no-change', // alters 0.06
+  }
+
+  it('has 20 cases, and a key and a blind label for each', () => {
+    expect(cases).toHaveLength(20)
+    expect(blindIds).toHaveLength(20)
+    expect(new Set(blindIds.map((id) => key[id]?.case))).toEqual(new Set(cases.map((c) => c.id)))
+    expect(sonnet.labels.map((l) => l.case).sort()).toEqual(blindIds)
+    expect(new Set(cases.map((c) => c.label))).toEqual(
+      new Set(['rule-update', 'rule-removal', 'new-rule', 'no-change']),
+    )
+  })
+
+  it('has a key label equal to the label of the builder, and a blind label equal to both', () => {
+    for (const c of cases) {
+      const id = blindIdOf(c.id)
+      expect(key[id]?.label, c.id).toBe(c.label)
+      expect(sonnet.labels.find((l) => l.case === id)?.label, c.id).toBe(c.label)
+    }
+  })
+
+  for (const c of cases.filter((one) => !one.removed)) {
+    const id = blindIdOf(c.id)
+    it(`gives ${expected[id]} for ${id} ${c.id} (label ${c.label})`, () => {
+      const item = { rules: c.cited ? [c.cited] : [], askRequirement: !c.cited }
+      const kinds = api.decide(item, saved[id]?.answers as Answers).map((o) => o.kind)
+      expect(kinds.find((kind) => kind !== 'no-change') ?? 'no-change').toBe(expected[id])
+    })
+  }
+
+  it('needs no call for the removed block, and it has no saved answer', () => {
+    const removed = cases.filter((c) => c.removed)
+    expect(removed.map((c) => blindIdOf(c.id))).toEqual(['h03'])
+    expect(saved.h03?.answers).toBeUndefined()
+  })
+
+  it('differs from the label for h04 only, and h19 now agrees with it', () => {
+    const differs = cases.filter((c) => expected[blindIdOf(c.id)] !== c.label)
+    expect(differs.map((c) => blindIdOf(c.id))).toEqual(['h04'])
+  })
+})
+
 describe('decide', () => {
   const item = { rules: ['a-rule'], askRequirement: false }
   const answers = (alters: number, obsolete: number): Answers => ({

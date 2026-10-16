@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 35, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316]
+related_issues: [25, 35, 38, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -92,6 +92,10 @@ A block that is too large for one request, and has a diff that fits, gets a mode
 request has the lines that each side adds and no full text. The Reason of a finding from that
 request says that Jev judged the changed lines.
 
+**Two deviations from the acceptance list of #25.** A change to the preset or the severity of a
+rule has no kind of its own. The `alters` question covers severity, and the finding is a
+`rule-update`. The classifier stores no Claude Code version, because the docs pages show none.
+
 The request pins `jev-1.13.0`, because the thresholds come from that version. A Noul has no
 confidence value, so a finding reports `|2p - 1|` as its confidence.
 
@@ -166,6 +170,8 @@ Accuracy by label, on each of the four runs:
 - The `alters` value stays 0.2. Two live cases fell in its band (#103 at 0.27 and #118 at
   0.24). Neither changed the rule that it cited, and #118 led to a new rule. Two cases are too
   few to move the value.
+- The held-out cases (Decision 3) add one true `rule-update` at 0.41 (`h04`). It goes to a
+  person. No true update scored 0.2 or less, so the `no` value stays.
 - The classifier summary lists each block that needs no change. For a block that no rule
   cites, it adds the `requirement` value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
@@ -182,13 +188,64 @@ ask it.
 "deprecated", and two sentences about lists of names and about text that counts toward a limit.
 One case was also rebuilt, because its old text did not agree with the current rule.
 
-### 3. The comparison with a Claude model uses reference labels only
+### 3. A blind Sonnet check and a held-out set test the reference labels
 
-No Anthropic API key exists in this environment, so no Claude model classified the cases. The
-labels are the reference. The Claude Code session that wrote this change set them by hand from
-the docs, and a person has not checked them yet. The `alters` and `obsolete` values come from the
-same 24 cases, and no held-out set exists. The `requirement` `no` value also uses seven live
-cases. Record new cases and their results here before you change a threshold.
+The Claude Code session that wrote this change set the reference labels of the 24 cases by
+hand from the docs. A person has not checked them. The `alters` and `obsolete` values come
+from the same 24 cases. The `requirement` `no` value also uses seven live cases (#150).
+
+On 2026-09-30 a check tested these labels:
+
+- A separate Sonnet agent labeled the 24 cases blind. It saw the two texts and the rule
+  description only.
+- Another agent built 20 held-out cases from changelog entries that the spike did not use. A
+  second blind Sonnet agent labeled them.
+- The production code (`jev-1.13.0`) ran once on all 44 cases.
+
+`tests/fixtures/docs-classify/heldout-*.json` hold the 20 cases, their key, the blind labels
+and the saved Jev answers. The describe "decide on the held-out Jev answers" in
+`tests/docs-classify.test.ts` runs the saved answers through `decide` at the current
+thresholds.
+
+The table counts the cases where two sources give the same result, at the current thresholds.
+A `needs-triage` result matches no label.
+
+| Pair | Spike 24 | Held-out 20 | All 44 |
+| - | - | - | - |
+| Author labels and Sonnet | 23 | 20 | 43 |
+| Author labels and Jev | 21 | 19 | 40 |
+| Sonnet and Jev | 20 | 19 | 39 |
+
+**One row differs from the first run.** The run used a `requirement` `no` value of 0.2. PR
+#171 raised it to 0.4. The block `h19` (uncited, `requirement` 0.34, label `no-change`) gave
+`needs-triage` then, and gives `no-change` now. The first run counted 18 for both held-out Jev
+pairs. No other row changes, because no other `requirement` value is between 0.2 and 0.4.
+
+- The author and Sonnet differ on one case: `listing-cap-configurable`. Sonnet chose
+  `no-change`. The author and Jev chose `rule-update`.
+- On the 43 cases where the author and Sonnet agree, Jev gave the same result on 39 and
+  `needs-triage` on 4. It never gave a wrong kind.
+- The 4 `needs-triage` cases have `alters` values from 0.29 to 0.47. Two are true updates
+  (`hook-event-deprecated` at 0.47 and `h04` at 0.41). Two are true no-changes
+  (`manifest-hooks-array` at 0.29 and `skills-key-default` at 0.41). A true update and a true
+  no-change both score 0.41. So no `alters` threshold separates them.
+- `hook-event-deprecated` scored 0.51 to 0.56 in the four spike runs and 0.47 in this run. A
+  value near 0.5 can fall on either side from one run to the next.
+- The lowest `alters` value of a true update is 0.41 (`h04`). No true update scored 0.2 or
+  less. So the `no` value of 0.2 holds.
+- The `requirement` value of a `no-change` block is 0.34 at most (`h19`), and the lowest value
+  of a `new-rule` block is 0.59 (`h08`). The `no` value of 0.4 holds.
+
+**Limits of this check:**
+
+- All labelers are Claude models. The author labels come from a Claude Code session, and the
+  blind labels come from Sonnet.
+- The held-out rename, default and removal cases borrow the shape of nearby changelog
+  entries.
+- Each case ran once, and Jev can give a different answer in each run (#316).
+
+The check changes no question and no threshold. Record new cases and their results here before
+you change a threshold.
 
 ### 4. The state lives in `docs/`, and only a reviewed pull request changes it
 
@@ -407,8 +464,9 @@ The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
   ($0.042 for each million tokens), a run with ten changed blocks costs much less than one cent.
 - The person must add the `TYPESAFE_API_KEY` secret, and confirm that the release App can write
   issues and set the issue type. The App token path and the schedule have not run on GitHub.
-- The spike has 24 cases from one author. The author rebuilt some shapes from a similar change,
-  for example the removal of the description cap. The result can differ on real changes.
+- The 44 cases have the limits of Decision 3. Claude models set every label. The builders
+  rebuilt some shapes from a similar change, for example the removal of the description cap.
+  Each case ran once. The result can differ on real changes.
 - A new requirement inside a block that a heading cites gives no `new-rule` issue. The rule
   question for that block is the only signal.
 - The snapshot has only the hash of an uncited block. A change to the words only of such a block
