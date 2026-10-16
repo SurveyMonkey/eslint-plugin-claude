@@ -3,20 +3,15 @@
 An ESLint 10 flat-config plugin, published to npm as `eslint-plugin-claude`, that lints Claude
 Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recommended` and
 `strict`. Each rule keeps to the limits in [README Scope](README.md#scope) (ADR 001 Decisions 2
-and 14):
-
-- Its source is a page of the Claude Code docs.
-- It reports a measurable fault. Style, quality and a model judgment are not faults.
-- A convention of one organization is not a rule.
-- It reads no file out of the git repository.
+and 14). `.claude/rules/path-rule-scope.md` turns each limit into a check. The limits include
+this one: a check that an official CLI tool makes, such as `claude plugin validate`, is not a
+rule.
 
 ## Design
 
 - `docs/adr/001-eslint-plugin-for-claude-config.md` records the decision and its scope.
 - `docs/rules-inventory.md` lists the candidate rules, each with its group, preset, severity and
   docs source. A rule enters the plugin in its own pull request.
-- A check that `claude plugin validate` covers fully is not a rule. A check that it covers in
-  part is a rule, for the cases that it misses.
 - `docs/adr/002-classify-docs-changes-with-jev.md` records the docs watch. A daily job finds each
   changed block of a page that a rule cites. It classifies the block and opens an issue. It posts
   a comment on a group issue for a tracked block. It opens a `moved` issue for a renamed section.

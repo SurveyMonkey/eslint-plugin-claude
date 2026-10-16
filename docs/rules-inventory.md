@@ -29,7 +29,8 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 439 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 439 it does not report at all. An official CLI check is out of
+  scope for a rule, so a `partial` rule reports only the cases that validate misses. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -53,8 +54,11 @@ What is out of scope:
 - A check that needs a model judgment about prose quality. A heuristic proxy for one, such as a
   leading imperative verb, is in the list at `off` and is marked "(heuristic)".
 - Runtime behavior that no committed file shows.
-- A check that `claude plugin validate` already covers fully. A check that validate covers in
-  part is a rule, for the cases validate misses. The Validate column marks it `partial`.
+- A check that an official Claude Code CLI tool already makes on the repository files, such as
+  `claude plugin validate`. A CLI check is quantitative, as the rules of this plugin are. A
+  session tool, such as `/doctor`, can make qualitative checks, so it does not count. A check
+  that the tool covers in part is a rule, for the cases that it misses. The Validate column marks
+  it `partial`. The next major release removes a rule that the tool starts to cover.
 - A rule specific to one organization's conventions, such as a required shape for a plugin's
   `SessionStart` hook[^hooks-sessionstart]. The docs do not source it, so it is out of scope
   for this package.
