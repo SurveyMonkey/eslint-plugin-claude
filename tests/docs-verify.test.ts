@@ -53,10 +53,10 @@ const INVENTORY = [
   '',
 ].join('\n')
 
-// The first part of the remedy. The gate prints it when a block has no key match.
+// The end of the remedy, without its first sentence. The gate prints it when a block has no key match.
 const REMEDY =
   'Run the docs watch workflow, triage what it opens, then run `update` again. ' +
-  'If the workflow opens no issue for a block above, open one by hand. ' +
+  'If the workflow opens no issue for a failed block above, open one by hand. ' +
   'Start its body with the marker line of that block, and leave it open:'
 
 const dirs: string[] = []
@@ -285,7 +285,8 @@ describe('a diff that changes the snapshot', () => {
     expect(written.startsWith('an earlier step\n')).toBe(true)
     expect(written).toContain(`- rule-update: ${URL_} block hooks, hash ${hash}`)
     expect(written).toContain(REMEDY)
-    expect(written).toContain(`${marker}\n`)
+    // The summary is Markdown, which hides an HTML comment, so a fence holds the marker.
+    expect(written).toContain(`\`\`\`\n${marker}\n\`\`\`\n`)
   })
 
   it('fails when the dry run would post only a tracked comment', async () => {
@@ -317,6 +318,8 @@ describe('a diff that changes the snapshot', () => {
     expect(text).not.toContain('The gate accepts')
     expect(text).toContain('The head snapshot is the live docs.')
     expect(text).toContain('docs-snapshot: pass')
+    expect(text).not.toContain(REMEDY)
+    expect(text).not.toContain('<!-- docs-watch:')
   })
 
   it('passes a block that an open issue and a group issue comment already name', async () => {
@@ -427,6 +430,9 @@ describe('a diff that changes the snapshot', () => {
       `- needs-triage: ${URL_} block hooks, hash ${headHash(root, 'hooks')}: The Jev request failed`,
     )
     expect(text).toContain('401')
+    expect(text).toContain(
+      `<!-- docs-watch:needs-triage:${URL_}#hooks:${headHash(root, 'hooks')} -->\n`,
+    )
   })
 
   it('fails both steps when the page fetch fails', async () => {
@@ -615,6 +621,11 @@ describe('a block whose key an open issue or a group issue comment has', () => {
     expect(text).toContain('The dry run would open 1 issue(s) and post 1 comment(s).')
     expect(text).toContain(`- tracked: ${URL_} block commands, hash ${headHash(root, 'commands')}`)
     expect(text).not.toContain('- rule-update:')
+    // The held block has no marker. The unmatched tracked block has one.
+    expect(text).not.toContain(`<!-- docs-watch:rule-update:${hooks} -->`)
+    expect(text).toContain(
+      `<!-- docs-watch:rule-update:${URL_}#commands:${headHash(root, 'commands')} -->\n`,
+    )
     expect(text).toContain(`- accepted: ${hooks}, held by #282, new rules: a-rule\n`)
     expect(text).toContain('docs-snapshot: fail')
     expect(code).toBe(1)

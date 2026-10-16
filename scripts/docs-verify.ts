@@ -181,8 +181,9 @@ function loggedBlocks(
 
 // The count of the blocks with no key match. One line for each of them
 // that the findings or the tracked list name, and one line for each
-// accepted block. The count, not the lines, fails the gate. Each block with
-// no key match also has the marker for an issue that a person opens by hand.
+// accepted block. The count, not the lines, fails the gate. It also returns
+// the marker line of each block with no key match, for an issue that a person
+// opens by hand.
 function namedBlocks(
   output: Output,
   blocks: ReturnType<typeof loggedBlocks>,
@@ -209,7 +210,8 @@ function namedBlocks(
   for (const t of output.tracked) {
     if (commentKeys.has(keyOf(t))) {
       failed.push(line('tracked', t))
-      // The gate reads a marker of any kind, so a tracked block uses rule-update.
+      // The gate reads an issue marker of any kind, so a tracked block gets a rule-update
+      // issue marker. It is not a docs-watch-tracked comment marker.
       markers.push(`<!-- docs-watch:rule-update:${keyOf(t)} -->`)
     }
   }
@@ -293,9 +295,10 @@ async function dryRun({
       const remedy =
         'The pull request stores a docs change that no open issue or group issue comment names. ' +
         'Run the docs watch workflow, triage what it opens, then run `update` again. ' +
-        'If the workflow opens no issue for a block above, open one by hand. ' +
+        'If the workflow opens no issue for a failed block above, open one by hand. ' +
         'Start its body with the marker line of that block, and leave it open:'
-      lines.push(remedy, ...markers)
+      // The step summary is Markdown, and it hides an HTML comment. A fence shows the markers.
+      lines.push('', remedy, '```', ...markers, '```')
       return { lines, failures: [remedy] }
     }
     return { lines, failures: [] }
