@@ -2,6 +2,7 @@
 // another file, sends the reader of a report to a 404.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
+import { isDeepStrictEqual } from 'node:util'
 import type { Linter } from 'eslint'
 import { expect, it } from 'vitest'
 import { parse } from 'yaml'
@@ -598,22 +599,31 @@ function optionsProse(doc: string): string[] {
   return units
 }
 
-/** The value after "default is" in a sentence, or `undefined` when the sentence gives none. */
+/** The value after "default is" in a sentence, or `undefined` when the sentence gives none. A
+ *  backtick value that is not JSON stays text, so it differs from the default and the test
+ *  names it. */
 function valueOfDefault(sentence: string): { value: unknown } | undefined {
-  const text = /\bdefault is (`[^`]+`|\d+(?![\d,.]*\d)|an empty (?:array|list))/.exec(sentence)?.[1]
+  const text = /\bdefault is (`[^`]+`|\d+(?![\d,.]*\d)|an empty (?:array|list))/i.exec(
+    sentence,
+  )?.[1]
   if (text === undefined) {
     return undefined
   }
   if (text.startsWith('an empty')) {
     return { value: [] }
   }
-  return { value: JSON.parse(text.replaceAll('`', '')) }
+  const raw = text.replaceAll('`', '')
+  try {
+    return { value: JSON.parse(raw) }
+  } catch {
+    return { value: raw }
+  }
 }
 
 /** The defaults that the Options prose of a doc states. A sentence counts when it gives a value
- *  after "default is" and its unit names one option of the rule in backticks. A sentence of a
- *  doc that talks of a default without these two parts is not a claim, and the test skips it:
- *  it can describe a Claude Code default, or the default of an option that it does not name. */
+ *  after "default is". Its unit must name exactly one option of the rule in backticks.
+ *  The test skips any other sentence about a default. It can describe a Claude Code default.
+ *  It can also describe an option that the unit does not name. */
 function statedDefaults(doc: string, options: string[]): StatedDefault[] {
   const found: StatedDefault[] = []
   for (const unit of optionsProse(doc)) {
@@ -640,7 +650,8 @@ function optionDefaults(rule: { meta?: unknown }): Map<string, unknown> {
   const properties = meta.schema?.[0]?.properties ?? {}
   const defaults = new Map<string, unknown>()
   for (const [option, schema] of Object.entries(properties)) {
-    defaults.set(option, meta.defaultOptions?.[0]?.[option] ?? schema.default)
+    const given = meta.defaultOptions?.[0] ?? {}
+    defaults.set(option, option in given ? given[option] : schema.default)
   }
   return defaults
 }
@@ -648,20 +659,33 @@ function optionDefaults(rule: { meta?: unknown }): Map<string, unknown> {
 // ADR 003 Decision 5 keeps hand prose under `## Options`, and some of it states a default.
 // docs:check compares the generated list with `meta`, not this prose. So a test compares the
 // default that a sentence states with the default in `meta`.
+
+/** The stated defaults of a doc that differ from the defaults in `meta`. */
+function wrongDefaults(doc: string, defaults: Map<string, unknown>): StatedDefault[] {
+  return statedDefaults(doc, [...defaults.keys()]).filter(
+    ({ option, value }) => !isDeepStrictEqual(value, defaults.get(option)),
+  )
+}
+
 it('states in each rule doc the option defaults that meta gives', () => {
-  let checked = 0
+  const wrong: string[] = []
+  const checked: string[] = []
   for (const [name, rule] of Object.entries(plugin.rules)) {
     const defaults = optionDefaults(rule)
-    for (const { option, value, sentence } of statedDefaults(docOf(name), [...defaults.keys()])) {
-      expect(value, `${name}: ${sentence}`).toEqual(defaults.get(option))
-      checked += 1
+    const doc = docOf(name)
+    for (const { option } of statedDefaults(doc, [...defaults.keys()])) {
+      checked.push(`${name}/${option}`)
+    }
+    for (const { sentence } of wrongDefaults(doc, defaults)) {
+      wrong.push(`${name}: ${sentence}`)
     }
   }
-  // The match is a heuristic. This count shows that it still finds the sentences.
-  expect(checked).toBeGreaterThanOrEqual(2)
+  expect(wrong).toEqual([])
+  // The match is a heuristic. This list shows that it still finds the known sentences.
+  expect(checked).toEqual(['plugin-bin-claude-ai/targets', 'sandbox-domain-broad/broad'])
 })
 
-it('finds a stated default that differs from meta, outside the fences and the generated list', () => {
+it('finds the stated defaults outside the fences and the generated list', () => {
   const doc = [
     '## Options',
     '',
@@ -680,6 +704,9 @@ it('finds a stated default that differs from meta, outside the fences and the ge
     '- `names`: a list. The default is an empty list.',
     '- `max` and `names`: the default is 6.',
     '- `max`: The default is 1,536 characters in the listing.',
+    '- `max`: Default is 12.',
+    '- `names`: the default is an empty array.',
+    '- `names`: the default is `warn`.',
     '',
     '## Sources',
     '',
@@ -688,7 +715,38 @@ it('finds a stated default that differs from meta, outside the fences and the ge
   expect(statedDefaults(doc, ['max', 'names']).map((d) => [d.option, d.value])).toEqual([
     ['max', 5],
     ['names', []],
+    ['max', 12],
+    ['names', []],
+    ['names', 'warn'],
   ])
+})
+
+it('reports a stated default that differs from the default in meta', () => {
+  const doc = [
+    '## Options',
+    '',
+    '`max` is a number. The default is 5.',
+    '',
+    '- `names`: the default is `warn`.',
+  ].join('\n')
+  expect(
+    wrongDefaults(
+      doc,
+      new Map<string, unknown>([
+        ['max', 5],
+        ['names', []],
+      ]),
+    ).map((d) => d.option),
+  ).toEqual(['names'])
+  expect(
+    wrongDefaults(
+      doc,
+      new Map<string, unknown>([
+        ['max', 6],
+        ['names', 'warn'],
+      ]),
+    ).map((d) => d.option),
+  ).toEqual(['max'])
 })
 
 // The generator writes the README rule list from the groups of `.eslint-doc-generatorrc.mjs`.
