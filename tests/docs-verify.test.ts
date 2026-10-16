@@ -632,6 +632,30 @@ describe('a block whose key an open issue or a group issue comment has', () => {
   })
 })
 
+describe('the markers of the remedy', () => {
+  it('names the block with no key match, and not a tracked block that a comment holds', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_BOTH)))
+    const hooks = headHash(root, 'hooks')
+    const commands = headHash(root, 'commands')
+    const gh = fakeGh({
+      groups: {
+        50: {
+          state: 'open',
+          comments: [`<!-- docs-watch-tracked:${URL_}#commands:${commands} -->`],
+        },
+      },
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_BOTH),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    expect(code).toBe(1)
+    expect(text).toContain(`<!-- docs-watch:rule-update:${URL_}#hooks:${hooks} -->\n`)
+    expect(text).not.toContain(`<!-- docs-watch:rule-update:${URL_}#commands:${commands} -->`)
+  })
+})
+
 describe('the base state and the page reads', () => {
   it('classifies with the base inventory, not the head inventory', async () => {
     // The head removes the inventory row of `commands`. The base still has
