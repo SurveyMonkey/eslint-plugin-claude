@@ -11,8 +11,6 @@ import { readSettings } from './settings-files.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
-  missingOf,
-  realOf,
   repositoryRoot,
   UNREADABLE,
   type Unreadable,
@@ -72,8 +70,10 @@ export function projectAgentNames(scope: AgentFile): string[] | Unreadable {
  *  below its `agents/` directory. A plugin scope holds the files that its manifest key `agents`
  *  names, or the files below `agents/` when the key is not there. The result is `UNREADABLE` when
  *  the scope has a part that the check cannot see: a manifest that it cannot read, a path that is
- *  a dangling link, a link out of the repository, or a directory that it cannot list. A named
- *  file that is not there adds nothing, as in Claude Code. */
+ *  a dangling link, a link out of the repository, or a directory that it cannot list. A missing
+ *  `agents/` directory is empty, unless its path leaves the repository or has a dangling link.
+ *  The scan of the directory finds both cases. A named file that is not there adds nothing, as in
+ *  Claude Code. */
 export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
   const bound = repositoryRoot(scope.root)
   const named = scope.plugin ? manifestAgents(scope.root, bound) : null
@@ -94,11 +94,6 @@ export function scopeAgentFiles(scope: AgentFile): string[] | Unreadable {
     return files
   }
   const agents = path.join(scope.root, 'agents')
-  // The check cannot see a directory that is not there when its path is out of the repository.
-  // The same holds when its path has a dangling link. The scan below gives the same result.
-  if (realOf(agents) === null && missingOf(agents, bound) === UNREADABLE) {
-    return UNREADABLE
-  }
   const scan = markdownFiles(agents, bound)
   return scan.outside || scan.unreadable ? UNREADABLE : scan.files
 }

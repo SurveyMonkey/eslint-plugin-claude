@@ -19,6 +19,7 @@ import { classifySkillFile } from '../src/skill-files.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
+  missingOf,
   readJson,
   readManifest,
   realDirectory,
@@ -749,7 +750,7 @@ describe('repositoryRoot', () => {
     expect(repositoryRoot(path.join(scratch, 'repo'))).toBe(path.join(scratch, 'repo'))
     // A `.git` file, as in a worktree or a submodule, counts too.
     expect(repositoryRoot(path.join(scratch, 'wt'))).toBe(path.join(scratch, 'wt'))
-    // A directory that does not exist gives its absolute path.
+    // A directory that does not exist, with no link in its path, gives its absolute path.
     expect(realDirectory(path.join(scratch, 'repo', 'gone'))).toBe(
       path.join(scratch, 'repo', 'gone'),
     )
@@ -764,6 +765,72 @@ describe('repositoryRoot', () => {
     } finally {
       rmSync(free, { recursive: true, force: true })
     }
+  })
+})
+
+describe.skipIf(process.platform === 'win32')('realDirectory for a bound that is not there', () => {
+  // The test makes a link in the path of the bound, as /var is a link on macOS.
+  const linked = (name: string) => {
+    put(`${name}/target/.keep`, '')
+    symlinkSync(path.join(scratch, name, 'target'), path.join(scratch, name, 'link'))
+    return path.join(scratch, name)
+  }
+
+  it('gives the real path of the nearest part that exists, plus the rest', () => {
+    const base = linked('missing-bound')
+    const bound = path.join(base, 'link', 'gone', 'deeper')
+    expect(realDirectory(bound)).toBe(path.join(base, 'target', 'gone', 'deeper'))
+    expect(repositoryRoot(bound)).toBe(path.join(base, 'target', 'gone', 'deeper'))
+  })
+
+  it('does not set outside for a scan in a bound that is not there', () => {
+    const base = linked('missing-scan')
+    const bound = path.join(base, 'link', 'gone')
+    expect(markdownFiles(path.join(bound, 'agents'), realDirectory(bound))).toEqual({
+      files: [],
+      outside: false,
+      unreadable: false,
+    })
+  })
+
+  it('sets outside when the nearest part that exists is out of the bound', () => {
+    const base = linked('missing-out')
+    const bound = realDirectory(path.join(base, 'target', 'inner'))
+    expect(markdownFiles(path.join(base, 'link', 'gone'), bound)).toEqual({
+      files: [],
+      outside: true,
+      unreadable: false,
+    })
+  })
+
+  // A live link comes first, so a climb past the bad part gives a path that differs from the input.
+  it('gives the absolute path when a part of the path is a dangling link', () => {
+    put('missing-dangling/real/.keep', '')
+    const base = path.join(scratch, 'missing-dangling')
+    symlinkSync(path.join(base, 'real'), path.join(base, 'alias'))
+    symlinkSync(path.join(base, 'nowhere'), path.join(base, 'real', 'dl'))
+    const missing = path.join(base, 'alias', 'dl', 'gone')
+    expect(realDirectory(missing)).toBe(missing)
+    expect(missingOf(missing, scratch)).toBe(UNREADABLE)
+  })
+
+  it('gives the absolute path when a part of the path is a loop of links', () => {
+    put('missing-loop/real/.keep', '')
+    const base = path.join(scratch, 'missing-loop')
+    symlinkSync(path.join(base, 'real'), path.join(base, 'alias'))
+    symlinkSync(path.join(base, 'real', 'two'), path.join(base, 'real', 'one'))
+    symlinkSync(path.join(base, 'real', 'one'), path.join(base, 'real', 'two'))
+    const missing = path.join(base, 'alias', 'one', 'gone')
+    expect(realDirectory(missing)).toBe(missing)
+    expect(missingOf(missing, scratch)).toBe(UNREADABLE)
+  })
+
+  it('gives null for a missing path in the bound, and UNREADABLE out of it', () => {
+    const base = linked('missing-of')
+    expect(missingOf(path.join(base, 'link', 'gone'), base)).toBeNull()
+    expect(missingOf(path.join(base, 'link', 'gone'), path.join(base, 'target', 'inner'))).toBe(
+      UNREADABLE,
+    )
   })
 })
 
