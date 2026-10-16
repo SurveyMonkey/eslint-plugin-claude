@@ -763,3 +763,14 @@ it('lists each rule once in the README rule list', () => {
   )
   expect(rows.sort()).toEqual(Object.keys(plugin.rules).sort())
 })
+
+it('reads an explicit null default from defaultOptions before the schema default', () => {
+  const meta = {
+    schema: [{ properties: { a: { default: 'x' }, b: { default: 'y' } } }],
+    defaultOptions: [{ a: null }],
+  }
+  expect([...optionDefaults({ meta })]).toEqual([
+    ['a', null],
+    ['b', 'y'],
+  ])
+})
