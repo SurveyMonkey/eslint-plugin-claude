@@ -749,7 +749,7 @@ describe('repositoryRoot', () => {
     expect(repositoryRoot(path.join(scratch, 'repo'))).toBe(path.join(scratch, 'repo'))
     // A `.git` file, as in a worktree or a submodule, counts too.
     expect(repositoryRoot(path.join(scratch, 'wt'))).toBe(path.join(scratch, 'wt'))
-    // A directory that does not exist gives its absolute path.
+    // A directory that does not exist, with no link in its path, gives its absolute path.
     expect(realDirectory(path.join(scratch, 'repo', 'gone'))).toBe(
       path.join(scratch, 'repo', 'gone'),
     )
@@ -767,8 +767,8 @@ describe('repositoryRoot', () => {
   })
 })
 
-describe('realDirectory for a bound that is not there', () => {
-  // The parent of the bound is a link, as /var is on macOS. The test makes its own link.
+describe.skipIf(process.platform === 'win32')('realDirectory for a bound that is not there', () => {
+  // A part of the path of the bound is a link, as /var is on macOS. The test makes its own link.
   const linked = (name: string) => {
     put(`${name}/target/.keep`, '')
     symlinkSync(path.join(scratch, name, 'target'), path.join(scratch, name, 'link'))
@@ -796,6 +796,22 @@ describe('realDirectory for a bound that is not there', () => {
     const base = linked('missing-out')
     const bound = realDirectory(path.join(base, 'target', 'inner'))
     expect(markdownFiles(path.join(base, 'link', 'gone'), bound).outside).toBe(true)
+  })
+
+  it('gives the absolute path when a part of the path is a dangling link', () => {
+    put('missing-dangling/.keep', '')
+    const link = path.join(scratch, 'missing-dangling', 'link')
+    symlinkSync(path.join(scratch, 'missing-dangling', 'nowhere'), link)
+    expect(realDirectory(path.join(link, 'gone'))).toBe(path.join(link, 'gone'))
+  })
+
+  it('gives the absolute path when a part of the path is a loop of links', () => {
+    put('missing-loop/.keep', '')
+    const one = path.join(scratch, 'missing-loop', 'one')
+    const two = path.join(scratch, 'missing-loop', 'two')
+    symlinkSync(two, one)
+    symlinkSync(one, two)
+    expect(realDirectory(path.join(one, 'gone'))).toBe(path.join(one, 'gone'))
   })
 })
 

@@ -79,15 +79,12 @@ export function scopeRoot(file: string, info: SkillFile): string {
 }
 
 /** The real path of `dir`. When `dir` does not exist, the result is the real
- *  path of its nearest part that exists, plus the rest. When the rule cannot
- *  read `dir`, the result is its absolute path. */
+ *  path of its nearest part that exists, plus the rest. The result is the
+ *  absolute path of `dir` when a part of it is a dangling link, or when the
+ *  rule cannot read a part of it. */
 export function realDirectory(dir: string): string {
-  const real = realOf(dir)
-  if (typeof real === 'string') {
-    return real
-  }
-  const missing = real === null ? realMissing(dir) : UNREADABLE
-  return typeof missing === 'string' ? missing : path.resolve(dir)
+  const real = realMissing(dir)
+  return typeof real === 'string' ? real : path.resolve(dir)
 }
 
 /** The real path of the repository that holds `dir`: the first directory at
@@ -96,7 +93,7 @@ export function realDirectory(dir: string): string {
  *  repository would move the bound out of it. Now the real path of the link
  *  is out of the bound, and a read of it gives `UNREADABLE`. A link whose
  *  target holds its own `.git` is a repository of its own (ADR 001, Decision
- *  14). Without a `.git`, the result is the real path of `dir`. So when `dir`
+ *  14). Without a `.git`, the result is `realDirectory(dir)`. So when `dir`
  *  is a `.claude` link, the bound is its target, and a rule reads files
  *  there. */
 export function repositoryRoot(dir: string): string {
@@ -349,7 +346,8 @@ export function missingOf(file: string, bound: string): null | Unreadable {
 }
 
 /** The real path of the nearest part of `file` that exists, plus the rest. The
- *  result is `UNREADABLE` in the cases that `missingOf` names. */
+ *  result is `UNREADABLE` for a dangling link, for a part that fails to read,
+ *  and for a root that does not exist (Windows only). */
 function realMissing(file: string): string | Unreadable {
   const rest: string[] = []
   let at = path.resolve(file)
