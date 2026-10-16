@@ -27,13 +27,23 @@ These limits apply to each rule:
   repository holds. A rule reads no file out of the repository. It does not read user,
   enterprise or other configuration out of the repository, such as `~/.claude/`. A rule option
   can name what the repository cannot see.
-- **A daily job watches the docs.** It compares each docs page that a rule cites with a stored
-  snapshot. For a changed block, it opens or updates an issue. For a moved or renamed section, it
-  opens an issue to update the links of each rule doc. A person decides each issue with the
-  [docs watch runbook](docs/runbooks/docs-watch-triage.md).
+- **An official CLI tool does not already make the check.** A check that an official Claude Code
+  CLI tool makes on the repository files is not a rule. An example is `claude plugin validate`.
+  A CLI check is quantitative, as the rules of this plugin are. A session tool, such as
+  `/doctor`, can make qualitative checks, so it does not count. A rule can report the cases that
+  the tool does not check. When the tool starts to make the check, the rule is deprecated, and
+  the next major release removes it.
 
-[ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md) (Decisions 2 and 14) and
-[ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) record these decisions.
+[ADR 001](docs/adr/001-eslint-plugin-for-claude-config.md) (Decisions 2 and 14) records these
+decisions.
+
+## How rules stay current
+
+A daily job watches the docs. It compares each docs page that a rule cites with a stored
+snapshot. For a changed block, it opens or updates an issue. For a moved or renamed section, it
+opens an issue to update the links of each rule doc. A person decides each issue with the
+[docs watch runbook](docs/runbooks/docs-watch-triage.md).
+[ADR 002](docs/adr/002-classify-docs-changes-with-jev.md) records this decision.
 
 ## Install
 
