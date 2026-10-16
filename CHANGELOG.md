@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.10.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.9.1...v0.10.0) (2026-10-16)
+
+
+### Features
+
+* **docs-watch:** fail a pull request that stores an untriaged block hash ([#294](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/294)) ([89dd624](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/89dd624862a72d30db17df833f81634e416aa425)), closes [#293](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/293)
+* **docs-watch:** open one auto-merge snapshot refresh at the end of triage ([#308](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/308)) ([23ec00f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/23ec00ff2b0079f284db22a07e51b4ece66c87a1)), closes [#307](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/307)
+* **skills:** add skill-name-characters for names that Claude Code refuses ([#324](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/324)) ([07dd6aa](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/07dd6aa0af2e39c6637eba2b78e5d6e9ed15f69b)), closes [#304](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/304)
+
+
+### Bug Fixes
+
+* **docs-watch:** accept a block in docs-snapshot when an open marker has its key ([#319](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/319)) ([0a38247](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/0a382473ab906f0d74acda81a81f83560437c10a)), closes [#316](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/316)
+* **docs-watch:** print the remedy when the docs-snapshot dry run fails ([#340](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/340)) ([0b282b4](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/0b282b4b5bb3c565724d482032e6b1a566109e6c)), closes [#328](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/328)
+* **docs-watch:** run the drift tests before the triage refresh opens its pull request ([#317](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/317)) ([407e092](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/407e092d85f303c6c3cce4c5c3e96c5ac16e45d5)), closes [#312](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/312)
+* give a missing bound its real path in realDirectory ([#343](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/343)) ([4a592f4](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/4a592f49fd1abd58b6638189bf017692f5573cef)), closes [#265](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/265) [#266](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/266)
+* **settings:** ignore CLAUDE_CODE_DISABLE_FILE_MENTIONS in project env ([#311](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/311)) ([5f8375b](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/5f8375be9387ea7d20d0cf6b2eda31f2d1b3aab9)), closes [#280](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/280)
+* **settings:** narrow the local gitignore and numeric spelling reports ([#342](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/342)) ([0a71bd4](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/0a71bd4591154fc90c2b1748f866c7884ad7f493)), closes [#272](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/272) [#326](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/326)
+* **settings:** support the idleCompaction key ([#310](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/310)) ([be6063e](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/be6063e92acfc2b50d2a8f6384a1a84c970ec8d5)), closes [#279](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/279)
+* support autoCompactWindow and add the numeric env value forms ([#318](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/318)) ([6798ef1](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/6798ef1b7e9684abb691041c65a059da2137a78a)), closes [#281](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/281) [#297](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/297)
+
 ## [0.9.1](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.9.0...v0.9.1) (2026-10-12)
 
 
