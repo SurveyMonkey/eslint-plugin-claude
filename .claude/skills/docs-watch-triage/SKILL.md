@@ -187,8 +187,7 @@ are in [commands.md](commands.md).
 8. Wait for the checks to end. If `docs-snapshot` fails, it names the blocks. Do one loop: run
    the docs-watch workflow, and wait for it to end. Triage the issues that it opens, with
    Phases 1 to 5. If the workflow opens no issue for a block that the log names, open one by
-   hand. Start its body with the marker line that the log prints, and leave it open. Run
-   `update` again, push to the same branch, and add a `Closes` line for each new issue that you
-   leave open.
+   hand with the marker line that the log prints, and leave it open. Run `update` again, push
+   to the same branch, and add a `Closes` line for each new issue that you leave open.
 9. If `docs-snapshot` fails again, stop. Auto-merge waits. The report names the blocks.
 10. Remove the worktree. GitHub deletes the branch when the pull request merges.

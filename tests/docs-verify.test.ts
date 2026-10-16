@@ -707,6 +707,7 @@ describe('the base state and the page reads', () => {
     })
     expect(code).toBe(1)
     expect(text).toContain(`- tracked: ${URL_} block commands, hash gone:${old}`)
+    expect(text).toContain(`<!-- docs-watch:rule-update:${URL_}#commands:gone:${old} -->\n`)
   })
 
   it('reads each page once, so the head check sees the text that the dry run read', async () => {

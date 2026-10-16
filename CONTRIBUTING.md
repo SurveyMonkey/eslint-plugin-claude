@@ -172,7 +172,8 @@ dry run, against the live docs. Then it runs `check` on the head state. It fails
   kind, the page, the block and the hash of each block. A `needs-triage` block also has its
   reason. Run the docs watch workflow with `workflow_dispatch`, triage what it opens, run
   `update` again, and push. If the workflow opens no issue for a block, open one by hand. The
-  log prints the marker line of each block. Start the issue body with it, and leave it open.
+  log prints a marker line for each block with no key match. Start the issue body with it, and
+  leave it open.
 - The head snapshot is not the live docs. The docs changed after `update`, or the map changed
   and `update` did not run. Run `update` again, and push.
 - `check` on the head has an error. Read the error. A map hash that is not the snapshot hash

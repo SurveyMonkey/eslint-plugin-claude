@@ -25,6 +25,8 @@
 //   accepted block.
 //   It exits 1 when a block has no key match, and names each such block. It
 //   gives the reason of a needs-triage block, such as a failed Jev request.
+//   It then prints the remedy, and the marker line of each such block in a
+//   fence, for an issue that a person opens by hand.
 //   It names each accepted block, the issues that have its key, and the
 //   rules that their markers do not name.
 // Then it runs the docs watch check on the head map and the head snapshot.
@@ -182,8 +184,8 @@ function loggedBlocks(
 // The count of the blocks with no key match. One line for each of them
 // that the findings or the tracked list name, and one line for each
 // accepted block. The count, not the lines, fails the gate. It also returns
-// the marker line of each block with no key match, for an issue that a person
-// opens by hand.
+// the marker line of each such block. A person puts that line in an issue
+// that they open by hand.
 function namedBlocks(
   output: Output,
   blocks: ReturnType<typeof loggedBlocks>,
