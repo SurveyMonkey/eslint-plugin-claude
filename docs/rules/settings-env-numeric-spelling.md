@@ -56,10 +56,11 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 <!-- end auto-generated rule options list -->
 
-A fault shows only on a client older than v2.1.211. The rule cannot know which clients a team
-runs. So it reports nothing until the option `minVersion` names the oldest client of the team. It
-reports when that version is below 2.1.211. `recommended` and `strict` set no option, so the rule
-reports nothing in those configs until a team sets `minVersion`.
+A fault shows only on a client older than v2.1.211, and only for a variable that the client has.
+The rule cannot know which clients a team runs. So it reports nothing until the option
+`minVersion` names the oldest client of the team. It reports when that version is below 2.1.211.
+`recommended` and `strict` set no option, so the rule reports nothing in those configs until a
+team sets `minVersion`.
 
 ```json
 { "claude/settings-env-numeric-spelling": ["warn", { "minVersion": "2.1.200" }] }
@@ -73,6 +74,10 @@ reports nothing in those configs until a team sets `minVersion`.
   `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` with `9e5`. That rule reports it, so the fault gets one
   report. The env vars reference says that these variables take plain digits only.
 - A credential variable.
+- A variable that needs Claude Code v2.1.211 or later, such as `CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`
+  (v2.1.290). A client older than v2.1.211 ignores it, so the spelling does no harm there. The
+  list is in `src/data/settings-env.ts`. It comes from the "Requires Claude Code" lines of the
+  env vars reference.[^spelling]
 - A value that is not a string, and a value with a leading sign, a space, or a comma.
 - A hidden drop-in, which Claude Code ignores.
 

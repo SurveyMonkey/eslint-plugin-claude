@@ -123,13 +123,9 @@ describe(`${name}: silent cases`, () => {
 
 describe(`${name}: the forms of settings-env-value-format`, () => {
   it('leaves a variable whose form rejects the value to settings-env-value-format', () => {
-    // These variables take plain digits only, so settings-env-value-format reports the spelling.
-    for (const [variable, value] of [
-      ['CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS', '9e5'],
-      ['CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH', '1e1'],
-      ['CLAUDE_CODE_AUTO_COMPACT_WINDOW', '5e5'],
-      ['CLAUDE_CODE_TOOL_MEMORY_LIMIT', '4e9'],
-    ] as const) {
+    // This variable takes plain digits only, so settings-env-value-format reports the spelling.
+    // The variables that need a later client are in the last describe of this file.
+    for (const [variable, value] of [['CLAUDE_CODE_AUTO_COMPACT_WINDOW', '5e5']] as const) {
       expect(ids(env({ [variable]: value })), variable).toEqual([])
       expect(
         lintJson('settings-env-value-format', env({ [variable]: value }), PROJECT).map(
@@ -210,5 +206,47 @@ describe(`${name}: the option minVersion`, () => {
     for (const minVersion of ['2.1', 'latest', '2.1.211-rc1', '']) {
       expect(() => idsAt([{ minVersion }]), minVersion).toThrow()
     }
+  })
+})
+
+describe(`${name}: a variable that a client before v2.1.211 does not have`, () => {
+  // The env vars reference gives the first version of each variable in its row: "Requires Claude
+  // Code vX or later". A client before v2.1.211 ignores such a variable, so the spelling does no
+  // harm there.
+  const ids200 = (variables: object) =>
+    lintWith(env(variables), PROJECT, [{ minVersion: '2.1.200' }]).map((m) => m.messageId)
+
+  it('gives no report for a variable that needs a later client', () => {
+    // CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS needs v2.1.290, and
+    // CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION needs v2.1.212.
+    expect(ids200({ CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS: '2e5' })).toEqual([])
+    expect(ids200({ CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION: '1_000' })).toEqual([])
+    // These three also have a form that rejects the value. Their silence does not prove the skip.
+    // The two variables above, which have no rejecting form, prove it.
+    for (const [variable, value] of [
+      ['CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS', '9e5'],
+      ['CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH', '1e1'],
+      ['CLAUDE_CODE_TOOL_MEMORY_LIMIT', '4e9'],
+    ] as const) {
+      expect(ids200({ [variable]: value }), variable).toEqual([])
+    }
+  })
+
+  it('keeps the report for a variable that has no version in the list', () => {
+    expect(ids200({ MAX_THINKING_TOKENS: '1e4' })).toEqual(['spelling'])
+    expect(
+      ids200({ CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS: '2e5', MAX_THINKING_TOKENS: '1e4' }),
+    ).toEqual(['spelling'])
+  })
+
+  it('treats a variable that needs exactly v2.1.211 as one that the fixed client reads', () => {
+    // v2.1.211 is the first client that reads the spelling right and the first that has this
+    // variable. So no client has the variable and misreads the spelling.
+    expect(ids200({ CLAUDE_CODE_FORWARD_SUBAGENT_TEXT: '1e1' })).toEqual([])
+    expect(ids200({ CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS: '1e6' })).toEqual([])
+  })
+
+  it('does not read a version for a name that Object.prototype has', () => {
+    expect(ids200({ constructor: '1e4', toString: '1e4' })).toEqual(['spelling', 'spelling'])
   })
 })

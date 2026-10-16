@@ -7,6 +7,100 @@
 // checked on Claude Code 2.1.296 on 2026-10-11. Review these lists on or before 2027-04-08,
 // the `stale_after` date of docs/rules/settings-env-credential.md.
 
+// The first Claude Code version that reads a variable. Source: the sentence "Requires Claude Code
+// vX or later" in the row of a variable in the env vars reference
+// (https://code.claude.com/docs/en/env-vars#variables). The review date is 2026-10-15, against
+// the stored text in docs/docs-snapshot/env-vars.json. The list holds each variable where the
+// sentence covers the whole variable and X is v2.1.211 or later. This is the range that
+// `settings-env-numeric-spelling` needs. The list leaves out a sentence for one part of a
+// variable (`BASH_DEFAULT_TIMEOUT_MS`, `BASH_MAX_TIMEOUT_MS`, `CLAUDE_CODE_FORK_SUBAGENT` and
+// `MCP_DISCOVERY_CACHE`). Review it on or before 2027-04-08, with the lists above.
+// `tests/settings-env.test.ts` checks the list against the stored text.
+
+/** The first Claude Code version that reads each variable, when that version is v2.1.211 or later.
+ *  A variable that is not here is old, or the docs give no whole-variable "Requires" sentence. */
+const ENV_FIRST_VERSIONS = new Map<string, string>([
+  ['ANTHROPIC_BEDROCK_REGION_PREFIX', '2.1.224'],
+  ['ANTHROPIC_CUSTOM_HEADERS', '2.1.227'],
+  ['ANTHROPIC_DEFAULT_MODEL', '2.1.236'],
+  ['CLAUDE_AX_PREPARK_MS', '2.1.233'],
+  ['CLAUDE_AX_STARTUP_QUIET_MS', '2.1.217'],
+  ['CLAUDE_CODE_ARTIFACT_COMMENTS', '2.1.221'],
+  ['CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT', '2.1.228'],
+  ['CLAUDE_CODE_ARTIFACT_PUBLISH_EDITS', '2.1.300'],
+  ['CLAUDE_CODE_AUTO_MODE_SERVER', '2.1.271'],
+  ['CLAUDE_CODE_BASH_EDIT_DIFF', '2.1.269'],
+  ['CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION', '2.1.223'],
+  ['CLAUDE_CODE_DISABLE_AUTH_REFRESH_LOCK', '2.1.286'],
+  ['CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_DEFAULT', '2.1.239'],
+  ['CLAUDE_CODE_DISABLE_CFC_PROMPT', '2.1.257'],
+  ['CLAUDE_CODE_DISABLE_DANGEROUS_RM_TIMEOUT', '2.1.281'],
+  ['CLAUDE_CODE_DISABLE_FILE_MENTIONS', '2.1.299'],
+  ['CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT', '2.1.288'],
+  ['CLAUDE_CODE_DISABLE_MODEL_ACCESS_FALLBACK', '2.1.285'],
+  ['CLAUDE_CODE_DISABLE_MTLS_RELOAD_ON_STALE_CONNECTION', '2.1.232'],
+  ['CLAUDE_CODE_DISABLE_PERMISSION_PROMPT_NOTIFY_HOOKS', '2.1.233'],
+  ['CLAUDE_CODE_DISABLE_POWERSHELL_CMD_RM_DENY', '2.1.283'],
+  ['CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS', '2.1.288'],
+  ['CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT', '2.1.281'],
+  ['CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT', '2.1.223'],
+  ['CLAUDE_CODE_DISABLE_WEB_FETCH', '2.1.285'],
+  ['CLAUDE_CODE_DISABLE_WINDOWS_SHELL_LAUNCHER', '2.1.269'],
+  ['CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION', '2.1.238'],
+  ['CLAUDE_CODE_ENABLE_TODO_TOOLS', '2.1.233'],
+  ['CLAUDE_CODE_FORWARD_SUBAGENT_TEXT', '2.1.211'],
+  ['CLAUDE_CODE_GATEWAY_HINT_HEADERS', '2.1.273'],
+  ['CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS', '2.1.269'],
+  ['CLAUDE_CODE_GOAL_CHECKIN_MINUTES', '2.1.234'],
+  ['CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS', '2.1.290'],
+  ['CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS', '2.1.217'],
+  ['CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH', '2.1.280'],
+  ['CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH', '2.1.217'],
+  ['CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION', '2.1.212'],
+  ['CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS', '2.1.212'],
+  ['CLAUDE_CODE_MCP_STARTUP_WAIT_MS', '2.1.274'],
+  ['CLAUDE_CODE_MESSAGING_SOCKET', '2.1.224'],
+  ['CLAUDE_CODE_MESSAGING_TOKEN', '2.1.228'],
+  ['CLAUDE_CODE_NONBLOCKING_STDOUT', '2.1.261'],
+  ['CLAUDE_CODE_NONSTREAMING_TIMEOUT_RETRIES', '2.1.285'],
+  ['CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH', '2.1.214'],
+  ['CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS', '2.1.292'],
+  ['CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS', '2.1.296'],
+  ['CLAUDE_CODE_PLUGIN_DIRS', '2.1.280'],
+  ['CLAUDE_CODE_PLUGIN_DIR_WATCH', '2.1.287'],
+  ['CLAUDE_CODE_PROJECT_DIR_NAME', '2.1.234'],
+  ['CLAUDE_CODE_PROMPT_CACHE_TTL', '2.1.242'],
+  ['CLAUDE_CODE_RESTRICTED', '2.1.248'],
+  ['CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS', '2.1.211'],
+  ['CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS', '2.1.295'],
+  ['CLAUDE_CODE_SKIP_MODEL_ACCESS_MEMORY', '2.1.285'],
+  ['CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '2.1.274'],
+  ['CLAUDE_CODE_SUBAGENT_MODEL_FORCE', '2.1.257'],
+  ['CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL', '2.1.242'],
+  ['CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE', '2.1.246'],
+  ['CLAUDE_CODE_TOOL_MEMORY_LIMIT', '2.1.233'],
+  ['CLAUDE_CODE_TRANSCRIPT_LOCAL_GC', '2.1.287'],
+  ['CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS', '2.1.233'],
+  ['CLAUDE_CODE_WEBFETCH_DEADLINE_MS', '2.1.268'],
+  ['CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR', '2.1.290'],
+  ['CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE', '2.1.283'],
+  ['CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS', '2.1.269'],
+  ['CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS', '2.1.229'],
+  ['CLAUDE_CODE_YOU_SHOULD_KNOW_DEBUG', '2.1.287'],
+  ['CLAUDE_PID', '2.1.214'],
+  ['CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS', '2.1.242'],
+  ['MCP_DISCOVERY_CACHE_STRIKES', '2.1.238'],
+  ['MCP_PROTOCOL_NEGOTIATION', '2.1.221'],
+  ['MCP_SDK_GENERATION', '2.1.218'],
+  ['OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT', '2.1.214'],
+  ['OTEL_LOG_MANAGED_SETTINGS', '2.1.274'],
+  ['OTEL_METRICS_INCLUDE_REPOSITORY', '2.1.269'],
+])
+
+/** The first Claude Code version that reads `name`. It is `undefined` when the list has no
+ *  entry, that is, when the docs name no version of v2.1.211 or later. */
+export const envFirstVersion = (name: string): string | undefined => ENV_FIRST_VERSIONS.get(name)
+
 /** The variables that hold an authentication credential. Rows of the env vars reference:
  *  an API key, a value for the `Authorization` header, and an OAuth access token.
  *  `CLAUDE_CODE_CLIENT_KEY` is not here. It holds the path to a key file, not a credential. */
