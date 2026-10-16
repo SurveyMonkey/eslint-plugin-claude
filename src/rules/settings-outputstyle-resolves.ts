@@ -11,12 +11,10 @@ import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import {
-  danglingOf,
   frontmatterOfFile,
   isInside,
   markdownFiles,
   realDirectory,
-  realOf,
   repositoryRoot,
   UNREADABLE,
 } from '../skill-tree.ts'
@@ -73,12 +71,7 @@ function customStyles(start: string, top: string, bound: string): Styles {
     const claude = path.join(dir, '.claude')
     const styles = path.join(claude, 'output-styles')
     const scan = markdownFiles(styles, bound)
-    // A dangling link is an entry, and it can lead to styles (ADR 001, Decision 14). The link
-    // can be `.claude` or `output-styles`.
-    found.unseen ||=
-      scan.outside ||
-      scan.unreadable ||
-      [claude, styles].some((entry) => realOf(entry) === null && danglingOf(entry) !== null)
+    found.unseen ||= scan.outside || scan.unreadable
     for (const file of scan.files) {
       const fields = frontmatterOfFile(file)
       found.unseen ||= fields === UNREADABLE
