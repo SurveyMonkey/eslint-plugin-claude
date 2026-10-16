@@ -557,6 +557,142 @@ it('gives the options list markers to each rule doc with options, and to no othe
   }
 })
 
+/** A default that the hand prose under `## Options` states for one option. */
+interface StatedDefault {
+  option: string
+  value: unknown
+  sentence: string
+}
+
+/** The hand prose of the Options section: the text outside the generated list and the code
+ *  fences. A list item and a paragraph are one unit each. */
+function optionsProse(doc: string): string[] {
+  const section = doc.split(/^## Options$/m)[1]?.split(/^## /m)[0] ?? ''
+  const hand = section.replace(
+    /<!-- begin auto-generated rule options list -->[\s\S]*?<!-- end auto-generated rule options list -->/,
+    '',
+  )
+  const units: string[] = []
+  let current: string[] = []
+  let fence = false
+  const flush = () => {
+    if (current.length > 0) {
+      units.push(current.join(' '))
+    }
+    current = []
+  }
+  for (const line of hand.split('\n')) {
+    if (/^\s*`{3,}/.test(line)) {
+      flush()
+      fence = !fence
+    } else if (fence) {
+      continue
+    } else if (line.trim() === '') {
+      flush()
+    } else {
+      if (line.startsWith('- ')) {
+        flush()
+      }
+      current.push(line.trim())
+    }
+  }
+  flush()
+  return units
+}
+
+/** The value after "default is" in a sentence, or `undefined` when the sentence gives none. */
+function valueOfDefault(sentence: string): { value: unknown } | undefined {
+  const text = /\bdefault is (`[^`]+`|\d+(?![\d,.]*\d)|an empty (?:array|list))/.exec(sentence)?.[1]
+  if (text === undefined) {
+    return undefined
+  }
+  if (text.startsWith('an empty')) {
+    return { value: [] }
+  }
+  return { value: JSON.parse(text.replaceAll('`', '')) }
+}
+
+/** The defaults that the Options prose of a doc states. A sentence counts when it gives a value
+ *  after "default is" and its unit names one option of the rule in backticks. A sentence of a
+ *  doc that talks of a default without these two parts is not a claim, and the test skips it:
+ *  it can describe a Claude Code default, or the default of an option that it does not name. */
+function statedDefaults(doc: string, options: string[]): StatedDefault[] {
+  const found: StatedDefault[] = []
+  for (const unit of optionsProse(doc)) {
+    const named = options.filter((option) => unit.includes(`\`${option}\``))
+    if (named.length !== 1) {
+      continue
+    }
+    for (const sentence of unit.split(/(?<=[.!?])\s+/)) {
+      const stated = valueOfDefault(sentence)
+      if (stated !== undefined) {
+        found.push({ option: named[0] as string, value: stated.value, sentence })
+      }
+    }
+  }
+  return found
+}
+
+/** The names and defaults of the options in the schema and `defaultOptions` of a rule. */
+function optionDefaults(rule: { meta?: unknown }): Map<string, unknown> {
+  const meta = rule.meta as {
+    schema?: Array<{ properties?: Record<string, { default?: unknown }> }>
+    defaultOptions?: Array<Record<string, unknown>>
+  }
+  const properties = meta.schema?.[0]?.properties ?? {}
+  const defaults = new Map<string, unknown>()
+  for (const [option, schema] of Object.entries(properties)) {
+    defaults.set(option, meta.defaultOptions?.[0]?.[option] ?? schema.default)
+  }
+  return defaults
+}
+
+// ADR 003 Decision 5 keeps hand prose under `## Options`, and some of it states a default.
+// docs:check compares the generated list with `meta`, not this prose. So a test compares the
+// default that a sentence states with the default in `meta`.
+it('states in each rule doc the option defaults that meta gives', () => {
+  let checked = 0
+  for (const [name, rule] of Object.entries(plugin.rules)) {
+    const defaults = optionDefaults(rule)
+    for (const { option, value, sentence } of statedDefaults(docOf(name), [...defaults.keys()])) {
+      expect(value, `${name}: ${sentence}`).toEqual(defaults.get(option))
+      checked += 1
+    }
+  }
+  // The match is a heuristic. This count shows that it still finds the sentences.
+  expect(checked).toBeGreaterThanOrEqual(2)
+})
+
+it('finds a stated default that differs from meta, outside the fences and the generated list', () => {
+  const doc = [
+    '## Options',
+    '',
+    '<!-- begin auto-generated rule options list -->',
+    '`max`: the default is 9.',
+    '<!-- end auto-generated rule options list -->',
+    '',
+    '```js',
+    '`max`: the default is 8.',
+    '```',
+    '',
+    'The default is 7.',
+    '',
+    '`max` is a number. The default is `5`.',
+    '',
+    '- `names`: a list. The default is an empty list.',
+    '- `max` and `names`: the default is 6.',
+    '- `max`: The default is 1,536 characters in the listing.',
+    '',
+    '## Sources',
+    '',
+    '`max`: the default is 4.',
+  ].join('\n')
+  expect(statedDefaults(doc, ['max', 'names']).map((d) => [d.option, d.value])).toEqual([
+    ['max', 5],
+    ['names', []],
+  ])
+})
+
 // The generator writes the README rule list from the groups of `.eslint-doc-generatorrc.mjs`.
 // `--check` compares the README with that same list, so it cannot see a rule that the list
 // leaves out or names twice.
