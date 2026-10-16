@@ -585,11 +585,9 @@ function optionsProse(doc: string): string[] {
     if (/^\s*`{3,}/.test(line)) {
       flush()
       fence = !fence
-    } else if (fence) {
-      continue
-    } else if (line.trim() === '') {
+    } else if (!fence && line.trim() === '') {
       flush()
-    } else {
+    } else if (!fence) {
       if (line.startsWith('- ')) {
         flush()
       }
