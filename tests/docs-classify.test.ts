@@ -289,6 +289,9 @@ describe('decide on the held-out Jev answers', () => {
   const blindIds = Object.keys(key)
   const blindIdOf = (caseId: string) => blindIds.find((id) => key[id]?.case === caseId) as string
 
+  // The saved file keeps `kind`, `outcomes` and `thresholds` from the first run.
+  // This describe does not read them.
+  //
   // The result of each case at the current thresholds. It is read by hand from
   // the saved answers: an answer at or above 0.5 is a yes, an answer at or
   // below the `no` value is a no, and an answer between them goes to a person.
@@ -322,6 +325,7 @@ describe('decide on the held-out Jev answers', () => {
     expect(blindIds).toHaveLength(20)
     expect(new Set(blindIds.map((id) => key[id]?.case))).toEqual(new Set(cases.map((c) => c.id)))
     expect(sonnet.labels.map((l) => l.case).sort()).toEqual(blindIds)
+    expect(Object.keys(saved).sort()).toEqual(blindIds)
     expect(new Set(cases.map((c) => c.label))).toEqual(
       new Set(['rule-update', 'rule-removal', 'new-rule', 'no-change']),
     )
@@ -344,7 +348,7 @@ describe('decide on the held-out Jev answers', () => {
     })
   }
 
-  it('needs no call for the removed block, and it has no saved answer', () => {
+  it('keeps h03 as the one removed case, with no saved answer', () => {
     const removed = cases.filter((c) => c.removed)
     expect(removed.map((c) => blindIdOf(c.id))).toEqual(['h03'])
     expect(saved.h03?.answers).toBeUndefined()
