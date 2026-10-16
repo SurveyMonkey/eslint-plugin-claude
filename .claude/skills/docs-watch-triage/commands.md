@@ -98,6 +98,9 @@ Phase 7 in SKILL.md. `gh pr create` opens a pull request that is ready unless yo
 For one loop after a `docs-snapshot` failure: the listed run must start after `gh workflow run`.
 If its `createdAt` is older, list again.
 
+If the run opens no issue for a block that the log names, open one by hand with
+`gh issue create`. Start its body with the marker line from the log, and leave it open.
+
 ```sh
 gh workflow run docs-watch.yml --ref main
 gh run list --workflow docs-watch.yml --event workflow_dispatch --branch main --limit 1 --json databaseId,status,createdAt
