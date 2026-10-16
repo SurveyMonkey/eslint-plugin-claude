@@ -327,6 +327,10 @@ describe(`${RULE} (paths that the rule cannot read)`, () => {
       expect(lintPlugin(RULE, dir, code)).toEqual([])
     })
 
+    linked('stays silent when agents/ is itself a link with no target', () => {
+      expect(dangling('agents', { agent: 'ghost' })).toEqual([])
+    })
+
     linked('ends on a link that loops back to the plugin root', () => {
       const { dir, code, top } = pluginTree(manifestOf({ agent: 'ghost' }), {
         'agents/reviewer.md': REVIEWER,

@@ -4,7 +4,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { envIgnoredIn, removedEnvVarSince } from '../src/data/settings-env.ts'
+import { envFirstVersion, envIgnoredIn, removedEnvVarSince } from '../src/data/settings-env.ts'
 import { NO_EFFECT_KEYS } from '../src/data/settings-keys.ts'
 
 function snapshotText(page: string, id: string): string {
@@ -193,5 +193,45 @@ describe('the keys with no effect, against the settings reference', () => {
     expect(snapshotText('settings-reference', 'disableartifact')).toContain(
       'ignores `disableArtifact: false`',
     )
+  })
+})
+
+describe('the first versions of the variables, against the env vars reference', () => {
+  // A row is whole-variable when a sentence of it starts with "Requires Claude Code vX or later".
+  // A sentence for one part of a variable has other words in front, for example "The interactive
+  // default requires ...", and the list leaves that row out.
+  const rows = [...VARIABLES.matchAll(/^\| `([A-Z0-9_]+)` \| (.*) \|$/gm)].map(
+    ([, name, text]) => ({
+      name: name ?? '',
+      since: /(?:^|\. )Requires Claude Code v(\d+\.\d+\.\d+) or later/.exec(text ?? '')?.[1],
+    }),
+  )
+  const atLeast = (version: string, floor: number[]) => {
+    const parts = version.split('.').map(Number)
+    const index = floor.findIndex((n, i) => n !== parts[i])
+    return index === -1 || (parts[index] as number) > (floor[index] as number)
+  }
+
+  it('reads the rows of the table', () => {
+    expect(rows.length).toBeGreaterThan(300)
+  })
+
+  it('gives each variable the version of its whole-variable sentence', () => {
+    for (const { name, since } of rows) {
+      const expected = since !== undefined && atLeast(since, [2, 1, 211]) ? since : undefined
+      expect(envFirstVersion(name), name).toBe(expected)
+    }
+  })
+
+  it('leaves out the four variables with a sentence for one part', () => {
+    for (const name of [
+      'BASH_DEFAULT_TIMEOUT_MS',
+      'BASH_MAX_TIMEOUT_MS',
+      'CLAUDE_CODE_FORK_SUBAGENT',
+      'MCP_DISCOVERY_CACHE',
+    ]) {
+      expect(envFirstVersion(name), name).toBeUndefined()
+      expect(VARIABLES, name).toMatch(new RegExp(`\\| \`${name}\` \\|.*requires Claude Code v`))
+    }
   })
 })

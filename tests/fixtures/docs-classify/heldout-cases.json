@@ -1,0 +1,216 @@
+{
+  "about": "Held-out cases for the docs classifier, built on 2026-09-30 from changelog entries that the spike cases did not use. Each case rebuilds the shape of a real Claude Code docs change, trimmed to a few lines. `label` is the label of the builder. `cited` is the rule that cites the block, or null for a block that no rule cites. A case with `removed: true` needs no model call. `heldout-key.json` maps the blind ids to these cases.",
+  "cases": [
+    {
+      "id": "h-messagedisplay-added",
+      "source": "changelog: added a `MessageDisplay` hook event that transforms or hides assistant message text",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook lifecycle\n\nHooks fire at these events. Write the event name exactly as shown.\n\n- `SessionStart`\n- `UserPromptSubmit`\n- `PreToolUse`\n- `PostToolUse`\n- `Stop`\n- `StopFailure`",
+      "new": "## Hook lifecycle\n\nHooks fire at these events. Write the event name exactly as shown.\n\n- `SessionStart`\n- `UserPromptSubmit`\n- `PreToolUse`\n- `PostToolUse`\n- `Stop`\n- `StopFailure`\n- `MessageDisplay`: fires as assistant message text is displayed. A hook can transform or hide the text.",
+      "label": "rule-update"
+    },
+    {
+      "id": "h-cwd-file-changed",
+      "source": "changelog: added `CwdChanged` and `FileChanged` hook events for reactive environment management",
+      "page": "https://code.claude.com/docs/en/plugins-reference",
+      "heading": "hooks",
+      "cited": "hooks-event-name-known",
+      "old": "## hooks\n\nThe `hooks` field takes a path to a hooks file or an inline object. Keys are event names, for example `SessionStart`, `PreToolUse` and `Stop`.",
+      "new": "## hooks\n\nThe `hooks` field takes a path to a hooks file or an inline object. Keys are event names, for example `SessionStart`, `PreToolUse`, `Stop`, `CwdChanged` and `FileChanged`.\n\n`CwdChanged` and `FileChanged` let a hook reload the environment, for example with direnv.",
+      "label": "rule-update"
+    },
+    {
+      "id": "h-event-renamed-old-works",
+      "source": "changelog: renamed `/extra-usage` to `/usage-credits`, old name still works (shape of a rename with an alias, applied to a hook event)",
+      "hard": "deprecation",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook lifecycle\n\nHooks fire at these events. Write the event name exactly as shown.\n\n- `SessionStart`\n- `UserPromptSubmit`\n- `PreToolUse`\n- `PostToolUse`\n- `Stop`\n- `StopFailure`\n- `TeammateIdle`: fires when an agent-team teammate goes idle.",
+      "new": "## Hook lifecycle\n\nHooks fire at these events. Write the event name exactly as shown.\n\n- `SessionStart`\n- `UserPromptSubmit`\n- `PreToolUse`\n- `PostToolUse`\n- `Stop`\n- `StopFailure`\n- `TeammateWaiting`: fires when an agent-team teammate goes idle. Renamed from `TeammateIdle`. The old name still works but is deprecated.",
+      "label": "rule-update"
+    },
+    {
+      "id": "h-listing-default-raised",
+      "source": "changelog: config default stated in parentheses (shape of a changed default), applied to the skill listing limit",
+      "hard": "default change",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "old": "## Skill descriptions are cut short\n\nClaude Code cuts each skill's `description` plus `when_to_use` in the skill listing. The default limit is 1,536 characters. Set `skillListingMaxDescChars` to change it.",
+      "new": "## Skill descriptions are cut short\n\nClaude Code cuts each skill's `description` plus `when_to_use` in the skill listing. The default limit is 3,000 characters. Set `skillListingMaxDescChars` to change it.",
+      "label": "rule-update"
+    },
+    {
+      "id": "h-plugin-commands-key",
+      "source": "changelog: plugins warn when a default component folder (for example `commands/`) is ignored because `plugin.json` sets the matching key",
+      "page": "https://code.claude.com/docs/en/plugins-reference",
+      "heading": "commands",
+      "cited": "command-legacy-format",
+      "old": "## commands\n\n`commands`: path or paths to extra command files or directories, relative to the plugin root. Claude Code also reads the `commands/` directory.",
+      "new": "## commands\n\n`commands`: path or paths to command files or directories, relative to the plugin root. Default: `commands/`.\n\nWhen you set this field, Claude Code does not read the default `commands/` directory. Add `./commands/` to the list to keep it.",
+      "label": "rule-update"
+    },
+    {
+      "id": "h-skill-limit-gone",
+      "source": "changelog: removed the one-hour time limit on background commands started by subagents (shape of a limit that is gone)",
+      "hard": "new text negates an earlier requirement",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "old": "## Skill descriptions are cut short\n\nClaude Code cuts the `description` plus `when_to_use` text at 1,536 characters in the skill listing. Put the main use case first.",
+      "new": "## Skill descriptions are cut short\n\nClaude Code no longer cuts skill descriptions in the listing. The full `description` and `when_to_use` text loads, and no length limit applies.",
+      "label": "rule-removal"
+    },
+    {
+      "id": "h-troubleshooting-block-gone",
+      "source": "changelog: unrecognized hook event name in settings no longer breaks the file (shape of a troubleshooting section that is deleted)",
+      "page": "https://code.claude.com/docs/en/plugins",
+      "heading": "Hook loads but never fires",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook loads but never fires\n\nCheck that the event name matches exactly, including case. `PostToolUse` works. `posttooluse` does not.",
+      "new": "",
+      "label": "rule-removal",
+      "removed": true
+    },
+    {
+      "id": "h-plugin-commands-not-legacy",
+      "source": "changelog: plugin slash commands resolve to a namespaced form (shape of a form that is fully supported, not deprecated)",
+      "page": "https://code.claude.com/docs/en/plugins-reference",
+      "heading": "Commands",
+      "cited": "command-legacy-format",
+      "old": "## Commands\n\nThe `commands/` directory holds legacy flat Markdown files. A skill in `skills/` replaces a command file. Migrate command files to skills.",
+      "new": "## Commands\n\nThe `commands/` directory holds flat Markdown command files. The plugin name namespaces each one, for example `/myplugin review`. Command files are a supported form and Claude Code does not deprecate them. Use `skills/` when a command needs supporting files.",
+      "label": "rule-removal"
+    },
+    {
+      "id": "h-hook-args-exec",
+      "source": "changelog: added hook `args: string[]` field (exec form) that spawns the command without a shell",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "cited": null,
+      "old": "## Command hook fields\n\nA command hook sets `type: \"command\"` and `command`, a shell string. Quote path placeholders such as `\"${CLAUDE_PLUGIN_ROOT}\"`.",
+      "new": "## Command hook fields\n\nA command hook sets `type: \"command\"` and `command`, a shell string. Quote path placeholders such as `\"${CLAUDE_PLUGIN_ROOT}\"`.\n\nA command hook can set `args` instead, an array of strings. Claude Code spawns the program directly without a shell, so path placeholders need no quotes. Set `command` or `args`, not both.",
+      "label": "new-rule"
+    },
+    {
+      "id": "h-agent-cachettl",
+      "source": "changelog: added `experimental.cacheTtl` (`\"5m\"` or `\"1h\"`) to agent frontmatter",
+      "page": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Supported frontmatter fields",
+      "cited": null,
+      "old": "## Supported frontmatter fields\n\n- `name`: required. Lowercase letters and hyphens.\n- `description`: required. When Claude should use the agent.\n- `tools`: optional list of tools.\n- `model`: optional model alias.",
+      "new": "## Supported frontmatter fields\n\n- `name`: required. Lowercase letters and hyphens.\n- `description`: required. When Claude should use the agent.\n- `tools`: optional list of tools.\n- `model`: optional model alias.\n- `experimental.cacheTtl`: optional prompt cache TTL for this agent. Allowed values are `\"5m\"` and `\"1h\"`.",
+      "label": "new-rule"
+    },
+    {
+      "id": "h-output-style-keep",
+      "source": "changelog: added `keep-coding-instructions` frontmatter field support for plugin output styles",
+      "page": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Output style frontmatter",
+      "cited": null,
+      "old": "## Output style frontmatter\n\nAn output style is a Markdown file. Its frontmatter sets `name` and `description`.",
+      "new": "## Output style frontmatter\n\nAn output style is a Markdown file. Its frontmatter sets `name` and `description`. Plugin output styles can also set `keep-coding-instructions`, a boolean. When it is `true`, the style keeps the coding parts of the system prompt.",
+      "label": "new-rule"
+    },
+    {
+      "id": "h-bash-output-max",
+      "source": "changelog: added `bashOutputMaxChars` and `taskOutputMaxChars` settings, up to 128K characters",
+      "page": "https://code.claude.com/docs/en/settings",
+      "heading": "Available settings",
+      "cited": null,
+      "old": "## Available settings\n\n- `cleanupPeriodDays`: days to keep session files. Integer.\n- `model`: default model.",
+      "new": "## Available settings\n\n- `cleanupPeriodDays`: days to keep session files. Integer.\n- `model`: default model.\n- `bashOutputMaxChars`: characters of command output that Claude receives inline before the rest goes to a file. Integer, at most 128000.",
+      "label": "new-rule"
+    },
+    {
+      "id": "h-truncation-warning-count",
+      "source": "changelog: the skill listing truncation warning shows how many skill descriptions are affected",
+      "hard": "wording-only change in a cited block",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Skill descriptions are cut short",
+      "cited": "skill-description-max-length",
+      "old": "## Skill descriptions are cut short\n\nClaude Code cuts each entry at 1,536 characters in the skill listing. It shows a warning at startup when it cuts a description.",
+      "new": "## Skill descriptions are cut short\n\nClaude Code cuts each entry at 1,536 characters in the skill listing. The startup warning states how many skill descriptions it cut.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-frontmatter-key-case",
+      "source": "changelog: skill frontmatter `display-name`, `default-enabled`, `fallback` and `metadata.*` accept kebab-case, snake_case and camelCase",
+      "hard": "nearby field that the rule does not read",
+      "page": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "cited": "skill-description-max-length",
+      "old": "## Frontmatter reference\n\n- `description`: what the skill does and when to use it.\n- `when_to_use`: extra trigger text. Counts toward the listing limit with `description`.\n- `display-name`: name shown in menus. Write it in kebab-case.\n- `default-enabled`: whether the skill starts on. Write it in kebab-case.",
+      "new": "## Frontmatter reference\n\n- `description`: what the skill does and when to use it.\n- `when_to_use`: extra trigger text. Counts toward the listing limit with `description`.\n- `display-name`: name shown in menus. Also accepted as `display_name` and `displayName`.\n- `default-enabled`: whether the skill starts on. Also accepted as `default_enabled` and `defaultEnabled`.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-commands-section-moved",
+      "source": "changelog: merged `/cost` and `/stats` into `/usage` (shape of content that moves and keeps its text)",
+      "hard": "moved section",
+      "page": "https://code.claude.com/docs/en/plugins-reference",
+      "heading": "Commands",
+      "cited": "command-legacy-format",
+      "old": "## Commands\n\nThe `commands/` directory holds legacy flat Markdown files. A skill in `skills/` replaces a command file. Migrate command files to skills.",
+      "new": "## Commands\n\nThis section moved from Plugin structure to Component reference.\n\nThe `commands/` directory holds legacy flat Markdown files. A skill in `skills/` replaces a command file. Migrate command files to skills.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-sessionend-env-timeout",
+      "source": "changelog: `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` now extends SessionEnd hooks that set no per-hook `timeout`",
+      "hard": "looks measurable but is runtime behavior",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionEnd",
+      "cited": null,
+      "old": "## SessionEnd\n\nClaude Code cancels a SessionEnd hook after 1.5 seconds. A hook can set `timeout` to raise the limit.",
+      "new": "## SessionEnd\n\nClaude Code cancels a SessionEnd hook after 1.5 seconds. A hook can set `timeout` to raise the limit. The environment variable `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` also raises the limit for hooks that set no `timeout`.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-default-folder-advisory",
+      "source": "changelog: advisories name every `plugin.json` key that shadows a default folder",
+      "hard": "runtime diagnostic beside a file-location rule",
+      "page": "https://code.claude.com/docs/en/plugins",
+      "heading": "Components missing after install",
+      "cited": null,
+      "old": "## Components missing after install\n\nA `plugin.json` key such as `skills` replaces the default `skills/` folder.",
+      "new": "## Components missing after install\n\nA `plugin.json` key such as `skills` replaces the default `skills/` folder. `/doctor` and `claude plugin list` name every key that replaces a default folder.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-hook-if-powershell",
+      "source": "changelog: fixed hook `if` conditions like `PowerShell(git push*)` never matching",
+      "page": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook `if` conditions",
+      "cited": null,
+      "old": "## Hook `if` conditions\n\nSet `if` to limit a hook to some tool calls, for example `Bash(git push*)`. Use `PowerShell(*)` for PowerShell.",
+      "new": "## Hook `if` conditions\n\nSet `if` to limit a hook to some tool calls, for example `Bash(git push*)` or `PowerShell(git push*)`.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-comma-matcher-fixed",
+      "source": "changelog: fixed hooks with comma-separated matchers (for example `Bash,PowerShell`) silently never firing",
+      "hard": "nearby cause removed in a cited block",
+      "page": "https://code.claude.com/docs/en/plugins",
+      "heading": "Hook loads but never fires",
+      "cited": "hooks-event-name-known",
+      "old": "## Hook loads but never fires\n\n- The event name differs in case. Use `PostToolUse`, not `posttooluse`.\n- A matcher is a comma-separated list such as `Bash,PowerShell`. Use `Bash|PowerShell`.\n- The script is not executable. Run `chmod +x` on it.",
+      "new": "## Hook loads but never fires\n\n- The event name differs in case. Use `PostToolUse`, not `posttooluse`.\n- The script is not executable. Run `chmod +x` on it.",
+      "label": "no-change"
+    },
+    {
+      "id": "h-automode-consent",
+      "source": "changelog: auto mode no longer requires opt-in consent",
+      "hard": "new text negates an earlier requirement, in an uncited runtime block",
+      "page": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Auto mode",
+      "cited": null,
+      "old": "## Auto mode\n\nAuto mode requires opt-in consent the first time you turn it on.",
+      "new": "## Auto mode\n\nAuto mode no longer requires opt-in consent.",
+      "label": "no-change"
+    }
+  ]
+}

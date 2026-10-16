@@ -11,7 +11,7 @@ import { docsUrl } from '../docs-url.ts'
 import { enclosingMarketplace, entriesIn } from '../marketplace-file.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { lookup, type Plugin, readPlugin, readPluginAt } from '../plugin-manifest.ts'
-import { entriesOf, isInside, readJson, realOf, SKIPPED, UNREADABLE } from '../skill-tree.ts'
+import { readJson, UNREADABLE } from '../skill-tree.ts'
 import { pluginAgents } from './skill-agent-exists.ts'
 
 const name = 'plugin-settings-agent-exists' as const
@@ -31,28 +31,6 @@ function fileDecides(plugin: Plugin): boolean {
     typeof data !== 'object' ||
     Array.isArray(data) ||
     PLUGIN_SETTINGS_KEYS.some((key) => Object.hasOwn(data, key))
-  )
-}
-
-/** True when `dir` holds, at any depth, a link with no target. The link can hold any agent: the
- *  name of an agent is its frontmatter `name` or its file name, in any case, and a link to a
- *  folder adds folder names. The scan of `agents/` also sets `unseen` for such a link. */
-function hasDanglingLink(dir: string, bound: string, seen = new Set<string>()): boolean {
-  const real = realOf(dir)
-  if (typeof real !== 'string' || seen.has(real) || !isInside(real, bound)) {
-    return false
-  }
-  seen.add(real)
-  const entries = entriesOf(dir)
-  return (
-    Array.isArray(entries) &&
-    entries
-      .filter((entry) => !SKIPPED.has(entry.name))
-      .some((entry) => {
-        const full = path.join(dir, entry.name)
-        // `realOf` gives null for an entry that is listed and has no target.
-        return realOf(full) === null || hasDanglingLink(full, bound, seen)
-      })
   )
 }
 
@@ -121,13 +99,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
           return
         }
         const agents = pluginAgents(plugin.root, pluginName, plugin.bound)
-        // The scan of `agents/` sets `unseen` for a link with no target. This check is a second
-        // guard.
-        if (
-          !agents.unseen &&
-          !agents.names.some(same) &&
-          !hasDanglingLink(path.join(plugin.root, 'agents'), plugin.bound)
-        ) {
+        if (!agents.unseen && !agents.names.some(same)) {
           context.report({ node: agent, messageId: 'missing', data: { agent: agent.value } })
         }
       },

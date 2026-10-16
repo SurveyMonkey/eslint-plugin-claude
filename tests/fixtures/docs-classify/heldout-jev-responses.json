@@ -1,0 +1,435 @@
+{
+  "model": "jev-1.13.0",
+  "thresholds": {
+    "alters": {
+      "yes": 0.5,
+      "no": 0.2
+    },
+    "obsolete": {
+      "yes": 0.5,
+      "no": 0.35
+    },
+    "requirement": {
+      "yes": 0.5,
+      "no": 0.2
+    }
+  },
+  "results": {
+    "h01": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": "hooks-event-name-known",
+          "probability": 0.14,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.7
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.14
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.05
+        }
+      }
+    },
+    "h02": {
+      "kind": "rule-removal",
+      "outcomes": [
+        {
+          "kind": "rule-removal",
+          "rule": "skill-description-max-length",
+          "probability": 0.87,
+          "reason": "obsolete"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.04
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.71
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.87
+        }
+      }
+    },
+    "h03": {
+      "kind": "rule-removal",
+      "outcomes": [],
+      "note": "removed block, no call"
+    },
+    "h04": {
+      "kind": "needs-triage",
+      "outcomes": [
+        {
+          "kind": "needs-triage",
+          "rule": "command-legacy-format",
+          "probability": 0.41,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.39
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.41
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.09
+        }
+      }
+    },
+    "h05": {
+      "kind": "new-rule",
+      "outcomes": [
+        {
+          "kind": "new-rule",
+          "rule": null,
+          "probability": 0.84,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.84
+        }
+      }
+    },
+    "h06": {
+      "kind": "rule-update",
+      "outcomes": [
+        {
+          "kind": "rule-update",
+          "rule": "hooks-event-name-known",
+          "probability": 0.89,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.53
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.89
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.03
+        }
+      }
+    },
+    "h07": {
+      "kind": "rule-update",
+      "outcomes": [
+        {
+          "kind": "rule-update",
+          "rule": "hooks-event-name-known",
+          "probability": 0.87,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.73
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.87
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.05
+        }
+      }
+    },
+    "h08": {
+      "kind": "new-rule",
+      "outcomes": [
+        {
+          "kind": "new-rule",
+          "rule": null,
+          "probability": 0.59,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.59
+        }
+      }
+    },
+    "h09": {
+      "kind": "new-rule",
+      "outcomes": [
+        {
+          "kind": "new-rule",
+          "rule": null,
+          "probability": 0.9,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.9
+        }
+      }
+    },
+    "h10": {
+      "kind": "rule-removal",
+      "outcomes": [
+        {
+          "kind": "rule-removal",
+          "rule": "command-legacy-format",
+          "probability": 0.77,
+          "reason": "obsolete"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.05
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.42
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.77
+        }
+      }
+    },
+    "h11": {
+      "kind": "new-rule",
+      "outcomes": [
+        {
+          "kind": "new-rule",
+          "rule": null,
+          "probability": 0.81,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.81
+        }
+      }
+    },
+    "h12": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": null,
+          "probability": 0.06,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.06
+        }
+      }
+    },
+    "h13": {
+      "kind": "rule-update",
+      "outcomes": [
+        {
+          "kind": "rule-update",
+          "rule": "hooks-event-name-known",
+          "probability": 0.92,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.65
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.92
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.04
+        }
+      }
+    },
+    "h14": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": "skill-description-max-length",
+          "probability": 0.05,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.08
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.05
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.03
+        }
+      }
+    },
+    "h15": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": null,
+          "probability": 0.03,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.03
+        }
+      }
+    },
+    "h16": {
+      "kind": "rule-update",
+      "outcomes": [
+        {
+          "kind": "rule-update",
+          "rule": "skill-description-max-length",
+          "probability": 0.94,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.29
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.94
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.09
+        }
+      }
+    },
+    "h17": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": "skill-description-max-length",
+          "probability": 0.15,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.75
+        },
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.15
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.03
+        }
+      }
+    },
+    "h18": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": null,
+          "probability": 0.19,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.19
+        }
+      }
+    },
+    "h19": {
+      "kind": "needs-triage",
+      "outcomes": [
+        {
+          "kind": "needs-triage",
+          "rule": null,
+          "probability": 0.34,
+          "reason": "requirement"
+        }
+      ],
+      "answers": {
+        "requirement": {
+          "type": "noul",
+          "noul": 0.34
+        }
+      }
+    },
+    "h20": {
+      "kind": "no-change",
+      "outcomes": [
+        {
+          "kind": "no-change",
+          "rule": "command-legacy-format",
+          "probability": 0.06,
+          "reason": "alters"
+        }
+      ],
+      "answers": {
+        "alters_0": {
+          "type": "noul",
+          "noul": 0.06
+        },
+        "obsolete_0": {
+          "type": "noul",
+          "noul": 0.03
+        },
+        "requirement": {
+          "type": "noul",
+          "noul": 0.04
+        }
+      }
+    }
+  }
+}

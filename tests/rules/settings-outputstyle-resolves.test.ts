@@ -303,6 +303,12 @@ describe(RULE, () => {
       expect(ids(dir, settings('Nope'))).toEqual([])
     })
 
+    it('stays silent for a dangling link to a style file in the styles directory', () => {
+      const dir = tree({ [`${STYLES}/root.md`]: style() })
+      link(dir, `${STYLES}/x.md`, 'missing-style')
+      expect(ids(dir, settings('Nope'))).toEqual([])
+    })
+
     it.skipIf(noLinks)(
       'stays silent for a link out of the repository below a readable root',
       () => {
