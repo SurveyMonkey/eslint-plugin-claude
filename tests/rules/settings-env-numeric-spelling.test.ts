@@ -124,7 +124,7 @@ describe(`${name}: silent cases`, () => {
 describe(`${name}: the forms of settings-env-value-format`, () => {
   it('leaves a variable whose form rejects the value to settings-env-value-format', () => {
     // This variable takes plain digits only, so settings-env-value-format reports the spelling.
-    // The variables that need a later client are in the next describe, where the rule skips them.
+    // The variables that need a later client are in the last describe of this file.
     for (const [variable, value] of [['CLAUDE_CODE_AUTO_COMPACT_WINDOW', '5e5']] as const) {
       expect(ids(env({ [variable]: value })), variable).toEqual([])
       expect(
@@ -221,7 +221,8 @@ describe(`${name}: a variable that a client before v2.1.211 does not have`, () =
     // CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION needs v2.1.212.
     expect(ids200({ CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS: '2e5' })).toEqual([])
     expect(ids200({ CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION: '1_000' })).toEqual([])
-    // These three have a form, and the rule skips them before it asks the form.
+    // These three also have a form that rejects the value. Their silence does not prove the skip.
+    // The two variables above, which have no rejecting form, prove it.
     for (const [variable, value] of [
       ['CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS', '9e5'],
       ['CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH', '1e1'],

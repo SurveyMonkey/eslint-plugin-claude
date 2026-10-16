@@ -9,15 +9,16 @@
 
 // The first Claude Code version that reads a variable. Source: the sentence "Requires Claude Code
 // vX or later" in the row of a variable in the env vars reference
-// (https://code.claude.com/docs/en/env-vars#variables), reviewed on 2026-10-15 against the stored
-// text in docs/docs-snapshot/env-vars.json. The list holds each variable with such a sentence on
-// the whole variable and a version of v2.1.211 or later. This is the range that
+// (https://code.claude.com/docs/en/env-vars#variables). The review date is 2026-10-15, against
+// the stored text in docs/docs-snapshot/env-vars.json. The list holds each variable where the
+// sentence covers the whole variable and X is v2.1.211 or later. This is the range that
 // `settings-env-numeric-spelling` needs. The list leaves out a sentence for one part of a
 // variable (`BASH_DEFAULT_TIMEOUT_MS`, `BASH_MAX_TIMEOUT_MS`, `CLAUDE_CODE_FORK_SUBAGENT` and
 // `MCP_DISCOVERY_CACHE`). Review it on or before 2027-04-08, with the lists above.
+// `tests/settings-env.test.ts` checks the list against the stored text.
 
 /** The first Claude Code version that reads each variable, when that version is v2.1.211 or later.
- *  A variable that is not here is old, or the docs name no version for it. */
+ *  A variable that is not here is old, or the docs give no whole-variable "Requires" sentence. */
 const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['ANTHROPIC_BEDROCK_REGION_PREFIX', '2.1.224'],
   ['ANTHROPIC_CUSTOM_HEADERS', '2.1.227'],
@@ -96,8 +97,8 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['OTEL_METRICS_INCLUDE_REPOSITORY', '2.1.269'],
 ])
 
-/** The first Claude Code version that reads `name`, or `undefined` when the docs name none that
- *  is v2.1.211 or later. */
+/** The first Claude Code version that reads `name`. It is `undefined` when the list has no
+ *  entry, that is, when the docs name no version of v2.1.211 or later. */
 export const envFirstVersion = (name: string): string | undefined => ENV_FIRST_VERSIONS.get(name)
 
 /** The variables that hold an authentication credential. Rows of the env vars reference:

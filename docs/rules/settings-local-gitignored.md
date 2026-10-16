@@ -28,10 +28,10 @@ generated:
 that Claude Code keeps it out of git when Claude Code creates the file. If you create it by hand,
 you add it to `.gitignore` yourself.[^files][^ref]
 
-The first time Claude Code writes the file in a repository that does not ignore it, Claude Code
-adds `**/.claude/settings.local.json` to the global excludes file. That file is the
+Claude Code writes the file in a repository that does not ignore it. At that first write, it adds
+`**/.claude/settings.local.json` to the global excludes file. That file is the
 `core.excludesFile` of the global git config, or the default `ignore` file in the git config
-directory.[^keep] A file that a person creates by hand has no such pattern, and a commit with
+directory.[^keep] A file that a person creates by hand has no such pattern. A commit with
 `git add .` can add it. A pattern in a `.gitignore` of the repository covers that file in each
 clone.
 
