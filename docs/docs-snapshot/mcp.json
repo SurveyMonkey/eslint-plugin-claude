@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/mcp",
-  "hash": "3c658de8dce88add9a2779767dfcea844f017220f59ba4ce0a7e1109f9ac7406",
+  "hash": "60647b46b63a1115cd3dad47ff1bb53824304df1fd5d76ab6bf05bf83f23c170",
   "blocks": [
     {
       "id": "connect-claude-code-to-tools-via-mcp",
@@ -378,8 +378,8 @@
     },
     {
       "id": "tool-search-for-mcp-server-authors",
-      "hash": "6fc830b6849a6476c3830053ba9048cae615ce899284433eaa8a74d4614b1667",
-      "bodyHash": "9ca8061b7af1822529e447b7d2b3d8a6022573a7d15421533110b1415367a407"
+      "hash": "0f8d152fe2a3f0a0a3c22182f569d026e2356b3405a128765c1adc51bf70b42c",
+      "bodyHash": "c216e06c063345a9fc6a7ca18d3d910a02ed3676f456947cff4d00a2a00ba081"
     },
     {
       "id": "per-tool-alwaysload",
