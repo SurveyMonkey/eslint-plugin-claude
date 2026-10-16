@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-local-gitignored, which reports a .claude/settings.json when no .gitignore pattern of the repository covers the settings.local.json beside it, because Claude Code writes the pattern to the global excludes file of one machine only.
+description: The ESLint rule claude/settings-local-gitignored, which reports a .claude/settings.json when no .gitignore pattern of the repository covers the settings.local.json beside it, because Claude Code adds the pattern to the global excludes file only when it writes the file, so a file that a person creates by hand has no pattern.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -28,11 +28,12 @@ generated:
 that Claude Code keeps it out of git when Claude Code creates the file. If you create it by hand,
 you add it to `.gitignore` yourself.[^files][^ref]
 
-The first time Claude Code writes the file, it adds `**/.claude/settings.local.json` to the
-global excludes file. That file is the `core.excludesFile` of the global git config, or the
-default `ignore` file in the git config directory.[^keep] It lives on one machine. A teammate on
-another machine has no such pattern, and a commit with `git add .` can add the file. A pattern in
-a `.gitignore` of the repository protects each clone.
+Claude Code writes the file in a repository that does not ignore it. At that first write, it adds
+`**/.claude/settings.local.json` to the global excludes file. That file is the
+`core.excludesFile` of the global git config, or the default `ignore` file in the git config
+directory.[^keep] A file that a person creates by hand has no such pattern. A commit with
+`git add .` can add it. A pattern in a `.gitignore` of the repository covers that file in each
+clone.
 
 The lint target is the shared `.claude/settings.json`, in the same directory. The pattern is a
 fact about the repository, and it matters when the local file does not exist yet. So the rule

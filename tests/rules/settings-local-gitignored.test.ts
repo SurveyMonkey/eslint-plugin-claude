@@ -29,6 +29,10 @@ describe(RULE, () => {
       column: 1,
     })
     expect(messages[0]?.message).toContain(`"${LOCAL}"`)
+    // The docs say Claude Code adds the pattern to the global excludes file when it writes the
+    // file. Only a file that a person creates by hand is at risk.
+    expect(messages[0]?.message).toContain('A file that you create by hand')
+    expect(messages[0]?.message).not.toContain('one machine')
   })
 
   it('reports in a repository with no .gitignore, also when the local file is not there', () => {
@@ -78,8 +82,8 @@ describe(RULE, () => {
   })
 
   it('does not count a pattern in the global excludes file or in .git/info/exclude', () => {
-    // Claude Code writes the pattern to the global excludes file of one machine. A clone on
-    // another machine does not have it.
+    // Claude Code writes the pattern to the global excludes file of the machine where it writes
+    // the file. A file that a person creates by hand has no such pattern.
     const global = plain({ '.gitignore': `${LOCAL}\n` })
     put(global, { config: `[core]\n\texcludesFile = ${path.join(global, '.gitignore')}\n` })
     const root = repo({ [PROJECT]: '{}' })

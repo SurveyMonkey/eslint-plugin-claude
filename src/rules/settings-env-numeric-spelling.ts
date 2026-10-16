@@ -4,11 +4,18 @@
 // form in `src/data/settings-env.ts` and rejects the value is for `settings-env-value-format`. A
 // variable that the heuristic form rejects is for `settings-env-format-heuristic`.
 // The fault shows only on a client before v2.1.211. So the rule reports nothing unless the option
-// `minVersion` names a client below that version.
+// `minVersion` names a client below that version. A client that old does not have a variable that
+// needs v2.1.211 or later (`envFirstVersion`). It ignores the variable, so the rule skips it.
 import type { JSONRuleDefinition } from '@eslint/json'
-import { CREDENTIAL_ENV_VARS, envValueForm, heuristicEnvForm } from '../data/settings-env.ts'
+import {
+  CREDENTIAL_ENV_VARS,
+  envFirstVersion,
+  envValueForm,
+  heuristicEnvForm,
+} from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
+import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -20,20 +27,15 @@ const SCIENTIFIC = /^\d+(?:\.\d+)?[eE][+-]?\d+$/
 const SEPARATED = /^\d+(?:_\d+)+$/
 
 /** The first client version that reads these spellings. */
-const FIRST_VERSION = [2, 1, 211] as const
+const FIRST_VERSION = '2.1.211'
 
 type Options = [{ minVersion?: string }]
 
-/** True when the version `text` is below 2.1.211. The schema allows only three numbers. */
-function isBeforeFirst(text: string): boolean {
-  const parts = text.split('.').map(Number)
-  for (const [index, first] of FIRST_VERSION.entries()) {
-    const part = parts[index] as number
-    if (part !== first) {
-      return part < first
-    }
-  }
-  return false
+/** True when a client before the fix does not have the variable `variable`. That client ignores
+ *  the variable, so the spelling does no harm there. */
+function isNewerThanFix(variable: string): boolean {
+  const first = envFirstVersion(variable)
+  return first !== undefined && !supportsBefore(first, FIRST_VERSION)
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }> = {
@@ -43,20 +45,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }>
       description: 'Write a number in the env block of a settings file in plain digits',
       url: docsUrl(name),
     },
-    schema: [
-      {
-        type: 'object',
-        properties: {
-          minVersion: {
-            description:
-              'The oldest Claude Code version that the team supports, as major.minor.patch.',
-            type: 'string',
-            pattern: '^\\d+\\.\\d+\\.\\d+$',
-          },
-        },
-        additionalProperties: false,
-      },
-    ],
+    schema: [MIN_VERSION_SCHEMA],
     defaultOptions: [{}],
     messages: {
       spelling:
@@ -65,11 +54,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }>
   },
   create(context) {
     const [{ minVersion }] = context.options
-    if (
-      minVersion === undefined ||
-      !isBeforeFirst(minVersion) ||
-      isHiddenDropIn(context.filename)
-    ) {
+    if (!supportsBefore(minVersion, FIRST_VERSION) || isHiddenDropIn(context.filename)) {
       return {}
     }
     return {
@@ -88,6 +73,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'spelling' }>
             value.type !== 'String' ||
             !(SCIENTIFIC.test(value.value) || SEPARATED.test(value.value)) ||
             CREDENTIAL_ENV_VARS.includes(variable) ||
+            isNewerThanFix(variable) ||
             envValueForm(variable)?.accepts(value.value) === false ||
             heuristicEnvForm(variable)?.accepts(value.value) === false
           ) {
