@@ -1,0 +1,82 @@
+{
+  "h01": {
+    "case": "h-comma-matcher-fixed",
+    "label": "no-change"
+  },
+  "h02": {
+    "case": "h-skill-limit-gone",
+    "label": "rule-removal"
+  },
+  "h03": {
+    "case": "h-troubleshooting-block-gone",
+    "label": "rule-removal"
+  },
+  "h04": {
+    "case": "h-plugin-commands-key",
+    "label": "rule-update"
+  },
+  "h05": {
+    "case": "h-bash-output-max",
+    "label": "new-rule"
+  },
+  "h06": {
+    "case": "h-messagedisplay-added",
+    "label": "rule-update"
+  },
+  "h07": {
+    "case": "h-cwd-file-changed",
+    "label": "rule-update"
+  },
+  "h08": {
+    "case": "h-output-style-keep",
+    "label": "new-rule"
+  },
+  "h09": {
+    "case": "h-agent-cachettl",
+    "label": "new-rule"
+  },
+  "h10": {
+    "case": "h-plugin-commands-not-legacy",
+    "label": "rule-removal"
+  },
+  "h11": {
+    "case": "h-hook-args-exec",
+    "label": "new-rule"
+  },
+  "h12": {
+    "case": "h-sessionend-env-timeout",
+    "label": "no-change"
+  },
+  "h13": {
+    "case": "h-event-renamed-old-works",
+    "label": "rule-update"
+  },
+  "h14": {
+    "case": "h-truncation-warning-count",
+    "label": "no-change"
+  },
+  "h15": {
+    "case": "h-automode-consent",
+    "label": "no-change"
+  },
+  "h16": {
+    "case": "h-listing-default-raised",
+    "label": "rule-update"
+  },
+  "h17": {
+    "case": "h-frontmatter-key-case",
+    "label": "no-change"
+  },
+  "h18": {
+    "case": "h-default-folder-advisory",
+    "label": "no-change"
+  },
+  "h19": {
+    "case": "h-hook-if-powershell",
+    "label": "no-change"
+  },
+  "h20": {
+    "case": "h-commands-section-moved",
+    "label": "no-change"
+  }
+}

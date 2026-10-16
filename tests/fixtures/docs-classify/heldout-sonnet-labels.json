@@ -1,0 +1,168 @@
+{
+  "labels": [
+    {
+      "case": "h01",
+      "label": "no-change",
+      "confidence": "high",
+      "reason": "Only the matcher bullet ('Use `Bash|PowerShell`') was removed; the rule reads event names, and the event-name case bullet is unchanged.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h02",
+      "label": "rule-removal",
+      "confidence": "high",
+      "reason": "New text says 'no length limit applies', so the 1,536 limit has no purpose.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h03",
+      "label": "rule-removal",
+      "confidence": "high",
+      "reason": "block_removed is true, so the cited block is gone.",
+      "ambiguous": true,
+      "alternative": "no-change"
+    },
+    {
+      "case": "h04",
+      "label": "rule-update",
+      "confidence": "medium",
+      "reason": "New text says 'When you set this field, Claude Code does not read the default `commands/` directory', which changes which command file locations count.",
+      "ambiguous": true,
+      "alternative": "no-change"
+    },
+    {
+      "case": "h05",
+      "label": "new-rule",
+      "confidence": "high",
+      "reason": "Uncited block adds setting `bashOutputMaxChars` with type 'Integer, at most 128000', which a check can measure in settings.json.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h06",
+      "label": "rule-update",
+      "confidence": "high",
+      "reason": "A new valid event name `MessageDisplay` is added to the list.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h07",
+      "label": "rule-update",
+      "confidence": "high",
+      "reason": "Adds event names `CwdChanged` and `FileChanged` to the known list.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h08",
+      "label": "new-rule",
+      "confidence": "medium",
+      "reason": "Uncited block adds `keep-coding-instructions`, 'a boolean', as an allowed output style frontmatter field.",
+      "ambiguous": true,
+      "alternative": "no-change"
+    },
+    {
+      "case": "h09",
+      "label": "new-rule",
+      "confidence": "high",
+      "reason": "Uncited block adds `experimental.cacheTtl` with allowed values '\"5m\"' and '\"1h\"' in agent frontmatter.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h10",
+      "label": "rule-removal",
+      "confidence": "high",
+      "reason": "New text says 'Command files are a supported form and Claude Code does not deprecate them', removing the legacy premise.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h11",
+      "label": "new-rule",
+      "confidence": "medium",
+      "reason": "Uncited block adds hook field `args`, 'an array of strings', and 'Set `command` or `args`, not both', which is checkable in hook config.",
+      "ambiguous": true,
+      "alternative": "no-change"
+    },
+    {
+      "case": "h12",
+      "label": "no-change",
+      "confidence": "high",
+      "reason": "Added text is about environment variable `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`, which is runtime behavior in an uncited block.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h13",
+      "label": "rule-update",
+      "confidence": "high",
+      "reason": "'Renamed from `TeammateIdle`. The old name still works but is deprecated' adds `TeammateWaiting` and deprecates a name.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h14",
+      "label": "no-change",
+      "confidence": "high",
+      "reason": "Limit stays 1,536; only the startup warning wording changed ('states how many skill descriptions it cut').",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h15",
+      "label": "no-change",
+      "confidence": "high",
+      "reason": "'Auto mode no longer requires opt-in consent' is runtime behavior in an uncited block.",
+      "ambiguous": true,
+      "alternative": "new-rule"
+    },
+    {
+      "case": "h16",
+      "label": "rule-update",
+      "confidence": "high",
+      "reason": "Default limit changes from '1,536 characters' to '3,000 characters'.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h17",
+      "label": "no-change",
+      "confidence": "medium",
+      "reason": "Only `display-name` and `default-enabled` spelling changed; the rule reads `description` and `when_to_use`, whose text is unchanged.",
+      "ambiguous": true,
+      "alternative": "new-rule"
+    },
+    {
+      "case": "h18",
+      "label": "no-change",
+      "confidence": "high",
+      "reason": "Added sentence names `/doctor` and `claude plugin list`, CLI commands, in an uncited block.",
+      "ambiguous": false,
+      "alternative": null
+    },
+    {
+      "case": "h19",
+      "label": "no-change",
+      "confidence": "medium",
+      "reason": "Only the example changed ('`PowerShell(git push*)`' replaces 'Use `PowerShell(*)`'); no new field, type or value set.",
+      "ambiguous": true,
+      "alternative": "new-rule"
+    },
+    {
+      "case": "h20",
+      "label": "no-change",
+      "confidence": "high",
+      "reason": "Only the sentence 'This section moved from Plugin structure to Component reference' was added; the rest is identical.",
+      "ambiguous": false,
+      "alternative": null
+    }
+  ],
+  "notes": [
+    "I read only heldout-blind.json. I saw no other labels, answers, fixtures or keys.",
+    "h03 is rule-removal by the block_removed rule; a maintainer could argue the removed text only restated event-name case."
+  ]
+}
