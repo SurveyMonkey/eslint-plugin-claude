@@ -78,11 +78,16 @@ export function scopeRoot(file: string, info: SkillFile): string {
   return dir
 }
 
-/** The real path of `dir`, or its absolute path when it does not exist or
- *  the rule cannot read it. */
+/** The real path of `dir`. When `dir` does not exist, the result is the real
+ *  path of its nearest part that exists, plus the rest. When the rule cannot
+ *  read `dir`, the result is its absolute path. */
 export function realDirectory(dir: string): string {
   const real = realOf(dir)
-  return typeof real === 'string' ? real : path.resolve(dir)
+  if (typeof real === 'string') {
+    return real
+  }
+  const missing = real === null ? realMissing(dir) : UNREADABLE
+  return typeof missing === 'string' ? missing : path.resolve(dir)
 }
 
 /** The real path of the repository that holds `dir`: the first directory at
@@ -339,6 +344,13 @@ export function danglingOf(entry: string): null | Unreadable {
  *  rest, is in `bound`. It is `UNREADABLE` when that path is out of `bound`,
  *  because the rule cannot see out of `bound`. */
 export function missingOf(file: string, bound: string): null | Unreadable {
+  const real = realMissing(file)
+  return typeof real === 'string' && isInside(real, bound) ? null : UNREADABLE
+}
+
+/** The real path of the nearest part of `file` that exists, plus the rest. The
+ *  result is `UNREADABLE` in the cases that `missingOf` names. */
+function realMissing(file: string): string | Unreadable {
   const rest: string[] = []
   let at = path.resolve(file)
   let real = realOf(at)
@@ -350,7 +362,7 @@ export function missingOf(file: string, bound: string): null | Unreadable {
     at = path.dirname(at)
     real = realOf(at)
   }
-  return typeof real === 'string' && isInside(path.join(real, ...rest), bound) ? null : UNREADABLE
+  return typeof real === 'string' ? path.join(real, ...rest) : UNREADABLE
 }
 
 /** The parsed JSON of `file`, as `{ data }`. The result is:

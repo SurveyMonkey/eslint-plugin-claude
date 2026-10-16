@@ -767,6 +767,38 @@ describe('repositoryRoot', () => {
   })
 })
 
+describe('realDirectory for a bound that is not there', () => {
+  // The parent of the bound is a link, as /var is on macOS. The test makes its own link.
+  const linked = (name: string) => {
+    put(`${name}/target/.keep`, '')
+    symlinkSync(path.join(scratch, name, 'target'), path.join(scratch, name, 'link'))
+    return path.join(scratch, name)
+  }
+
+  it('gives the real path of the nearest part that exists, plus the rest', () => {
+    const base = linked('missing-bound')
+    const bound = path.join(base, 'link', 'gone', 'deeper')
+    expect(realDirectory(bound)).toBe(path.join(base, 'target', 'gone', 'deeper'))
+    expect(repositoryRoot(bound)).toBe(path.join(base, 'target', 'gone', 'deeper'))
+  })
+
+  it('does not set outside for a scan in a bound that is not there', () => {
+    const base = linked('missing-scan')
+    const bound = path.join(base, 'link', 'gone')
+    expect(markdownFiles(path.join(bound, 'agents'), realDirectory(bound))).toEqual({
+      files: [],
+      outside: false,
+      unreadable: false,
+    })
+  })
+
+  it('sets outside when the nearest part that exists is out of the bound', () => {
+    const base = linked('missing-out')
+    const bound = realDirectory(path.join(base, 'target', 'inner'))
+    expect(markdownFiles(path.join(base, 'link', 'gone'), bound).outside).toBe(true)
+  })
+})
+
 describe('repositoryRoot for a linked .claude', () => {
   it('gives the repository, not the link target, and readSettings gives UNREADABLE', {
     skip: process.platform === 'win32',
