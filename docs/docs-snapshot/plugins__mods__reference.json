@@ -1,11 +1,11 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/mods/reference",
-  "hash": "dbdb742602611908f5506d4e6f40ff47b5c6df1c5460ec7be5bbe347c73a3df5",
+  "hash": "e466c9b5ac7e5ecde1b5c5ac4097af98493d47f83f38a0534da56138058dd12b",
   "blocks": [
     {
       "id": "mods-reference",
-      "hash": "3026cb0caebf11e412cfd732352f22828f73190ee6ccee5b02d7968aee3c2cb6",
-      "bodyHash": "b9e6b8a178d1e055f00dac292e0d68a2cbbafc0eb9b39ad1c38cc5eb3518dcab"
+      "hash": "c9e104c5964ea268157bfdf056fd65bc73bc4654c3641f62db2bd34c64495efa",
+      "bodyHash": "90df7c2349b2296c1745d51df52e731d30e4edd37b96dec4b34ffb12486159f1"
     },
     {
       "id": "files",
@@ -94,13 +94,13 @@
     },
     {
       "id": "render-sites",
-      "hash": "6df9e1f6ff8b94a99e6abd55a066e8e9bbf92941f035bab8194a71cce0356221",
-      "bodyHash": "c8c8b9ec1b8caad28b0f4bd77bb4e895275b1e69d5afae74b8851b031d6885e1"
+      "hash": "0bce6611bd1adfd2749f44f2aa06ffe56483fe1a7c023a04a3a44f610e5cb84e",
+      "bodyHash": "9299c3f1ce8a0057fea791bfd963e7a33df29c28403cbc1f180f5fa4206c0010"
     },
     {
       "id": "elements",
-      "hash": "860cf1236b3e6a68d0ff8591c7332f4942040dd04dc758be3872ce33e2adc2ee",
-      "bodyHash": "e7bdc9e42a2977e6c4628c7be9a253ee962ad9aeaedc4637352bef2c2a9abc3a"
+      "hash": "597784c85d9e75d128286b47ccab1dbede1f05898aed235e5e6f84454b6cc624",
+      "bodyHash": "97a9a714fb7a1b20a3120d26e8dc0b8c56c4742b74e1c5758659025547ca6ba1"
     },
     {
       "id": "box-border-styles",

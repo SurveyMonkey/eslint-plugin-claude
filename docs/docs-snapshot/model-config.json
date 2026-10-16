@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/model-config",
-  "hash": "76f91c1cf8ccc291c772d5aae23841868f30fda204062a72343833c4a9e33723",
+  "hash": "cf781dd9bd0954efc98d52e09a5967a743e89b3bcfa762571501e0e1e5c712eb",
   "blocks": [
     {
       "id": "model-configuration",
@@ -218,7 +218,12 @@
     },
     {
       "id": "correct-the-window-for-a-gateway-or-custom-model-id",
-      "hash": "710c5611d94c9dc79094c2e3a67f7088d93bf2c67cbe24214a954444bcc92c43",
+      "hash": "40b26a9d461b43fa4b79d3e738a7517bf167aa0a4c85e3b7071b421771c15af8",
+      "bodyHash": "e47d75cd1542f68456ed8803b69156a35b8d692a405ab58fcca8ad4f5c33e21c"
+    },
+    {
+      "id": "which-ids-claude_code_max_context_tokens-applies-to",
+      "hash": "83c31f92bdce66448dbcf484d8e50b3c09b88483b1433306c0775302ac9e81b6",
       "bodyHash": "56bd89ccc927409c32f78201ef0f60ad6e805b552e97e1e4daf6576d986d56de"
     },
     {

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "d28fbfce1925693bcca6448782bdb106b618e7a62f1352cb64d40bc3834bbc03",
+  "hash": "5990351cd7bed2caf68db4c18373ac6cf3ab3f8be206473df89fd3ca50763205",
   "blocks": [
     {
       "id": "error-reference",
@@ -9,8 +9,8 @@
     },
     {
       "id": "find-your-error",
-      "hash": "f4d22669b5f5739a153f93989860a46ee570cf64301639f0bff1c5c8252337f0",
-      "bodyHash": "9187b674e69961612f9ba0e270705b37b9bc1888660a569c9e6c16e3547b3bb2"
+      "hash": "26df730d6e44a6228cc1225aa8b69bd9ff5988138ae2a2dfb99b55caac3e6955",
+      "bodyHash": "862ad23b0401d2b43ca29bf9595d5ebde75f9edaf644425ba2804cf5deff705f"
     },
     {
       "id": "automatic-retries",
@@ -181,6 +181,11 @@
       "id": "remote-control-couldnt-refresh-your-login",
       "hash": "76064fee11476cf6ab561586b960f01b1d522daad99642efca4a85839f5d44b0",
       "bodyHash": "931f0570181194602dc00c01d2c89764dbded613727336f7b81ff9ce422d3c2d"
+    },
+    {
+      "id": "remote-control-could-not-renew-this-computers-connection",
+      "hash": "4933399bcd0996151ceb97605e59aa796fd65e2b3fc82c9b5b9af54dcd6706ca",
+      "bodyHash": "5d85d4b1ec8c02543775307856c38a119512d5995abaf68c56b08ea1f63ed819"
     },
     {
       "id": "remote-control-stopped-because-the-signed-in-account-changed",
@@ -419,8 +424,8 @@
     },
     {
       "id": "prompt-is-too-long",
-      "hash": "d5d78d1253a43bf70caec93fa3011abbe8e39535d1cdd1d569a4a33e3cc081c1",
-      "bodyHash": "7aef9e45a313215c3abc24f09a8a7a57551064132f8f61caac93da8319773e77"
+      "hash": "95e72af80b303950029411174b3183df0033c487f70a6d6d309052d672bf4de1",
+      "bodyHash": "883432debae4d13d718856f98080d0fde61198a1e6b005a402c2357bd41f4d10"
     },
     {
       "id": "context-exceeds-the-token-limit",
@@ -434,8 +439,8 @@
     },
     {
       "id": "image-was-too-large",
-      "hash": "0322e2344b3b3d0168b818413c9d2829725cab9407e5e6f5d092802af4ab7ccc",
-      "bodyHash": "5db98c4796d760059c2c1f38e2da6001c98305d5a5525317fdff74300f42b457"
+      "hash": "83f8fb742d01038c345529c9928255511a4d1fa122315fab1886426686deecf2",
+      "bodyHash": "9ad9f49309b4ce9e0d44aec7bc07bd5a68c313af97fea726495b2a5cbc452f5a"
     },
     {
       "id": "unable-to-resize-image",
@@ -548,6 +553,11 @@
       "bodyHash": "12e58b5717c0f8afa30375583f7ce7522e92e4cf636842c606fef3141a413c2a"
     },
     {
+      "id": "response-exceeded-the-output-token-maximum",
+      "hash": "b8656df0e3254ae828dccc56ba1e60a9a969917d18c07b88be626a63549a7b24",
+      "bodyHash": "c3108719065ca6a90378da3aec637b0a90a4fde560cebc5237f87fd11e8546c5"
+    },
+    {
       "id": "tool-use-or-thinking-block-mismatch",
       "hash": "f3473e72796eec6da9621a2b2056475301c59fa0ef2bce676507364298cd35e8",
       "bodyHash": "82f45e8ff545bd2e0b98cd4a2944031ee3c36320d8cbbb7e109d6566de3010b4"
@@ -579,8 +589,8 @@
     },
     {
       "id": "safety-measures-flagged-a-cybersecurity-topic",
-      "hash": "7b058d14075f552fc6b36b1d902bf4a259c4ba8c4c18b017d23e90474296444c",
-      "bodyHash": "8cb6258067f50771ba8fb6cb05392acf9ac010a84c1611365d5d0c39d1e9931a"
+      "hash": "73cf4fe31751e3c6a0684858e90091c6f5f971a0e84fea95478f74c50602d981",
+      "bodyHash": "e381e1a9a5f29ae5529ee1425ab9fd394c1e6c32e8d27a960d42d677db8270cb"
     },
     {
       "id": "safeguards-flagged-a-request-for-claudes-reasoning",
@@ -601,6 +611,11 @@
       "id": "conflict-between-bg-and-print",
       "hash": "da83a77b3db533c6f200ae991fab09958b4c624ece3882c72b7edadb59a37f9f",
       "bodyHash": "17e350aa99431e3eeb526432250b408b47878915bb6ec631d392a2d0b76ffabb"
+    },
+    {
+      "id": "couldnt-tell-whether-bg-is-a-flag-or-text",
+      "hash": "f62720eab3909069355f4f3a81f01003a8f5ce2b5c412c4eb4f6ac7a3f68d897",
+      "bodyHash": "8ed9175262f3feb59f673b3f8d40f39674190708acea4bd407b78fde363206c0"
     },
     {
       "id": "conflict-between-a-system-prompt-flag-and-its-file-form",
@@ -673,6 +688,11 @@
       "bodyHash": "a7f8ab35fa3d796be7dc997bd1d2ad2225532f980449df9545d58840c94f4463"
     },
     {
+      "id": "sandbox-is-not-supported-by-claude-remote-control",
+      "hash": "847bd5d2d5610b3acd1e5371e0ec98a33a792b863818f0606e3c5c69c97acee4",
+      "bodyHash": "f3fbb909da9d9372e7c838c06a7e7b4ba5981fb3e0801d8d0a3e9320f6a3a47c"
+    },
+    {
       "id": "claude-import-is-not-yet-available-in-this-build",
       "hash": "19fd2bfe225e637248087c7948d4e1100b78feb26f1f2825b0eb40ee576e5bcb",
       "bodyHash": "56348bc91b5e3690de80e83533c17f4ae267c537600e1ac8f6136fd67e77d231"
@@ -739,8 +759,13 @@
     },
     {
       "id": "security-review-fails-without-origin-head",
-      "hash": "57bdf87adbcb6ea712d79f00cd3e7a639d221a17b480d99daf6557f0e0d78328",
-      "bodyHash": "1de22e492de68178c87699c1def8968b0f73418e4ed41e1742370832295b767c"
+      "hash": "f5f7462c0b318c6b007b1443fb83c775b341dea149c236cc37dacd60384b9300",
+      "bodyHash": "2a1e9285c124cefbdf08219510cab1774d29c4f3a169884e2f49974fa384fd42"
+    },
+    {
+      "id": "no-shell-command-was-run",
+      "hash": "1ae474877448bef670f5c22a30406c0ede2225134c10e0e9260f8ae2deb858db",
+      "bodyHash": "8a7e341c9b4a3641f83458655298bc3475e33d00ef85cc3b50db8a0ca64fc102"
     },
     {
       "id": "input-must-be-provided-when-using-print",
@@ -1233,6 +1258,11 @@
       "bodyHash": "b1893e3294780f4e19c78cd6729308de247900450328bfa1ba90fc08957d68b1"
     },
     {
+      "id": "instruction-file-not-loaded",
+      "hash": "30ac185862f59eddb667e7b3f9feb6eaee70744a424ba699ecfe55a652e17b00",
+      "bodyHash": "d005425c490d89746ea70133d696fa25d1780c51674e10f5d1c969fcda245224"
+    },
+    {
       "id": "a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved",
       "hash": "9cff6c8c0d69ddc3809b9ccb46992c3388cb2b00df983898b2140dee61aedcd4",
       "bodyHash": "7ee4c03e787f80c4d63df8e481ccb9837493bf911891b434eba5059f435f1dac"
@@ -1278,6 +1308,11 @@
       "bodyHash": "df09f327c8aa25362b9a1d4a9e4c9bd6a637c785707d0c4917e25706d348dad8"
     },
     {
+      "id": "mcp-server-name-is-reserved",
+      "hash": "810d7536c36c017e117cfdf385bc5e795c2fb930db0b5647e1bafd180f4a27f6",
+      "bodyHash": "d03116dc8bd5c5bb9967297996d6eee266d4d8b8f2c2f3fa935a4a87760003f3"
+    },
+    {
       "id": "managed-settings-document-could-not-be-parsed",
       "hash": "d1e9587a21189f68c13a1ed4c448129c97c6a5b9326c26f19c1cfb03c99d9dbb",
       "bodyHash": "087a4fd13be3de3fe14c43baf3e4c9f50bb9bf4b09ec9cc2ac1da76eb1541d9e"
@@ -1286,6 +1321,11 @@
       "id": "unable-to-read-managed-policy-settings",
       "hash": "eb56ce06bff7397cef31ec510430c69f98ae64717675b948d90d011d6606982d",
       "bodyHash": "d3e3ec49fc888dde8df37813c8c60f55a9dfb219b89a27be53bc2e984008e0d0"
+    },
+    {
+      "id": "managed-settings-hooks-not-loaded",
+      "hash": "4997afaea7661cad5064416a2510b2315640dea4eb93a60441c4bf76cc7789e1",
+      "bodyHash": "e3a4aa750f5e5e805b714bf517e05cf76c78ecd5075663441680c3b5a9ac6a91"
     },
     {
       "id": "otelheadershelper-failed",
@@ -1336,6 +1376,11 @@
       "id": "unrecognized-model-id-on-a-request",
       "hash": "a5e64aa23d8f2c3bd6fc93f999750d6818bd0bad92c2b6b70e1c7f9c3d438aab",
       "bodyHash": "42c722c59b14a644ef30d86d4214a0c2850588d5d8d787526a41e3c0a130bbf6"
+    },
+    {
+      "id": "sandbox-allow-entries-are-ignored-under-a-managed-lock",
+      "hash": "4e77f6153337cb600fb4e3bf17be53f4b807dabe5f4a4a63b3537412c251ee73",
+      "bodyHash": "0c84c7c189f2dde7cdb715311268f45989e03984274050b5a20dd9e4a3fc2d5e"
     },
     {
       "id": "stale-sandbox-mask-files-left-by-a-killed-session",
