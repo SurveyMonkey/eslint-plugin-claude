@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99, 235, 236]
+related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99, 235, 236, 348]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -102,9 +102,17 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
      does not say that Claude Code acts at that value.
 
    A convention of one organization is not a rule in this package. A check that needs a model
-   judgment is not a lint rule. A check that `claude plugin validate` already covers fully is not
-   a rule either. A check that validate covers in part is a rule, for the cases validate misses. The [rule inventory](../rules-inventory.md) lists the candidates
-   with a preset and a severity for each.
+   judgment is not a lint rule.
+
+   A check that an official Claude Code CLI tool makes on the repository files is not a rule. An
+   example is `claude plugin validate`. A CLI check is quantitative, as the rules of this plugin
+   are. A session tool, such as `/doctor`, can make qualitative checks, so it does not count. A
+   check that the tool covers in part is a rule, for the cases that the tool misses. When the tool
+   starts to make the check of a rule, set `meta.deprecated` on the rule. The message names the
+   tool and its version. The next major release removes the rule.
+
+   The [rule inventory](../rules-inventory.md) lists the candidates with a preset and a severity
+   for each.
 3. **The name is `eslint-plugin-claude`, unscoped.** Its namespace is `claude`, and its rules read
    `claude/<rule>` in a config.
 4. **The code lives in this standalone public repository.** It is TypeScript in `src/`, and `tsc`

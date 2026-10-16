@@ -53,8 +53,11 @@ What is out of scope:
 - A check that needs a model judgment about prose quality. A heuristic proxy for one, such as a
   leading imperative verb, is in the list at `off` and is marked "(heuristic)".
 - Runtime behavior that no committed file shows.
-- A check that `claude plugin validate` already covers fully. A check that validate covers in
-  part is a rule, for the cases validate misses. The Validate column marks it `partial`.
+- A check that an official Claude Code CLI tool already makes on the repository files, such as
+  `claude plugin validate`. A CLI check is quantitative, as the rules of this plugin are. A
+  session tool, such as `/doctor`, can make qualitative checks, so it does not count. A check
+  that the tool covers in part is a rule, for the cases that it misses. The Validate column marks
+  it `partial`. The next major release removes a rule that the tool starts to cover.
 - A rule specific to one organization's conventions, such as a required shape for a plugin's
   `SessionStart` hook[^hooks-sessionstart]. The docs do not source it, so it is out of scope
   for this package.
