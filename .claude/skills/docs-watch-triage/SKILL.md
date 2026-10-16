@@ -158,7 +158,8 @@ Use the `gh:issues` skill when it is available. If it is not, use the commands i
 The refresh pull request stores the snapshot, and closes each issue that this session decided
 and left open. It also closes a work item whose fix merged. Its branch is always
 `docs-watch-refresh`, so only one refresh can be open. The `docs-snapshot` check is its gate.
-It fails when the refresh stores a change that no open issue or group issue comment names. The commands are in [commands.md](commands.md).
+It fails when the refresh stores a change that no open issue or group issue comment names.
+Its log prints the remedy and a marker line for each such block. The commands are in [commands.md](commands.md).
 
 1. Look for an open pull request from `docs-watch-refresh`. If one is open, do not open a
    second. Report it, and stop. The next session reads its checks first.
@@ -184,7 +185,8 @@ It fails when the refresh stores a change that no open issue or group issue comm
 7. Turn on auto-merge with squash.
 8. Wait for the checks to end. If `docs-snapshot` fails, it names the blocks. Do one loop: run
    the docs-watch workflow, and wait for it to end. Triage the issues that it opens, with
-   Phases 1 to 5. Run `update` again, push to the same branch, and add a `Closes` line for
+   Phases 1 to 5. If it opens no issue for a block that the log names, open one by hand. Start
+   its body with the marker line that the log prints, and leave it open. Run `update` again, push to the same branch, and add a `Closes` line for
    each new issue that you leave open.
-9. If `docs-snapshot` fails again, stop. Auto-merge waits. The report names the blocks.
+9. If `docs-snapshot` fails again after the manual issue, stop. Auto-merge waits. The report names the blocks.
 10. Remove the worktree. GitHub deletes the branch when the pull request merges.

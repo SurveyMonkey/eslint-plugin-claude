@@ -97,6 +97,12 @@ The log names each failure. Do the steps for the failure that it names.
      `gh workflow run docs-watch.yml`.
   2. Triage the issues and comments that it opens.
   3. Run `node scripts/docs-watch.ts update` again, and push.
+
+  The workflow can open no issue for a block that the dry run names. The dry run and the live
+  job can classify one block in different ways (ADR 002 Decision 4). Then open an issue by
+  hand. Copy the marker line that the log prints under the remedy. Start the issue body with
+  it, and leave the issue open. The gate then matches the block by its key. Example:
+  `<!-- docs-watch:rule-update:<page>#<blockId>:<hash> -->`.
 - **The head snapshot is not the live docs.** The docs changed after you ran `update`, or the
   map changed and `update` did not run. Run `node scripts/docs-watch.ts update` again, and push.
   A new change can then fail the dry run.

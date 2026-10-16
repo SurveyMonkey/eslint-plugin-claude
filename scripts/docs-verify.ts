@@ -181,12 +181,13 @@ function loggedBlocks(
 
 // The count of the blocks with no key match. One line for each of them
 // that the findings or the tracked list name, and one line for each
-// accepted block. The count, not the lines, fails the gate.
+// accepted block. The count, not the lines, fails the gate. Each block with
+// no key match also has the marker for an issue that a person opens by hand.
 function namedBlocks(
   output: Output,
   blocks: ReturnType<typeof loggedBlocks>,
   held: ReturnType<typeof heldKeys>,
-): { unmatched: number; failed: string[]; accepted: string[] } {
+): { unmatched: number; failed: string[]; markers: string[]; accepted: string[] } {
   const openKeys = new Set(blocks.open.map((m) => m.key).filter((key) => !held.has(key)))
   const commentKeys = new Set(blocks.comment.filter((key) => !held.has(key)))
   const byKey = new Map<string, Finding[]>()
@@ -195,14 +196,22 @@ function namedBlocks(
   const line = (kind: string, block: Pick<Finding, 'page' | 'blockId' | 'oldHash' | 'newHash'>) =>
     `- ${kind}: ${block.page} block ${block.blockId}, hash ${block.newHash ?? `gone:${block.oldHash}`}`
   const failed: string[] = []
+  const markers: string[] = []
   for (const [key, group] of byKey) {
     const f = merge(group)
     // A needs-triage block names its reason, such as a failed Jev request.
     const why = f.kind === 'needs-triage' ? `: ${f.reason}` : ''
-    if (openKeys.has(key)) failed.push(`${line(f.kind, f)}${why}`)
+    if (openKeys.has(key)) {
+      failed.push(`${line(f.kind, f)}${why}`)
+      markers.push(`<!-- docs-watch:${f.kind}:${key} -->`)
+    }
   }
   for (const t of output.tracked) {
-    if (commentKeys.has(keyOf(t))) failed.push(line('tracked', t))
+    if (commentKeys.has(keyOf(t))) {
+      failed.push(line('tracked', t))
+      // The gate reads a marker of any kind, so a tracked block uses rule-update.
+      markers.push(`<!-- docs-watch:rule-update:${keyOf(t)} -->`)
+    }
   }
   const accepted: string[] = []
   const seen = new Set<string>()
@@ -219,7 +228,7 @@ function namedBlocks(
       `- accepted: ${key}, held by ${issues}${fresh.length > 0 ? `, new rules: ${fresh.join(', ')}` : ''}`,
     )
   }
-  return { unmatched: openKeys.size + commentKeys.size, failed, accepted }
+  return { unmatched: openKeys.size + commentKeys.size, failed, markers, accepted }
 }
 
 // Classifies the live pages against the base state, then runs the issue
@@ -264,7 +273,11 @@ async function dryRun({
       throw new Error('the issue step report has no wouldOpen or wouldComment count')
     }
     const blocks = loggedBlocks(log, report)
-    const { unmatched, failed, accepted } = namedBlocks(output, blocks, heldKeys(output, repo, run))
+    const { unmatched, failed, markers, accepted } = namedBlocks(
+      output,
+      blocks,
+      heldKeys(output, repo, run),
+    )
     const lines = [
       `The dry run would open ${report.wouldOpen} issue(s) and post ${report.wouldComment} comment(s).`,
       ...failed,
@@ -277,13 +290,13 @@ async function dryRun({
       )
     }
     if (unmatched > 0) {
-      return {
-        lines,
-        failures: [
-          'The pull request stores a docs change that no open issue or group issue comment names. ' +
-            'Run the docs watch workflow, triage what it opens, then run `update` again.',
-        ],
-      }
+      const remedy =
+        'The pull request stores a docs change that no open issue or group issue comment names. ' +
+        'Run the docs watch workflow, triage what it opens, then run `update` again. ' +
+        'If the workflow opens no issue for a block above, open one by hand. ' +
+        'Start its body with the marker line of that block, and leave it open:'
+      lines.push(remedy, ...markers)
+      return { lines, failures: [remedy] }
     }
     return { lines, failures: [] }
   } catch (error) {

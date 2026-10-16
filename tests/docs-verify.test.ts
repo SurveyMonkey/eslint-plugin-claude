@@ -53,6 +53,12 @@ const INVENTORY = [
   '',
 ].join('\n')
 
+// The first part of the remedy. The gate prints it when a block has no key match.
+const REMEDY =
+  'Run the docs watch workflow, triage what it opens, then run `update` again. ' +
+  'If the workflow opens no issue for a block above, open one by hand. ' +
+  'Start its body with the marker line of that block, and leave it open:'
+
 const dirs: string[] = []
 afterEach(() => {
   vi.unstubAllEnvs()
@@ -271,9 +277,15 @@ describe('a diff that changes the snapshot', () => {
     expect(text).toContain(`- rule-update: ${URL_} block hooks, hash ${hash}`)
     expect(text).toContain('The dry run would open 1 issue(s) and post 0 comment(s).')
     expect(text).not.toContain(KEY)
+    const marker = `<!-- docs-watch:rule-update:${URL_}#hooks:${hash} -->`
+    expect(text).toContain(REMEDY)
+    expect(text).toContain(`${marker}\n`)
+    expect(text.split(REMEDY)).toHaveLength(2)
     const written = readFileSync(summary, 'utf8')
     expect(written.startsWith('an earlier step\n')).toBe(true)
     expect(written).toContain(`- rule-update: ${URL_} block hooks, hash ${hash}`)
+    expect(written).toContain(REMEDY)
+    expect(written).toContain(`${marker}\n`)
   })
 
   it('fails when the dry run would post only a tracked comment', async () => {
@@ -287,6 +299,10 @@ describe('a diff that changes the snapshot', () => {
     expect(code).toBe(1)
     expect(text).toContain(`- tracked: ${URL_} block commands, hash ${headHash(root, 'commands')}`)
     expect(text).toContain('The dry run would open 0 issue(s) and post 1 comment(s).')
+    expect(text).toContain(REMEDY)
+    expect(text).toContain(
+      `<!-- docs-watch:rule-update:${URL_}#commands:${headHash(root, 'commands')} -->\n`,
+    )
   })
 
   it('passes when the dry run opens nothing and the head snapshot is the live docs', async () => {
@@ -356,6 +372,7 @@ describe('a diff that changes the snapshot', () => {
     expect(code).toBe(1)
     expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
     expect(text).toContain('1 page(s) of the head snapshot are not the live docs')
+    expect(text.split('1 page(s) of the head snapshot are not the live docs')).toHaveLength(2)
     expect(text).toContain('Run `node scripts/docs-watch.ts update` again')
     // GITHUB_REPOSITORY names the repository, so gh does not.
     expect(gh.calls.map((args) => args.slice(0, 2))).not.toContainEqual(['repo', 'view'])
@@ -392,6 +409,7 @@ describe('a diff that changes the snapshot', () => {
     })
     expect(code).toBe(1)
     expect(text).toContain('The check of the head failed:')
+    expect(text.split('The check of the head failed:')).toHaveLength(2)
     expect(text).toContain('rule-sources.json')
   })
 
@@ -758,6 +776,7 @@ describe('the gate fails closed', () => {
     })
     expect(code).toBe(1)
     expect(text).toContain('The dry run failed: Jev is down')
+    expect(text.split('The dry run failed: Jev is down')).toHaveLength(2)
   })
 
   it.each([
@@ -782,6 +801,7 @@ describe('the gate fails closed', () => {
     })
     expect(code).toBe(1)
     expect(text).toContain('The dry run failed: gh: HTTP 401')
+    expect(text.split('The dry run failed: gh: HTTP 401')).toHaveLength(2)
   })
 
   it.each([
