@@ -3,9 +3,9 @@
 An ESLint 10 flat-config plugin, published to npm as `eslint-plugin-claude`, that lints Claude
 Code configuration files. Rule IDs are `claude/<rule>`. The configs are `recommended` and
 `strict`. Each rule keeps to the limits in [README Scope](README.md#scope) (ADR 001 Decisions 2
-and 14). `.claude/rules/path-rule-scope.md` turns each limit into a check. The limits include
-this one: a check that an official CLI tool makes, such as `claude plugin validate`, is not a
-rule.
+and 14). `.claude/rules/path-rule-scope.md` turns each limit into a check. One limit is this:
+an official CLI tool does not already make the check. An example is `claude plugin validate`. A
+check that the tool covers in part is a rule, for the cases that it misses.
 
 ## Design
 
