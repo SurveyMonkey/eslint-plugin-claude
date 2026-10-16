@@ -4,6 +4,7 @@
 [![CodeQL](https://github.com/SurveyMonkey/eslint-plugin-claude/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/SurveyMonkey/eslint-plugin-claude/actions/workflows/codeql.yml?query=branch%3Amain)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/SurveyMonkey/eslint-plugin-claude/blob/main/vitest.config.ts#L10)
 [![npm](https://img.shields.io/npm/v/eslint-plugin-claude)](https://www.npmjs.com/package/eslint-plugin-claude)
+[![npm downloads](https://img.shields.io/npm/dm/eslint-plugin-claude)](https://www.npmjs.com/package/eslint-plugin-claude)
 
 > An ESLint plugin that lints Claude Code configuration files
 
