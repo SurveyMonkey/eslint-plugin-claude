@@ -160,8 +160,8 @@ Accuracy by label, on each of the four runs:
 
 **Why these thresholds.** The `no` values matter most, because a no opens no issue.
 
-- The lowest `alters` for a `rule-update` case in the spike is 0.51. The `no` value of 0.2 is far
-  below it. The two `no-change` cases between 0.2 and 0.5 go to a person.
+- The lowest `alters` for a `rule-update` case in the four spike runs is 0.51. The `no` value
+  of 0.2 is far below it. The two `no-change` cases between 0.2 and 0.5 go to a person.
 - The highest `requirement` for a `no-change` block is 0.06, and the lowest for a `new-rule`
   block is 0.73. The band from 0.2 to 0.5 is empty in this spike data.
 - Seven live blocks that no rule cites had a `requirement` value from 0.21 to 0.33. They are
@@ -175,8 +175,9 @@ Accuracy by label, on each of the four runs:
 - The classifier summary lists each block that needs no change. For a block that no rule
   cites, it adds the `requirement` value.
 - `obsolete` is 0.70 or more for a removal, and 0.28 or less for the other cases.
-- The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56. A
-  value below 0.5 gives `needs-triage`, not a silent miss. Both results open an issue.
+- The `yes` value of `alters` has a small margin: `hook-event-deprecated` is 0.51 to 0.56 in
+  the four spike runs (0.47 in Decision 3). A value below 0.5 gives `needs-triage`, not a
+  silent miss. Both results open an issue.
 
 **Why not a Choice.** The spike also asked a Choice among the four labels, over three runs. It
 was correct 43 times in 69: `no-change` 30 of 30, `rule-removal` 6 of 6, `rule-update` 7 of 21,
@@ -190,7 +191,7 @@ One case was also rebuilt, because its old text did not agree with the current r
 
 ### 3. A blind Sonnet check and a held-out set test the reference labels
 
-The Claude Code session that wrote this change set the reference labels of the 24 cases by
+A Claude Code session wrote this change set. It set the reference labels of the 24 cases by
 hand from the docs. A person has not checked them. The `alters` and `obsolete` values come
 from the same 24 cases. The `requirement` `no` value also uses seven live cases (#150).
 
@@ -202,13 +203,14 @@ On 2026-09-30 a check tested these labels:
   second blind Sonnet agent labeled them.
 - The production code (`jev-1.13.0`) ran once on all 44 cases.
 
-`tests/fixtures/docs-classify/heldout-*.json` hold the 20 cases, their key, the blind labels
-and the saved Jev answers. The describe "decide on the held-out Jev answers" in
+`tests/fixtures/docs-classify/heldout-*.json` hold the 20 held-out cases, their key, their
+blind labels and the saved Jev answers. The describe "decide on the held-out Jev answers" in
 `tests/docs-classify.test.ts` runs the saved answers through `decide` at the current
 thresholds.
 
 The table counts the cases where two sources give the same result, at the current thresholds.
-A `needs-triage` result matches no label.
+A `needs-triage` result matches no label. The repository stores only the held-out data. The
+Spike 24 column and the spike values below come from the comments of #38.
 
 | Pair | Spike 24 | Held-out 20 | All 44 |
 | - | - | - | - |
@@ -216,16 +218,17 @@ A `needs-triage` result matches no label.
 | Author labels and Jev | 21 | 19 | 40 |
 | Sonnet and Jev | 20 | 19 | 39 |
 
-**One row differs from the first run.** The run used a `requirement` `no` value of 0.2. PR
+**Two rows differ from the first run.** The run used a `requirement` `no` value of 0.2. PR
 #171 raised it to 0.4. The block `h19` (uncited, `requirement` 0.34, label `no-change`) gave
 `needs-triage` then, and gives `no-change` now. The first run counted 18 for both held-out Jev
-pairs. No other row changes, because no other `requirement` value is between 0.2 and 0.4.
+pairs, and 39 and 38 for the Jev pairs of all 44. No other row changes, because no other
+`requirement` value is between 0.2 and 0.4.
 
 - The author and Sonnet differ on one case: `listing-cap-configurable`. Sonnet chose
   `no-change`. The author and Jev chose `rule-update`.
-- On the 43 cases where the author and Sonnet agree, Jev gave the same result on 39 and
+- Author and Sonnet agree on 43 cases. On these, Jev gave the same result on 39 and
   `needs-triage` on 4. It never gave a wrong kind.
-- The 4 `needs-triage` cases have `alters` values from 0.29 to 0.47. Two are true updates
+- In this run, the 4 `needs-triage` cases have `alters` values from 0.29 to 0.47. Two are true updates
   (`hook-event-deprecated` at 0.47 and `h04` at 0.41). Two are true no-changes
   (`manifest-hooks-array` at 0.29 and `skills-key-default` at 0.41). A true update and a true
   no-change both score 0.41. So no `alters` threshold separates them.
@@ -233,8 +236,8 @@ pairs. No other row changes, because no other `requirement` value is between 0.2
   value near 0.5 can fall on either side from one run to the next.
 - The lowest `alters` value of a true update is 0.41 (`h04`). No true update scored 0.2 or
   less. So the `no` value of 0.2 holds.
-- The `requirement` value of a `no-change` block is 0.34 at most (`h19`), and the lowest value
-  of a `new-rule` block is 0.59 (`h08`). The `no` value of 0.4 holds.
+- The `requirement` value of a `no-change` block is 0.34 at most (`h19`). The lowest value of
+  a `new-rule` block is 0.59 (`h08`). So the `no` value of 0.4 holds.
 
 **Limits of this check:**
 
