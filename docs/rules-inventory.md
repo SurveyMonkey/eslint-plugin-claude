@@ -7,7 +7,7 @@ related_issues: [5, 23]
 stale_after: 2027-03-29
 generated:
   by: claude-code
-  at: 2026-10-17T20:35:00Z
+  at: 2026-10-17T20:47:00Z
 ---
 
 # Lint rule candidates for `eslint-plugin-claude`
@@ -23,12 +23,12 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **457 candidate rules** in 9 groups. 341 rules go in `recommended`: 205 at `error` and 136 at
+- **456 candidate rules** in 9 groups. 340 rules go in `recommended`: 204 at `error` and 136 at
   `warn`. 116 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 142 rules have the category `no-op`. The file loads,
-  but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
+  but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
-- **`claude plugin validate` covers little of this.** 17 rules are `partial`: validate reports
+- **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
   some of their cases. The other 440 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
@@ -118,7 +118,7 @@ It is in the Subagents and output styles group.
 
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
-| `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 78 |
+| `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 77 |
 | `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 142 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
@@ -137,7 +137,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 457 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 456 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -170,15 +170,15 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Skills and commands | 16 | 13 | 9 | 38 |
 | Subagents and output styles | 17 | 16 | 11 | 44 |
 | Hooks | 19 | 16 | 21 | 56 |
-| Plugin manifest and layout | 27 | 19 | 9 | 55 |
+| Plugin manifest and layout | 26 | 19 | 9 | 54 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
 | CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
 | Settings | 18 | 19 | 14 | 51 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **205** | **136** | **116** | **457** |
+| **Total** | **204** | **136** | **116** | **456** |
 
-By severity, 205 rules are `error` and 252 are `warn`: the 136 `recommended` `warn` rules and
+By severity, 204 rules are `error` and 252 are `warn`: the 136 `recommended` `warn` rules and
 the 116 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -475,7 +475,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 
 ### Plugin manifest and layout
 
-Covers `.claude-plugin/plugin.json` (every field except inline `mcpServers`, `lspServers` and `hooks`), the plugin directory layout, `bin/`, symlinks, component path rules, plugin `settings.json`, `userConfig`, `dependencies`, `channels`, `monitors`, `themes`, Node.js lockfiles, marketplace-entry `relevance`, and plugin eval suites. 55 rules: 27 error and 19 warn in `recommended`, and 9 `off`. 46 are plugin rules, and 9 are eval-suite rules in their own subsection.
+Covers `.claude-plugin/plugin.json` (every field except inline `mcpServers`, `lspServers` and `hooks`), the plugin directory layout, `bin/`, symlinks, component path rules, plugin `settings.json`, `userConfig`, `dependencies`, `channels`, `monitors`, `themes`, Node.js lockfiles, marketplace-entry `relevance`, and plugin eval suites. 54 rules: 26 error and 19 warn in `recommended`, and 9 `off`. 45 are plugin rules, and 9 are eval-suite rules in their own subsection.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -497,7 +497,7 @@ Covers `.claude-plugin/plugin.json` (every field except inline `mcpServers`, `ls
 | `plugin-commands-dir-nonempty` | A custom `commands` path holds at least one `.md` file or a subdirectory with `SKILL.md`. The rule counts a `.md` file at any depth, so it reports less than the warning. It reads a string or an array of strings, and skips the object map. A `.md` link with no target gives no report. | recommended | error | no-op | – | [^plugins-troubleshooting-warning-no-commands-found-in-plugin-name-custom-directory] |
 | `plugin-default-dir-shadowed` | When `commands`, `agents`, `outputStyles`, `workflows`, `experimental.themes` or `experimental.monitors` is set, the matching default folder exists, and the key points nowhere inside it, flag the ignored folder. The rule reads those six keys only (`REPLACED_DEFAULTS`), and not the top-level `themes` and `monitors` keys. An object map of `commands` names a path through each `source`. | recommended | error | no-op | – | [^plugins-manifest-reference-how-each-key-combines-with-its-default-location] [^plugins-components-themes-and-output-styles] |
 | `plugin-skills-key-redundant-default` | `skills` adds to the default `skills/` scan. Flag a `skills` entry that names `./skills` again. The rule resolves each entry from the plugin root, so `./skills`, `./skills/` and `skills` are all reported. It does not report `.`, which names the plugin root, or one folder inside `skills/`, because the docs say an entry can be one folder with a `SKILL.md` [^plugins-manifest-reference-fields]. `claude plugin validate` passes the entry (Claude Code 2.1.296). | recommended | warn | practice | – | [^plugins-manifest-reference-how-each-key-combines-with-its-default-location] |
-| `plugin-settings-keys` | Plugin `settings.json` and manifest `settings` set only `agent` and `subagentStatusLine`. Other keys are dropped at load. The rule reports each other top-level key, with one report on each key (`PLUGIN_SETTINGS_KEYS`). A repeated key gets one report, on the last member. It reads the `settings.json` at a plugin root, and skips one in a `.claude` folder, which Claude Code reads as project settings. It skips a manifest `settings` that is not an object: `claude plugin validate` 2.1.302 fails it (`expected record`). It also reports the dropped keys of a manifest `settings` that `plugin-settings-single-source` reports, because the two faults differ. `claude plugin validate` 2.1.302 passes a manifest `settings` with `model` and a root `settings.json` with `theme`. | recommended | error | no-op | – | [^plugins-manifest-reference-settings] [^plugins-components-default-settings] |
+| `plugin-settings-keys` | Plugin `settings.json` and manifest `settings` set only `agent` and `subagentStatusLine` (`PLUGIN_SETTINGS_KEYS`). Claude Code drops other keys at load. The rule reports each other top-level key, with one report on each key. A repeated key gets one report, on the last member. It reads the `settings.json` at a plugin root, and skips one in a `.claude` folder. Claude Code reads that file as project settings. It skips a manifest `settings` that is not an object: `claude plugin validate` 2.1.302 fails it (`expected record`). It also reports the dropped keys of a manifest `settings` that `plugin-settings-single-source` reports, because the two faults differ. `claude plugin validate` 2.1.302 passes a manifest `settings` with `model` and a root `settings.json` with `theme`. | recommended | error | no-op | – | [^plugins-manifest-reference-settings] [^plugins-components-default-settings] |
 | `plugin-settings-single-source` | Do not set both a root `settings.json` with a supported key and manifest `settings`. The manifest `settings` is then ignored (cross-file). The rule checks less. It reports the manifest `settings` only when it sets `agent` or `subagentStatusLine` too, because Claude Code drops every other key, so the manifest loses nothing else. It reads the `settings.json` at the plugin root only [^plugins-components-default-settings]. | recommended | error | no-op | – | [^plugins-components-default-settings] |
 | `plugin-settings-agent-exists` | Plugin `settings` `agent` names one of the plugin's own agents (cross-file). The rule reads the `agent` of the root `settings.json` and of the manifest `settings`. It skips the manifest `agent` when the file sets a supported key, because Claude Code then ignores the manifest key [^plugins-components-default-settings]. It lists the agents with the reader of `skill-agent-exists`: the frontmatter `name` or the file name, bare or scoped as `<plugin>:<folder>:<name>` [^plugins-components-agents]. It accepts the built-in agents of that rule. It makes no report when the manifest sets `agents` [^plugins-manifest-reference-how-each-key-combines-with-its-default-location], when the entry of the plugin in the enclosing `marketplace.json` sets `agents` [^plugins-marketplace-reference-strict-mode], when it cannot read the `agents/` folder or the file, or when `agents/` holds a link with no target. `claude plugin validate` does not check the agent (Claude Code 2.1.296). | recommended | warn | consistency | – | [^plugins-components-default-settings] |
 | `plugin-user-config-field-applicability` | `min`/`max` only on `type: number`. `multiple` only on `type: string`. The rule reads the top-level `userConfig` and the `userConfig` of each channel. It reports the field by the five types of the table, and skips an option whose `type` is missing or not one of them, because `claude plugin validate` rejects that `type` (Claude Code 2.1.296). Validate passes the fields on the wrong type [^plugins-manifest-reference-user-configuration]. | recommended | warn | practice | – | [^plugins-manifest-reference-user-configuration] |
@@ -552,7 +552,7 @@ These rules lint `claude plugin eval` suites (`evals/` or the `experimental.eval
 - `plugin-settings-agent-exists`: the agents findings rated it "breaks" and the plugins findings "best-practice". The docs only say "Set `agent` to run one of the plugin's own agents" [^plugins-components-default-settings]. I used `warn` because they document no failure.
 - `plugin-monitors-command-quote`: the hooks findings treat unquoted placeholders as "breaks". Failure needs an install path with spaces, so by policy this is a conditional `warn`. The hooks group should align `hooks-shell-form-quote-placeholder`. Both `"${CLAUDE_PLUGIN_ROOT}/x"` and `"${CLAUDE_PLUGIN_ROOT}"/x` pass [^plugins-manifest-reference-quoting-and-path-separators].
 - Changelog 2.1.136 says the `skills` key no longer hides the default `skills/`. 2.1.140 warns about default folders that a key replaces [^changelog-claude-code-changelog]. The manifest reference says `skills` adds to the default and does not replace it [^plugins-manifest-reference-how-each-key-combines-with-its-default-location]. So `plugin-default-dir-shadowed` excludes `skills`.
-- `plugin-path-containment` is dropped (v1 round ruling 9): validate checks the `..` spelling and does not follow links, and the two symlink rules report the links. Before v2.1.257 even load-time checks looked only at spelling, not at symlink targets [^errors-path-escapes-plugin-directory].
+- Ruling 9 of the v1 round drops `plugin-path-containment`. Validate checks the `..` spelling and does not follow links. The two symlink rules report a link out of the plugin. Before v2.1.257 even load-time checks looked only at spelling, not at symlink targets [^errors-path-escapes-plugin-directory].
 - Overlap with other groups; dedupe at merge. `plugin-user-config-no-shell-fields` overlaps `hooks-user-config-exec-form-only` (hooks) and the `headersHelper` checks (mcp-lsp). `plugin-path-uses-plugin-root` and `plugin-no-state-in-plugin-root` overlap `hooks-plugin-use-plugin-root` and `hooks-plugin-no-state-in-root`. `plugin-commands-dir-legacy` sits next to the skills group's legacy command rule. I kept each where the finding is about plugin layout or `userConfig`.
 - Left to other groups: marketplace entry and cross-file `version` checks (entry vs `plugin.json`, set in both), entry name vs manifest name, `commands` paths in entries, `command` link-mode top-level symlinks (marketplace); plugin agent fields and output-style frontmatter (agents); hook script existence and exec bit (hooks); plugin `.mcp.json`/`.lsp.json` (mcp-lsp); plugin skill `description`, `name` prefix (skills).
 - plugin-evals accepts a root `plugin.json` as well as `.claude-plugin/plugin.json` [^plugin-evals-requirements]. `plugin-manifest-location` should ignore a root `plugin.json` that only serves evals, or accept an option.
