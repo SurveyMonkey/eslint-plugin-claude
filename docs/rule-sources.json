@@ -401,7 +401,7 @@
     {
       "url": "https://code.claude.com/docs/en/agent-teams",
       "heading": "Architecture",
-      "hash": "4a138e9f5bd5cd53e711c8e060dfd2f1bc76da4e6a8fffed84bf1c00fbb45098"
+      "hash": "11ecea8da4d580fdc6177b5a40425531c11a40f04dc5221fac5d9906c8997418"
     }
   ],
   "agent-tools-agent-type-list": [
@@ -605,7 +605,7 @@
     {
       "url": "https://code.claude.com/docs/en/features-overview",
       "heading": "Compare similar features",
-      "hash": "4245acf874dbb6a16096107b5a7c5b8399a78c6eb140abdcf182cdb94c307772"
+      "hash": "2c7bed2f2114585f893ee235d05ab34e97c6b3d1916c740f764269c2403e1080"
     }
   ],
   "claude-md-html-comment-content": [
@@ -729,7 +729,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "d7efdac51e999defb3df6adb0b0a7fe148c92b66106e7cdff1a57b236bc84dab"
+      "hash": "428fdf2654fa01dcbbece1f6d010e350f646ecbdbec229e7df097f452f06c2b7"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -849,6 +849,11 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exec form and shell form",
       "hash": "f181740d3b1eec7872104c29a6063393d55e26282821b1f7f4b7e19d0dd26214"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "--sandbox or --no-sandbox is not supported by claude remote-control",
+      "hash": "847bd5d2d5610b3acd1e5371e0ec98a33a792b863818f0606e3c5c69c97acee4"
     }
   ],
   "hooks-command-shell-safety": [
@@ -1310,7 +1315,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PreToolUse",
-      "hash": "81a5682164c1caa3943384e7eec0ff93d465fa6e1ffb2f116a7fee1a7dc747c2"
+      "hash": "6f9c9a09395c182ad32a899b464837079697017b737d05f621d5336b12eb0a7e"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -3897,7 +3902,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "How permissions interact with sandboxing",
-      "hash": "f77b9fd8f16f623118b1476aa2a4857dcfc90597c38611311c5f0f33867e061e"
+      "hash": "d016fcf5bc8b6132055db41301b365e2c011ebe5a9c920371980879ba1c83879"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -4768,7 +4773,7 @@
     {
       "url": "https://code.claude.com/docs/en/terminal-config",
       "heading": "Create a custom theme",
-      "hash": "d703916c26837c686ee32a41aca398d321b89499a1d4135e44765881313e5157"
+      "hash": "779a5925188e7bbe2125c07a345a551fc82c81614b4616ef0fd768068813fe27"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",

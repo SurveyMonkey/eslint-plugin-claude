@@ -1,6 +1,8 @@
 // `--enable-auto-mode` was removed in v2.1.111. Auto mode is in the Shift+Tab cycle, and
 // `--permission-mode auto` starts in it
-// (https://code.claude.com/docs/en/cli-reference#cli-flags).
+// (https://code.claude.com/docs/en/cli-reference#cli-flags). The sandbox flags of
+// `claude remote-control` are at the end of the file.
+import type { RuleTester } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import {
   command,
@@ -13,7 +15,7 @@ import {
   settings,
 } from '../hooks.test-support.ts'
 import { pluginAgent } from '../plugin-fixture.test-support.ts'
-import { lintJson } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const name = 'hooks-command-removed-cli-flag'
 const ids = (handler: object, file = FILES.project) =>
@@ -165,5 +167,115 @@ describe(`${name}: the handlers and the files`, () => {
     expect(
       jsonIds(name, settings({ Stop: [{ hooks: [{ type: 'command' }] }] }), FILES.project),
     ).toEqual([])
+  })
+})
+
+// v2.1.300 removed `--sandbox` and `--no-sandbox` from `claude remote-control`. With one of them,
+// the server exits with code 1 and does not start
+// (https://code.claude.com/docs/en/errors#sandbox-is-not-supported-by-claude-remote-control).
+const shellCode = (text: string) => settings(hooks('Stop', [command({ command: text })]))
+const sandbox = (flag: string): RuleTester.TestCaseError => ({
+  messageId: 'removedFromSubcommand',
+  data: { flag, subcommand: 'remote-control', version: 'v2.1.300' },
+})
+
+jsonTester.run(`${name}: remote-control sandbox flags`, ruleOf(name), {
+  valid: [
+    'claude --sandbox',
+    'claude --no-sandbox -p x',
+    'claude mcp --sandbox',
+    'claude --sandbox remote-control',
+    'claude -p "remote-control --sandbox"',
+    'echo remote-control --sandbox',
+    'claude remote-control --name x; echo --sandbox',
+    'claude remote-control --sandboxed',
+    'my-claude remote-control --sandbox',
+  ]
+    .map((text) => ({ code: shellCode(text), filename: FILES.project }))
+    .concat(
+      [
+        command({ command: 'claude', args: ['--no-sandbox', 'remote-control'] }),
+        command({ command: 'claude', args: ['mcp', '--sandbox'] }),
+        command({ command: 'node', args: ['remote-control', '--sandbox'] }),
+        command({ command: 'claude', args: [['remote-control'], '--sandbox'] }),
+      ].map((handler) => ({ code: settings(hooks('Stop', [handler])), filename: FILES.project })),
+    ),
+  invalid: [
+    { text: 'claude remote-control --sandbox', flag: '--sandbox' },
+    { text: 'claude remote-control --no-sandbox', flag: '--no-sandbox' },
+    { text: 'claude remote-control --sandbox=1', flag: '--sandbox' },
+    { text: 'claude remote-control --name x --no-sandbox=true', flag: '--no-sandbox' },
+    { text: 'claude --verbose remote-control --sandbox', flag: '--sandbox' },
+    { text: 'claude --model opus remote-control --no-sandbox', flag: '--no-sandbox' },
+    { text: '/usr/local/bin/claude remote-control --sandbox', flag: '--sandbox' },
+    { text: 'cd x && claude remote-control --sandbox', flag: '--sandbox' },
+    { text: 'nohup claude remote-control --no-sandbox &', flag: '--no-sandbox' },
+  ]
+    .map(({ text, flag }) => ({
+      code: shellCode(text),
+      filename: FILES.project,
+      errors: [sandbox(flag)],
+    }))
+    .concat([
+      {
+        code: settings(
+          hooks('Stop', [
+            command({ command: 'claude', args: ['remote-control', '--no-sandbox=1'] }),
+          ]),
+        ),
+        filename: FILES.project,
+        errors: [{ ...sandbox('--no-sandbox'), line: 1, column: 91 }],
+      },
+      {
+        code: settings(
+          hooks('Stop', [
+            command({ command: '/opt/claude', args: ['--verbose', 'remote-control', '--sandbox'] }),
+          ]),
+        ),
+        filename: FILES.project,
+        errors: [sandbox('--sandbox')],
+      },
+      // Exec form gives one report at each item, also for a flag that occurs two times.
+      {
+        code: settings(
+          hooks('Stop', [
+            command({ command: 'claude', args: ['remote-control', '--sandbox', '--sandbox'] }),
+          ]),
+        ),
+        filename: FILES.project,
+        errors: [sandbox('--sandbox'), sandbox('--sandbox')],
+      },
+      {
+        code: shellCode('claude remote-control --sandbox --no-sandbox'),
+        filename: FILES.project,
+        errors: [sandbox('--sandbox'), sandbox('--no-sandbox')],
+      },
+    ]),
+})
+
+describe(`${name}: the two kinds of removed flag`, () => {
+  it('gives the text of each message', () => {
+    const found = lintJson(
+      name,
+      shellCode('claude --enable-auto-mode; claude remote-control --sandbox'),
+      FILES.project,
+    )
+    expect(found.map(({ messageId, message }) => [messageId, message])).toEqual([
+      [
+        'removed',
+        'Claude Code removed "--enable-auto-mode" in v2.1.111. Auto mode is in the Shift+Tab cycle. Use "--permission-mode auto" to start in it.',
+      ],
+      [
+        'removedFromSubcommand',
+        'Claude Code removed "--sandbox" from "claude remote-control" in v2.1.300. With it, the server exits with code 1 and does not start. Remove the flag.',
+      ],
+    ])
+  })
+
+  it('reports a removed flag once for each command string', () => {
+    expect(shell('claude --enable-auto-mode; claude --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('claude remote-control --sandbox; claude remote-control --sandbox')).toEqual([
+      'removedFromSubcommand',
+    ])
   })
 })
