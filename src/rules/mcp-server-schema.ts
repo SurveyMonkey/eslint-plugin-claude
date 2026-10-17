@@ -1,14 +1,17 @@
 // A server entry of `.mcp.json` with a bad shape (docs/rules/mcp-server-schema.md). Claude Code
-// skips such an entry and loads the others. `claude plugin validate` reports such an entry of a
-// plugin, so the rule reads a project `.mcp.json` and a committed `managed-mcp.json` only (ruling
-// 14 of #355). An entry with no `type` is a stdio server. Claude Code skips a `sdk` entry with its
-// own message, and #355 leaves that entry to it.
+// skips such an entry and loads the others. The rule reads each fault in a project `.mcp.json` and
+// a committed `managed-mcp.json`. `claude plugin validate` 2.1.302 reports each fault of a plugin
+// entry but one: a `url` with a `command` and no `type`. So in a plugin, the rule reports that
+// fault only (rulings 14 and 20 of #355). An entry with no `type` is a stdio server. Claude Code
+// skips a `sdk` entry with its own message, and #355 leaves that entry to it.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
 import {
+  type LintedServer,
   lintedServers,
+  type McpFileKind,
   mcpFileKind,
   parseUrl,
   REMOTE_SERVER_TYPES,
@@ -98,6 +101,17 @@ function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
   return [{ node: type, messageId: 'unknownType' }]
 }
 
+/** The faults of the plugin server entry `entry`. Validate 2.1.302 passes an entry with a `url`
+ *  and no `type` when the entry has a good stdio shape: a `command` that is not empty, and `args`
+ *  of strings. It reports each other fault, so the result is `urlNoType` or nothing. */
+function pluginFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
+  const command = entry.type === 'Object' ? lastMember(entry, 'command')?.value : undefined
+  if (command?.type !== 'String' || command.value === '' || stdioFaults(entry).length > 0) {
+    return []
+  }
+  return entryFaults(entry).filter(({ messageId }) => messageId === 'urlNoType')
+}
+
 const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
   meta: {
     type: 'problem',
@@ -124,21 +138,32 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     // A plugin has no `managed-mcp.json` component, and `claude plugin validate` 2.1.302 does not
     // read the file. So the rule reads it in all directories. Its map is the `mcpServers` object.
     const managed = base === 'managed-mcp.json'
-    // `claude plugin validate` reports these faults in a plugin. A manifest holds plugin servers.
-    if (!managed && (base === 'plugin.json' || mcpFileKind(context.filename) !== 'project')) {
+    // A manifest holds plugin servers. A `.mcp.json` path that Claude Code never reads gets no
+    // report.
+    let kind: McpFileKind | null = 'project'
+    if (!managed) {
+      kind = base === 'plugin.json' ? 'plugin' : mcpFileKind(context.filename)
+    }
+    if (kind === null) {
       return {}
     }
+    const faultsOf = kind === 'plugin' ? pluginFaults : entryFaults
     return {
       Document(node) {
-        const servers = managed
+        const servers: LintedServer[] = managed
           ? serverMembers(node.body, 'project').map((member) => ({
               name: keyOf(member.name),
               member,
             }))
           : lintedServers(context.filename, node.body)
         for (const server of servers) {
-          for (const { node: at, messageId } of entryFaults(server.member.value)) {
-            context.report({ node: at, messageId, data: { server: server.name } })
+          for (const { node: at, messageId } of faultsOf(server.member.value)) {
+            // A server of a declared file takes its report on its path in the manifest.
+            context.report({
+              node: server.pinned ?? at,
+              messageId,
+              data: { server: server.name },
+            })
           }
         }
       },
@@ -149,7 +174,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
 export const target = {
   name,
   language: 'json' as const,
-  files: ['**/.mcp.json', '**/managed-mcp.json'],
+  files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
 }
 
 export default rule

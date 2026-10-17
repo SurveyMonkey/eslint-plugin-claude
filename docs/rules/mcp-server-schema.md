@@ -1,13 +1,13 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-server-schema, which reports a server entry of a project .mcp.json or a committed managed-mcp.json that Claude Code skips for its shape, such as a url with no type or an args value that is not an array of strings.
+description: The ESLint rule claude/mcp-server-schema, which reports a server entry of a project .mcp.json or a committed managed-mcp.json that Claude Code skips for its shape, such as a url with no type or an args value that is not an array of strings. In a plugin, it reports a url with a command and no type only.
 owner: brianespinosa
 created: 2026-10-17
 related_issues: [16, 355]
 stale_after: 2027-04-17
 generated:
   by: claude-code
-  at: 2026-10-17T00:00:00Z
+  at: 2026-10-17T19:50:00Z
 ---
 
 # claude/mcp-server-schema
@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| load | `**/.mcp.json`, `**/managed-mcp.json` |
+| load | `**/.mcp.json`, `**/managed-mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -50,9 +50,19 @@ A stdio entry has the `type` `stdio`, or no `type`. A remote entry has the `type
 An entry with an unknown `type` gets one report only.
 
 The rule reads the `mcpServers` object of a project `.mcp.json` and of a committed
-`managed-mcp.json`. It reads a `managed-mcp.json` in a plugin root too, because a plugin has no
-such component and `claude plugin validate` does not read it. Of two members with one name, the
-last one counts, as `JSON.parse` keeps it.
+`managed-mcp.json`. It reads a `managed-mcp.json` in a plugin root too. A plugin has no such
+component, and `claude plugin validate` 2.1.302 does not read the file. Of two members with one
+name, the last one counts, as `JSON.parse` keeps it.
+
+In a plugin, the rule reports one fault only: a `url` with no `type`, in an entry with a good stdio
+shape. That entry has a `command` that is not empty, and `args` of strings. `claude plugin
+validate` 2.1.302 passes that entry, but Claude Code skips it.[^http] Validate reports each other
+fault of a plugin entry that Claude Code drops at load, and a remote `url` that is not a valid
+absolute URL.[^validate] [^plugin] The rule reads a plugin `.mcp.json`, and the inline servers of
+`plugin.json`. It also reads the servers of each `.json` file that `mcpServers` names, and puts
+the report on that path in `plugin.json`. A directory counts as a plugin root when it holds
+`.claude-plugin/plugin.json`. The rule makes no report for a `.mcp.json` when it cannot read that
+directory.
 
 The rule leaves these cases alone:
 
@@ -60,13 +70,11 @@ The rule leaves these cases alone:
   application can register such a server.[^http]
 - A file with no `mcpServers` object. The rule `mcp-json-servers-key` reports it in a project
   `.mcp.json`. No rule reports it in a `managed-mcp.json`.
-- An empty remote `url`. The rule `mcp-remote-url-empty` reports it in a project file.
+- An empty remote `url`. The rule `mcp-remote-url-empty` reports it in a project `.mcp.json`. No
+  rule reports it in a `managed-mcp.json`.
 - A `url` that holds a `${` reference, because the reference can expand to any text.
-- A plugin `.mcp.json`, and the servers of `plugin.json`. `claude plugin validate` reports each
-  entry that Claude Code drops at load, and a remote `url` that is not a valid absolute
-  URL.[^validate] [^plugin] Version 2.1.302 does not report a `url` with a `command` and no
-  `type`. A directory counts as a plugin root when it holds `.claude-plugin/plugin.json`. The rule
-  makes no report for a `.mcp.json` when it cannot read that directory.
+- Each other fault in a plugin `.mcp.json` and in the servers of `plugin.json`. Validate reports
+  it.
 - A path under `.claude/`, which Claude Code never reads. The rule `mcp-json-location` reports it.
 
 Fail:

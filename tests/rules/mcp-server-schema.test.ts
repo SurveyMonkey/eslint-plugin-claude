@@ -1,11 +1,19 @@
 // Claude Code skips a server entry of `.mcp.json` that has a bad shape, and still loads the others.
-// `claude plugin validate` reports such an entry in a plugin, so the rule reads a project
-// `.mcp.json` and a committed `managed-mcp.json` only. The files glob is in tests/configs.test.ts.
+// The rule reads each fault in a project `.mcp.json` and a committed `managed-mcp.json`.
+// `claude plugin validate` 2.1.302 reports each fault in a plugin but one. In a plugin, the rule
+// reports that one fault only: a `url` with a `command` and no `type`. The files glob is in
+// tests/configs.test.ts.
 import path from 'node:path'
 import { expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
 import { ids, lintManifest, lintPluginFile, lintProject } from '../mcp-server-rule.test-support.ts'
-import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
+import {
+  chmodCannotBlock,
+  jsonTester,
+  lintJson,
+  ruleOf,
+  withoutAccess,
+} from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('mcp-server-schema')
 
@@ -387,15 +395,94 @@ it('reports each fault case of a managed-mcp.json at a plugin root', () => {
   expect(ids(lintJson('mcp-server-schema', FAULTS, file))).toEqual(FAULT_IDS)
   const bare = JSON.stringify(JSON.parse(FAULTS).mcpServers)
   expect(ids(lintJson('mcp-server-schema', bare, file))).toEqual([])
+  // The control: the directory is a plugin root, so its `.mcp.json` gets the plugin skip.
+  expect(ids(lintJson('mcp-server-schema', FAULTS, path.join(root, '.mcp.json')))).toEqual([])
 })
-it('stays silent on each fault case in a plugin .mcp.json, with and without the wrapper', () => {
-  expect(ids(lintPluginFile('mcp-server-schema', FAULTS))).toEqual([])
-  const bare = JSON.stringify(JSON.parse(FAULTS).mcpServers)
-  expect(ids(lintPluginFile('mcp-server-schema', bare))).toEqual([])
+it('reports each fault case of a managed-mcp.json in a directory that it cannot read', () => {
+  // The rule reads a `managed-mcp.json` without the plugin-root check, so a lock does not stop it.
+  if (chmodCannotBlock) {
+    return
+  }
+  const root = repo({ '.claude-plugin/plugin.json': '{}' })
+  const file = path.join(root, 'managed-mcp.json')
+  const found = withoutAccess(path.join(root, '.claude-plugin'), () =>
+    lintJson('mcp-server-schema', FAULTS, file),
+  )
+  expect(ids(found)).toEqual(FAULT_IDS)
 })
-it('stays silent on each fault case in a plugin manifest, inline and in a declared file', () => {
-  const inline = JSON.stringify({ name: 'p', mcpServers: JSON.parse(FAULTS).mcpServers })
-  expect(ids(lintManifest('mcp-server-schema', inline))).toEqual([])
-  const declared = JSON.stringify({ name: 'p', mcpServers: './servers.json' })
-  expect(ids(lintManifest('mcp-server-schema', declared, { 'p/servers.json': FAULTS }))).toEqual([])
+
+// Ruling 20 of #355: `claude plugin validate` 2.1.302 passes a `url` with a `command` and no
+// `type` in a plugin, and Claude Code skips that entry. So the rule reports it in a plugin too.
+// Validate fails each other fault there, and the rule stays silent on them.
+const URL = 'https://x.test/mcp'
+/** The servers of `FAULTS`, and the server `both`, which has a `url` and a `command`. */
+const pluginServers = { ...JSON.parse(FAULTS).mcpServers, both: { command: 'npx', url: URL } }
+/** The column of the `url` value of the server `both`, the last server of `code`. */
+const bothUrl = (code: string) => code.lastIndexOf(`"${URL}"`) + 1
+
+it('reports only a url with a command and no type in a plugin .mcp.json', () => {
+  const wrapped = JSON.stringify({ mcpServers: pluginServers })
+  const found = lintPluginFile('mcp-server-schema', wrapped)
+  expect(found.map((m) => [m.messageId, m.message.includes('"both"'), m.column])).toEqual([
+    ['urlNoType', true, bothUrl(wrapped)],
+  ])
+  expect(ids(lintPluginFile('mcp-server-schema', JSON.stringify(pluginServers)))).toEqual([
+    'urlNoType',
+  ])
+})
+it('reports only a url with a command and no type in a plugin manifest', () => {
+  const inline = JSON.stringify({ name: 'p', mcpServers: pluginServers })
+  const found = lintManifest('mcp-server-schema', inline)
+  expect(found.map((m) => [m.messageId, m.column])).toEqual([['urlNoType', bothUrl(inline)]])
+  // The report for a server of a declared file is on its path in the manifest. A bundle adds no
+  // server, and the rule does not read it.
+  const declared = JSON.stringify({ name: 'p', mcpServers: ['./x.mcpb', './servers.json'] })
+  const files = {
+    'p/servers.json': JSON.stringify({ mcpServers: pluginServers }),
+    'p/x.mcpb': JSON.stringify({ mcpServers: pluginServers }),
+  }
+  const fromFile = lintManifest('mcp-server-schema', declared, files)
+  expect(fromFile.map((m) => [m.messageId, m.column])).toEqual([
+    ['urlNoType', declared.indexOf('"./servers.json"') + 1],
+  ])
+  // The root `.mcp.json` has its own lint run, so the manifest gets no report for it.
+  const root = JSON.stringify({ name: 'p', mcpServers: './.mcp.json' })
+  const rootFile = { 'p/.mcp.json': JSON.stringify({ mcpServers: pluginServers }) }
+  expect(ids(lintManifest('mcp-server-schema', root, rootFile))).toEqual([])
+})
+it('stays silent in a plugin on an entry that validate reports or that has no url', () => {
+  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio.
+  const entries = [
+    { url: URL },
+    { command: '', url: URL },
+    { command: 1, url: URL },
+    { command: 'npx', args: 'x', url: URL },
+    { command: 'npx', args: [1], url: URL },
+    { command: 'npx', url: null },
+    { type: 'stdio', command: 'npx', url: URL },
+    { type: 'bad', command: 'npx', url: URL },
+  ]
+  for (const entry of entries) {
+    const code = JSON.stringify({ mcpServers: { a: entry } })
+    expect(ids(lintPluginFile('mcp-server-schema', code))).toEqual([])
+    expect(
+      ids(lintManifest('mcp-server-schema', JSON.stringify({ name: 'p', ...JSON.parse(code) }))),
+    ).toEqual([])
+  }
+  // A command of one space passes validate, so the rule reports it. The last `url` counts.
+  const space = JSON.stringify({ mcpServers: { a: { command: ' ', args: ['-y'], url: URL } } })
+  expect(ids(lintPluginFile('mcp-server-schema', space))).toEqual(['urlNoType'])
+  const lastNull = '{"mcpServers": {"a": {"command": "npx", "url": "x", "url": null}}}'
+  expect(ids(lintPluginFile('mcp-server-schema', lastNull))).toEqual([])
+})
+it('stays silent on a plugin .mcp.json in a directory that it cannot read', () => {
+  if (chmodCannotBlock) {
+    return
+  }
+  const root = repo({ 'p/.claude-plugin/plugin.json': '{}' })
+  const code = JSON.stringify({ mcpServers: pluginServers })
+  const found = withoutAccess(path.join(root, 'p', '.claude-plugin'), () =>
+    lintJson('mcp-server-schema', code, path.join(root, 'p', '.mcp.json')),
+  )
+  expect(ids(found)).toEqual([])
 })

@@ -3276,7 +3276,10 @@ const MCP_RULES: {
   { name: 'mcp-json-location', files: MCP_PATHS },
   { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
-  { name: 'mcp-server-schema', files: ['**/.mcp.json', '**/managed-mcp.json'] },
+  {
+    name: 'mcp-server-schema',
+    files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
+  },
   { name: 'mcp-server-name-reserved', files: ['**/.mcp.json'] },
   { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
   { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
