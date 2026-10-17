@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/output-style-frontmatter-valid, which reports an output style file whose frontmatter does not parse or does not start on line 1, because Claude Code then loads the style under its file name with no field set.
+description: The ESLint rule claude/output-style-frontmatter-valid, which reports an output style file whose frontmatter is not a map or does not start on line 1, because Claude Code then loads the style under its file name with no field set.
 owner: brianespinosa
 created: 2026-10-01
 related_issues: [9]
@@ -29,13 +29,19 @@ under its file name, with no field set.[^osfields] Claude Code shows the parse e
 `claude --debug`. A style with a `description` or `keep-coding-instructions` field then
 silently loses it. The rule reports two faults:
 
-- **YAML.** The frontmatter does not parse, or its top level is not a map.
+- **Not a map.** The frontmatter parses, but its top level is a list or a single value. The docs
+  do not say what such a block does. The rule infers that the style loads with no field set, as
+  for YAML that does not parse.
 - **Late block.** The opening `---` is not line 1, and the block holds a style field. Claude Code
   reads frontmatter only from line 1.[^glossary] The docs do not say what a late block does. The rule
   infers that the style loads with no field set.
 
 A style file with no frontmatter is valid, and so is an empty block, because each field is
 optional.[^osfields]
+
+The rule does not report frontmatter that the strict YAML parser cannot read. Claude Code can read
+some YAML that the strict parser cannot.
+[`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports it as a warning.
 
 The rule checks a style file in `.claude/output-styles/` and in the `output-styles/` directory of a
 plugin. A plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere, such as
@@ -45,7 +51,7 @@ Fail:
 
 ```markdown
 ---
-name: [unclosed
+- name: Rhyme
 ---
 
 Answer in rhyme.

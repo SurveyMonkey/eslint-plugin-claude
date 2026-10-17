@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/agent-frontmatter-valid, which reports a local subagent file in .claude/agents/ that Claude Code skips with no error, because the frontmatter does not parse, has no name or description, has a bad name, has a name of more than 256 characters, or does not start on line 1.
+description: The ESLint rule claude/agent-frontmatter-valid, which reports a local subagent file in .claude/agents/ that Claude Code skips with no error, because the frontmatter is not a map, has no name or description, has a bad name, has a name of more than 256 characters, or does not start on line 1.
 owner: brianespinosa
 created: 2026-10-01
 related_issues: [9]
@@ -29,7 +29,8 @@ cause appears only in the debug log. The rule reports each case on the frontmatt
 
 - **Late block.** The opening `---` is not line 1, and the block holds a subagent field. Claude Code
   reads frontmatter only from line 1.[^glossary]
-- **YAML.** The frontmatter does not parse, or its top level is not a map. Claude Code reads no field.
+- **Not a map.** The frontmatter parses, but its top level is a list or a single value. It sets
+  no `name`, so Claude Code skips the file.[^skips]
 - **No `name`.** Claude Code reads the file as documentation.[^skips]
 - **No `description`.** Claude Code skips the file.
 - **Bad `name`.** The name starts with `-` or contains `:`. The colon is for the scoped names of
@@ -39,6 +40,12 @@ cause appears only in the debug log. The rule reports each case on the frontmatt
 
 The rule checks an agent file in `.claude/agents/`, at any depth. This also covers a nested
 `.claude/agents/` directory, such as `packages/x/.claude/agents/`.
+
+The rule does not report frontmatter that the strict YAML parser cannot read. The docs say that
+Claude Code skips a local agent with YAML that does not parse.[^skips] But Claude Code can read
+some YAML that the strict parser cannot, so the rule cannot say that Claude Code skips the file.
+[`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports it as a warning. The rule
+then checks no field, because it cannot read them.
 
 A plugin agent with no `name`, or with YAML that does not parse, still loads. Claude Code gives it
 the name of its file, and a placeholder description for YAML that does not parse. The docs do not
