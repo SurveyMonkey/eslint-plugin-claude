@@ -25,7 +25,7 @@ const inFile = (text: string, manifest: unknown = { name: 'p' }) => {
   const { dir } = pluginTree(manifest, { 'settings.json': text })
   return lintPluginFile(RULE, GLOBS, path.join(dir, 'settings.json'), text)
 }
-/** The key names in the data of each message. */
+/** The message ID and the key name in the text of each message. */
 const keys = (found: ReturnType<typeof inFile>) =>
   found.map((m) => [m.messageId, m.message.split('`')[1]])
 
@@ -82,6 +82,13 @@ describe(RULE, () => {
     expect(found[0]).toMatchObject({ messageId: 'unsupported', column: 19, endColumn: 26 })
   })
 
+  check('reads the last settings key of a manifest, as JSON.parse keeps it', () => {
+    const last = '{"name": "p", "settings": {"agent": "a"}, "settings": {"model": "x"}}'
+    expect(keys(lintPlugin(RULE, pluginTree(last).dir, last))).toEqual([['unsupported', 'model']])
+    const first = '{"name": "p", "settings": {"model": "x"}, "settings": {"agent": "a"}}'
+    expect(lintPlugin(RULE, pluginTree(first).dir, first)).toEqual([])
+  })
+
   check('reports a key with the name of a prototype key', () => {
     expect(keys(inFile('{"constructor": 1}'))).toEqual([['unsupported', 'constructor']])
   })
@@ -101,7 +108,7 @@ describe(RULE, () => {
     expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toHaveLength(1)
   })
 
-  check('reports the manifest settings and the root settings.json of one plugin each', () => {
+  check('reports the manifest settings when the root settings.json sets a supported key', () => {
     const files = { 'settings.json': '{"agent": "a"}' }
     const found = inManifest({ name: 'p', settings: { agent: 'b', model: 'x' } }, files)
     expect(keys(found)).toEqual([['unsupported', 'model']])
