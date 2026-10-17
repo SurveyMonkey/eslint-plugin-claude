@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/claude-directory",
-  "hash": "7462382d58a4aef384801da176d3d92ea456b80956188d5f6585dd7599caa051",
+  "hash": "1aab55aa4a8a66327d1e4736cb869bb449760cd5befc68047f5ed0680956f6dd",
   "blocks": [
     {
       "id": "explore-the--claude-directory",
@@ -49,8 +49,8 @@
     },
     {
       "id": "authentication",
-      "hash": "1da8ed428cd814bcd3788db98f28c2d1ad3d3793bae299fd5ee94168dacb4304",
-      "bodyHash": "a6b994e1c5ab4751cd3725ef95a51037fa94d62edc6fe2cb99351bc554b8fd50"
+      "hash": "c45bf94264245da5e302d47fca26d989522eae48bbb2a32ef18debec6378520f",
+      "bodyHash": "e04e790ea5afe7f5b14b6a616dd284b37c528dcc0a41d94d89b8f25bdd831924"
     },
     {
       "id": "patterns-seen",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/large-codebases",
-  "hash": "5357b722e3684ceb45a7fc2c0c7b617fa63ba768f4e06fe210067c6d93087ff9",
+  "hash": "2a3939c22b945516c7666fc062c7be24e8d609bf34329f71ca5fd1d5bf432bab",
   "blocks": [
     {
       "id": "set-up-claude-code-in-a-monorepo-or-large-codebase",
@@ -54,8 +54,8 @@
     },
     {
       "id": "reduce-file-reads-with-code-intelligence",
-      "hash": "bc0da5edaf7964969c7f1be152ad63c6919b18232081d3fc813fe64fef1e4f90",
-      "bodyHash": "44c3b522eb049f997d063b7a19dc21aefd6ddb660c5aa3c4d77a81a211ff0bbb"
+      "hash": "014d45cdf8d73291e0dfb74a85f4469ffd4133c2d8dc9c169440b49e96e361a3",
+      "bodyHash": "24b397ddbdafe9737bfb03aece815af982c9b0e3933c599bbeb867e8d4840a0c"
     },
     {
       "id": "scope-worktrees-and-file-access",
