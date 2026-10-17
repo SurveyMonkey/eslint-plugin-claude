@@ -2622,6 +2622,11 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "Include a packaged MCPB server",
       "hash": "8a0ff461b0a91ad8c13072b917adf7982103e231d33a5c606b9650bc6e6b8015"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Plugins shared through a repository",
+      "hash": "71249e9304755651cccc811bd2487edf214505849e20bf6cfa7a3333a704a3e5"
     }
   ],
   "mcp-json-file-size": [

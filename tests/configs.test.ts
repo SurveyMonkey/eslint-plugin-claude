@@ -2229,8 +2229,8 @@ const TREE: Record<string, string> = {
   'packages/me/managed-settings.d/30-b.txt': badManagedEntry,
   'packages/me/managed-settings.d/sub/40-c.json': badManagedEntry,
   'packages/me/.vscode/settings.json': badManagedEntry,
-  // `mcp-insecure-url`: an `http://` URL in a project file. A plugin file is for `claude plugin
-  // validate`, and a loopback host is silent.
+  // `mcp-insecure-url`: an `http://` URL in a project file. A plugin server entry is for `claude
+  // plugin validate`, and the inline map here is not a bundle string. A loopback host is silent.
   'packages/iu/.mcp.json':
     '{"mcpServers": {"a": {"type": "http", "url": "http://example.com/mcp"}}}',
   'packages/iu/dev/.mcp.json':

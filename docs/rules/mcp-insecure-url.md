@@ -80,12 +80,14 @@ report is on the string.
 
 The rule makes no report in these cases:
 
-- The string is a path, an `https://` URL or a `ws://` URL. An inline map is not a string.
+- The string is a path, a URL with a scheme other than `http`, or a URL that does not parse. An
+  inline map is not a string.
 - The host is on the machine, or a `${` reference hides it, for the reasons of the server case.
-- The string starts with a space, or with `http:` and less than two slashes. Validate reads it as
-  a path and fails it, so Claude Code downloads nothing.
-- The plugin is under `.claude/skills/`. Claude Code skips each bundle of such a plugin, and
-  `mcp-project-plugin-bundle` reports it.
+- A character comes before `http://`, such as a space or a tab. Or the string starts with `http:`
+  and not two `/` characters. Validate reads it as a path and fails it. Validate says that the
+  runtime loader reports a load failure.
+- The plugin is directly under `.claude/skills/`. Claude Code skips each bundle of such a
+  plugin.[^loading]
 
 The rule does not read the extension. Validate fails an extension that is not `.mcpb` or
 `.dxt`.[^mcpservers] The rule reads only the last `mcpServers` member.
@@ -122,3 +124,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^validate]: [Plugin manifest reference: Validate the manifest](https://code.claude.com/docs/en/plugins/manifest-reference#validate-the-manifest)
 [^mcpservers]: [Plugin manifest reference: mcpServers](https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers)
 [^mcpb]: [Add components to a plugin: Include a packaged MCPB server](https://code.claude.com/docs/en/plugins/components#include-a-packaged-mcpb-server)
+[^loading]: [Plugin loading reference: Plugins shared through a repository](https://code.claude.com/docs/en/plugins/loading#plugins-shared-through-a-repository)
