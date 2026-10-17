@@ -64,10 +64,12 @@ export function hasManifest(dir: string): boolean | Unreadable {
 }
 
 /** The entry keys that replace a default location of a plugin. With no
- *  `plugin.json`, the entry is the manifest. A rule reads the default
- *  locations only, so an entry with one of these keys makes no plugin root.
- *  A `skills` key adds to the default in a manifest. In an entry whose source
- *  is the marketplace root, it replaces the default, so it is here too.
+ *  `plugin.json`, the entry is the manifest. A rule reads the component keys
+ *  from `plugin.json` only, and not from an entry. So an entry with one of
+ *  these keys makes no plugin root.
+ *  A `skills` key adds to the default in a manifest, but replaces it in an
+ *  entry whose source is the marketplace root. The check does not tell the
+ *  two apart, so `skills` is here for each entry.
  *  (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location) */
 const REPLACES: readonly string[] = [
   'commands',

@@ -155,9 +155,9 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
       then loads the standard layout. A rule cannot find each such directory. It finds one when a
       `.claude-plugin/marketplace.json` lists it as a relative `source`
       ([#17](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/17)).
-    - With no `plugin.json`, the entry is the manifest. A rule reads the default locations only.
-      So an entry with a key that replaces a default location, such as `commands`, makes no
-      plugin root.
+    - With no `plugin.json`, the entry is the manifest. A rule reads the component keys from
+      `plugin.json` only, and not from an entry. So an entry with a key that replaces a default
+      location, such as `commands`, makes no plugin root.
     - A user changes the `files` of a rule through the config blocks. The block of a rule has the
       name `claude/<config>/<rule>`. The two blocks of files have the names
       `claude/<config>/markdown-files` and `claude/<config>/json-files`. These names are a public

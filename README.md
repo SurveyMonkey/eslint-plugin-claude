@@ -109,8 +109,8 @@ export default defineConfig(
 ```
 
 A rule that reads two languages has two blocks with the same name. Compare `block.language` too
-(`'markdown/gfm'` or `'json/json'`) to change only one of them. A rule also checks the place of a file in code, so a wider glob can
-give no new report. The plugin has no setting and no rule option for `files`.
+(`'markdown/gfm'` or `'json/json'`) to change only one of them. A rule also checks the place of a
+file in code, so a wider glob can give no new report. The plugin has no setting and no rule option for `files`.
 
 ## Configs
 
