@@ -363,6 +363,13 @@
       "hash": "13b3aafece25a689bcf19d24fa7764ae9c9cf18c2c4e9b52ab973b81210059ce"
     }
   ],
+  "agent-skills-preload-limit": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Preload skills into subagents",
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
+    }
+  ],
   "agent-skills-preloadable": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -809,7 +816,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+      "hash": "333bdcc3475641b0a08d024e5b7261c26f9cf7ab5159a97021964843f3138cce"
     }
   ],
   "hooks-command-path-variable": [
@@ -843,7 +850,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+      "hash": "333bdcc3475641b0a08d024e5b7261c26f9cf7ab5159a97021964843f3138cce"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -5809,7 +5816,7 @@
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
       "heading": "How Claude Code uses prompt caching",
-      "hash": "39a39f725f669bdb05977333b1610a8878c2ecde0f238dd5faea67ff02f7646f"
+      "hash": "bf0e42060b519be1966b3cf3ea6540685fa416c16ef21063a8f76c3d46791f2d"
     },
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -6015,7 +6022,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+      "hash": "333bdcc3475641b0a08d024e5b7261c26f9cf7ab5159a97021964843f3138cce"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
