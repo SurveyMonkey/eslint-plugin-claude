@@ -63,6 +63,34 @@ describe('agent-permission-mode-auto-unavailable', () => {
     expect(messages).toHaveLength(1)
   })
 
+  // Claude Code locks auto mode when any settings file sets the lock. Lists in `permissions`
+  // merge across files, so a local `permissions` object does not hide the project lock.
+  it('reports when the local file sets other permissions', () => {
+    const messages = run({
+      '.claude/settings.json': inner('disable'),
+      '.claude/settings.local.json': '{"permissions":{"allow":["Read"]}}',
+    })
+    expect(messages).toHaveLength(1)
+    expect(messages[0]?.message).toContain('`permissions.disableAutoMode`')
+  })
+
+  it('reports when the local file sets the key to another value', () => {
+    const messages = run({
+      '.claude/settings.json': top('disable'),
+      '.claude/settings.local.json': top(null),
+    })
+    expect(messages).toHaveLength(1)
+  })
+
+  it('reports from a file that reads when the other file does not parse', () => {
+    expect(
+      run({ '.claude/settings.json': '{', '.claude/settings.local.json': top('disable') }),
+    ).toHaveLength(1)
+    expect(
+      run({ '.claude/settings.json': top('disable'), '.claude/settings.local.json': '{' }),
+    ).toHaveLength(1)
+  })
+
   it('reports an agent in a subfolder of agents', () => {
     const files = { '.claude/settings.json': top('disable') }
     expect(run(files, AUTO, '.claude/agents/team/a.md')).toHaveLength(1)
@@ -78,6 +106,13 @@ describe('agent-permission-mode-auto-unavailable', () => {
 
     it('for a plugin agent', () => {
       expect(lintWith(rule, AUTO, pluginAgent())).toEqual([])
+      // Settings files at the plugin root do not reach the rule.
+      const files = {
+        'plugins/p/.claude-plugin/plugin.json': '{}',
+        'plugins/p/settings.json': top('disable'),
+        'plugins/p/settings.local.json': top('disable'),
+      }
+      expect(run(files, AUTO, 'plugins/p/agents/a.md')).toEqual([])
     })
     it('without a settings file', () => {
       expect(run({})).toEqual([])
@@ -116,8 +151,8 @@ describe('agent-permission-mode-auto-unavailable', () => {
     it('for a file outside the agents folders', () => {
       expect(run(locked, AUTO, 'docs/a.md')).toEqual([])
     })
-    it('when a settings file does not parse', () => {
-      expect(run({ ...locked, '.claude/settings.local.json': '{' })).toEqual([])
+    it('when the only file with the lock does not parse', () => {
+      expect(run({ '.claude/settings.json': '{"disableAutoMode":"disable"' })).toEqual([])
     })
     it('when a settings file cannot be read', () => {
       if (chmodCannotBlock) {
