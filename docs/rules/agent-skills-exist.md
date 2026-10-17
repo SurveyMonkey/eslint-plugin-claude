@@ -70,8 +70,8 @@ The rule is silent in these cases:
   the rule cannot read gives no report either. The rule adds no message for these cases.
 
 The rule does not check the total size of the preloaded skills. The docs give no size limit. The
-docs limit the preload to "the first 32 distinct names in the list". The rule does not check that
-number.
+docs limit the preload to "the first 32 distinct names in the list". [`agent-skills-preload-limit`](agent-skills-preload-limit.md)
+checks that number.
 
 The rule reads no file out of the repository (ADR 001, Decision 14).
 
