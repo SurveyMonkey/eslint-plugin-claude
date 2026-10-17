@@ -26,7 +26,7 @@ generated:
 
 The `skills` field of a subagent injects the full text of each listed skill at startup. Claude
 Code preloads only the first 32 distinct names in the list.[^preload] It does not preload a later
-name, and it shows no error.
+distinct name, and it shows no error.
 
 The rule counts the distinct names in a `skills` list. A name that occurs two times counts one
 time. The docs do not say if Claude Code treats upper and lower case as different. So the rule
@@ -87,7 +87,7 @@ The default of `max` is the number from the docs. No setting moves that number, 
 sets a maximum of 32. ESLint refuses a larger value. The `recommended` and `strict` configs set
 no option.
 
-When `max` is 32, the message says that Claude Code does not preload the names after the 32nd.
+When `max` is 32, the message says that Claude Code does not preload the distinct names after the 32nd.
 At another value, the message names the configured limit. It does not say that Claude Code skips
 a name at that value.
 

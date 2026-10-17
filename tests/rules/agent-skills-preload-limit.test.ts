@@ -11,7 +11,8 @@ const file = (fields: string, filename = local) => ({
   code: `---\nname: a\ndescription: d\n${fields}---\n\nBody.\n`,
   filename,
 })
-// The names s01, s02 and on, as a YAML list of one name on each line.
+// The names s01 to sNN, with NN the count.
+// `list` writes them as a YAML list, one name on each line.
 const names = (count: number) =>
   Array.from({ length: count }, (_, i) => `s${String(i + 1).padStart(2, '0')}`)
 const list = (entries: string[]) => `skills:\n${entries.map((e) => `  - ${e}\n`).join('')}`
@@ -71,6 +72,11 @@ markdownTester.run('agent-skills-preload-limit', ruleOf('agent-skills-preload-li
       ...file(list(names(33)), '.claude/agents/review/a.md'),
       errors: [{ messageId: 'overPreloadLimit' }],
     },
+    // S01 counts with s01, so s33 is still the first name over the limit.
+    {
+      ...file(list([...names(32), 'S01', 's33'])),
+      errors: [{ messageId: 'overPreloadLimit', data: { count: '33', max: '32', first: 's33' } }],
+    },
     {
       ...file(list(names(11))),
       options: [{ max: 10 }],
@@ -89,7 +95,7 @@ describe('the message and the option of agent-skills-preload-limit', () => {
     const [report, ...rest] = lint(file(list(names(33))).code)
     expect(rest).toEqual([])
     expect(report?.message).toBe(
-      '`skills` lists 33 distinct names. Claude Code preloads only the first 32, so `s33` and each later name are not preloaded, with no error.',
+      '`skills` lists 33 distinct names. Claude Code preloads only the first 32, so it does not preload `s33` or a later distinct name, and shows no error.',
     )
   })
 

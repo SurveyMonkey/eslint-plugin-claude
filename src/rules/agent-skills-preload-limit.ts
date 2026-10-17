@@ -41,7 +41,7 @@ const rule: MarkdownRuleDefinition<{
     defaultOptions: [{ max: PRELOAD_LIMIT }],
     messages: {
       overPreloadLimit:
-        '`skills` lists {{count}} distinct names. Claude Code preloads only the first {{max}}, so `{{first}}` and each later name are not preloaded, with no error.',
+        '`skills` lists {{count}} distinct names. Claude Code preloads only the first {{max}}, so it does not preload `{{first}}` or a later distinct name, and shows no error.',
       overConfiguredLimit:
         '`skills` lists {{count}} distinct names. The configured limit is {{max}}, and `{{first}}` is over it.',
     },
