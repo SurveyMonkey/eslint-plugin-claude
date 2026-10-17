@@ -231,6 +231,15 @@ describe(RULE, () => {
     )
   })
 
+  linked('stays silent for a marketplace root with an entry whose source it cannot see', () => {
+    const top = tree({ '.claude-plugin/marketplace.json': listing('.', './gone/p') })
+    link(top, 'gone', path.join(top, 'nothing'))
+    const code = scripts({ dev: 'claude --plugin-dir .' })
+    expect(lintPluginFile(RULE, ['**/package.json'], path.join(top, 'package.json'), code)).toEqual(
+      [],
+    )
+  })
+
   linked('stays silent for a link with no target', () => {
     const top = tree({})
     link(top, 'gone', path.join(top, 'nothing'))

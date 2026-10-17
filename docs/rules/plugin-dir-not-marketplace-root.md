@@ -52,6 +52,8 @@ The rule makes no report in these cases:
 - The path is empty, is not there, is a file, or is out of the repository.
 - A part of the path is a link with no target, or is a link to a place out of the repository.
 - The `marketplace.json` is a link with no target, or a link out of the repository.
+- The rule cannot see the source of an entry of the `marketplace.json`, for example a link with no
+  target on its path. The source can be the folder itself.
 
 The docs name the marketplace root only. A folder of plugins with no `marketplace.json` gets no
 report, because the docs do not say what Claude Code does with it.

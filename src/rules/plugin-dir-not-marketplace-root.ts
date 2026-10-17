@@ -45,27 +45,26 @@ function pluginDirs(script: string): { value: string; source: string }[] {
 }
 
 /** True when each entry of the `marketplace.json` at `file` has the folder `real` as its source.
- *  `--plugin-dir` then loads the one plugin of the marketplace, with no manifest, and loses none.
- *  A file that does not parse, and a file with no entry, give false. */
+ *  `--plugin-dir` then loads the standard layout of that folder. The result is also true when the
+ *  rule cannot see the source of an entry (ADR 001, Decision 14). A file that does not parse, and
+ *  a file with no entry, give false. */
 function listsOnlyItself(file: string, real: string, bound: string): boolean {
   const body = readJsonBody(file, bound)
   if (body === null) {
     return false
   }
   const read = sourceReader(file, { body })
-  const entries = pluginEntries({ body })
+  const found = pluginEntries({ body }).map(read)
   return (
-    entries.length > 0 &&
-    entries.every((entry) => {
-      const found = read(entry)
-      return found.kind === 'no-manifest' && found.dir === real
-    })
+    found.some((source) => source.kind === 'unreadable') ||
+    (found.length > 0 &&
+      found.every((source) => source.kind === 'no-manifest' && source.dir === real))
   )
 }
 
 /** True when `value`, from the folder `base`, is a folder that holds `.claude-plugin/marketplace.json`
  *  and no `.claude-plugin/plugin.json`. A folder with both is a plugin root too, and Claude Code
- *  loads it. A file that does not parse still marks the folder. A marketplace whose only entry is
+ *  loads it. A file that does not parse still marks the folder. A marketplace whose each entry is
  *  the folder itself (`"."`) is a plugin too, so the rule does not report it. `--plugin-dir` does
  *  not read `marketplace.json`, so a marketplace with another entry still gets a report. */
 function isMarketplaceRoot(base: string, bound: string, value: string): boolean {
