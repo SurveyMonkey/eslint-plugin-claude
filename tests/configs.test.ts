@@ -514,6 +514,8 @@ const badMcpServers = {
   legacy: { type: 'sse', url: 'https://x.test/sse' },
   relHelper: { type: 'http', url: 'https://x.test/mcp', headersHelper: './h.sh' },
   relCommand: { command: './server.js' },
+  // A `url` with no `type`, which `mcp-server-schema` reports in a project file and not in a plugin.
+  noType: { url: 'https://x.test/mcp' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
 
@@ -3274,6 +3276,10 @@ const MCP_RULES: {
   { name: 'mcp-json-location', files: MCP_PATHS },
   { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
+  {
+    name: 'mcp-server-schema',
+    files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
+  },
   { name: 'mcp-server-name-reserved', files: ['**/.mcp.json'] },
   { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
   { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
@@ -4756,9 +4762,10 @@ const EXPECTED = [
   'packages/pw/commands/cbad.md: claude/plugin-path-var-braced@2',
   'packages/pw/skills/bad/SKILL.md: claude/plugin-path-var-braced@2',
   'packages/se/.claude/commands/cpush.md: claude/command-legacy-format@1',
-  // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`, and no other file.
-  // The paths under `.claude/` get the location report only.
+  // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`. They read no other
+  // file of these packages. The paths under `.claude/` get the location report only.
   ...[
+    'mcp-server-schema',
     'mcp-server-name-reserved',
     'mcp-remote-url-empty',
     'mcp-hidden-whitespace',

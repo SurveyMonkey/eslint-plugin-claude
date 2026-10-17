@@ -2911,6 +2911,33 @@
       "hash": "30a7b267d3cf703e1c1038d207472a346adfa5e0d2d6223cb3accbc7ec943a38"
     }
   ],
+  "mcp-server-schema": [
+    {
+      "url": "https://code.claude.com/docs/en/mcp",
+      "heading": "Option 1: Add a remote HTTP server",
+      "hash": "1b683785676110b4d68486879a95dae7d645961cbde1d3806f79a024fe4f62bc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp-quickstart",
+      "heading": "Edit .mcp.json directly",
+      "hash": "88406efc430301191bc23167781d27b91135ce461933513e18f092d8da8c216c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/mcp-quickstart",
+      "heading": "Troubleshooting",
+      "hash": "44f3f9324dd4697fedebcb0e369396ea378920919d2624c511e04bd07a38f5f1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Validate the manifest",
+      "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
+      "heading": "Server is configured but never connects",
+      "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd"
+    }
+  ],
   "mcp-settings-mcpservers": [
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
