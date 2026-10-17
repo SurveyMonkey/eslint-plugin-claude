@@ -1,4 +1,4 @@
-// Claude Code preloads only the first 32 distinct names of the `skills` field of a subagent, and
+// Claude Code preloads only the first 32 distinct names of the `skills` field of a subagent. It
 // skips the rest with no error (docs/rules/agent-skills-preload-limit.md). No setting moves that
 // number, so the option `max` has a schema maximum.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
