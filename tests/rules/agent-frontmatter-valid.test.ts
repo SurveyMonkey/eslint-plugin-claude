@@ -44,6 +44,10 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
     file('description: No name.\n', pluginAgent()),
     file('name: [unclosed\n', pluginAgent()),
     file('name: "-x:y"\n', pluginAgent()),
+    // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`. The rule
+    // cannot read the fields, so it reports no missing field either.
+    file('name: [unclosed\ndescription: d\n'),
+    file('description: Use this when x. Context: y\n'),
     // Not an agent file.
     file('name: [unclosed\n', 'docs/agents/a.md'),
     file('name: [unclosed\n', '.claude/skills/agents.md'),
@@ -88,14 +92,19 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
       ...file('name: "my-plugin:reviewer"\ndescription: Reviews code.\n'),
       errors: [{ messageId: 'badName', line: 2 }],
     },
-    {
-      ...file('name: [unclosed\ndescription: d\n'),
-      errors: [{ messageId: 'invalidYaml' }],
-    },
     // The top level of the YAML is not a map.
     {
       ...file('just text\n'),
-      errors: [{ messageId: 'invalidYaml' }],
+      errors: [{ messageId: 'invalidYaml', line: 1, endLine: 3 }],
+    },
+    {
+      ...file('- name: reviewer\n- description: Reviews code.\n'),
+      errors: [
+        {
+          message:
+            'The frontmatter is YAML, but not a map of fields, so it sets no `name`. Claude Code skips this agent file.',
+        },
+      ],
     },
     // A whitespace-only block is an empty block.
     {

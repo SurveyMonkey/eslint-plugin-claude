@@ -7,8 +7,9 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyAgentFile } from '../agent-files.ts'
 import { AGENT_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
+import { classifyFrontmatter } from '../frontmatter.ts'
 import { lateFrontmatter } from '../late-frontmatter.ts'
-import { readFrontmatter } from '../skill-frontmatter.ts'
+import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'agent-frontmatter-valid' as const
 
@@ -59,8 +60,9 @@ const rule: MarkdownRuleDefinition<{
     messages: {
       notFirst:
         'This frontmatter block does not start on line 1. Claude Code reads the file as documentation, and does not load the agent.',
+      // A value that is not a map has no `name`, and the docs say that Claude Code skips such a file.
       invalidYaml:
-        'The frontmatter is not YAML that gives a map of fields. Claude Code skips this agent file.',
+        'The frontmatter is YAML, but not a map of fields, so it sets no `name`. Claude Code skips this agent file.',
       missingName: 'The frontmatter has no `name`. Claude Code reads the file as documentation.',
       missingDescription:
         'The frontmatter has no `description`. Claude Code skips this agent file.',
@@ -97,11 +99,17 @@ const rule: MarkdownRuleDefinition<{
           context.report({ node, messageId: 'missingDescription' })
           return
         }
-        const fm = readFrontmatter(sourceCode, node)
-        if (fm === null) {
+        const parsed = classifyFrontmatter(node.value)
+        // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`. Claude Code
+        // can read some of it, so this rule claims no skip, and checks no field.
+        if (parsed.kind === 'error') {
+          return
+        }
+        if (parsed.kind === 'not-mapping') {
           context.report({ node, messageId: 'invalidYaml' })
           return
         }
+        const fm = readFrontmatter(sourceCode, node) as SkillFrontmatter
         const agentName = fm.data.name
         if (isBlank(agentName)) {
           context.report({ node, messageId: 'missingName' })
