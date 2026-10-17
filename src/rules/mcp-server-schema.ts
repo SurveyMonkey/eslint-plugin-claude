@@ -54,8 +54,8 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 
 /** The faults of the remote entry `entry`, whose `type` value is `type`: `url` is there and is
  *  a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports in
- *  a project `.mcp.json`. A
- *  `${` reference can expand to any text, so the rule does not parse a URL that holds one. */
+ *  a project `.mcp.json`. A `${` reference can expand to any text, so the rule does not parse a
+ *  URL that holds one. */
 function remoteFaults(
   entry: ValueNode,
   type: ValueNode,
@@ -121,8 +121,8 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
   },
   create(context) {
     const base = path.basename(context.filename)
-    // Claude Code loads no `managed-mcp.json` from a plugin, so the file is a project file in all
-    // directories. Its map is the `mcpServers` object.
+    // A plugin has no `managed-mcp.json` component, and `claude plugin validate` 2.1.302 does not
+    // read the file. So the rule reads it in all directories. Its map is the `mcpServers` object.
     const managed = base === 'managed-mcp.json'
     // `claude plugin validate` reports these faults in a plugin. A manifest holds plugin servers.
     if (!managed && (base === 'plugin.json' || mcpFileKind(context.filename) !== 'project')) {

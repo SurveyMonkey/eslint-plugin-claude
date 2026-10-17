@@ -34,7 +34,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'ignored' }> = {
             continue
           }
           const type = lastMember(member.value, 'type')?.value
-          // No `type` means stdio. A `type` that is not a string is for `mcp-server-schema`.
+          // No `type` means stdio. `mcp-server-schema` reports a `type` that is not a string in a
+          // project file, and `claude plugin validate` reports it in a plugin.
           const transport = type === undefined ? 'stdio' : type.type === 'String' ? type.value : ''
           if (transport === 'stdio' || transport === 'ws') {
             context.report({

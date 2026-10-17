@@ -1,5 +1,5 @@
 // Claude Code skips a server entry of `.mcp.json` that has a bad shape, and still loads the others.
-// `claude plugin validate` reports each such entry in a plugin, so the rule reads a project
+// `claude plugin validate` reports such an entry in a plugin, so the rule reads a project
 // `.mcp.json` and a committed `managed-mcp.json` only. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
 import { expect, it } from 'vitest'
@@ -380,8 +380,8 @@ it('reports each fault case of a project file on disk', () => {
   expect(ids(lintProject('mcp-server-schema', FAULTS))).toEqual(FAULT_IDS)
 })
 it('reports each fault case of a managed-mcp.json at a plugin root', () => {
-  // Claude Code loads no `managed-mcp.json` from a plugin, and `claude plugin validate` does not
-  // read it. So the plugin skip does not cover it.
+  // A plugin has no `managed-mcp.json` component, and `claude plugin validate` does not read it.
+  // So the plugin skip does not cover it.
   const root = repo({ '.claude-plugin/plugin.json': '{}' })
   const file = path.join(root, 'managed-mcp.json')
   expect(ids(lintJson('mcp-server-schema', FAULTS, file))).toEqual(FAULT_IDS)
