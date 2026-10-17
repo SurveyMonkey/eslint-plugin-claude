@@ -1,9 +1,11 @@
 // Claude Code skips a server entry of `.mcp.json` that has a bad shape, and still loads the others.
 // `claude plugin validate` reports each such entry in a plugin, so the rule reads a project
 // `.mcp.json` and a committed `managed-mcp.json` only. The files glob is in tests/configs.test.ts.
+import path from 'node:path'
 import { expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import { ids, lintManifest, lintPluginFile, lintProject } from '../mcp-server-rule.test-support.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('mcp-server-schema')
 
@@ -11,6 +13,9 @@ const project = '.mcp.json'
 const wrap = (entry: string) => `{"mcpServers": {"a": ${entry}}}`
 /** The column of the first `text` in `code`, as ESLint counts it. */
 const col = (code: string, text: string) => code.indexOf(text) + 1
+
+/** A remote entry whose `url` is a number. */
+const remoteNumber = wrap('{"type": "ws", "url": 2.5}')
 
 const cases = {
   urlNoType: wrap('{"url": "https://x.test/mcp"}'),
@@ -221,6 +226,27 @@ jsonTester.run('mcp-server-schema (valid shapes)', rule, {
       filename: project,
     },
     {
+      name: 'the last command',
+      code: wrap('{"command": 1, "command": "x"}'),
+      filename: project,
+    },
+    {
+      name: 'the last remote url',
+      code: wrap('{"type": "http", "url": "bad", "url": "https://x.test"}'),
+      filename: project,
+    },
+    {
+      name: 'the last url, null, no type',
+      code: wrap('{"command": "x", "url": "https://x.test", "url": null}'),
+      filename: project,
+    },
+    // `mcp-json-servers-key` reads no `managed-mcp.json`, so no rule reports this file.
+    {
+      name: 'a managed file with no wrapper',
+      code: '{"a": {"url": "x"}}',
+      filename: 'managed-mcp.json',
+    },
+    {
       name: 'the last entry',
       code: '{"mcpServers": {"a": 1, "a": {"command": "x"}}}',
       filename: project,
@@ -269,6 +295,31 @@ jsonTester.run('mcp-server-schema (null, empty and wrong-type values)', rule, {
     ),
     one('a remote type with a command and no url', '{"type": "http", "command": "x"}', 'noUrl'),
     one('a stdio type with no command', '{"type": "stdio", "args": []}', 'noCommand'),
+    {
+      name: 'a remote url that is not a string, on the url value',
+      code: remoteNumber,
+      filename: project,
+      errors: [
+        {
+          messageId: 'invalidUrl',
+          data: { server: 'a' },
+          column: col(remoteNumber, '2.5'),
+          endColumn: col(remoteNumber, '}}}'),
+        },
+      ],
+    },
+    {
+      name: 'no command, and args that is not an array',
+      code: wrap('{"args": "x"}'),
+      filename: project,
+      errors: [{ messageId: 'noCommand' }, { messageId: 'argsType' }],
+    },
+    {
+      name: 'no command, and an args item that is not a string',
+      code: wrap('{"args": [1]}'),
+      filename: project,
+      errors: [{ messageId: 'noCommand' }, { messageId: 'argType' }],
+    },
     {
       name: 'each fault of one entry, and each bad args item',
       code: wrap('{"command": 1, "args": [1, null]}'),
@@ -327,6 +378,15 @@ jsonTester.run('mcp-server-schema (files)', rule, {
 
 it('reports each fault case of a project file on disk', () => {
   expect(ids(lintProject('mcp-server-schema', FAULTS))).toEqual(FAULT_IDS)
+})
+it('reports each fault case of a managed-mcp.json at a plugin root', () => {
+  // Claude Code loads no `managed-mcp.json` from a plugin, and `claude plugin validate` does not
+  // read it. So the plugin skip does not cover it.
+  const root = repo({ '.claude-plugin/plugin.json': '{}' })
+  const file = path.join(root, 'managed-mcp.json')
+  expect(ids(lintJson('mcp-server-schema', FAULTS, file))).toEqual(FAULT_IDS)
+  const bare = JSON.stringify(JSON.parse(FAULTS).mcpServers)
+  expect(ids(lintJson('mcp-server-schema', bare, file))).toEqual([])
 })
 it('stays silent on each fault case in a plugin .mcp.json, with and without the wrapper', () => {
   expect(ids(lintPluginFile('mcp-server-schema', FAULTS))).toEqual([])

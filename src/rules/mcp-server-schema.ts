@@ -1,13 +1,19 @@
 // A server entry of `.mcp.json` with a bad shape (docs/rules/mcp-server-schema.md). Claude Code
-// skips such an entry and loads the others. `claude plugin validate` reports each such entry of a
-// plugin, so the rule reads a project `.mcp.json` and a committed `managed-mcp.json` only. An
-// entry with no `type` is a stdio server. Only an SDK host registers a `sdk` server, so the rule
-// skips that type.
+// skips such an entry and loads the others. `claude plugin validate` reports such an entry of a
+// plugin, so the rule reads a project `.mcp.json` and a committed `managed-mcp.json` only (ruling
+// 14 of #355). An entry with no `type` is a stdio server. Claude Code skips a `sdk` entry with its
+// own message, and #355 leaves that entry to it.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { lastMember, type ValueNode } from '../marketplace-json.ts'
-import { lintedServers, mcpFileKind, parseUrl, REMOTE_SERVER_TYPES } from '../mcp-servers.ts'
+import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
+import {
+  lintedServers,
+  mcpFileKind,
+  parseUrl,
+  REMOTE_SERVER_TYPES,
+  serverMembers,
+} from '../mcp-servers.ts'
 
 const name = 'mcp-server-schema' as const
 
@@ -47,7 +53,8 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 }
 
 /** The faults of the remote entry `entry`, whose `type` value is `type`: `url` is there and is
- *  a valid absolute URL. An empty `url` is a placeholder that `mcp-remote-url-empty` owns. A
+ *  a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports in
+ *  a project `.mcp.json`. A
  *  `${` reference can expand to any text, so the rule does not parse a URL that holds one. */
 function remoteFaults(
   entry: ValueNode,
@@ -113,16 +120,23 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     },
   },
   create(context) {
+    const base = path.basename(context.filename)
+    // Claude Code loads no `managed-mcp.json` from a plugin, so the file is a project file in all
+    // directories. Its map is the `mcpServers` object.
+    const managed = base === 'managed-mcp.json'
     // `claude plugin validate` reports these faults in a plugin. A manifest holds plugin servers.
-    if (
-      path.basename(context.filename) === 'plugin.json' ||
-      mcpFileKind(context.filename) !== 'project'
-    ) {
+    if (!managed && (base === 'plugin.json' || mcpFileKind(context.filename) !== 'project')) {
       return {}
     }
     return {
       Document(node) {
-        for (const server of lintedServers(context.filename, node.body)) {
+        const servers = managed
+          ? serverMembers(node.body, 'project').map((member) => ({
+              name: keyOf(member.name),
+              member,
+            }))
+          : lintedServers(context.filename, node.body)
+        for (const server of servers) {
           for (const { node: at, messageId } of entryFaults(server.member.value)) {
             context.report({ node: at, messageId, data: { server: server.name } })
           }
