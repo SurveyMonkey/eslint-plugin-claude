@@ -12,6 +12,7 @@ export interface RemovedFlag {
   readonly version: string
   /** The subcommand that the flag is removed from. A flag with no subcommand is removed from each command. */
   readonly subcommand?: string
+  /** `removed` gives the advice for `--enable-auto-mode`. `removedFromSubcommand` names the subcommand. */
   readonly messageId: 'removed' | 'removedFromSubcommand'
 }
 

@@ -26,10 +26,10 @@ function removedFlagAt(args: readonly (string | undefined)[], at: number): Remov
   )
 }
 
-/** The message of a report for the removed flag `removed`. */
+/** The messageId and the data of a report for a removed flag. */
 const reportOf = ({ flag, version, subcommand, messageId }: RemovedFlag) => ({
   messageId,
-  data: { flag, version, subcommand: subcommand ?? '' },
+  data: { flag, version, subcommand },
 })
 
 const rule: Rule.RuleModule = {
@@ -41,6 +41,7 @@ const rule: Rule.RuleModule = {
     },
     schema: [],
     messages: {
+      // The advice of `removed` is for `--enable-auto-mode` only. A new global flag needs its own message.
       removed:
         'Claude Code removed "{{flag}}" in {{version}}. Auto mode is in the Shift+Tab cycle. Use "--permission-mode auto" to start in it.',
       removedFromSubcommand:
