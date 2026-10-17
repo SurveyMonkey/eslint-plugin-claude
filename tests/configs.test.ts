@@ -5417,6 +5417,7 @@ const AGENT_RULES = [
   'agent-model-forced',
   'agent-teams-no-project-config',
   'agent-teams-no-project-config',
+  'agent-permission-mode-auto-unavailable',
   'output-style-frontmatter-valid',
   'output-style-frontmatter-schema',
 ]
@@ -5431,7 +5432,6 @@ const AGENT_WARN_RULES = [
   'agent-name-shadowing',
   'agent-name-shadows-builtin',
   'agent-no-bom',
-  'agent-permission-mode-auto-unavailable',
   'agent-permission-mode-manual',
   'agent-plugin-scoped-name-unique',
   'agent-skills-preload-limit',

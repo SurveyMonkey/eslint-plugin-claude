@@ -23,7 +23,7 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **456 candidate rules** in 9 groups. 340 rules go in `recommended`: 204 at `error` and 136 at
+- **456 candidate rules** in 9 groups. 340 rules go in `recommended`: 205 at `error` and 135 at
   `warn`. 116 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 142 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
@@ -166,7 +166,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
 | Skills and commands | 16 | 13 | 9 | 38 |
-| Subagents and output styles | 16 | 16 | 11 | 43 |
+| Subagents and output styles | 17 | 15 | 11 | 43 |
 | Hooks | 19 | 16 | 21 | 56 |
 | Plugin manifest and layout | 27 | 19 | 9 | 55 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
@@ -174,9 +174,9 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 18 | 19 | 14 | 51 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **204** | **136** | **116** | **456** |
+| **Total** | **205** | **135** | **116** | **456** |
 
-By severity, 204 rules are `error` and 252 are `warn`: the 136 `recommended` `warn` rules and
+By severity, 205 rules are `error` and 251 are `warn`: the 135 `recommended` `warn` rules and
 the 116 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -310,7 +310,7 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 
 ### Subagents and output styles
 
-Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), output style files (`.claude/output-styles/*.md`, plugin `output-styles/*.md`), and agent teams configuration: 43 rules: 16 error and 16 warn in `recommended`, and 11 `off`. "Local" means a project, user, managed or `--add-dir` agent file; "plugin" means a file under a plugin's `agents/` directory or its `agents` manifest key.
+Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), output style files (`.claude/output-styles/*.md`, plugin `output-styles/*.md`), and agent teams configuration: 43 rules: 17 error and 15 warn in `recommended`, and 11 `off`. "Local" means a project, user, managed or `--add-dir` agent file; "plugin" means a file under a plugin's `agents/` directory or its `agents` manifest key.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -337,7 +337,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 | `agent-mcp-servers-inline-trust` | Inline server in a local `.claude/agents/` file: Claude Code connects it only after that folder is trusted (parent trust and `-p` do not count), and a `stdio` server also runs its command. Review each server. One report for each file, on the `mcpServers` value, naming each inline server. A name reference and a plugin agent get no report. The rule cannot tell a project agent from a `~/.claude/agents/` file by its path, and a user agent needs no trust. | recommended | warn | security | – | [^sub-agents-scope-mcp-servers-to-a-subagent] [^changelog-claude-code-changelog] |
 | `agent-mcp-servers-ref-exists` | Each string `mcpServers` entry names a server in `.mcp.json`. The docs show no server definition in a project settings file, so the rule reads `.mcp.json` only, in the project folder and each folder above it, up to the repository root. It checks local agents only. Option `allow` names servers that the repository cannot see. (heuristic: user config is not visible) | off | warn | consistency | – | [^sub-agents-scope-mcp-servers-to-a-subagent] |
 | `agent-permission-mode-bypass` | Local agent sets `permissionMode: bypassPermissions`. Since v2.1.267 it is ignored unless the main session already bypasses; earlier versions granted bypass. | recommended | error | security | – | [^sub-agents-permission-modes] |
-| `agent-permission-mode-auto-unavailable` | Local agent sets `permissionMode: auto` while `.claude/settings.json` or `.claude/settings.local.json` sets `disableAutoMode` or `permissions.disableAutoMode` to `"disable"`. Auto mode is then not available, and the subagent keeps the mode of the main conversation. The lock applies from any settings file, so the rule reads each file alone. The rule does not report another lock value, such as `true`, because `permissions-disable-mode-value` reports it. The docs give a second case, a model that does not support auto mode. The repository does not show it, so the rule does not check it. The rule does not read managed or user settings, or a plugin agent, because they are not in the repository. (cross-file) | recommended | warn | no-op | – (validate does not read `.claude/agents/`. A plugin agent ignores `permissionMode`, and `claude plugin validate` 2.1.302 passes one with `permissionMode: auto`) | [^sub-agents-permission-modes] [^settings-reference-disableautomode] [^permission-modes-which-mode-a-session-starts-in] |
+| `agent-permission-mode-auto-unavailable` | Local agent sets `permissionMode: auto` while `.claude/settings.json` or `.claude/settings.local.json` sets `disableAutoMode` or `permissions.disableAutoMode` to `"disable"`. Auto mode is then not available, and the subagent keeps the mode of the main conversation. The lock applies from any settings file, so the rule reads each file alone. The rule does not report another lock value, such as `true`, because `permissions-disable-mode-value` reports it. The docs give a second case, a model that does not support auto mode. The repository does not show it, so the rule does not check it. The rule does not read managed or user settings, or a plugin agent, because they are not in the repository. (cross-file) | recommended | error | no-op | – (validate does not read `.claude/agents/`. A plugin agent ignores `permissionMode`, and `claude plugin validate` 2.1.302 passes one with `permissionMode: auto`) | [^sub-agents-permission-modes] [^settings-reference-disableautomode] [^permission-modes-which-mode-a-session-starts-in] |
 | `agent-permission-mode-manual` | `permissionMode: manual` is an alias; write the config value `default`. Local agents only, because Claude Code ignores the field in a plugin agent. | recommended | warn | practice | – | [^sub-agents-permission-modes] [^sub-agents-frontmatter-reference] |
 | `agent-memory-auto-memory-off` | Local agent sets `memory` while `.claude/settings.json` or `.claude/settings.local.json` sets `autoMemoryEnabled: false` or `env.CLAUDE_CODE_DISABLE_AUTO_MEMORY` to `1` or `true`: `memory` has no effect. The local file wins. The rule does not read managed or user settings, or a plugin agent, because they are not in the repository. (cross-file) | recommended | error | no-op | – | [^sub-agents-enable-persistent-memory] |
 | `agent-memory-grants-write` | Agent sets `memory` and a `tools` list without `Write` or `Edit`: memory enables Read, Write and Edit anyway. | recommended | error | security | – | [^sub-agents-enable-persistent-memory] |
@@ -370,7 +370,6 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 - `agent-tools-known` uses the permissions group's rule syntax for specifiers and the mcp-lsp group's canonical built-in tool list. An unrecognized entry is reported. When every entry fails, Claude Code refuses to launch the agent. An empty `tools` list launches with no tools and no error [^errors-agent-would-be-spawned-with-zero-tools].
 - Background set for `agent-tools-unavailable` and `agent-tools-conditional`: `Read`, `Grep`, `Glob`, `LSP`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`, `SendMessage`, `Artifact`, `SubagentHandback`, plus MCP tools, `Agent` and `ExitPlanMode` [^sub-agents-available-tools].
 - `agent-permission-mode-bypass` is `error`: on current versions the value is silently ignored, and before v2.1.267 it granted bypass [^sub-agents-permission-modes].
-- `agent-permission-mode-auto-unavailable` is `warn`, not `error`, by the triage of #103. The subagent still runs, in the mode of the main conversation.
 - `agent-memory-grants-write` is `error` because `memory` grants Write and Edit that the `tools` allowlist left out [^sub-agents-enable-persistent-memory].
 - `agent-name-shadows-builtin`: overriding `Explore` with a cheaper `model` is a documented technique [^sub-agents-built-in-subagents]. Hence the `allow` option. `fork` is not a built-in agent name in the docs, so it is left out.
 - `settings-teammate-mode` and `settings-teammate-default-model` are here as agent teams config. The docs put `teammateMode` in `~/.claude/settings.json` [^agent-teams-choose-a-display-mode]. `teammateDefaultModel` is `error`, not a deprecation `warn`, because Claude Code ignores the value [^agent-teams-specify-teammates-and-models].

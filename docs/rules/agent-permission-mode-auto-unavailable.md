@@ -14,7 +14,7 @@ generated:
 
 📝 Do not set `permissionMode: auto` in a local agent when the settings turn auto mode off.
 
-⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
+💼 This rule is enabled in the following configs: ✅ `recommended`, 🔒 `strict`.
 
 <!-- end auto-generated rule header -->
 
@@ -71,7 +71,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [Usage](../../README.md#usage) in the README.
 
 ```js
-'claude/agent-permission-mode-auto-unavailable': 'warn'
+'claude/agent-permission-mode-auto-unavailable': 'error'
 ```
 
 ## Sources
