@@ -45,7 +45,7 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
     file('name: [unclosed\n', pluginAgent()),
     file('name: "-x:y"\n', pluginAgent()),
     // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`. The rule
-    // cannot read the fields, so it reports no missing field either.
+    // cannot read the fields, so it reports no absent field either.
     file('name: [unclosed\ndescription: d\n'),
     file('description: Use this when x. Context: y\n'),
     // Not an agent file.

@@ -43,7 +43,7 @@ The rule checks an agent file in `.claude/agents/`, at any depth. This also cove
 
 The rule does not report frontmatter that the strict YAML parser cannot read. The docs say that
 Claude Code skips a local agent with YAML that does not parse.[^skips] But Claude Code can read
-some YAML that the strict parser cannot, so the rule cannot say that Claude Code skips the file.
+some YAML that the strict parser cannot. So the rule cannot say that Claude Code skips the file.
 [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports it as a warning. The rule
 then checks no field, because it cannot read them.
 

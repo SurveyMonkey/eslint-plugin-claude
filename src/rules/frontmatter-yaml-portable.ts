@@ -44,7 +44,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notPortable' | 'notPortableNoL
           context.report({ node, messageId: 'notPortableNoLine', data: { reason } })
           return
         }
-        // Line 1 of the YAML text is the line after the opening `---`.
+        // Line 1 of the YAML text is the line after the first `---`.
         const line = String(context.sourceCode.getLoc(node).start.line + parsed.line)
         context.report({ node, messageId: 'notPortable', data: { reason, line } })
       },

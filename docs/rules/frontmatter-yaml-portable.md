@@ -41,16 +41,20 @@ cannot tell which YAML the parser of Claude Code reads. So it claims none of the
 These are frequent causes:
 
 - A plain value that holds `: `. Put the value in quotes.
-- A value that starts with `[` or `{` and has text after the closing bracket, such as
+- A value that starts with `[` or `{` and has text after the end bracket, such as
   `argument-hint: [n] [n]`. Put the value in quotes.
-- A `[` or a `{` that has no closing bracket.
+- A `[` or a `{` that has no end bracket.
 - A key that is in the block two times.
 - A tab as indentation.
 
-The rule reads the files that the rules of each kind read. These are an agent file in
-`.claude/agents/` or in the `agents/` directory of a plugin, a skill or a command file in
-`.claude/` or in a plugin, and an output style file in `.claude/output-styles/` or in a plugin. A
-plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere, such as
+The rule reads the files that the rules of each kind read:
+
+- An agent file in `.claude/agents/`, or in the `agents/` directory of a plugin.
+- A skill or a command file in `.claude/`, or in a plugin.
+- An output style file in `.claude/output-styles/`, or in the `output-styles/` directory of a
+  plugin.
+
+A plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere, such as
 `docs/SKILL.md`, gets no report. An agent file that the `agents` key of a plugin manifest names
 outside `agents/` is not in the globs, so the rule does not read it.
 
