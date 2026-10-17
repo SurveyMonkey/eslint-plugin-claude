@@ -22,6 +22,8 @@ markdownTester.run('output-style-frontmatter-valid', ruleOf('output-style-frontm
     // A block in a code fence is an example, and a whitespace-only block is empty.
     { code: '```yaml\n---\nname: x\n---\n```\n', filename: local },
     { code: '---\n  \n\n---\n\nAnswer in rhyme.\n', filename: local },
+    // A block of comments only sets no field, as an empty block.
+    file('# Owner: web\n'),
     file('name: [unclosed\n', '.claude/output-styles/nested/s.md'),
     file('name: [unclosed\n', 'docs/output-styles/s.md'),
     file('name: [unclosed\n', '.claude/other/s.md'),

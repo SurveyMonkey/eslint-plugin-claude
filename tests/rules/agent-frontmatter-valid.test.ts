@@ -106,6 +106,11 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
         },
       ],
     },
+    // A block of comments only sets no field, as an empty block.
+    {
+      ...file('# Owner: web\n'),
+      errors: [{ messageId: 'missingName' }, { messageId: 'missingDescription' }],
+    },
     // A whitespace-only block is an empty block.
     {
       code: '---\n  \n\n---\n\nBody.\n',

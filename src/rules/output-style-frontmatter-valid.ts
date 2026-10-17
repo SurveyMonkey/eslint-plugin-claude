@@ -46,8 +46,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' | 'invalidYaml' }> =
         }
       },
       yaml(node) {
-        // Empty frontmatter sets no field, and that is valid.
-        if (node.value.trim() !== '' && classifyFrontmatter(node.value).kind === 'not-mapping') {
+        // An empty block, or one of comments only, sets no field, and that is valid.
+        const parsed = classifyFrontmatter(node.value)
+        if (parsed.kind === 'not-mapping' && parsed.value !== null) {
           context.report({ node, messageId: 'invalidYaml' })
         }
       },

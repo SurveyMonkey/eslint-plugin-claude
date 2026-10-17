@@ -30,10 +30,11 @@ const file = (frontmatter: string, filename: string) => ({
 
 markdownTester.run('frontmatter-yaml-portable', ruleOf('frontmatter-yaml-portable'), {
   valid: [
-    // Valid frontmatter, an empty block and no block, in each kind of file.
+    // Valid frontmatter, an empty block, comments only and no block, in each kind of file.
     ...[agent, skill, command, style].flatMap((filename) => [
       file('name: s\ndescription: "Use this when x. Context: y"\n', filename),
       { code: '---\n---\n\nBody.\n', filename },
+      file('# Owner: web\n', filename),
       { code: '# Notes\n\nBody.\n', filename },
     ]),
     // A value that parses but is not a map is for the rule of each kind.
