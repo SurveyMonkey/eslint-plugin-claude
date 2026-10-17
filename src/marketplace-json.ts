@@ -27,7 +27,7 @@ export function lastMember(value: ValueNode | undefined, key: string): MemberNod
 
 /** The entries of `plugins` that are objects, in file order. A `plugins` value
  *  that is not an array, and an entry that is not an object, are not read. */
-export function pluginEntries(document: DocumentNode): ObjectNode[] {
+export function pluginEntries(document: Pick<DocumentNode, 'body'>): ObjectNode[] {
   const plugins = lastMember(document.body, 'plugins')?.value
   if (plugins?.type !== 'Array') {
     return []

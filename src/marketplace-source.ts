@@ -102,10 +102,11 @@ export function realSource(
 }
 
 /** Return a function that reads the source of an entry in `document`. `file`
- *  is the path of the `marketplace.json` that holds `document`. */
+ *  is the path of the `marketplace.json` that holds `document`. The reader
+ *  uses only the `body` of `document`, so a file on disk can give it too. */
 export function sourceReader(
   file: string,
-  document: DocumentNode,
+  document: Pick<DocumentNode, 'body'>,
 ): (entry: ObjectNode) => SourceRead {
   const root = path.dirname(path.dirname(path.resolve(file)))
   const realRoot = realOf(root)
