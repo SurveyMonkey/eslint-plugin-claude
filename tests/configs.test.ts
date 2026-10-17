@@ -1063,7 +1063,7 @@ const TREE: Record<string, string> = {
   'plugins/p/agents/versions.md': '---\nname: ver\ndescription: d\nomitClaudeMd: true\n---\n',
   'docs/agents/warn.md':
     '\uFEFF---\nname: Explore\ntools: CronCreate, Task\ndisallowedTools: Bash(x)\nomitClaudeMd: true\nmcpServers:\n  - pw:\n      command: npx\n---\n',
-  '.claude/output-styles/yaml.md': '---\nname: [unclosed\n---\n',
+  '.claude/output-styles/yaml.md': '---\n- name: list\n---\n',
   '.claude/output-styles/schema.md': '---\nforce-for-plugin: true\n---\n',
   'plugins/p/output-styles/forced.md': '---\nforce-for-plugin: true\n---\n',
   // The cross-file agent rules: one scope with settings, two agents of one name, a skill that

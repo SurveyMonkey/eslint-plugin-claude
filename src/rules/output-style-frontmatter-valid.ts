@@ -1,12 +1,13 @@
-// A style file with frontmatter that does not parse, or that is not at the
-// start of the file, loads under its file name with no field set
+// A style file with frontmatter that is not a map, or that is not at the start
+// of the file, loads under its file name with no field set
 // (docs/rules/output-style-frontmatter-valid.md). A style file without
-// frontmatter is valid, because each field is optional.
+// frontmatter is valid, because each field is optional. YAML that the strict
+// parser cannot read is for `frontmatter-yaml-portable`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyOutputStyle } from '../agent-files.ts'
 import { OUTPUT_STYLE_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
-import { parseFrontmatter } from '../frontmatter.ts'
+import { classifyFrontmatter } from '../frontmatter.ts'
 import { lateFrontmatter } from '../late-frontmatter.ts'
 
 const name = 'output-style-frontmatter-valid' as const
@@ -23,7 +24,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' | 'invalidYaml' }> =
       notFirst:
         'This frontmatter block does not start on line 1. Claude Code loads the style with no field set.',
       invalidYaml:
-        'The frontmatter is not YAML that gives a map of fields. Claude Code loads the style with no field set.',
+        'The frontmatter is YAML, but not a map of fields. Claude Code loads the style with no field set.',
     },
   },
   create(context) {
@@ -46,7 +47,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notFirst' | 'invalidYaml' }> =
       },
       yaml(node) {
         // Empty frontmatter sets no field, and that is valid.
-        if (node.value.trim() !== '' && parseFrontmatter(node.value) === null) {
+        if (node.value.trim() !== '' && classifyFrontmatter(node.value).kind === 'not-mapping') {
           context.report({ node, messageId: 'invalidYaml' })
         }
       },
