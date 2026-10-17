@@ -5,7 +5,7 @@
 // `readManifest`, with the repository of the marketplace as the bound
 // (ADR 001, Decision 14). With no `.git`, the bound is the marketplace root.
 import path from 'node:path'
-import { type DocumentNode, lastMember, type ObjectNode } from './marketplace-json.ts'
+import { lastMember, type MarketplaceBody, type ObjectNode } from './marketplace-json.ts'
 import { BARE_NAME, pathFault } from './rules/marketplace-relative-source-format.ts'
 import {
   danglingOf,
@@ -101,16 +101,15 @@ export function realSource(
   return real
 }
 
-/** Return a function that reads the source of an entry in `document`. `file`
- *  is the path of the `marketplace.json` that holds `document`. The reader
- *  uses only the `body` of `document`, so a file on disk can give it too. */
-export function sourceReader(
+/** Return a function that gives the path of the source of an entry in
+ *  `document`, from the marketplace root. The path is undefined when the
+ *  source is not a relative path. The function follows no link. `file` is the
+ *  path of the `marketplace.json` that holds `document`. */
+export function sourcePath(
   file: string,
-  document: Pick<DocumentNode, 'body'>,
-): (entry: ObjectNode) => SourceRead {
+  document: MarketplaceBody,
+): (entry: ObjectNode) => string | undefined {
   const root = path.dirname(path.dirname(path.resolve(file)))
-  const realRoot = realOf(root)
-  const bound = repositoryRoot(root)
   const configured = lastMember(lastMember(document.body, 'metadata')?.value, 'pluginRoot')?.value
   // A `pluginRoot` with a fault is for the format rule. A bare name under it is not read.
   const pluginRoot =
@@ -120,7 +119,24 @@ export function sourceReader(
   return (entry) => {
     const source = lastMember(entry, 'source')?.value
     const relative = source?.type === 'String' ? relativePath(source.value, pluginRoot) : undefined
-    if (relative === undefined) {
+    return relative === undefined ? undefined : path.resolve(root, relative)
+  }
+}
+
+/** Return a function that reads the source of an entry in `document`. `file`
+ *  is the path of the `marketplace.json` that holds `document`. The reader
+ *  uses only the `body` of `document`, so a file on disk can give it too. */
+export function sourceReader(
+  file: string,
+  document: MarketplaceBody,
+): (entry: ObjectNode) => SourceRead {
+  const root = path.dirname(path.dirname(path.resolve(file)))
+  const realRoot = realOf(root)
+  const bound = repositoryRoot(root)
+  const pathOf = sourcePath(file, document)
+  return (entry) => {
+    const dir = pathOf(entry)
+    if (dir === undefined) {
       return NOT_RELATIVE
     }
     // A marketplace root that is not on disk gives no answer for any source.
@@ -129,7 +145,6 @@ export function sourceReader(
     if (typeof realRoot !== 'string' || !isInside(realRoot, bound)) {
       return CANNOT_SEE
     }
-    const dir = path.resolve(root, relative)
     const real = realSource(root, realRoot, bound, dir)
     if (typeof real !== 'string') {
       return real

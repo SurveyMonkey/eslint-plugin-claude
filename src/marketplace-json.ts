@@ -25,9 +25,15 @@ export function lastMember(value: ValueNode | undefined, key: string): MemberNod
   return value.members.findLast((member) => keyOf(member.name) === key)
 }
 
+/** The top-level value of a `marketplace.json`, from the AST of the linted
+ *  file or from a file on disk. A file that does not parse has no `body`. */
+export interface MarketplaceBody {
+  readonly body?: ValueNode
+}
+
 /** The entries of `plugins` that are objects, in file order. A `plugins` value
  *  that is not an array, and an entry that is not an object, are not read. */
-export function pluginEntries(document: Pick<DocumentNode, 'body'>): ObjectNode[] {
+export function pluginEntries(document: MarketplaceBody): ObjectNode[] {
   const plugins = lastMember(document.body, 'plugins')?.value
   if (plugins?.type !== 'Array') {
     return []

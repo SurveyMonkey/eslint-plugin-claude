@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -171,23 +171,90 @@ describe('a directory that a marketplace lists with no manifest', () => {
     expect(isPluginRoot(repo('p'))).toBe(true)
     // A new size gives a new stamp, so the entry list is read again.
     market('.', [
-      { name: 'other', source: './other' },
+      { name: 'other', source: './q' },
       { name: 'more', source: './more' },
     ])
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    expect(isPluginRoot(repo('q'))).toBe(true)
+  })
+
+  it('shows an edit that keeps the size of the marketplace', () => {
+    mkdirSync(repo('p'))
+    mkdirSync(repo('q'))
+    const file = market('.', [{ name: 'p', source: './p' }])
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    market('.', [{ name: 'p', source: './q' }])
+    // A file system with a coarse clock can give the two writes one time. Set a time far apart.
+    utimesSync(file, new Date(2001, 0, 1), new Date(2001, 0, 1))
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    expect(isPluginRoot(repo('q'))).toBe(true)
+  })
+
+  it('is not a plugin root after the marketplace is removed, or stops to parse', () => {
+    mkdirSync(repo('p'))
+    const file = market('.', [{ name: 'p', source: './p' }])
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    rmSync(file)
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    market('.', [{ name: 'p', source: './p' }])
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    put(file, '{ "plugins": [')
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    expect(isPluginRoot(repo('p'))).toBe(false)
+  })
+
+  it('is not a plugin root when the entry sets a key that replaces a default location', () => {
+    market('.', [
+      { name: 'c', source: './c', commands: ['./x.md'] },
+      { name: 'a', source: './a', agents: './agents/' },
+      { name: 's', source: './s', skills: ['./skills/one'] },
+      { name: 'm', source: './m', mcpServers: { x: { command: 'x' } } },
+    ])
+    for (const dir of ['c', 'a', 's', 'm']) {
+      mkdirSync(repo(dir))
+    }
+    expect(isPluginRoot(repo('c'))).toBe(false)
+    expect(isPluginRoot(repo('a'))).toBe(false)
+    expect(isPluginRoot(repo('s'))).toBe(false)
+    // `mcpServers` merges with the default `.mcp.json`, so the default layout still loads.
+    expect(isPluginRoot(repo('m'))).toBe(true)
+  })
+
+  it('reads no marketplace above the repository root', () => {
+    put(
+      path.join(scratch, '.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ plugins: [{ name: 'p', source: './repo/p' }] }),
+    )
+    mkdirSync(repo('p'))
     expect(isPluginRoot(repo('p'))).toBe(false)
   })
 })
 
 describe.skipIf(process.platform === 'win32')('a listed source that is a link', () => {
-  it('is not a plugin root when the link leads out of the repository', () => {
+  it('is unseen when the link leads out of the repository', () => {
     put(
       repo('.claude-plugin', 'marketplace.json'),
       JSON.stringify({ plugins: [{ name: 'p', source: './p' }] }),
     )
     mkdirSync(outside('p'))
     symlinkSync(outside('p'), repo('p'))
-    expect(isPluginRoot(repo('p'))).toBe(false)
+    mkdirSync(repo('q'))
+    // The check cannot see the source, so it cannot tell if `p` is a plugin root.
+    expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
+    // No entry has the path of `q`.
+    expect(isPluginRoot(repo('q'))).toBe(false)
     expect(isPluginRoot(outside('p'))).toBe(false)
+  })
+
+  it('is unseen when the marketplace is a dangling link, or a link out of the repository', () => {
+    mkdirSync(repo('.claude-plugin'))
+    mkdirSync(repo('p'))
+    symlinkSync('missing.json', repo('.claude-plugin', 'marketplace.json'))
+    expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
+    rmSync(repo('.claude-plugin', 'marketplace.json'))
+    put(outside('m.json'), JSON.stringify({ plugins: [{ name: 'p', source: './p' }] }))
+    symlinkSync(outside('m.json'), repo('.claude-plugin', 'marketplace.json'))
+    expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
   })
 
   it('is a plugin root at the target when the link stays in the marketplace', () => {
@@ -199,5 +266,30 @@ describe.skipIf(process.platform === 'win32')('a listed source that is a link', 
     symlinkSync(repo('shared', 'p'), repo('p'))
     expect(isPluginRoot(repo('p'))).toBe(true)
     expect(isPluginRoot(repo('shared', 'p'))).toBe(true)
+  })
+})
+
+describe.skipIf(chmodCannotBlock)('a marketplace or a source that the check cannot read', () => {
+  const listing = JSON.stringify({ plugins: [{ name: 'p', source: './plugins/p' }] })
+
+  it('is unseen when the marketplace cannot be read, and a root when it can again', () => {
+    const file = put(repo('.claude-plugin', 'marketplace.json'), listing)
+    mkdirSync(repo('plugins', 'p'), { recursive: true })
+    withoutAccess(file, () => {
+      expect(isPluginRoot(repo('plugins', 'p'))).toBe(UNREADABLE)
+    })
+    expect(isPluginRoot(repo('plugins', 'p'))).toBe(true)
+  })
+
+  it('reads a source again that the check could not see before', () => {
+    put(repo('.claude-plugin', 'marketplace.json'), listing)
+    mkdirSync(repo('plugins', 'p'), { recursive: true })
+    mkdirSync(repo('q'))
+    // The check of `q` reads the marketplace while `plugins/` cannot be searched. No entry has
+    // the path of `q`, so it is not a plugin root.
+    withoutAccess(repo('plugins'), () => {
+      expect(isPluginRoot(repo('q'))).toBe(false)
+    })
+    expect(isPluginRoot(repo('plugins', 'p'))).toBe(true)
   })
 })
