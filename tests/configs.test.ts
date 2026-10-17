@@ -3338,7 +3338,11 @@ const MCP_RULES: {
   { name: 'mcp-stdio-relative-path', files: ['**/.mcp.json'], severity: 'warn' },
   // The warn rules of the URL and the policy lists.
   { name: 'mcp-allowlist-empty', files: MANAGED_FILES, severity: 'warn' },
-  { name: 'mcp-insecure-url', files: ['**/.mcp.json'], severity: 'warn' },
+  {
+    name: 'mcp-insecure-url',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
   {
     name: 'mcp-plugin-stdio-reach',
     files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],

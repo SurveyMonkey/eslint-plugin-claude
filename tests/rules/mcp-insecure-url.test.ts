@@ -1,6 +1,7 @@
 // A plain `http://` or `ws://` URL to a host that is not on the machine sends the traffic in
 // clear text. `claude plugin validate` warns for plugin MCP configs (manifest reference,
-// "Validate the manifest"). The rule reads the project `.mcp.json` only.
+// "Validate the manifest"). The rule reads the servers of the project `.mcp.json` only. It also
+// reads the MCP bundle string of a plugin manifest, which validate passes with `http://`.
 import { expect, it } from 'vitest'
 import {
   ids,
@@ -125,4 +126,62 @@ it('leaves plugin configs to claude plugin validate', () => {
 })
 it('does not read a path under .claude/', () => {
   expect(ids(lintProject(NAME, at('http://example.com'), '.claude/.mcp.json'))).toEqual([])
+})
+
+const bundle = (declared: unknown) => JSON.stringify({ mcpServers: declared })
+
+it('reports an http:// bundle URL in a plugin manifest, on the string', () => {
+  const found = lintManifest(NAME, bundle('http://example.com/db.mcpb'))
+  expect(ids(found)).toEqual(['insecureBundle'])
+  expect(found[0]).toMatchObject({ line: 1, column: 15, endColumn: 43 })
+  expect(found[0]?.message).toBe(
+    'The MCP bundle URL points to example.com over http://, so a download of the bundle goes in clear text. Use a path inside the plugin or an https:// URL.',
+  )
+})
+it('names the bundle host without the port, the trailing dot or the letter case', () => {
+  const found = lintManifest(NAME, bundle('HTTP://Example.COM.:8080/db.mcpb'))
+  expect(ids(found)).toEqual(['insecureBundle'])
+  expect(found[0]?.message).toContain('points to example.com over http://,')
+})
+it('reports the http:// item of a bundle array once, and not the path item', () => {
+  const found = lintManifest(NAME, bundle(['./servers/db.mcpb', 'http://example.com/db.mcpb']))
+  expect(ids(found)).toEqual(['insecureBundle'])
+  expect(found[0]).toMatchObject({ line: 1, column: 36, endColumn: 64 })
+})
+it('reports the last mcpServers member of a manifest', () => {
+  const last = '{"mcpServers": "https://x.test/db.mcpb", "mcpServers": "http://x.test/db.mcpb"}'
+  expect(ids(lintManifest(NAME, last))).toEqual(['insecureBundle'])
+  const first = '{"mcpServers": "http://x.test/db.mcpb", "mcpServers": "https://x.test/db.mcpb"}'
+  expect(ids(lintManifest(NAME, first))).toEqual([])
+})
+it('stays silent for a bundle path, an https:// URL and a ws:// URL', () => {
+  for (const declared of [
+    './servers/db.mcpb',
+    'servers/db.dxt',
+    'https://example.com/db.mcpb',
+    'ws://example.com/db.mcpb',
+    'ftp://example.com/db.mcpb',
+    'http://',
+  ]) {
+    expect(ids(lintManifest(NAME, bundle(declared)))).toEqual([])
+  }
+})
+it('stays silent for a loopback bundle host and a bundle host with a variable', () => {
+  for (const declared of [
+    'http://localhost/db.mcpb',
+    'http://127.0.0.1:8080/db.mcpb',
+    'http://[::1]/db.mcpb',
+    `http://\${HOST}/db.mcpb`,
+  ]) {
+    expect(ids(lintManifest(NAME, bundle(declared)))).toEqual([])
+  }
+})
+it('stays silent for an empty, null, empty array or inline mcpServers in a manifest', () => {
+  for (const declared of ['', null, [], {}, [{ a: { type: 'http', url: 'http://x.test' } }]]) {
+    expect(ids(lintManifest(NAME, bundle(declared)))).toEqual([])
+  }
+  expect(ids(lintManifest(NAME, '{"name": "p"}'))).toEqual([])
+})
+it('does not read a plugin.json outside .claude-plugin/', () => {
+  expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), 'p/plugin.json'))).toEqual([])
 })

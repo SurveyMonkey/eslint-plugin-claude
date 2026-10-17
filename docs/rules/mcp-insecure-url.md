@@ -1,13 +1,13 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-insecure-url, which reports a remote MCP server in a project .mcp.json whose url uses http:// or ws:// to a host that is not on the machine, because the traffic goes in clear text.
+description: The ESLint rule claude/mcp-insecure-url, which reports a remote MCP server in a project .mcp.json whose url uses http:// or ws:// to a host that is not on the machine, and an http:// MCP bundle URL in a plugin.json, because the traffic goes in clear text.
 owner: brianespinosa
 created: 2026-10-10
-related_issues: [16]
+related_issues: [16, 43]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 ---
 
 # claude/mcp-insecure-url
@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| security | `**/.mcp.json` |
+| security | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 
@@ -30,8 +30,8 @@ Use `https://` or `wss://` for a host that is not on the machine.
 `claude plugin validate` checks each MCP server entry that a plugin declares, in its `.mcp.json`,
 in a `.json` file that `mcpServers` names, or inline in `plugin.json`. It warns about an `http://`
 or `ws://` URL to a host that is not loopback. This check needs Claude Code v2.1.281 or later.[^validate]
-So the rule reads the project `.mcp.json` only. It makes no report for a plugin `.mcp.json` or for
-the servers of a `plugin.json`.
+So the rule reads the servers of the project `.mcp.json` only. It makes no report for a plugin
+`.mcp.json` or for the servers of a `plugin.json`.
 
 The rule reports a server whose `type` is `http`, `streamable-http`, `sse` or `ws`, and whose
 `url` has the scheme `http` or `ws`. The report is on the `url`. The scheme and the host match
@@ -47,6 +47,19 @@ The rule makes no report in these cases:
 
 Of two servers with one name, or two keys with one name, the last one counts, as `JSON.parse`
 keeps it. The rule skips the paths under `.claude/`, which `mcp-json-location` reports.
+
+### MCP bundle URL
+
+The `mcpServers` key of `.claude-plugin/plugin.json` also takes the path or URL of an MCP bundle,
+a `.mcpb` or `.dxt` file. The value is a string, or a string item of an array. Claude Code
+downloads a bundle URL.[^mcpservers] The docs ask for "a path inside the plugin or an `https://`
+URL".[^mcpb] `claude plugin validate` passes an `http://` bundle URL with no warning (Claude Code
+2.1.302). So the rule reports an `http://` bundle URL to a host that is not on the machine. The
+report is on the string.
+
+A path, an `https://` URL and an inline map get no report. A loopback host and a host with a `${`
+reference get no report, for the reasons of the server case. The rule reads only the last
+`mcpServers` member.
 
 Fail:
 
@@ -69,6 +82,24 @@ Pass:
 }
 ```
 
+Fail, in `.claude-plugin/plugin.json`:
+
+```json
+{
+  "name": "db-plugin",
+  "mcpServers": "http://downloads.example.com/db.mcpb"
+}
+```
+
+Pass:
+
+```json
+{
+  "name": "db-plugin",
+  "mcpServers": ["./servers/db.mcpb", "https://downloads.example.com/db.mcpb"]
+}
+```
+
 ## Usage
 
 Put the rule in `rules`, in the config block that extends `claude/recommended`. See
@@ -81,3 +112,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^validate]: [Plugin manifest reference: Validate the manifest](https://code.claude.com/docs/en/plugins/manifest-reference#validate-the-manifest)
+[^mcpservers]: [Plugin manifest reference: mcpServers](https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers)
+[^mcpb]: [Add components to a plugin: Include a packaged MCPB server](https://code.claude.com/docs/en/plugins/components#include-a-packaged-mcpb-server)
