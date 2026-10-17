@@ -7,7 +7,7 @@ related_issues: [16]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-17T00:00:00Z
+  at: 2026-10-17T19:50:00Z
 ---
 
 # claude/mcp-oauth-transport
@@ -31,8 +31,8 @@ with no `type` is a stdio server.
 The rule reports an `oauth` object on a server whose `type` is `stdio`, `ws` or absent. The report
 is on the `oauth` key. The rule makes no report for `http`, `streamable-http` or `sse`. It also
 makes no report for a `type` that is not a string, or for an `oauth` value that is not an
-object. The rule `mcp-server-schema` reports such a `type` in a project file. No rule reports such
-an `oauth` value.
+object. The rule `mcp-server-schema` reports such a `type` in a project file, and `claude plugin
+validate` reports it in a plugin. No rule reports such an `oauth` value.
 
 The rule reads the `mcpServers` object of a project `.mcp.json` and of a plugin `.mcp.json`. A plugin
 file may omit that wrapper. Then the rule reads the top-level names of the file. Of two servers
