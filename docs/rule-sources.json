@@ -293,6 +293,23 @@
       "hash": "0bd4a81dbb595fc75c796fc6d798cf088427bffd90a6ec3597f8baef574632b5"
     }
   ],
+  "agent-permission-mode-auto-unavailable": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Permission modes",
+      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "disableAutoMode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "Which mode a session starts in",
+      "hash": "31afcf301bb31ec53df9202e5bcafb5d13ed08ac7ac8ff22cc84644b8789125d"
+    }
+  ],
   "agent-permission-mode-bypass": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",

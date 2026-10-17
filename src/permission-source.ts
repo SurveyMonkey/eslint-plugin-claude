@@ -139,7 +139,7 @@ export function hasPreToolUseHook(objects: readonly SettingsObject[]): boolean {
 
 /** The places of the lock that turns auto mode off, as the docs give them
  *  (https://code.claude.com/docs/en/settings-reference#disableautomode). */
-const AUTO_MODE_LOCKS = [['disableAutoMode'], ['permissions', 'disableAutoMode']]
+export const AUTO_MODE_LOCKS = [['disableAutoMode'], ['permissions', 'disableAutoMode']]
 
 /** True when a file of the managed source `objects` turns auto mode off. The docs lock is
  *  "disable". A value that Claude Code cannot read also reads as the restrictive value, and only

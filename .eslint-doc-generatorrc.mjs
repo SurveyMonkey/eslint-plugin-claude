@@ -66,6 +66,7 @@ const GROUPS = [
       'agent-omit-claude-md-main',
       'agent-model-forced',
       'agent-teams-no-project-config',
+      'agent-permission-mode-auto-unavailable',
       'output-style-frontmatter-valid',
       'output-style-frontmatter-schema',
       'agent-disallowed-tools-scope',
