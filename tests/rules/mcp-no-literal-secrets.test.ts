@@ -1,10 +1,11 @@
 // A credential written into a committed MCP config is in the repository. The MCP page allows
 // `${VAR}` in `env`, `args`, `url` and `headers`, and `managed-mcp.json` says not to store
 // credentials in `env` blocks. `claude plugin validate` warns about a header value that looks like a
-// literal credential in a plugin MCP config. The rule reads the other cases.
+// literal credential in the MCP config of a plugin with a manifest. The rule reads the other cases.
 import { expect, it } from 'vitest'
 import {
   ids,
+  lintListedPluginFile,
   lintManifest,
   lintPluginFile,
   lintProject,
@@ -86,6 +87,11 @@ it('reports env, args and url in a plugin file, and not the headers', () => {
     'secret',
   ])
   expect(ids(lintPluginFile(NAME, remote({ Authorization: 'Bearer abc123' })))).toEqual([])
+})
+it('reports the headers in a plugin with no manifest, which claude plugin validate fails', () => {
+  expect(ids(lintListedPluginFile(NAME, remote({ Authorization: 'Bearer abc123' })))).toEqual([
+    'secret',
+  ])
 })
 it('reports the servers of a manifest, on the path for a declared file', () => {
   const inline = JSON.stringify({

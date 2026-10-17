@@ -2,7 +2,8 @@
 // (docs/rules/mcp-no-literal-secrets.md). The MCP page expands `${VAR}` in these fields, and the
 // managed MCP page says not to store credentials in `env` blocks. `claude plugin validate`
 // already warns about a header value that looks like a literal credential in a plugin MCP config.
-// So the rule reads `headers` in a project file and in `managed-mcp.json`, and not in a plugin.
+// So the rule reads `headers` in a project file, in `managed-mcp.json`, and in a plugin with no
+// `plugin.json`, which validate does not read. It does not read them in a plugin with a manifest.
 // The docs name no credential format. So a credential is a literal value under a name that ends
 // in a credential word (a heuristic). The docs list no `oauth` key for a secret, so the rule does not read `oauth`. A message never holds
 // the value.
@@ -12,6 +13,7 @@ import { HELPER_CREDENTIAL_WORDS } from '../data/mcp-credential-vars.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
 import { lastMembers, lintedServers, mcpFileKind } from '../mcp-servers.ts'
+import { hasManifest } from '../plugin-root.ts'
 
 const name = 'mcp-no-literal-secrets' as const
 
@@ -99,9 +101,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'secret' }> = {
   },
   create(context) {
     // `validate` warns about a header value in a plugin file. A manifest holds plugin servers.
+    // `validate` fails a plugin with no `plugin.json` (v2.1.302), so the rule reads its headers.
     const plugin =
       path.basename(context.filename) === 'plugin.json' ||
-      mcpFileKind(context.filename) === 'plugin'
+      (mcpFileKind(context.filename) === 'plugin' &&
+        hasManifest(path.dirname(path.resolve(context.filename))) === true)
     return {
       Document(node) {
         for (const server of lintedServers(context.filename, node.body)) {

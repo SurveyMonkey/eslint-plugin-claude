@@ -117,6 +117,43 @@ describe(RULE, () => {
     expect(run({ dev: 'claude --plugin-dir .' }, files)).toEqual([])
   })
 
+  // With no `plugin.json`, a `"."` entry makes the marketplace root a plugin. `--plugin-dir` does
+  // not read `marketplace.json`, so only a marketplace with no other entry loses no plugin.
+  const listing = (...sources: unknown[]) =>
+    JSON.stringify({
+      name: 'm',
+      owner: { name: 'o' },
+      plugins: sources.map((source, index) => ({ name: `p${index}`, source })),
+    })
+  check('stays silent for a marketplace root whose only entry is the root itself', () => {
+    expect(
+      run({ dev: 'claude --plugin-dir .' }, { '.claude-plugin/marketplace.json': listing('.') }),
+    ).toEqual([])
+    expect(
+      run(
+        { dev: 'claude --plugin-dir .' },
+        { '.claude-plugin/marketplace.json': listing('.', './') },
+      ),
+    ).toEqual([])
+  })
+
+  check('reports a marketplace root that lists itself and another plugin', () => {
+    const files = {
+      '.claude-plugin/marketplace.json': listing('.', './plugins/p'),
+      'plugins/p/x.md': '',
+    }
+    expect(texts(run({ dev: 'claude --plugin-dir .' }, files))).toEqual([message('dev', '.')])
+    const remote = {
+      '.claude-plugin/marketplace.json': listing('.', { source: 'github', repo: 'o/r' }),
+    }
+    expect(texts(run({ dev: 'claude --plugin-dir .' }, remote))).toEqual([message('dev', '.')])
+  })
+
+  check('reports a marketplace root whose entries name a folder that is not there', () => {
+    const files = { '.claude-plugin/marketplace.json': listing('./plugins/gone') }
+    expect(texts(run({ dev: 'claude --plugin-dir .' }, files))).toEqual([message('dev', '.')])
+  })
+
   check('stays silent for the plugin folder under a marketplace root', () => {
     const files = {
       '.claude-plugin/marketplace.json': MARKET,

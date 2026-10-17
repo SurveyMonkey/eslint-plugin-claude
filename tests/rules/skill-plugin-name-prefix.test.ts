@@ -32,6 +32,10 @@ const numericSkill = put('numeric/skills/s/SKILL.md', '')
 const blankSkill = put('blank/skills/s/SKILL.md', '')
 const spacesSkill = put('spaces/skills/s/SKILL.md', '')
 const nullSkill = put('nul/skills/s/SKILL.md', '')
+// A plugin with no manifest that its own marketplace lists. Its name comes from the entry, or from
+// the directory with `--plugin-dir`.
+put('self/.claude-plugin/marketplace.json', '{"plugins": [{"name": "entry", "source": "."}]}')
+const listedSkill = put('self/skills/s/SKILL.md', '')
 const command = put('plug/commands/c.md', '')
 // A file with this name below `commands/` is a command file, not a skill.
 const commandNamedSkill = put('plug/commands/SKILL.md', '')
@@ -81,6 +85,9 @@ markdownTester.run('skill-plugin-name-prefix', ruleOf('skill-plugin-name-prefix'
     { code: named('"  :fancy"'), filename: spacesSkill, options: BEFORE_FIX },
     // A `null` name is present and unusable, so the directory name is not the prefix.
     { code: named('nul:fancy'), filename: nullSkill, options: BEFORE_FIX },
+    // With no manifest, the plugin name has two sources, so the prefix is not known.
+    { code: named('self:fancy'), filename: listedSkill, options: BEFORE_FIX },
+    { code: named('entry:fancy'), filename: listedSkill, options: BEFORE_FIX },
     // Not a skill file.
     { code: named('my-plugin:fancy'), filename: decoy, options: BEFORE_FIX },
   ],

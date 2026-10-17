@@ -43,13 +43,16 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'doubled'
     }
     const root = scopeRoot(context.filename, file)
     const manifest = readManifest(root, repositoryRoot(root))
-    // A manifest that the rule cannot read can hold any name.
-    if (manifest === UNREADABLE) {
+    // A manifest that the rule cannot read can hold any name. With no manifest, the name comes
+    // from the marketplace entry, or from the directory name with `--plugin-dir`
+    // (https://code.claude.com/docs/en/plugins/manifest-reference#manifest-file). So the prefix
+    // is not known.
+    if (manifest === UNREADABLE || manifest === null) {
       return {}
     }
     // The prefix is the manifest `name`, or the directory name when the manifest has none. A
     // `name` that is not a text value, or is blank, leaves the prefix unknown.
-    const declared = manifest?.name
+    const declared = manifest.name
     if (declared !== undefined && (typeof declared !== 'string' || declared.trim() === '')) {
       return {}
     }
