@@ -57,8 +57,8 @@ name, the last one counts, as `JSON.parse` keeps it.
 In a plugin, the rule reports one fault only: a `url` with no `type`, in an entry with a good stdio
 shape. That entry has a `command` that is not empty, and `args` of strings. `claude plugin
 validate` 2.1.302 passes that entry, but Claude Code skips it.[^http] Validate reports each other
-fault of a plugin entry that Claude Code drops at load, and a remote `url` that is not a valid
-absolute URL.[^validate] [^plugin] The rule reads a plugin `.mcp.json`, and the inline servers of
+fault that makes Claude Code drop a plugin entry at load. It also reports a remote `url` that is
+not a valid absolute URL.[^validate] [^plugin] The rule reads a plugin `.mcp.json`, and the inline servers of
 `plugin.json`. It also reads the servers of each `.json` file that `mcpServers` names, and puts
 the report on that path in `plugin.json`. A directory counts as a plugin root when it holds
 `.claude-plugin/plugin.json`. The rule makes no report for a `.mcp.json` when it cannot read that

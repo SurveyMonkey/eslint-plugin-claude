@@ -138,8 +138,8 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     // A plugin has no `managed-mcp.json` component, and `claude plugin validate` 2.1.302 does not
     // read the file. So the rule reads it in all directories. Its map is the `mcpServers` object.
     const managed = base === 'managed-mcp.json'
-    // A manifest holds plugin servers. A `.mcp.json` path that Claude Code never reads gets no
-    // report.
+    // A manifest holds plugin servers. A `.mcp.json` gets no report when Claude Code never reads
+    // its path, or when the rule cannot read its directory.
     let kind: McpFileKind | null = 'project'
     if (!managed) {
       kind = base === 'plugin.json' ? 'plugin' : mcpFileKind(context.filename)
