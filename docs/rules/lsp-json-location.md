@@ -49,8 +49,10 @@ cannot read a plugin root, for example when `.claude-plugin/` is a link out of t
 plugin root is then not known. When no `.git` is at or above the file, the repository root is the
 folder of the file, and the rule reads no folder above it.
 
-The manifest of a plugin is optional.[^manifest] A plugin with no `.claude-plugin/plugin.json`
-gets a false report. This is a limit of the heuristic.
+The manifest of a plugin is optional.[^manifest] A directory with no
+`.claude-plugin/plugin.json` is a plugin root when a `.claude-plugin/marketplace.json` at or above
+it lists it. A plugin with no manifest that no marketplace of the repository lists gets a false
+report. This is a limit of the heuristic.
 
 Fail:
 
