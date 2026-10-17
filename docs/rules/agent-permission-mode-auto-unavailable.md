@@ -24,15 +24,16 @@ generated:
 
 ## Rule details
 
-Auto mode is not always available to a subagent. Then `permissionMode: auto` has no effect,
-and the subagent keeps the permission mode of the main conversation. A settings file that sets
-`disableAutoMode` is one such case.[^modes] The lock takes the string `"disable"`, at the top
-level or in `permissions`.[^auto] The lock applies when any settings file sets it.[^start]
+Auto mode is not always available to a subagent. When it is not, `permissionMode: auto` has no
+effect, and the subagent keeps the permission mode of the main conversation. A settings file
+that sets `disableAutoMode` is one such case.[^modes] The lock takes the string `"disable"`, at
+the top level or in `permissions`.[^auto] The lock applies when any settings file sets it.[^start]
 
 The rule reports the `permissionMode` value of a local agent in `.claude/agents/`. It reports when
 `.claude/settings.json` or `.claude/settings.local.json` sets `disableAutoMode` or
 `permissions.disableAutoMode` to `"disable"`. The message names the key that sets the lock. When
-both keys set it, the message names the top-level key. The rule makes one report for each file.
+both keys set it, the message names the top-level key. The rule makes one report for each agent
+file.
 
 The rule does not report another value of the lock, such as `true`. Claude Code rejects that
 value, and the lock does not apply.
@@ -48,10 +49,10 @@ repository does not show which models support auto mode, so the rule does not ch
 The rule reports local agents only. Claude Code ignores `permissionMode` in a plugin agent, and
 [`agent-plugin-ignored-fields`](agent-plugin-ignored-fields.md) reports the field there.
 
-The rule makes no report that rests on a settings file that it cannot see. These files add
-nothing: a file that the rule cannot read, and a link to a file that is not there. A file with a
-real path out of the repository adds nothing too. So does a file that does not parse to an
-object. A file that is not there adds nothing.
+The rule makes no report that rests on a settings file that it cannot see. A file that the rule
+cannot read adds nothing, and so does a link to a file that is not there. A file with a real path
+out of the repository adds nothing too. So does a file that does not parse to an object. A
+settings file that is not there adds nothing.
 
 Fail, with `{"permissions": {"disableAutoMode": "disable"}}` in `.claude/settings.json`:
 

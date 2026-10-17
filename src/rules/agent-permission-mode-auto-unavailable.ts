@@ -16,7 +16,8 @@ const name = 'agent-permission-mode-auto-unavailable' as const
  *  does not merge them. A file that is not there, or that the rule cannot read, adds
  *  nothing (ADR 001, Decision 14). */
 function settingsFiles(dir: string): Record<string, unknown>[] {
-  // `readSiblingSettings` gives the other project file of the file that it gets.
+  // `readSiblingSettings` reads the other settings file of the same `.claude/` directory, not the
+  // file that it gets. So each call reads one file.
   return [
     ...readSiblingSettings(path.join(dir, 'settings.local.json')),
     ...readSiblingSettings(path.join(dir, 'settings.json')),

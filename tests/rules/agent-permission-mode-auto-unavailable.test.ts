@@ -63,8 +63,8 @@ describe('agent-permission-mode-auto-unavailable', () => {
     expect(messages).toHaveLength(1)
   })
 
-  // Claude Code locks auto mode when any settings file sets the lock. Lists in `permissions`
-  // merge across files, so a local `permissions` object does not hide the project lock.
+  // Claude Code locks auto mode when any settings file sets the lock. So a local `permissions`
+  // object does not hide the project lock.
   it('reports when the local file sets other permissions', () => {
     const messages = run({
       '.claude/settings.json': inner('disable'),
@@ -98,7 +98,9 @@ describe('agent-permission-mode-auto-unavailable', () => {
 
   it('reports a quoted auto', () => {
     const files = { '.claude/settings.json': top('disable') }
-    expect(run(files, agent('permissionMode: "auto"\n'))).toHaveLength(1)
+    expect(run(files, agent('permissionMode: "auto"\n'))).toMatchObject([
+      { line: 4, column: 17, endColumn: 23 },
+    ])
   })
 
   describe('stays silent', () => {
@@ -124,12 +126,17 @@ describe('agent-permission-mode-auto-unavailable', () => {
     })
     // `permissions-disable-mode-value` reports these values. Claude Code rejects them, and
     // the lock does not apply.
-    for (const value of [true, 'true', 'Disable', 1, null]) {
+    for (const value of [true, 'true', 'Disable', 1]) {
       it(`when disableAutoMode is ${JSON.stringify(value)}`, () => {
         expect(run({ '.claude/settings.json': top(value) })).toEqual([])
         expect(run({ '.claude/settings.json': inner(value) })).toEqual([])
       })
     }
+    // A null value removes the key (docs/rules/permissions-disable-mode-value.md).
+    it('when disableAutoMode is null', () => {
+      expect(run({ '.claude/settings.json': top(null) })).toEqual([])
+      expect(run({ '.claude/settings.json': inner(null) })).toEqual([])
+    })
     it('when the lock is under another key', () => {
       const settings = JSON.stringify({ sandbox: { disableAutoMode: 'disable' } })
       expect(run({ '.claude/settings.json': settings })).toEqual([])
