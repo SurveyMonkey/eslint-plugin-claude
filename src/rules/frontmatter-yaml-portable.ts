@@ -1,7 +1,8 @@
 // Frontmatter that the strict `yaml` parser cannot read, in a subagent, skill, command or output
-// style file. Each kind is found as the rules of that kind find it. Claude Code can
-// load some of these files (issue #288), so the message claims nothing about Claude Code. It
-// says that other tools cannot read the YAML (docs/rules/frontmatter-yaml-portable.md).
+// style file. The rule finds each kind with the classifier of the rules of that kind. A plugin
+// agent that the manifest names outside `agents/` is not in the globs. Claude Code can load some
+// of these files (issue #288), so the message claims nothing about Claude Code. It says that
+// other tools cannot read the YAML (docs/rules/frontmatter-yaml-portable.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted, classifyOutputStyle } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'

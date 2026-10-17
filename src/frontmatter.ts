@@ -6,7 +6,7 @@ import { isMap, isScalar, type Node, parse, parseDocument, YAMLParseError } from
 /** What the strict `yaml` parser makes of the text of a frontmatter block. An
  *  empty block, and a block of comments only, give `not-mapping` with the value
  *  null. A parse error gives the first error, and the line of the text where it
- *  starts. An alias that the parser cannot resolve has no line. */
+ *  starts. An error of alias resolution, such as an alias with no anchor, has no line. */
 export type FrontmatterParse =
   | { kind: 'mapping'; data: Record<string, unknown> }
   | { kind: 'not-mapping'; value: unknown }
@@ -20,8 +20,8 @@ export function classifyFrontmatter(text: string): FrontmatterParse {
     // With no pretty errors, the message has no position and no copy of the text.
     value = parse(text, { prettyErrors: false })
   } catch (error) {
-    // `parse` throws a YAMLParseError, with an offset, for text that does not parse. It throws
-    // a ReferenceError, with no offset, for an alias that it cannot resolve.
+    // `parse` throws a YAMLParseError, with an offset, for text that does not parse. It throws a
+    // ReferenceError, with no offset, for an alias that it cannot resolve, or for too many aliases.
     const line =
       error instanceof YAMLParseError ? text.slice(0, error.pos[0]).split('\n').length : null
     return { kind: 'error', message: (error as Error).message, line }

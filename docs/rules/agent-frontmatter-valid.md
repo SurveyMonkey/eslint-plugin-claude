@@ -55,7 +55,8 @@ say what a plugin agent with other faults does. So the rule does not check plugi
 A file with no frontmatter at all, such as `.claude/agents/README.md`, is not a report. The docs
 say that Claude Code keeps such a file as documentation beside the agents. A frontmatter block
 with no `name`, such as `title: Agents`, is a report, because the rule cannot tell it from an
-agent file that lacks its `name`. A block below line 1 is
+agent file that lacks its `name`. An empty block, or a block of comments only, gets the reports
+for no `name` and no `description`. A block below line 1 is
 a report only when it holds a subagent field. A value that is not a string, such as `name: 123`, is
 a fault for [`agent-frontmatter-schema`](agent-frontmatter-schema.md).
 

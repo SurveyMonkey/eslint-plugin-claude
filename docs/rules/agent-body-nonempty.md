@@ -50,7 +50,7 @@ The rule is silent in these cases:
 - The body has text. A heading, a comment or a code block is text.
 - The file has no frontmatter, or the frontmatter does not parse. No rule reports a file with no
   frontmatter. The rule [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports
-  frontmatter that does not parse.
+  frontmatter that does not parse, in a file below `agents/`.
 - The file is not an agent file, such as `docs/agents/a.md`.
 
 Fail:

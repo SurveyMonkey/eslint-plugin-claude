@@ -36,8 +36,8 @@ silently loses it. The rule reports two faults:
   reads frontmatter only from line 1.[^glossary] The docs do not say what a late block does. The rule
   infers that the style loads with no field set.
 
-A style file with no frontmatter is valid, and so is an empty block, because each field is
-optional.[^osfields]
+A style file with no frontmatter is valid, and so is an empty block or a block of comments only,
+because each field is optional.[^osfields]
 
 The rule does not report frontmatter that the strict YAML parser cannot read. Claude Code can read
 some YAML that the strict parser cannot.

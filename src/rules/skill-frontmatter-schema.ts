@@ -122,7 +122,7 @@ const rule: MarkdownRuleDefinition<{
           return
         }
         if (parsed.kind === 'not-mapping') {
-          // `claude plugin validate` reports this value in a plugin file.
+          // `claude plugin validate` 2.1.302 reports this value in a plugin file (rule doc).
           if (!file.plugin) {
             context.report({ node, messageId: 'notMapping' })
           }
