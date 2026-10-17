@@ -771,6 +771,33 @@
       "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
     }
   ],
+  "frontmatter-yaml-portable": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Frontmatter reference",
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Subagent files Claude Code skips",
+      "hash": "7b617474ff3500aacc38963445f493a128262616557ef8a4f9838ea1306507c3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Frontmatter reference",
+      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-directory",
+      "heading": "Frontmatter fields by file",
+      "hash": "ad9df6d7413af0f762173c8e133754b61333e4065d3794d3871b72305286ac5d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/output-styles",
+      "heading": "Frontmatter reference",
+      "hash": "0c633483f15c113851fb05cf3be8e3496b4bdea494ebc6b794a208978a37703b"
+    }
+  ],
   "hooks-agent-stop-event": [
     {
       "url": "https://code.claude.com/docs/en/hooks",

@@ -81,6 +81,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'claude-md-procedure-to-skill',
     'claude-md-symlink',
     'command-legacy-format',
+    'frontmatter-yaml-portable',
     'hooks-agent-stop-event',
     'hooks-agent-type-experimental',
     'hooks-async-on-blocking-event',

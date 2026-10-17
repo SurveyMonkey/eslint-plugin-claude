@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 ---
 
 # claude/agent-body-nonempty
@@ -48,9 +48,9 @@ read gives no report for a file outside `agents/`. The rule reads no file out of
 The rule is silent in these cases:
 
 - The body has text. A heading, a comment or a code block is text.
-- The file has no frontmatter, or the frontmatter does not parse. No rule reports a file with no
-  frontmatter. The rule [`agent-frontmatter-valid`](agent-frontmatter-valid.md) reports
-  frontmatter that does not parse in a local agent.
+- The file has no frontmatter, or the frontmatter does not parse or is not a map. No rule reports a
+  file with no frontmatter. The rule [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md)
+  reports frontmatter that does not parse, in a file below `agents/`.
 - The file is not an agent file, such as `docs/agents/a.md`.
 
 Fail:

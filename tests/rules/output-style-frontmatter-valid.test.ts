@@ -1,5 +1,5 @@
 // An output style file has no required field, so a file with no frontmatter is
-// valid. The rule reports a block that does not parse, and a block below line 1.
+// valid. The rule reports a block that is not a map, and a block below line 1.
 import { pluginStyle } from '../plugin-fixture.test-support.ts'
 import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -22,21 +22,39 @@ markdownTester.run('output-style-frontmatter-valid', ruleOf('output-style-frontm
     // A block in a code fence is an example, and a whitespace-only block is empty.
     { code: '```yaml\n---\nname: x\n---\n```\n', filename: local },
     { code: '---\n  \n\n---\n\nAnswer in rhyme.\n', filename: local },
+    // A block of comments only, and a YAML null, set no field, as an empty block.
+    file('# Owner: web\n'),
+    file('~\n'),
+    file('null\n'),
     file('name: [unclosed\n', '.claude/output-styles/nested/s.md'),
     file('name: [unclosed\n', 'docs/output-styles/s.md'),
     file('name: [unclosed\n', '.claude/other/s.md'),
+    // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`.
+    file('name: [unclosed\n'),
+    file('name: [unclosed\n', pluginStyle()),
   ],
   invalid: [
     {
-      ...file('name: [unclosed\n'),
-      errors: [{ messageId: 'invalidYaml', line: 1 }],
+      ...file('- name: Rhyme\n'),
+      errors: [
+        {
+          message:
+            'The frontmatter is YAML, but not a map of fields. Claude Code loads the style with no field set.',
+          line: 1,
+        },
+      ],
     },
     {
-      ...file('name: [unclosed\n', pluginStyle()),
+      ...file('- name: Rhyme\n', pluginStyle()),
       errors: [{ messageId: 'invalidYaml' }],
     },
     {
       ...file('just text\n'),
+      errors: [{ messageId: 'invalidYaml' }],
+    },
+    // A scalar that is false is a value, not an empty block.
+    {
+      ...file('false\n'),
       errors: [{ messageId: 'invalidYaml' }],
     },
     {

@@ -4,8 +4,9 @@
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { COMMAND_EXCLUDED, SKILL_FIELDS } from '../data/skill-fields.ts'
 import { docsUrl } from '../docs-url.ts'
+import { classifyFrontmatter } from '../frontmatter.ts'
 import { classifySkillFile } from '../skill-files.ts'
-import { readFrontmatter } from '../skill-frontmatter.ts'
+import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-frontmatter-schema' as const
 
@@ -72,6 +73,7 @@ function valueProblem(key: string, value: unknown): Problem | null {
 
 const rule: MarkdownRuleDefinition<{
   MessageIds:
+    | 'notMapping'
     | 'unknownKey'
     | 'nearMiss'
     | 'commandField'
@@ -89,6 +91,7 @@ const rule: MarkdownRuleDefinition<{
     hasSuggestions: true,
     schema: [],
     messages: {
+      notMapping: 'The frontmatter is YAML, but not a map of fields, so it sets no skill field.',
       unknownKey: '`{{key}}` is not a skill frontmatter field. Claude Code ignores it.',
       nearMiss:
         '`{{key}}` is not a skill frontmatter field. Claude Code ignores it. Use `{{expected}}`.',
@@ -112,10 +115,20 @@ const rule: MarkdownRuleDefinition<{
       : [...SKILL_FIELDS]
     return {
       yaml(node) {
-        const fm = readFrontmatter(context.sourceCode, node)
-        if (fm === null) {
+        const parsed = classifyFrontmatter(node.value)
+        // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`. An empty
+        // block, a block of comments only, and a YAML null set no field. That is valid.
+        if (parsed.kind === 'error' || (parsed.kind === 'not-mapping' && parsed.value === null)) {
           return
         }
+        if (parsed.kind === 'not-mapping') {
+          // `claude plugin validate` 2.1.302 reports this value in a plugin file (rule doc).
+          if (!file.plugin) {
+            context.report({ node, messageId: 'notMapping' })
+          }
+          return
+        }
+        const fm = readFrontmatter(context.sourceCode, node) as SkillFrontmatter
         for (const field of fm.fields.values()) {
           const { key } = field
           const keyLoc = fm.at(field.keyStart, field.keyEnd)
