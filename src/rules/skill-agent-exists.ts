@@ -126,8 +126,8 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
       return {}
     }
     // With no manifest, the plugin name comes from the marketplace entry, or from the directory
-    // name with `--plugin-dir` (https://code.claude.com/docs/en/plugins/manifest-reference#manifest-file).
-    // So a scoped name is not known.
+    // name with `--plugin-dir`. So a scoped name is not known.
+    // (https://code.claude.com/docs/en/plugins/manifest-reference#manifest-file)
     const named = !(file.plugin && manifest === null)
     // A project has no plugin name, and so no scoped names of its own.
     const plugin = file.plugin

@@ -2,8 +2,9 @@
 // (docs/rules/mcp-no-literal-secrets.md). The MCP page expands `${VAR}` in these fields, and the
 // managed MCP page says not to store credentials in `env` blocks. `claude plugin validate`
 // already warns about a header value that looks like a literal credential in a plugin MCP config.
-// So the rule reads `headers` in a project file, in `managed-mcp.json`, and in a plugin with no
-// `plugin.json`, which validate does not read. It does not read them in a plugin with a manifest.
+// So the rule reads `headers` in a project file and in `managed-mcp.json`. Validate does not read
+// a plugin with no `plugin.json`, so the rule reads its `headers` too. It does not read them in a
+// plugin with a manifest.
 // The docs name no credential format. So a credential is a literal value under a name that ends
 // in a credential word (a heuristic). The docs list no `oauth` key for a secret, so the rule does not read `oauth`. A message never holds
 // the value.

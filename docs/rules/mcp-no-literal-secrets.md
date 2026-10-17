@@ -59,8 +59,8 @@ value that looks like a literal credential in a plugin `.mcp.json`, in a `.json`
 `mcpServers` names and in an inline map.[^validate] The docs say that it checks the MCP entries that a plugin declares. So the
 rule does not read `headers` in the files of a plugin with a manifest. For such a file it reads
 `env`, `args` and `url`, which validate does not cover. Validate 2.1.302 fails a plugin with no
-`plugin.json`, so the rule reads `headers` in the `.mcp.json` of such a plugin, as in a project
-file and in `managed-mcp.json`.
+`plugin.json`. So the rule reads `headers` in the `.mcp.json` of such a plugin. It reads them in a
+project file and in `managed-mcp.json` too.
 
 The split with other rules:
 

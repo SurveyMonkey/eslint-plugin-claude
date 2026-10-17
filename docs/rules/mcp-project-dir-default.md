@@ -37,7 +37,8 @@ the default is empty. The rule leaves these cases alone:
 - Other fields, such as `env` and `url`. The docs state the default for `command` and `args`.
 - The shell form `$CLAUDE_PROJECT_DIR`, which is not `${VAR}` syntax.
 - A plugin `.mcp.json`. A directory counts as a plugin root when it holds
-  `.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository lists it. The rule makes no report when it cannot read that directory.
+  `.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository lists it. The
+  rule makes no report when it cannot read that directory.
 - A path under `.claude/`, which `mcp-json-location` reports.
 
 Of two servers with one name, or two keys with one name, the last one counts.

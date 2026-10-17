@@ -191,8 +191,8 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
       cannot see a path that has a dangling link in it.
     - A rule does not follow a link whose real path is out of the repository.
     - A rule finds the marketplace of a plugin root with no manifest in the repository only. It
-      reads each `.claude-plugin/marketplace.json` at or above the directory, up to the
-      repository root. A remote source and a source out of the marketplace root make no plugin
+      reads each `.claude-plugin/marketplace.json` at or above the directory. The walk stops at
+      the repository root. A remote source and a source out of the marketplace root make no plugin
       root. A `marketplace.json` that the rule cannot read makes the directory unseen. So does an
       entry at the directory whose source the rule cannot see, such as a source out of the
       repository. A `marketplace.json` that does not parse lists no plugin.

@@ -1,7 +1,7 @@
 // A remote server at an `http://` or `ws://` URL (docs/rules/mcp-insecure-url.md). The traffic to
 // a host that is not on the machine goes in clear text. `claude plugin validate` warns about this
 // URL in the MCP configs of a plugin with a manifest (v2.1.281 or later). It fails a plugin with
-// no `plugin.json` (v2.1.302), so the rule reads the project `.mcp.json` and the `.mcp.json` of
+// no `plugin.json` (v2.1.302). So the rule reads the project `.mcp.json`, and the `.mcp.json` of
 // such a plugin. A loopback host is on the machine, so it is silent. A host with a `${`
 // reference is not known, so it is silent too.
 import path from 'node:path'

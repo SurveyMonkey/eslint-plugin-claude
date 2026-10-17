@@ -64,9 +64,10 @@ function listsOnlyItself(file: string, real: string, bound: string): boolean {
 
 /** True when `value`, from the folder `base`, is a folder that holds `.claude-plugin/marketplace.json`
  *  and no `.claude-plugin/plugin.json`. A folder with both is a plugin root too, and Claude Code
- *  loads it. A file that does not parse still marks the folder. A marketplace whose each entry is
- *  the folder itself (`"."`) is a plugin too, so the rule does not report it. `--plugin-dir` does
- *  not read `marketplace.json`, so a marketplace with another entry still gets a report. */
+ *  loads it. A file that does not parse still marks the folder. Each entry of a marketplace can be
+ *  the folder itself (`"."`). Then the folder is a plugin too, and the rule does not report it.
+ *  `--plugin-dir` does not read `marketplace.json`, so a marketplace with another entry still gets
+ *  a report. */
 function isMarketplaceRoot(base: string, bound: string, value: string): boolean {
   if (value === '' || UNRESOLVED.test(value)) {
     return false

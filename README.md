@@ -91,8 +91,9 @@ Each config is an array of blocks. The block of a rule has the name `claude/<con
 as `claude/recommended/command-legacy-format`. The two blocks that give the files of each language
 have the names `claude/<config>/markdown-files` and `claude/<config>/json-files`. These names are
 stable from version 1.0.0. A rule that is `off` in a config has no block of its own there. The
-block of its language gives its files. To change the `files` of a rule, find its block by the name,
-and replace `files`:
+block of its language gives its files. A glob that matches each file of a language, such as
+`**/*.md`, is not in that block. To change the `files` of a rule, find its block by the name, and
+replace `files`:
 
 ```js
 // eslint.config.js
@@ -110,7 +111,8 @@ export default defineConfig(
 
 A rule that reads two languages has two blocks with the same name. Compare `block.language` too
 (`'markdown/gfm'` or `'json/json'`) to change only one of them. A rule also checks the place of a
-file in code, so a wider glob can give no new report. The plugin has no setting and no rule option for `files`.
+file in code, so a wider glob can give no new report. The plugin has no setting and no rule option
+for `files`.
 
 ## Configs
 
