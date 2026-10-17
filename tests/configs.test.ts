@@ -3509,6 +3509,7 @@ const PLUGIN_RULES: {
     language: 'markdown/gfm',
     files: ['**/SKILL.md', '**/agents/**/*.md'],
   },
+  { name: 'plugin-settings-keys', files: ['**/.claude-plugin/plugin.json', '**/settings.json'] },
   // The rules with the option `minVersion` give no report in the config run, which sets no option.
   {
     name: 'plugin-feature-min-version',
