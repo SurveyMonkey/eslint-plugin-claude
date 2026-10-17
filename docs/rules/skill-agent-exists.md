@@ -54,7 +54,9 @@ For a plugin skill or command file, the rule reads each Markdown file below `age
 plugin root.[^plugin] An agent has its `name`. When it has no `name`, it has the file name without `.md`. The value can
 be the scoped name `<plugin>:<folder>:<name>`.[^plugin] The rule also accepts the bare name, because
 the docs do not say that Claude Code refuses it. The plugin name is the `name` in
-`plugin.json`, or the directory name. A plugin skill does not see the agents of the repository
+`plugin.json`, or the directory name. A plugin with no `plugin.json` takes its name from the
+marketplace entry, or from the directory name with `--plugin-dir`. So the rule makes no
+report for a scoped name there. A plugin skill does not see the agents of the repository
 that installs the plugin.
 
 The rule is silent in these cases:

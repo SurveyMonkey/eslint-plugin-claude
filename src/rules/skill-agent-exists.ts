@@ -125,6 +125,10 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
     if (manifest === UNREADABLE || (manifest !== null && 'agents' in manifest)) {
       return {}
     }
+    // With no manifest, the plugin name comes from the marketplace entry, or from the directory
+    // name with `--plugin-dir` (https://code.claude.com/docs/en/plugins/manifest-reference#manifest-file).
+    // So a scoped name is not known.
+    const named = !(file.plugin && manifest === null)
     // A project has no plugin name, and so no scoped names of its own.
     const plugin = file.plugin
       ? typeof manifest?.name === 'string'
@@ -143,7 +147,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
         }
         // A scoped name holds `:`, and names the agent of a plugin. A project
         // agent has no `:`. A plugin that the settings enable is out of sight.
-        if (agent.includes(':') && (plugin === null || !agent.startsWith(`${plugin}:`))) {
+        if (agent.includes(':') && (plugin === null || !named || !agent.startsWith(`${plugin}:`))) {
           return
         }
         // The docs do not say if Claude Code compares names with case.
