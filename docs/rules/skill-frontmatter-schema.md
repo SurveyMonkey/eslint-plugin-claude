@@ -62,8 +62,9 @@ value.
 
 The rule ignores a file with no frontmatter, an empty block, and a block of comments only. It
 also ignores frontmatter that the strict YAML parser cannot read. The docs say that a skill with
-YAML that does not parse loads with no field set.[^reference] Claude Code can read some YAML that the strict parser cannot,
-so [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports it as a warning.
+YAML that does not parse loads with no field set.[^reference] Claude Code can read some YAML that
+the strict parser cannot, so [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports
+it as a warning.
 
 The rule checks the files that the other skill rules check:
 
