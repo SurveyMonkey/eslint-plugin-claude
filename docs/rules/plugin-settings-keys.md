@@ -7,7 +7,7 @@ related_issues: [11, 354]
 stale_after: 2027-04-17
 generated:
   by: claude-code
-  at: 2026-10-17T21:00:00Z
+  at: 2026-10-17T20:35:00Z
 ---
 
 # claude/plugin-settings-keys
