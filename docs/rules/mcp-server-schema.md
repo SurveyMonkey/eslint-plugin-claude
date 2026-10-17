@@ -50,18 +50,23 @@ A stdio entry has the `type` `stdio`, or no `type`. A remote entry has the `type
 An entry with an unknown `type` gets one report only.
 
 The rule reads the `mcpServers` object of a project `.mcp.json` and of a committed
-`managed-mcp.json`. Of two members with one name, the last one counts, as `JSON.parse` keeps it.
+`managed-mcp.json`. It reads a `managed-mcp.json` in a plugin root too, because a plugin has no
+such component and `claude plugin validate` does not read it. Of two members with one name, the
+last one counts, as `JSON.parse` keeps it.
 
 The rule leaves these cases alone:
 
-- An entry with `type: "sdk"`. Only an SDK host application can register such a server.[^http]
-- A file with no `mcpServers` object. The rule `mcp-json-servers-key` reports it.
+- An entry with `type: "sdk"`. Claude Code skips it with its own message: only an SDK host
+  application can register such a server.[^http]
+- A file with no `mcpServers` object. The rule `mcp-json-servers-key` reports it in a project
+  `.mcp.json`. No rule reports it in a `managed-mcp.json`.
 - An empty remote `url`. The rule `mcp-remote-url-empty` reports it in a project file.
 - A `url` that holds a `${` reference, because the reference can expand to any text.
 - A plugin `.mcp.json`, and the servers of `plugin.json`. `claude plugin validate` reports each
   entry that Claude Code drops at load, and a remote `url` that is not a valid absolute
-  URL.[^validate] [^plugin] A directory counts as a plugin root when it holds
-  `.claude-plugin/plugin.json`. The rule makes no report when it cannot read that directory.
+  URL.[^validate] [^plugin] Version 2.1.302 does not report a `url` with a `command` and no
+  `type`. A directory counts as a plugin root when it holds `.claude-plugin/plugin.json`. The rule
+  makes no report for a `.mcp.json` when it cannot read that directory.
 - A path under `.claude/`, which Claude Code never reads. The rule `mcp-json-location` reports it.
 
 Fail:
