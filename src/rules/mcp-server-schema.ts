@@ -1,0 +1,141 @@
+// A server entry of `.mcp.json` with a bad shape (docs/rules/mcp-server-schema.md). Claude Code
+// skips such an entry and loads the others. `claude plugin validate` reports each such entry of a
+// plugin, so the rule reads a project `.mcp.json` and a committed `managed-mcp.json` only. An
+// entry with no `type` is a stdio server. Only an SDK host registers a `sdk` server, so the rule
+// skips that type.
+import path from 'node:path'
+import type { JSONRuleDefinition } from '@eslint/json'
+import { docsUrl } from '../docs-url.ts'
+import { lastMember, type ValueNode } from '../marketplace-json.ts'
+import { lintedServers, mcpFileKind, parseUrl, REMOTE_SERVER_TYPES } from '../mcp-servers.ts'
+
+const name = 'mcp-server-schema' as const
+
+type MessageIds =
+  | 'notObject'
+  | 'urlNoType'
+  | 'unknownType'
+  | 'noCommand'
+  | 'commandType'
+  | 'argsType'
+  | 'argType'
+  | 'noUrl'
+  | 'invalidUrl'
+
+const SKIP = 'Claude Code skips this entry.'
+
+/** The faults of the stdio entry `entry`: `command` is a string, and `args`, when present, is an
+ *  array of strings. */
+function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
+  const faults: { node: ValueNode; messageId: MessageIds }[] = []
+  const command = lastMember(entry, 'command')?.value
+  if (command === undefined) {
+    faults.push({ node: entry, messageId: 'noCommand' })
+  } else if (command.type !== 'String') {
+    faults.push({ node: command, messageId: 'commandType' })
+  }
+  const args = lastMember(entry, 'args')?.value
+  if (args !== undefined && args.type !== 'Array') {
+    faults.push({ node: args, messageId: 'argsType' })
+  }
+  for (const { value } of args?.type === 'Array' ? args.elements : []) {
+    if (value.type !== 'String') {
+      faults.push({ node: value, messageId: 'argType' })
+    }
+  }
+  return faults
+}
+
+/** The faults of the remote entry `entry`, whose `type` value is `type`: `url` is there and is
+ *  a valid absolute URL. An empty `url` is a placeholder that `mcp-remote-url-empty` owns. A
+ *  `${` reference can expand to any text, so the rule does not parse a URL that holds one. */
+function remoteFaults(
+  entry: ValueNode,
+  type: ValueNode,
+): { node: ValueNode; messageId: MessageIds }[] {
+  const url = lastMember(entry, 'url')?.value
+  if (url === undefined) {
+    return [{ node: type, messageId: 'noUrl' }]
+  }
+  if (url.type !== 'String') {
+    return [{ node: url, messageId: 'invalidUrl' }]
+  }
+  if (url.value === '' || url.value.includes('${') || parseUrl(url.value) !== null) {
+    return []
+  }
+  return [{ node: url, messageId: 'invalidUrl' }]
+}
+
+/** The faults of the server entry `entry`. */
+function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
+  if (entry.type !== 'Object') {
+    return [{ node: entry, messageId: 'notObject' }]
+  }
+  const type = lastMember(entry, 'type')?.value
+  if (type === undefined) {
+    // Claude Code reads an entry with no `type` as a stdio server, and skips it when it has a `url`.
+    const url = lastMember(entry, 'url')?.value
+    return url !== undefined && url.type !== 'Null'
+      ? [{ node: url, messageId: 'urlNoType' }]
+      : stdioFaults(entry)
+  }
+  if (type.type === 'String' && type.value === 'sdk') {
+    return []
+  }
+  if (type.type === 'String' && type.value === 'stdio') {
+    return stdioFaults(entry)
+  }
+  if (type.type === 'String' && REMOTE_SERVER_TYPES.includes(type.value)) {
+    return remoteFaults(entry, type)
+  }
+  return [{ node: type, messageId: 'unknownType' }]
+}
+
+const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'Give each MCP server entry the shape that Claude Code loads',
+      url: docsUrl(name),
+    },
+    schema: [],
+    messages: {
+      notObject: `The server "{{server}}" is not an object. ${SKIP} Write its config as an object.`,
+      urlNoType: `The server "{{server}}" has a \`url\` and no \`type\`, so Claude Code reads it as a stdio server. ${SKIP} Add \`"type": "http"\`, \`"sse"\` or \`"ws"\`.`,
+      unknownType: `The server "{{server}}" has an unknown \`type\`. ${SKIP} Use \`stdio\`, \`http\`, \`streamable-http\`, \`sse\` or \`ws\`.`,
+      noCommand: `The stdio server "{{server}}" has no \`command\`. ${SKIP} Set \`command\` to the program to run.`,
+      commandType: `The \`command\` of the server "{{server}}" is not a string. ${SKIP}`,
+      argsType: `The \`args\` of the server "{{server}}" is not an array. ${SKIP} Write \`args\` as an array of strings.`,
+      argType: `An item of the \`args\` of the server "{{server}}" is not a string. ${SKIP}`,
+      noUrl: `The remote server "{{server}}" has no \`url\`. ${SKIP} Set \`url\` to the endpoint.`,
+      invalidUrl:
+        'The `url` of the server "{{server}}" is not a valid absolute URL. Write a URL such as `https://host/path`.',
+    },
+  },
+  create(context) {
+    // `claude plugin validate` reports these faults in a plugin. A manifest holds plugin servers.
+    if (
+      path.basename(context.filename) === 'plugin.json' ||
+      mcpFileKind(context.filename) !== 'project'
+    ) {
+      return {}
+    }
+    return {
+      Document(node) {
+        for (const server of lintedServers(context.filename, node.body)) {
+          for (const { node: at, messageId } of entryFaults(server.member.value)) {
+            context.report({ node: at, messageId, data: { server: server.name } })
+          }
+        }
+      },
+    }
+  },
+}
+
+export const target = {
+  name,
+  language: 'json' as const,
+  files: ['**/.mcp.json', '**/managed-mcp.json'],
+}
+
+export default rule

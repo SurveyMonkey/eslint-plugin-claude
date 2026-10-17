@@ -211,6 +211,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'mcp-server-name-anthropic-skills',
     'mcp-server-name-format',
     'mcp-server-name-reserved',
+    'mcp-server-schema',
     'mcp-settings-mcpservers',
     'mcp-stdio-command-has-args',
     'mcp-stdio-relative-path',

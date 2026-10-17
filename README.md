@@ -553,6 +553,7 @@ default if it has one.
 | [mcp-json-location](docs/rules/mcp-json-location.md)                                     | Put the project MCP config in .mcp.json at the repository root                        | ✅ 🔒 |      |    |
 | [mcp-json-servers-key](docs/rules/mcp-json-servers-key.md)                               | Put the servers of a project .mcp.json under the mcpServers key                       | ✅ 🔒 |      |    |
 | [mcp-json-file-size](docs/rules/mcp-json-file-size.md)                                   | Keep a .mcp.json file at or under 2 MiB                                               | ✅ 🔒 |      | ⚙️ |
+| [mcp-server-schema](docs/rules/mcp-server-schema.md)                                     | Give each MCP server entry the shape that Claude Code loads                           | ✅ 🔒 |      |    |
 | [mcp-server-name-reserved](docs/rules/mcp-server-name-reserved.md)                       | Do not give an MCP server a name that Claude Code reserves                            | ✅ 🔒 |      | ⚙️ |
 | [mcp-remote-url-empty](docs/rules/mcp-remote-url-empty.md)                               | Give each remote server in a project .mcp.json a url                                  | ✅ 🔒 |      |    |
 | [mcp-hidden-whitespace](docs/rules/mcp-hidden-whitespace.md)                             | Remove leading and trailing whitespace from the values of an MCP server               | ✅ 🔒 |      |    |
