@@ -43,6 +43,8 @@ The rule checks a plugin skill in `<plugin>/skills/<name>/SKILL.md` and a plugin
 - A command file. Claude Code does not read the `name` of a command file.
 - A `name` that is not a string.
 - A manifest `name` that is blank or is not a string. The prefix is not known then.
+- A plugin with no manifest. Its name comes from the marketplace entry, or from the directory
+  name with `--plugin-dir`, so the prefix is not known.
 - The rule cannot read the manifest, or the manifest is out of the repository. A plugin root
   that the rule cannot see gives no report.
 

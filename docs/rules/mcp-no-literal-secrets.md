@@ -57,8 +57,10 @@ place and the server, and never holds the value.
 The split with `claude plugin validate`: from Claude Code v2.1.281, validate warns about a header
 value that looks like a literal credential in a plugin `.mcp.json`, in a `.json` file that
 `mcpServers` names and in an inline map.[^validate] The docs say that it checks the MCP entries that a plugin declares. So the
-rule reads `headers` in a project file and `managed-mcp.json` only. For a plugin file it reads `env`,
-`args` and `url`, which validate does not cover.
+rule does not read `headers` in the files of a plugin with a manifest. For such a file it reads
+`env`, `args` and `url`, which validate does not cover. Validate 2.1.302 fails a plugin with no
+`plugin.json`. So the rule reads `headers` in the `.mcp.json` of such a plugin. It reads them in a
+project file and in `managed-mcp.json` too.
 
 The split with other rules:
 

@@ -45,8 +45,9 @@ letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` wo
 `yes` has no effect in an older version. A key with no value is the same as an absent key, and the rule ignores it.
 
 The rule checks a style file in `.claude/output-styles/` and in the `output-styles/` directory of a
-plugin. A plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere gets no
-report. The rule ignores a file with no frontmatter, and a file whose frontmatter does not parse.
+plugin. A plugin root is a directory with `.claude-plugin/plugin.json`, or a directory that a
+`marketplace.json` of the repository lists. A file elsewhere gets no report. The rule ignores a
+file with no frontmatter, and a file whose frontmatter does not parse.
 [`output-style-frontmatter-valid`](output-style-frontmatter-valid.md) reports that fault.
 
 Fail:

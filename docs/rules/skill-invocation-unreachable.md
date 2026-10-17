@@ -50,7 +50,7 @@ The rule checks these files:
 - `<plugin>/SKILL.md`
 
 A file elsewhere, such as `docs/SKILL.md`, is not a report. A plugin root is a directory with
-`.claude-plugin/plugin.json`.
+`.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the repository lists.
 
 Fail:
 

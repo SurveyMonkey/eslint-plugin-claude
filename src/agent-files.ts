@@ -1,6 +1,6 @@
 // Find out if a file is a subagent file or an output style file. The globs of
 // the rules are broad, so each rule asks here where the file sits (ADR 001,
-// Decision 10). A plugin root is found by its manifest. A root that the check
+// Decision 10). `isPluginRoot` finds a plugin root. A root that the check
 // cannot see gives null. An agent file also gives its scope root. The manifest
 // key `agents` of a plugin names its agent files. It replaces the `agents/`
 // directory scan (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location).

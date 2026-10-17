@@ -29,7 +29,8 @@ when the plugin has no `skills/` directory and `plugin.json` has no `skills` key
 other case it does not load the root file, and it shows no error.
 
 The rule reads a `SKILL.md` that sits directly in a plugin root. A plugin root is a directory with
-`.claude-plugin/plugin.json`. The rule reports on line 1 in these cases:
+`.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the repository lists. The
+rule reports on line 1 in these cases:
 
 - The plugin root has a `skills/` directory. The report is `directory`.
 - `plugin.json` has a `skills` key, with any value. The report is `manifest`.
@@ -39,7 +40,7 @@ A file can get both reports. The rule does not read the frontmatter of the file.
 The rule is silent in these cases:
 
 - A skill in `skills/<name>/SKILL.md`. It is not the root skill.
-- A `SKILL.md` in a directory that has no manifest.
+- A `SKILL.md` in a directory that is not a plugin root.
 - A manifest that does not parse, or that is not an object. The rule reads no key from it, so it
   gives no `manifest` report. The `directory` report does not need the manifest.
 
