@@ -24,10 +24,10 @@ generated:
 
 ## Rule details
 
-A subagent that sets `permissionMode: auto` keeps the permission mode of the main conversation
-when auto mode is not available to it. A settings file that sets `disableAutoMode` is one such
-case.[^modes] The lock takes the string `"disable"`, at the top level or in `permissions`.[^auto]
-The field then has no effect.
+Auto mode is not always available to a subagent. Then `permissionMode: auto` has no effect,
+and the subagent keeps the permission mode of the main conversation. A settings file that sets
+`disableAutoMode` is one such case.[^modes] The lock takes the string `"disable"`, at the top
+level or in `permissions`.[^auto] The lock applies when any settings file sets it.[^start]
 
 The rule reports the `permissionMode` value of a local agent in `.claude/agents/`. It reports when
 `.claude/settings.json` or `.claude/settings.local.json` sets `disableAutoMode` or
@@ -38,11 +38,9 @@ The rule does not report another value of the lock, such as `true`. Claude Code 
 value, and the lock does not apply.
 [`permissions-disable-mode-value`](permissions-disable-mode-value.md) reports it.
 
-The rule reads both settings files of the `.claude/` directory that holds the agent. When both files
-set a key, the local file wins.[^precedence] A local file that sets `permissions` replaces the
-`permissions` object of the project file. So the rule then reads `permissions.disableAutoMode` from
-the local file only. The rule reads no managed or user settings, because they are not in the
-repository.
+The rule reads the two settings files of the `.claude/` directory that holds the agent. It reads
+each file alone, so a key in one file does not hide the lock in the other file. The rule reads no
+managed or user settings, because they are not in the repository.
 
 The docs give a second case: the model of the subagent does not support auto mode.[^modes] The
 repository does not show which models support auto mode, so the rule does not check this case.
@@ -50,10 +48,10 @@ repository does not show which models support auto mode, so the rule does not ch
 The rule reports local agents only. Claude Code ignores `permissionMode` in a plugin agent, and
 [`agent-plugin-ignored-fields`](agent-plugin-ignored-fields.md) reports the field there.
 
-The rule makes no report that rests on a settings file that it cannot see. A file cannot be seen
-when it cannot be read, or when it is a link to a file that is not there. A file also cannot be seen
-when its real path is out of the repository, or when it does not parse to an object. A file that is
-not there gives no report.
+The rule makes no report that rests on a settings file that it cannot see. These files add
+nothing: a file that the rule cannot read, and a link to a file that is not there. A file with a
+real path out of the repository adds nothing too. So does a file that does not parse to an
+object. A file that is not there adds nothing.
 
 Fail, with `{"permissions": {"disableAutoMode": "disable"}}` in `.claude/settings.json`:
 
@@ -80,4 +78,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^modes]: [Create custom subagents: Permission modes](https://code.claude.com/docs/en/sub-agents#permission-modes)
 [^auto]: [All settings: disableAutoMode](https://code.claude.com/docs/en/settings-reference#disableautomode)
-[^precedence]: [Claude Code settings: Settings precedence](https://code.claude.com/docs/en/settings#settings-precedence)
+[^start]: [Choose a permission mode: Which mode a session starts in](https://code.claude.com/docs/en/permission-modes#which-mode-a-session-starts-in)
