@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { frontmatterFields, parseFrontmatter, stringField } from '../src/frontmatter.ts'
+import {
+  classifyFrontmatter,
+  frontmatterFields,
+  parseFrontmatter,
+  stringField,
+} from '../src/frontmatter.ts'
 
 describe('parseFrontmatter', () => {
   it('reads a mapping, folded scalars included', () => {
@@ -17,6 +22,45 @@ describe('parseFrontmatter', () => {
     expect(parseFrontmatter('')).toBeNull()
     expect(parseFrontmatter('just text')).toBeNull()
     expect(parseFrontmatter('- a\n- b')).toBeNull()
+  })
+})
+
+describe('classifyFrontmatter', () => {
+  it('gives the fields of a mapping', () => {
+    expect(classifyFrontmatter('name: a\ndescription: d\n')).toEqual({
+      kind: 'mapping',
+      data: { name: 'a', description: 'd' },
+    })
+  })
+
+  it('gives the value of YAML that parses to a list or a scalar', () => {
+    expect(classifyFrontmatter('- a\n- b\n')).toEqual({ kind: 'not-mapping', value: ['a', 'b'] })
+    expect(classifyFrontmatter('just text\n')).toEqual({ kind: 'not-mapping', value: 'just text' })
+    // An empty block, and a block of comments only, parse to null.
+    expect(classifyFrontmatter('')).toEqual({ kind: 'not-mapping', value: null })
+    expect(classifyFrontmatter('# note\n')).toEqual({ kind: 'not-mapping', value: null })
+  })
+
+  it('gives the first error and its line for YAML that does not parse', () => {
+    // A plain scalar with `: ` in it, as in issue #288.
+    expect(classifyFrontmatter('name: a\ndescription: Use this when x. Context: y\n')).toEqual({
+      kind: 'error',
+      message: 'Nested mappings are not allowed in compact mappings',
+      line: 2,
+    })
+    expect(classifyFrontmatter('name: s\nargument-hint: [n] [n]\n')).toEqual({
+      kind: 'error',
+      message: 'Unexpected flow-seq-start at node end',
+      line: 2,
+    })
+  })
+
+  it('gives no line for an alias that the parser cannot resolve', () => {
+    expect(classifyFrontmatter('a: *x\n')).toEqual({
+      kind: 'error',
+      message: 'Unresolved alias (the anchor must be set before the alias): x',
+      line: null,
+    })
   })
 })
 
