@@ -42,6 +42,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-name-unique',
     'agent-no-bom',
     'agent-omit-claude-md-main',
+    'agent-permission-mode-auto-unavailable',
     'agent-permission-mode-bypass',
     'agent-permission-mode-manual',
     'agent-plugin-ignored-fields',

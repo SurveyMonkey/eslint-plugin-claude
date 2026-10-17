@@ -5431,6 +5431,7 @@ const AGENT_WARN_RULES = [
   'agent-name-shadowing',
   'agent-name-shadows-builtin',
   'agent-no-bom',
+  'agent-permission-mode-auto-unavailable',
   'agent-permission-mode-manual',
   'agent-plugin-scoped-name-unique',
   'agent-skills-preload-limit',

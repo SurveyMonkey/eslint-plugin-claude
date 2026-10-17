@@ -24,6 +24,7 @@ import * as agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import * as agentNameUnique from './rules/agent-name-unique.ts'
 import * as agentNoBom from './rules/agent-no-bom.ts'
 import * as agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
+import * as agentPermissionModeAutoUnavailable from './rules/agent-permission-mode-auto-unavailable.ts'
 import * as agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import * as agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
 import * as agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
@@ -600,6 +601,10 @@ const modules = [
   { target: agentNameShadowing.target, default: agentNameShadowing.default },
   { target: agentNameShadowsBuiltin.target, default: agentNameShadowsBuiltin.default },
   { target: agentNoBom.target, default: agentNoBom.default },
+  {
+    target: agentPermissionModeAutoUnavailable.target,
+    default: agentPermissionModeAutoUnavailable.default,
+  },
   { target: agentPermissionModeManual.target, default: agentPermissionModeManual.default },
   { target: agentPluginScopedNameUnique.target, default: agentPluginScopedNameUnique.default },
   { target: agentSkillsPreloadLimit.target, default: agentSkillsPreloadLimit.default },
@@ -1262,6 +1267,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-name-shadowing': 'warn',
   'agent-name-shadows-builtin': 'warn',
   'agent-no-bom': 'warn',
+  'agent-permission-mode-auto-unavailable': 'warn',
   'agent-permission-mode-manual': 'warn',
   'agent-plugin-scoped-name-unique': 'warn',
   'agent-skills-preload-limit': 'warn',
