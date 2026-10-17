@@ -3856,8 +3856,10 @@ const Q11_REPORTS = [
 
 // A tree of its own for #17: a marketplace lists `plugins/p`, which has no `plugin.json`. The
 // manifest is optional, and Claude Code then loads the standard layout. So `plugins/p` is a
-// plugin root. `plugins/q` has no manifest and no entry, and `r` has a remote source. `plugins/m`
-// has a manifest and no entry. It is a root as before.
+// plugin root. `plugins/q` has no manifest and no entry, and `r` has a remote source. The entry of
+// `plugins/c` sets `commands`, which replaces the default `commands/`, so it makes no root.
+// `plugins/m` has a manifest and no entry. It is a root as before. The marketplace of
+// `packages/self` lists its own root (`"."`).
 const E17_TREE: Record<string, string> = {
   '.claude-plugin/marketplace.json': JSON.stringify({
     name: 'm',
@@ -3865,15 +3867,24 @@ const E17_TREE: Record<string, string> = {
     plugins: [
       { name: 'p', source: './plugins/p' },
       { name: 'r', source: { source: 'github', repo: 'o/r' } },
+      { name: 'c', source: './plugins/c', commands: ['./other/y.md'] },
     ],
   }),
   'plugins/p/commands/x.md': '# X\n',
   'plugins/q/commands/x.md': '# X\n',
   'plugins/r/commands/x.md': '# X\n',
+  'plugins/c/commands/x.md': '# X\n',
   'plugins/m/.claude-plugin/plugin.json': JSON.stringify({ name: 'm' }),
   'plugins/m/commands/x.md': '# X\n',
+  'packages/self/.claude-plugin/marketplace.json': JSON.stringify({
+    name: 's',
+    owner: { name: 'o' },
+    plugins: [{ name: 'self', source: '.' }],
+  }),
+  'packages/self/commands/x.md': '# X\n',
 }
 const E17_REPORTS = [
+  'packages/self/commands/x.md: claude/command-legacy-format@1',
   'plugins/m/commands/x.md: claude/command-legacy-format@1',
   'plugins/p/commands/x.md: claude/command-legacy-format@1',
 ]
