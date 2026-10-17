@@ -96,3 +96,106 @@ describe.skipIf(chmodCannotBlock)('a path that the check cannot read', () => {
     })
   })
 })
+
+describe('a directory that a marketplace lists with no manifest', () => {
+  /** Write `repo/<at>/.claude-plugin/marketplace.json` with the entries `plugins`. */
+  const market = (at: string, plugins: unknown[], metadata?: object) =>
+    put(
+      repo(at, '.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ name: 'm', metadata, plugins }),
+    )
+
+  it('is a plugin root when a marketplace above it lists it', () => {
+    market('.', [{ name: 'p', source: './plugins/p' }])
+    put(repo('plugins', 'p', 'commands', 'x.md'), '# X\n')
+    mkdirSync(repo('plugins', 'q', 'commands'), { recursive: true })
+    expect(isPluginRoot(repo('plugins', 'p'))).toBe(true)
+    // A directory that no entry lists, and the directory that holds the plugins, stay out.
+    expect(isPluginRoot(repo('plugins', 'q'))).toBe(false)
+    expect(isPluginRoot(repo('plugins'))).toBe(false)
+    expect(isPluginRoot(repo('plugins', 'p', 'commands'))).toBe(false)
+  })
+
+  it('is a plugin root when a nested marketplace lists it, or lists a bare name under pluginRoot', () => {
+    market(
+      'packages/m',
+      [
+        { name: 'a', source: 'a' },
+        { name: 'b', source: './b' },
+      ],
+      {
+        pluginRoot: './plugins',
+      },
+    )
+    mkdirSync(repo('packages', 'm', 'plugins', 'a'), { recursive: true })
+    mkdirSync(repo('packages', 'm', 'b'), { recursive: true })
+    expect(isPluginRoot(repo('packages', 'm', 'plugins', 'a'))).toBe(true)
+    expect(isPluginRoot(repo('packages', 'm', 'b'))).toBe(true)
+  })
+
+  it('is a plugin root at the marketplace root when an entry lists "."', () => {
+    market('.', [{ name: 'self', source: '.' }])
+    expect(isPluginRoot(repo())).toBe(true)
+  })
+
+  it('is not a plugin root for a remote source, a ".." path, or a file that does not parse', () => {
+    market('.', [
+      { name: 'r', source: { source: 'github', repo: 'o/r' } },
+      { name: 'u', source: '../outside' },
+      { name: 'n', source: 'p' },
+    ])
+    mkdirSync(repo('p'), { recursive: true })
+    mkdirSync(path.join(scratch, 'outside'), { recursive: true })
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    put(repo('packages', 'bad', '.claude-plugin', 'marketplace.json'), '{ "plugins": [')
+    mkdirSync(repo('packages', 'bad', 'p'), { recursive: true })
+    expect(isPluginRoot(repo('packages', 'bad', 'p'))).toBe(false)
+  })
+
+  it('reads no marketplace above the directory when no `.git` marks the repository', () => {
+    rmSync(repo('.git'), { recursive: true })
+    market('.', [{ name: 'p', source: './p' }])
+    market('own', [{ name: 'self', source: '.' }])
+    mkdirSync(repo('p'), { recursive: true })
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    expect(isPluginRoot(repo('own'))).toBe(true)
+  })
+
+  it('shows a change to the marketplace, and a listed directory that a user adds later', () => {
+    market('.', [{ name: 'p', source: './p' }])
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    mkdirSync(repo('p'))
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    // A new size gives a new stamp, so the entry list is read again.
+    market('.', [
+      { name: 'other', source: './other' },
+      { name: 'more', source: './more' },
+    ])
+    expect(isPluginRoot(repo('p'))).toBe(false)
+  })
+})
+
+describe.skipIf(process.platform === 'win32')('a listed source that is a link', () => {
+  it('is not a plugin root when the link leads out of the repository', () => {
+    put(
+      repo('.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ plugins: [{ name: 'p', source: './p' }] }),
+    )
+    mkdirSync(outside('p'))
+    symlinkSync(outside('p'), repo('p'))
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    expect(isPluginRoot(outside('p'))).toBe(false)
+  })
+
+  it('is a plugin root at the target when the link stays in the marketplace', () => {
+    put(
+      repo('.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ plugins: [{ name: 'p', source: './p' }] }),
+    )
+    mkdirSync(repo('shared', 'p'), { recursive: true })
+    symlinkSync(repo('shared', 'p'), repo('p'))
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    expect(isPluginRoot(repo('shared', 'p'))).toBe(true)
+  })
+})
