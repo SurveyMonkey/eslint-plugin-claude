@@ -87,9 +87,9 @@ The default of `max` is the number from the docs. No setting moves that number, 
 sets a maximum of 32. ESLint refuses a larger value. The `recommended` and `strict` configs set
 no option.
 
-When `max` is 32, the message says that Claude Code does not preload the distinct names after the 32nd.
-At another value, the message names the configured limit. It does not say that Claude Code skips
-a name at that value.
+When `max` is 32, the message says that Claude Code does not preload the distinct names after
+the 32nd. At another value, the message names the configured limit. It does not say that Claude
+Code skips a name at that value.
 
 ## Sources
 
