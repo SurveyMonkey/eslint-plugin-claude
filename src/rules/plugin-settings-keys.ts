@@ -34,7 +34,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' }> = {
     return {
       Document(node) {
         const settings = manifest ? lastMember(node.body, 'settings')?.value : node.body
-        // `claude plugin validate` fails a manifest `settings` that is not an object.
+        // A value that is not an object sets no key. `claude plugin validate` fails it in a manifest.
         if (plugin === undefined || settings?.type !== 'Object') {
           return
         }
