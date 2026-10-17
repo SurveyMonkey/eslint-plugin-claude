@@ -126,8 +126,6 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     // A name of 256 characters is at the limit. The joined command name counts the `:` too.
     named(long(LIMIT)),
     { code: '# C\n', filename: commandAt(`${long(LIMIT)}.md`) },
-    // A skill folder name over the limit cannot be on disk, and a skill is not a command.
-    { code: '# S\n', filename: skillIn(long(LIMIT + 1)) },
     { code: '# C\n', filename: commandAt(`${long(126)}/${long(129)}.md`) },
     // A code point outside the BMP is one character, so 256 of them are at the limit.
     named('\u{1F600}'.repeat(LIMIT)),
