@@ -163,7 +163,9 @@ describe('a directory that a marketplace lists with no manifest', () => {
 
   it('shows a change to the marketplace, and a listed directory that a user adds later', () => {
     market('.', [{ name: 'p', source: './p' }])
-    expect(isPluginRoot(repo('p'))).toBe(false)
+    // The check of `q` reads the marketplace while `p` is not there.
+    mkdirSync(repo('q'))
+    expect(isPluginRoot(repo('q'))).toBe(false)
     mkdirSync(repo('p'))
     expect(isPluginRoot(repo('p'))).toBe(true)
     expect(isPluginRoot(repo('p'))).toBe(true)

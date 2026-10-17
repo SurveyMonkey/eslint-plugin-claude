@@ -8,7 +8,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
-import { ESLint, type Linter } from 'eslint'
+import { ESLint, Linter } from 'eslint'
 import { defineConfig } from 'eslint/config'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import plugin from '../src/index.ts'
@@ -3854,6 +3854,30 @@ const Q11_REPORTS = [
   'packages/s-managed/managed-settings.json: claude/sandbox-settings-without-enabled@1',
 ].sort()
 
+// A tree of its own for #17: a marketplace lists `plugins/p`, which has no `plugin.json`. The
+// manifest is optional, and Claude Code then loads the standard layout. So `plugins/p` is a
+// plugin root. `plugins/q` has no manifest and no entry, and `r` has a remote source. `plugins/m`
+// has a manifest and no entry. It is a root as before.
+const E17_TREE: Record<string, string> = {
+  '.claude-plugin/marketplace.json': JSON.stringify({
+    name: 'm',
+    owner: { name: 'o' },
+    plugins: [
+      { name: 'p', source: './plugins/p' },
+      { name: 'r', source: { source: 'github', repo: 'o/r' } },
+    ],
+  }),
+  'plugins/p/commands/x.md': '# X\n',
+  'plugins/q/commands/x.md': '# X\n',
+  'plugins/r/commands/x.md': '# X\n',
+  'plugins/m/.claude-plugin/plugin.json': JSON.stringify({ name: 'm' }),
+  'plugins/m/commands/x.md': '# X\n',
+}
+const E17_REPORTS = [
+  'plugins/m/commands/x.md: claude/command-legacy-format@1',
+  'plugins/p/commands/x.md: claude/command-legacy-format@1',
+]
+
 // Each file with a report, as `file: rule@severity`. 1 is warn, 2 is error.
 const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
@@ -5826,6 +5850,7 @@ let mcpSizeRoot = ''
 let outputSizeRoot = ''
 let q10Root = ''
 let q11Root = ''
+let e17Root = ''
 // A folder next to the tree, for the files that links in the tree lead to.
 let external = ''
 
@@ -5885,6 +5910,12 @@ beforeAll(() => {
     writeFileSync(path.join(q11Root, file), content)
   }
   stage(q11Root, Object.keys(Q11_TREE))
+  e17Root = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-e17-'))
+  for (const [file, content] of Object.entries(E17_TREE)) {
+    mkdirSync(path.dirname(path.join(e17Root, file)), { recursive: true })
+    writeFileSync(path.join(e17Root, file), content)
+  }
+  stage(e17Root, Object.keys(E17_TREE))
   if (LINKS) {
     mkdirSync(path.join(root, 'packages/s/site/plugins'), { recursive: true })
     symlinkSync('../../shared/p', path.join(root, 'packages/s/site/plugins/p'))
@@ -5914,6 +5945,7 @@ afterAll(() => {
   rmSync(outputSizeRoot, { recursive: true, force: true })
   rmSync(q10Root, { recursive: true, force: true })
   rmSync(q11Root, { recursive: true, force: true })
+  rmSync(e17Root, { recursive: true, force: true })
   rmSync(external, { recursive: true, force: true })
 })
 
@@ -6037,6 +6069,33 @@ describe('configs', () => {
         ]),
       ],
     )
+  })
+
+  // The README tells a user to find a block by its name. The names are a public contract from
+  // v1 (ADR 001, Decision 10). The rule blocks are pinned above and in the strict test below.
+  it('names the blocks of files claude/<config>/<language>-files, first in each config', () => {
+    for (const config of ['recommended', 'strict'] as const) {
+      const files = [`claude/${config}/markdown-files`, `claude/${config}/json-files`]
+      expect(plugin.configs[config].filter((c) => !c.rules).map((c) => c.name)).toEqual(files)
+      expect(plugin.configs[config].slice(0, 2).map((c) => c.name)).toEqual(files)
+    }
+  })
+
+  it('lets a user change the files of one rule by the name of its block, as the README shows', () => {
+    const moved = plugin.configs.recommended.map((block) =>
+      block.name === 'claude/recommended/command-legacy-format'
+        ? { ...block, files: ['packages/app/.claude/commands/**/*.md'] }
+        : block,
+    )
+    const linter = new Linter({ cwd: path.resolve('/repo') })
+    const legacy = (config: Linter.Config[], file: string) =>
+      linter
+        .verify('# Command\n', defineConfig(config), path.resolve('/repo', file))
+        .filter((m) => m.ruleId === 'claude/command-legacy-format').length
+    expect(legacy(plugin.configs.recommended, '.claude/commands/c.md')).toBe(1)
+    expect(legacy(plugin.configs.recommended, 'packages/app/.claude/commands/c.md')).toBe(1)
+    expect(legacy(moved, '.claude/commands/c.md')).toBe(0)
+    expect(legacy(moved, 'packages/app/.claude/commands/c.md')).toBe(1)
   })
 
   // `strict` keeps each rule of `recommended` at its severity, and adds each `off` rule at `warn`.
@@ -6240,6 +6299,12 @@ describe('configs', () => {
       )
     expect(own(await reports(plugin.configs.strict, q10Root))).toEqual(Q10_REPORTS)
     expect(own(await reports(plugin.configs.recommended, q10Root))).toEqual([])
+  }, 30_000)
+
+  it('reports a command of a plugin that a marketplace lists with no manifest', async () => {
+    const legacy = (found: string[]) =>
+      found.filter((report) => report.includes(': claude/command-legacy-format@'))
+    expect(legacy(await reports(plugin.configs.recommended, e17Root))).toEqual(E17_REPORTS)
   }, 30_000)
 
   it('turns each sandbox off rule on in strict only, on the files that it reads', () => {
