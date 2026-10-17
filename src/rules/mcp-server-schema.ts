@@ -105,7 +105,7 @@ function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
  *  and no `type` when the entry has a good stdio shape: a `command` that is not empty, and `args`
  *  of strings. It reports each other fault, so the result is `urlNoType` or nothing. */
 function pluginFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
-  const command = entry.type === 'Object' ? lastMember(entry, 'command')?.value : undefined
+  const command = lastMember(entry, 'command')?.value
   if (command?.type !== 'String' || command.value === '' || stdioFaults(entry).length > 0) {
     return []
   }
