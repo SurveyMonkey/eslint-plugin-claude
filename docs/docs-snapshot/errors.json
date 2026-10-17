@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "5990351cd7bed2caf68db4c18373ac6cf3ab3f8be206473df89fd3ca50763205",
+  "hash": "400451afb27d4d92f2fdbaf71aebd1b11531e7171da1b139a13e4f9876fd39e1",
   "blocks": [
     {
       "id": "error-reference",
@@ -9,13 +9,13 @@
     },
     {
       "id": "find-your-error",
-      "hash": "26df730d6e44a6228cc1225aa8b69bd9ff5988138ae2a2dfb99b55caac3e6955",
-      "bodyHash": "862ad23b0401d2b43ca29bf9595d5ebde75f9edaf644425ba2804cf5deff705f"
+      "hash": "5fff0d7365af4df55a3efa983b2e6131cd3256514f49556782784aa016a5e0fe",
+      "bodyHash": "b1ae406928cd74cd2e55a598841f6fe3d844d9aa1d5d101663c37d646f1a4a7f"
     },
     {
       "id": "automatic-retries",
-      "hash": "5dbca1ed3a2917bef07a5e4b21c9841d154bedceaf6f86c9347c1243201bc88a",
-      "bodyHash": "0e937dea53f7ff9500cd9d7d9659cb2a6c2aad5dac881a967a0e38c6812b57e9"
+      "hash": "737d91aa84eab91848896566c86ffcde39de1ffcc02e34363eb72dadad3b02cb",
+      "bodyHash": "a4e5ed2fd924069844bdda4c6de22de0d6cbb9f6dad25262d82ff8e5dc3d2c25"
     },
     {
       "id": "what-you-see-while-claude-code-retries-or-waits",
@@ -979,8 +979,8 @@
     },
     {
       "id": "agent-would-be-spawned-with-zero-tools",
-      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923",
-      "bodyHash": "b792eb7ef3bbbe3b44b704ab0377145072b86903352c03bc3e1315a8ce0e7107"
+      "hash": "b7679cde6d0cfc88a076120b65a9ad2b6afedd50bc640b3e6e65ead9bbe9679f",
+      "bodyHash": "0bbed96551fcb788bed120829fe55eb11a8f5d3fa7678ab308e157d496d1bfc2"
     },
     {
       "id": "file-is-covered-by-a-read-deny-rule",
@@ -1408,8 +1408,8 @@
     {
       "heading": "Agent would be spawned with zero tools",
       "id": "agent-would-be-spawned-with-zero-tools",
-      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923",
-      "text": "### Agent would be spawned with zero tools\n\nEvery entry in the subagent's [`tools` list](/docs/en/sub-agents#supported-frontmatter-fields) failed to match a usable tool, so Claude Code refused to launch the subagent: with no tools, it couldn't act. The message groups your entries by what went wrong:\n\n* **Unrecognized**: the entry matches no tool name, usually a typo such as `Grpe` for `Grep`.\n* **Not available to subagents**: the entry names a real tool that [subagents can't use](/docs/en/sub-agents#available-tools). Background subagents keep a smaller built-in tool set, so an entry that only a foreground subagent can use lands here when the subagent would run in the background, which is the default. If you list `Agent`, the message reports it under the next group instead.\n* **Matched no tools in this session**: the entry is valid but no tool in the current session matches it right now, such as `mcp__github__*` with no GitHub MCP server connected, or `Agent` for a subagent at the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents).\n\nOmitting the `tools` field never triggers this refusal. If you leave the `tools` list empty, or `disallowedTools` removes every entry in it, Claude Code also skips the refusal and launches the subagent without tools.\n\nBefore v2.1.208, the subagent launched with no tools and could return an empty or confusing result.\n\n```text theme={null}\nAgent 'code-reviewer' would be spawned with zero tools — refusing. Its tools list resolved to nothing: unrecognized [Grpe]. Fix the agent's tools frontmatter or pass a different subagent_type.\n```\n\n**What to do:**\n\n* Correct each entry the error names against the [tools available to subagents](/docs/en/sub-agents#available-tools)\n* Remove entries for tools the session doesn't have, such as MCP tools from a server that isn't connected\n* For a tool that [background subagents drop](/docs/en/sub-agents#available-tools), such as `CronCreate`, remove the entry. To keep the tool, [turn fork mode off](/docs/en/sub-agents#turn-fork-mode-on-or-off) and ask Claude to run the subagent in the foreground\n* Delete the `tools` field instead of listing tools to give the subagent every [tool available to subagents](/docs/en/sub-agents#available-tools)\n* For a `tools` list that contains only `Agent`, raise the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents) or give the agent at least one other tool: Claude Code withholds `Agent` at that limit, so a list with nothing else in it resolves to no tools"
+      "hash": "b7679cde6d0cfc88a076120b65a9ad2b6afedd50bc640b3e6e65ead9bbe9679f",
+      "text": "### Agent would be spawned with zero tools\n\nEvery entry in the subagent's [`tools` list](/docs/en/sub-agents#supported-frontmatter-fields) failed to match a usable tool, so Claude Code refused to launch the subagent: with no tools, it couldn't act. The message groups your entries by what went wrong:\n\n* **Unrecognized**: the entry matches no tool name, usually a typo such as `Grpe` for `Grep`.\n* **Not available to subagents**: the entry names a real tool that [subagents can't use](/docs/en/sub-agents#available-tools). Background subagents keep a smaller built-in tool set, so an entry that only a foreground subagent can use lands here when the subagent would run in the background, which is the default. If you list `Agent`, the message reports it under the next group instead.\n* **Matched no tools in this session**: the entry is valid but no tool in the current session matches it right now, such as `mcp__github__*` with no GitHub MCP server connected, or `Agent` for a subagent at the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents).\n\nOmitting the `tools` field never triggers this refusal. If you leave the `tools` list empty, or `disallowedTools` removes every entry in it, Claude Code also skips the refusal and launches the subagent without tools.\n\nBefore v2.1.208, the subagent launched with no tools and could return an empty or confusing result.\n\n```text theme={null}\nAgent 'code-reviewer' would be spawned with zero tools — refusing. Its tools list resolved to nothing: unrecognized [Grpe]. Fix the agent's tools frontmatter or pass a different subagent_type.\n```\n\n**What to do:**\n\n* Correct each entry the error names against the [tools available to subagents](/docs/en/sub-agents#available-tools)\n* Remove entries for tools the session doesn't have, such as MCP tools from a server that isn't connected\n* If the entry names a connected MCP server, compare the entry with that server's name as the server's [tool names](/docs/en/permissions#mcp) spell it, such as `reports__v2` in `mcp__reports__v2__get_totals`. For that server, write `mcp__reports__v2__*`, which is `mcp__` followed by the whole name and `__*`. With the shorter `mcp__reports`, which names a server called `reports`, the subagent gets none of the `reports__v2` tools\n* For a tool that [background subagents drop](/docs/en/sub-agents#available-tools), such as `CronCreate`, remove the entry. To keep the tool, [turn fork mode off](/docs/en/sub-agents#turn-fork-mode-on-or-off) and ask Claude to run the subagent in the foreground\n* Delete the `tools` field instead of listing tools to give the subagent every [tool available to subagents](/docs/en/sub-agents#available-tools)\n* For a `tools` list that contains only `Agent`, raise the [depth limit](/docs/en/sub-agents#let-subagents-spawn-their-own-subagents) or give the agent at least one other tool: Claude Code withholds `Agent` at that limit, so a list with nothing else in it resolves to no tools"
     },
     {
       "heading": "--sandbox or --no-sandbox is not supported by claude remote-control",
