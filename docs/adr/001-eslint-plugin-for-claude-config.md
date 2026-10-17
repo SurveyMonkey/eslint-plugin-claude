@@ -152,12 +152,16 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
     under `commands/` at a plugin root.
     - `isPluginRoot` in `src/plugin-root.ts` finds a plugin root. A directory with
       `.claude-plugin/plugin.json` is a plugin root. The manifest is optional, and Claude Code
-      then loads the standard layout. So a directory with no manifest is a plugin root when a
+      then loads the standard layout. A rule cannot find each such directory. It finds one when a
       `.claude-plugin/marketplace.json` lists it as a relative `source`
       ([#17](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/17)).
+    - With no `plugin.json`, the entry is the manifest. A rule reads the default locations only.
+      So an entry with a key that replaces a default location, such as `commands`, makes no
+      plugin root.
     - A user changes the `files` of a rule through the config blocks. The block of a rule has the
-      name `claude/<config>/<rule>`. The blocks of the files of each language have the name
-      `claude/<config>/<language>-files`. These names are a public contract from version 1.0.0.
+      name `claude/<config>/<rule>`. The two blocks of files have the names
+      `claude/<config>/markdown-files` and `claude/<config>/json-files`. These names are a public
+      contract from version 1.0.0.
       A change to a name is a breaking change. The README shows the change of `files` by name.
     - The plugin has no setting and no rule option for `files` or for plugin roots.
 11. **A value set that Claude Code owns lives in one data module.** Hook events, tool names and
@@ -188,7 +192,9 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
     - A rule finds the marketplace of a plugin root with no manifest in the repository only. It
       reads each `.claude-plugin/marketplace.json` at or above the directory, up to the
       repository root. A remote source, a source out of the marketplace root, and a source out
-      of the repository make no plugin root.
+      of the repository make no plugin root. A `marketplace.json` that the rule cannot read, and
+      an entry at the directory whose source the rule cannot see, make the directory unseen. A
+      `marketplace.json` that does not parse lists no plugin.
     - A rule does not model what Claude Code loads from out of the repository, such as user
       settings or agents in `~/.claude/`.
     - A rule that cannot see a file because of this limit makes no report that rests on that file.

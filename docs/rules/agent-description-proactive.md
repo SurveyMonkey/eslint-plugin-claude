@@ -45,7 +45,8 @@ The rule checks these files:
 - A file that the manifest key `agents` of a plugin names. The key replaces the `agents/`
   directory, so a file in that directory that the key does not name is not an agent.[^replace]
 
-A plugin root is a directory with `.claude-plugin/plugin.json`. A manifest that the rule cannot
+A plugin root is a directory with `.claude-plugin/plugin.json`, or a directory that a
+`marketplace.json` of the repository lists. A manifest that the rule cannot
 read gives no report for a file outside `agents/`. The rule reads no file out of the repository
 (ADR 001, Decision 14). A manifest path that leaves the plugin or the repository names no agent.
 

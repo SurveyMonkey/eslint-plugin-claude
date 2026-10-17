@@ -33,7 +33,7 @@ The report is on the empty string. It reads the project `.mcp.json` only.
 A plugin can ship an entry with an empty `url` as a placeholder for a connector that the user
 configures later. Claude Code does not report that entry as an error.[^status] So the rule skips the
 `.mcp.json` at the root of a plugin. A directory counts as a plugin root when it holds
-`.claude-plugin/plugin.json`. The rule makes no report when it cannot read that directory.
+`.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository lists it. The rule makes no report when it cannot read that directory.
 
 The rule leaves these cases alone:
 

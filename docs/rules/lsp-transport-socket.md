@@ -32,7 +32,8 @@ validate` accepts the value too, so nothing else reports it.
 The rule reports `"transport": "socket"` in a server config. The report is on the value. It reads
 two places:
 
-- `.lsp.json` at the root of a plugin: the directory that holds `.claude-plugin/plugin.json`. The
+- `.lsp.json` at the root of a plugin: the directory that holds `.claude-plugin/plugin.json`, or a
+  directory that a `marketplace.json` of the repository lists. The
   file maps a server name to its config.[^components] The rule makes no report for a `.lsp.json`
   in another directory, and none when it cannot read the directory.
 - The inline `lspServers` of `.claude-plugin/plugin.json`. The key takes an inline map, a path, or

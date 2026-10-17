@@ -37,8 +37,8 @@ on line 1 in these cases:
   file named `SKILL.md`. Then the file is a supporting file.
 
 A `skills/` directory is `.claude/skills/`, or the `skills/` directory of a plugin. A plugin root is
-a directory with `.claude-plugin/plugin.json`. A `skills/` directory in any other place is not a
-report.
+a directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
+repository lists. A `skills/` directory in any other place is not a report.
 
 The rule makes no report in a plugin whose `.claude-plugin/` directory it cannot see. This is the
 case when the rule cannot search that directory, or when its real path is out of the repository.

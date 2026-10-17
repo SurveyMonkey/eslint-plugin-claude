@@ -39,7 +39,10 @@ it does not read a shell script. For each script, the rule finds these:
 A relative path starts at the folder of the `package.json`. The rule reports the script when the
 path is a folder of the repository that has `.claude-plugin/marketplace.json` and no
 `.claude-plugin/plugin.json`. A folder with both files is a plugin root too, so Claude Code loads it
-and the rule does not report it. A `marketplace.json` that does not parse still marks the folder.
+and the rule does not report it. A folder with no `plugin.json` is a plugin too when its own
+`marketplace.json` lists it as a source (`"."`). The rule does not report it when each entry has
+that folder as its source. `--plugin-dir` does not read `marketplace.json`, so a marketplace with
+another entry still gets a report. A `marketplace.json` that does not parse still marks the folder.
 The report is on the script string.
 
 The rule makes no report in these cases:

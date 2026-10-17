@@ -35,13 +35,13 @@ these places:
 - a `commands/` directory at the root of a plugin.
 
 A plugin root is a directory with `.claude-plugin/plugin.json`. The manifest is
-optional.[^optional] So a directory with no manifest is a plugin root too, when a
-`.claude-plugin/marketplace.json` at or above it lists it as a relative `source`. Any other
-`commands/` directory, for example `docs/commands/`, is not a report. A plugin with no manifest
-that no marketplace of the repository lists is not a report either, but Claude Code can still
-load it with `--plugin-dir`. When `plugin.json` sets
-`commands`, Claude Code does not read the `commands/` directory.[^manifest] The rule still
-reports it.
+optional.[^optional] A directory with no manifest is also a plugin root when a
+`.claude-plugin/marketplace.json` at or above it lists it as a relative `source`. An entry that
+sets `commands`, or another key that replaces a default location, makes no plugin root.[^manifest]
+Any other `commands/` directory, for example `docs/commands/`, is not a report. A plugin with no
+manifest that no marketplace of the repository lists is not a report either. Claude Code can still
+load it, for example with `--plugin-dir`.[^optional] When `plugin.json` sets `commands`, Claude
+Code does not read the `commands/` directory.[^manifest] The rule still reports it.
 
 The rule makes no report in a plugin whose `.claude-plugin/` directory it cannot see. This is the
 case when the rule cannot search that directory, or when its real path is out of the repository.

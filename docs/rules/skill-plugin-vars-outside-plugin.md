@@ -48,7 +48,8 @@ The rule checks the files that the other skill rules check:
 - `<plugin>/commands/**/*.md`
 
 A file in a plugin is not a report. A file elsewhere, such as `docs/SKILL.md`, is not a report
-either. A plugin root is a directory with `.claude-plugin/plugin.json`.
+either. A plugin root is a directory with `.claude-plugin/plugin.json`, or a directory that a
+`marketplace.json` of the repository lists.
 
 Fail, in `.claude/skills/render/SKILL.md`:
 

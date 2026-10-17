@@ -33,7 +33,8 @@ no other place. So a `.lsp.json` at a repository root with no plugin, or under `
 have no effect.
 
 The rule reports a `.lsp.json` when no folder from its own up to the repository root is a plugin
-root. A plugin root is a directory that holds `.claude-plugin/plugin.json`. The report is on the
+root. A plugin root is a directory that holds `.claude-plugin/plugin.json`, or a directory that a
+`marketplace.json` of the repository lists (see below). The report is on the
 top-level value of the file. The rule does not read the content for a fault: `lsp-json-schema`
 does.
 
@@ -51,8 +52,9 @@ folder of the file, and the rule reads no folder above it.
 
 The manifest of a plugin is optional.[^manifest] A directory with no
 `.claude-plugin/plugin.json` is a plugin root when a `.claude-plugin/marketplace.json` at or above
-it lists it. A plugin with no manifest that no marketplace of the repository lists gets a false
-report. This is a limit of the heuristic.
+it lists it. The rule makes no report when it cannot read such a `marketplace.json`. A plugin with
+no manifest that no marketplace of the repository lists gets a false report. This is a limit of the
+heuristic.
 
 Fail:
 

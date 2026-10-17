@@ -38,8 +38,9 @@ A style file with no frontmatter is valid, and so is an empty block, because eac
 optional.[^osfields]
 
 The rule checks a style file in `.claude/output-styles/` and in the `output-styles/` directory of a
-plugin. A plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere, such as
-`docs/output-styles/s.md`, gets no report.
+plugin. A plugin root is a directory with `.claude-plugin/plugin.json`, or a directory that a
+`marketplace.json` of the repository lists. A file elsewhere, such as `docs/output-styles/s.md`,
+gets no report.
 
 Fail:
 
