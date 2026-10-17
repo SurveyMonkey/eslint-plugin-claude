@@ -590,7 +590,7 @@ default if it has one.
 | [mcp-server-name-format](docs/rules/mcp-server-name-format.md)                           | Name an MCP server with letters, numbers, hyphens and underscores only                |      | ✅ 🔒 |    |
 | [mcp-stdio-relative-path](docs/rules/mcp-stdio-relative-path.md)                         | Do not use a ./ or ../ path in the command or args of a project MCP server            |      | ✅ 🔒 |    |
 | [mcp-allowlist-empty](docs/rules/mcp-allowlist-empty.md)                                 | Confirm that an empty allowedMcpServers list is intended                              |      | ✅ 🔒 |    |
-| [mcp-insecure-url](docs/rules/mcp-insecure-url.md)                                       | Use https:// or wss:// for a remote MCP server that is not on the machine             |      | ✅ 🔒 |    |
+| [mcp-insecure-url](docs/rules/mcp-insecure-url.md)                                       | Use https:// or wss:// for a remote MCP server, and https:// for an MCP bundle URL    |      | ✅ 🔒 |    |
 | [mcp-plugin-stdio-reach](docs/rules/mcp-plugin-stdio-reach.md)                           | Do not declare a stdio MCP server in a plugin that targets claude.ai                  |      | ✅ 🔒 | ⚙️ |
 | [mcp-policy-literal-values](docs/rules/mcp-policy-literal-values.md)                     | Write a literal serverUrl and serverCommand in an MCP policy entry                    |      | ✅ 🔒 |    |
 | [mcp-policy-servername-weak](docs/rules/mcp-policy-servername-weak.md)                   | Do not rely on a serverName entry in an MCP policy list                               |      | ✅ 🔒 |    |

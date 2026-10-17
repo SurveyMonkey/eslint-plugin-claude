@@ -1,7 +1,7 @@
 // A plain `http://` or `ws://` URL to a host that is not on the machine sends the traffic in
 // clear text. `claude plugin validate` warns for plugin MCP configs (manifest reference,
 // "Validate the manifest"). The rule reads the servers of the project `.mcp.json` only. It also
-// reads the MCP bundle string of a plugin manifest, which validate passes with `http://`.
+// reads each MCP bundle string of a plugin manifest. Validate passes an `http://` bundle URL.
 import { expect, it } from 'vitest'
 import {
   ids,
@@ -127,6 +127,9 @@ it('leaves plugin configs to claude plugin validate', () => {
 it('does not read a path under .claude/', () => {
   expect(ids(lintProject(NAME, at('http://example.com'), '.claude/.mcp.json'))).toEqual([])
 })
+it('does not read the servers of a plugin.json outside .claude-plugin/', () => {
+  expect(ids(lintProject(NAME, at('http://example.com'), 'p/plugin.json'))).toEqual([])
+})
 
 const bundle = (declared: unknown) => JSON.stringify({ mcpServers: declared })
 
@@ -182,6 +185,33 @@ it('stays silent for an empty, null, empty array or inline mcpServers in a manif
   }
   expect(ids(lintManifest(NAME, '{"name": "p"}'))).toEqual([])
 })
+it('stays silent for a string that validate reads as a path', () => {
+  // Validate 2.1.302 fails each one with "Path not found", so Claude Code downloads nothing.
+  for (const declared of [
+    ' http://example.com/db.mcpb',
+    'http:example.com/db.mcpb',
+    'http:/example.com/db.mcpb',
+    'http:\\\\example.com\\\\db.mcpb',
+  ]) {
+    expect(ids(lintManifest(NAME, bundle(declared)))).toEqual([])
+  }
+})
 it('does not read a plugin.json outside .claude-plugin/', () => {
   expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), 'p/plugin.json'))).toEqual([])
+})
+it('does not read a bundle string in another file of .claude-plugin/', () => {
+  const at = '.claude-plugin/marketplace.json'
+  expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), at))).toEqual([])
+})
+it('does not read a bundle string in a project .mcp.json', () => {
+  expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb')))).toEqual([])
+})
+it('leaves a plugin under .claude/skills/ to mcp-project-plugin-bundle', () => {
+  // Claude Code skips each bundle of such a plugin, so it downloads nothing.
+  const at = '.claude/skills/p/.claude-plugin/plugin.json'
+  expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), at))).toEqual([])
+  const other = 'tools/skills/p/.claude-plugin/plugin.json'
+  expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), other))).toEqual([
+    'insecureBundle',
+  ])
 })

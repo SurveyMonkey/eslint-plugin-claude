@@ -12,7 +12,7 @@ generated:
 
 # claude/mcp-insecure-url
 
-📝 Use https:// or wss:// for a remote MCP server that is not on the machine.
+📝 Use https:// or wss:// for a remote MCP server, and https:// for an MCP bundle URL.
 
 ⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
 
@@ -48,19 +48,6 @@ The rule makes no report in these cases:
 Of two servers with one name, or two keys with one name, the last one counts, as `JSON.parse`
 keeps it. The rule skips the paths under `.claude/`, which `mcp-json-location` reports.
 
-### MCP bundle URL
-
-The `mcpServers` key of `.claude-plugin/plugin.json` also takes the path or URL of an MCP bundle,
-a `.mcpb` or `.dxt` file. The value is a string, or a string item of an array. Claude Code
-downloads a bundle URL.[^mcpservers] The docs ask for "a path inside the plugin or an `https://`
-URL".[^mcpb] `claude plugin validate` passes an `http://` bundle URL with no warning (Claude Code
-2.1.302). So the rule reports an `http://` bundle URL to a host that is not on the machine. The
-report is on the string.
-
-A path, an `https://` URL and an inline map get no report. A loopback host and a host with a `${`
-reference get no report, for the reasons of the server case. The rule reads only the last
-`mcpServers` member.
-
 Fail:
 
 ```json
@@ -81,6 +68,27 @@ Pass:
   }
 }
 ```
+
+### MCP bundle URL
+
+The `mcpServers` key of `.claude-plugin/plugin.json` also takes the path or URL of an MCP bundle,
+a `.mcpb` or `.dxt` file. The value is a string, or a string item of an array. Claude Code
+downloads a bundle URL.[^mcpservers] The docs ask for "a path inside the plugin or an `https://`
+URL".[^mcpb] `claude plugin validate` passes an `http://` bundle URL with no warning (Claude Code
+2.1.302). So the rule reports an `http://` bundle URL to a host that is not on the machine. The
+report is on the string.
+
+The rule makes no report in these cases:
+
+- The string is a path, an `https://` URL or a `ws://` URL. An inline map is not a string.
+- The host is on the machine, or a `${` reference hides it, for the reasons of the server case.
+- The string starts with a space, or with `http:` and less than two slashes. Validate reads it as
+  a path and fails it, so Claude Code downloads nothing.
+- The plugin is under `.claude/skills/`. Claude Code skips each bundle of such a plugin, and
+  `mcp-project-plugin-bundle` reports it.
+
+The rule does not read the extension. Validate fails an extension that is not `.mcpb` or
+`.dxt`.[^mcpservers] The rule reads only the last `mcpServers` member.
 
 Fail, in `.claude-plugin/plugin.json`:
 

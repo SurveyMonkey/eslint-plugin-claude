@@ -3,10 +3,11 @@
 // URL in the MCP configs of a plugin (v2.1.281 or later), so the rule reads the servers of the
 // project `.mcp.json` only. A loopback host is on the machine, so it is silent. A host with a `${`
 // reference is not known, so it is silent too.
-// The rule also reads the string `mcpServers` of `.claude-plugin/plugin.json`: the path or URL of
-// an MCP bundle. Validate passes an `http://` bundle URL (v2.1.302), so the rule reports it. The
-// docs ask for "a path inside the plugin or an `https://` URL". A loopback host and a `${` host are
-// silent there too, for the same reasons.
+// The rule also reads each string in the `mcpServers` of `.claude-plugin/plugin.json`: the path or
+// URL of an MCP bundle. Validate passes an `http://` bundle URL (v2.1.302), so the rule reports it.
+// The docs ask for "a path inside the plugin or an `https://` URL". A loopback host and a `${` host
+// are silent there too, for the same reasons. A plugin under `.claude/skills/` is silent, because
+// Claude Code skips its bundles, and `mcp-project-plugin-bundle` reports them.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -18,6 +19,7 @@ import {
   parseUrl,
   REMOTE_SERVER_TYPES,
 } from '../mcp-servers.ts'
+import { isSkillsPlugin } from '../plugin-manifest.ts'
 
 const name = 'mcp-insecure-url' as const
 
@@ -29,8 +31,9 @@ const CLEAR_SCHEMES: readonly string[] = ['http:', 'ws:']
 const isLoopback = (host: string) =>
   host === 'localhost' || host === '[::1]' || /^127(?:\.\d{1,3}){3}$/.test(host)
 
-/** The scheme of a bundle URL that sends the download in clear text. */
-const BUNDLE_SCHEMES: readonly string[] = ['http:']
+/** A bundle string that `claude plugin validate` reads as an `http://` URL. Validate 2.1.302 reads
+ *  `HTTP://` as a URL, but it reads ` http://`, `http:/` and `http:` as a path, and fails them. */
+const HTTP_BUNDLE = /^http:\/\//i
 
 /** The host and the scheme of `url` when the scheme is in `schemes` and the host is not on the
  *  machine. The host has no trailing dot. The result is null for a URL that does not parse,
@@ -56,7 +59,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Use https:// or wss:// for a remote MCP server that is not on the machine',
+      description:
+        'Use https:// or wss:// for a remote MCP server, and https:// for an MCP bundle URL',
       url: docsUrl(name),
     },
     schema: [],
@@ -69,10 +73,15 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
   },
   create(context) {
     if (isManifest(context.filename)) {
+      if (isSkillsPlugin(context.filename)) {
+        return {}
+      }
       return {
         Document(node) {
           for (const declared of declaredMcpStrings(node.body)) {
-            const clear = clearHost(declared.value, BUNDLE_SCHEMES)
+            const clear = HTTP_BUNDLE.test(declared.value)
+              ? clearHost(declared.value, CLEAR_SCHEMES)
+              : null
             if (clear !== null) {
               context.report({
                 node: declared,
@@ -84,8 +93,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
         },
       }
     }
-    // `claude plugin validate` warns for a plugin config. `mcpFileKind` reads a `plugin.json` in
-    // `.claude-plugin/` as a project file, so the rule also checks the file name.
+    // `claude plugin validate` warns for a plugin config. `mcpFileKind` does not read the file
+    // name, so the rule also checks it.
     if (
       mcpFileKind(context.filename) !== 'project' ||
       path.basename(context.filename) !== '.mcp.json'
