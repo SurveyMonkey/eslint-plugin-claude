@@ -58,8 +58,8 @@ A plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere
 `docs/SKILL.md`, gets no report. An agent file that the `agents` key of a plugin manifest names
 outside `agents/` is not in the globs, so the rule does not read it.
 
-An empty block, and a file with no frontmatter, get no report. A value that parses but is not a
-map, such as a list, is a fault for the rule of each kind:
+An empty block, a block of comments only, and a file with no frontmatter get no report. A value that
+parses but is not a map, such as a list, is a fault for the rule of each kind:
 [`agent-frontmatter-valid`](agent-frontmatter-valid.md),
 [`skill-frontmatter-schema`](skill-frontmatter-schema.md) and
 [`output-style-frontmatter-valid`](output-style-frontmatter-valid.md). Those rules do not report

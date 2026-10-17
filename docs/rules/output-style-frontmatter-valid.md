@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-01
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 ---
 
 # claude/output-style-frontmatter-valid
@@ -29,15 +29,15 @@ under its file name, with no field set.[^osfields] Claude Code shows the parse e
 `claude --debug`. A style with a `description` or `keep-coding-instructions` field then
 silently loses it. The rule reports two faults:
 
-- **Not a map.** The frontmatter parses, but its top level is a list or a single value. The docs
-  do not say what such a block does. The rule infers that the style loads with no field set, as
-  for YAML that does not parse.
+- **Not a map.** The frontmatter parses, but its top level is a list or a single value that is not
+  null. The docs do not say what such a block does. The rule infers that the style loads with no
+  field set, as for YAML that does not parse.
 - **Late block.** The opening `---` is not line 1, and the block holds a style field. Claude Code
   reads frontmatter only from line 1.[^glossary] The docs do not say what a late block does. The rule
   infers that the style loads with no field set.
 
-A style file with no frontmatter is valid, and so is an empty block or a block of comments only,
-because each field is optional.[^osfields]
+A style file with no frontmatter is valid. So are an empty block, a block of comments only and a
+YAML null such as `~`, because each field is optional.[^osfields]
 
 The rule does not report frontmatter that the strict YAML parser cannot read. Claude Code can read
 some YAML that the strict parser cannot.

@@ -7,7 +7,7 @@ related_issues: [9]
 stale_after: 2027-04-01
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 ---
 
 # claude/agent-frontmatter-valid
@@ -29,8 +29,8 @@ cause appears only in the debug log. The rule reports each case on the frontmatt
 
 - **Late block.** The opening `---` is not line 1, and the block holds a subagent field. Claude Code
   reads frontmatter only from line 1.[^glossary]
-- **Not a map.** The frontmatter parses, but its top level is a list or a single value. It sets
-  no `name`, so Claude Code skips the file.[^skips]
+- **Not a map.** The frontmatter parses, but its top level is a list or a single value that is
+  not null. It sets no `name`, so Claude Code skips the file.[^skips]
 - **No `name`.** Claude Code reads the file as documentation.[^skips]
 - **No `description`.** Claude Code skips the file.
 - **Bad `name`.** The name starts with `-` or contains `:`. The colon is for the scoped names of
@@ -55,14 +55,14 @@ say what a plugin agent with other faults does. So the rule does not check plugi
 A file with no frontmatter at all, such as `.claude/agents/README.md`, is not a report. The docs
 say that Claude Code keeps such a file as documentation beside the agents. A frontmatter block
 with no `name`, such as `title: Agents`, is a report, because the rule cannot tell it from an
-agent file that lacks its `name`. An empty block, or a block of comments only, gets the reports
-for no `name` and no `description`. A block below line 1 is
+agent file that lacks its `name`. An empty block, a block of comments only, and a YAML null such
+as `~` get the reports for no `name` and no `description`. A block below line 1 is
 a report only when it holds a subagent field. A value that is not a string, such as `name: 123`, is
 a fault for [`agent-frontmatter-schema`](agent-frontmatter-schema.md).
 
 `claude plugin validate` checks a directory that you name, for example `.claude/agents`. It
 finds YAML that does not parse.[^check] It does not find a missing `name`.[^check] The
-rule does not need a command, and it finds the other cases too.
+rule does not need a command. It finds a missing `name` and the other cases.
 
 Fail:
 

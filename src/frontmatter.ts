@@ -4,9 +4,10 @@
 import { isMap, isScalar, type Node, parse, parseDocument, YAMLParseError } from 'yaml'
 
 /** What the strict `yaml` parser makes of the text of a frontmatter block. An
- *  empty block, and a block of comments only, give `not-mapping` with the value
- *  null. A parse error gives the first error, and the line of the text where it
- *  starts. An error of alias resolution, such as an alias with no anchor, has no line. */
+ *  empty block, a block of comments only, and a YAML null such as `~`, give
+ *  `not-mapping` with the value null. A parse error gives the first error, and
+ *  the line of the text where it starts. An error of alias resolution, such as
+ *  an alias with no anchor, has no line. */
 export type FrontmatterParse =
   | { kind: 'mapping'; data: Record<string, unknown> }
   | { kind: 'not-mapping'; value: unknown }

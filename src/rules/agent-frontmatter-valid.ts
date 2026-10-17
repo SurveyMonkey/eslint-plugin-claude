@@ -100,7 +100,7 @@ const rule: MarkdownRuleDefinition<{
         if (parsed.kind === 'error') {
           return
         }
-        // An empty block, or one of comments only, has no field.
+        // An empty block, a block of comments only, and a YAML null have no field.
         if (parsed.kind === 'not-mapping' && parsed.value === null) {
           context.report({ node, messageId: 'missingName' })
           context.report({ node, messageId: 'missingDescription' })
