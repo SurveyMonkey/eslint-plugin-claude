@@ -33,9 +33,9 @@ import {
  *  `UNREADABLE` is a truthy symbol. Test the result with `=== true`, or
  *  compare it to `UNREADABLE` first.
  *
- *  A `.claude-plugin/plugin.json` entry makes a plugin root. The check
- *  follows no link at that last step, so a link to any target counts, and a
- *  dangling link too. `readManifest` reads the content.
+ *  A `.claude-plugin/plugin.json` of any file type makes a plugin root. The
+ *  check follows no link at that last step, so a link to any target counts,
+ *  and a dangling link too. `readManifest` reads the content.
  *
  *  A directory with no manifest is a plugin root when a `marketplace.json` of
  *  the repository lists it (see `isListed`). */
@@ -64,13 +64,15 @@ export function hasManifest(dir: string): boolean | Unreadable {
 }
 
 /** The entry keys that replace a default location of a plugin. With no
- *  `plugin.json`, the entry is the manifest. A rule reads the component keys
- *  from `plugin.json` only, and not from an entry. So an entry with one of
- *  these keys makes no plugin root.
- *  A `skills` key adds to the default in a manifest, but replaces it in an
- *  entry whose source is the marketplace root. The check does not tell the
- *  two apart, so `skills` is here for each entry.
- *  (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location) */
+ *  `plugin.json`, the entry is the manifest. The location checks, such as
+ *  `classifyAgentFile` and `mcpFileKind`, read the component keys from
+ *  `plugin.json` only. So they cannot model the plugin of an entry with one
+ *  of these keys, and the check gives `UNREADABLE` for its directory.
+ *  A `skills` key adds to the default in a manifest. It replaces the default
+ *  in an entry whose source is the marketplace root. The check does not tell
+ *  the two apart, so `skills` is here for each entry.
+ *  (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location,
+ *  https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json) */
 const REPLACES: readonly string[] = [
   'commands',
   'agents',
@@ -82,7 +84,8 @@ const REPLACES: readonly string[] = [
 
 /** What the check knows of one `marketplace.json`. `stamp` is the time of the
  *  last write and the size of the file when the check parsed it. `roots` holds
- *  the real paths of the sources that resolve. `pending` holds the entries with
+ *  the real paths of the sources that resolve. `replaced` holds them for the
+ *  entries with a key of `REPLACES`. `pending` holds the entries with
  *  a source that is missing, or that the check cannot see. `unseen` holds the
  *  entries of `pending` that the check could not see at the last read. */
 interface Listing {
@@ -90,6 +93,7 @@ interface Listing {
   readonly read: (entry: ObjectNode) => SourceRead
   readonly pathOf: (entry: ObjectNode) => string | undefined
   readonly roots: Set<string>
+  readonly replaced: Set<string>
   pending: readonly ObjectNode[]
   unseen: readonly ObjectNode[]
 }
@@ -100,13 +104,15 @@ interface Listing {
 const listings = new Map<string, Listing>()
 
 /** Read the pending entries of `listing` again, and move each source that now
- *  resolves to `roots`. */
+ *  resolves to `roots`, or to `replaced`. */
 function settle(listing: Listing): void {
   const unseen: ObjectNode[] = []
   listing.pending = listing.pending.filter((entry) => {
     const found = listing.read(entry)
     if (found.kind === 'manifest' || found.kind === 'no-manifest') {
-      listing.roots.add(found.dir)
+      const replaces = REPLACES.some((key) => lastMember(entry, key) !== undefined)
+      const into = replaces ? listing.replaced : listing.roots
+      into.add(found.dir)
       return false
     }
     if (found.kind === 'unreadable') {
@@ -118,16 +124,15 @@ function settle(listing: Listing): void {
 }
 
 /** A new listing of `document`, the content of the `marketplace.json` at
- *  `file`. An entry with a key of `REPLACES` is not read. */
+ *  `file`. */
 function listingOf(file: string, stamp: string, document: MarketplaceBody): Listing {
   return {
     stamp,
     read: sourceReader(file, document),
     pathOf: sourcePath(file, document),
     roots: new Set(),
-    pending: pluginEntries(document).filter((entry) =>
-      REPLACES.every((key) => lastMember(entry, key) === undefined),
-    ),
+    replaced: new Set(),
+    pending: pluginEntries(document),
     unseen: [],
   }
 }
@@ -141,7 +146,7 @@ function doesNotParse(file: string, bound: string): boolean {
 
 /** The listing of the `marketplace.json` at `file`, with its pending entries
  *  read again. The result is null when no file is there. It is `UNREADABLE`
- *  when the check cannot see the file: a read fails, the file is a dangling
+ *  when the check cannot see the file. A read fails, the file is a dangling
  *  link, or its real path is out of `bound`. A file that does not parse lists
  *  no source, as Claude Code loads no plugin from it. */
 function listedAt(file: string, bound: string): Listing | null | Unreadable {
@@ -178,9 +183,10 @@ function listedAt(file: string, bound: string): Listing | null | Unreadable {
  *  marketplace of `dir` only. The manifest reference says that "The manifest
  *  is optional", and that Claude Code then loads the standard layout.
  *
- *  When no marketplace lists `dir`, the result is `UNREADABLE` in two cases.
- *  The check cannot see a marketplace of the walk. Or an entry has the path
- *  `dir`, and the check cannot see its source. */
+ *  When no marketplace lists `dir` as a plain root, the result is
+ *  `UNREADABLE` in three cases. The check cannot see a marketplace of the
+ *  walk. Or an entry has the path `dir`, and the check cannot see its source.
+ *  Or the source of an entry with a key of `REPLACES` is `dir`. */
 function isListed(dir: string): boolean | Unreadable {
   const real = realOf(dir)
   if (typeof real !== 'string') {
@@ -197,7 +203,8 @@ function isListed(dir: string): boolean | Unreadable {
       if (listing.roots.has(real)) {
         return true
       }
-      unseen ||= listing.unseen.some((entry) => listing.pathOf(entry) === at)
+      unseen ||=
+        listing.replaced.has(real) || listing.unseen.some((entry) => listing.pathOf(entry) === at)
     }
     // `repositoryRoot` is the real path of `dir` or of a directory above it, so the walk ends.
     if (realDirectory(up) === bound) {

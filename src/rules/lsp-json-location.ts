@@ -3,8 +3,9 @@
 // manifest. That key can name a `.json` file in a folder of the plugin, so a file below a plugin
 // root gets no report. A `.lsp.json` at a repository root with no plugin, or under `.claude/`,
 // may have no effect. The plugin manifest is optional. A plugin with no manifest that no
-// `marketplace.json` of the repository lists gets a false report. The rule reads the place of the
-// file and not its content. A folder with an ancestor whose plugin root the check cannot read gets
+// `marketplace.json` of the repository lists gets a false report. A listed plugin whose entry sets
+// a key such as `commands` gets no report. The rule reads the place of the file and not its
+// content. A folder with an ancestor whose plugin root the check cannot read gets
 // no report (ADR 001, Decision 14).
 // `lsp-json-schema` reads the content.
 import { existsSync } from 'node:fs'

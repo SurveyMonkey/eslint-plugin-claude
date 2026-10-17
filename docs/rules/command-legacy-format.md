@@ -36,8 +36,9 @@ these places:
 
 A plugin root is a directory with `.claude-plugin/plugin.json`. The manifest is
 optional.[^optional] A directory with no manifest is also a plugin root when a
-`.claude-plugin/marketplace.json` at or above it lists it as a relative `source`. An entry that
-sets `commands`, or another key that replaces a default location, makes no plugin root.[^manifest]
+`.claude-plugin/marketplace.json` at or above it lists it. The entry must have a relative
+`source`. An entry can set `commands`, or another key that replaces a default
+location.[^manifest] The rule does not read that key, so it makes no report in that plugin.
 Any other `commands/` directory, for example `docs/commands/`, is not a report. A plugin with no
 manifest that no marketplace of the repository lists is not a report either. Claude Code can still
 load it, for example with `--plugin-dir`.[^optional] When `plugin.json` sets `commands`, Claude

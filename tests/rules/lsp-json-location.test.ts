@@ -67,6 +67,18 @@ it('stays silent for a plugin with no manifest that a marketplace lists, and rep
   expect(ids(lintAt('plugins/a/.lsp.json', files))).toEqual([])
   expect(ids(lintAt('plugins/b/.lsp.json', files))).toEqual(['outside'])
 })
+it('stays silent for a listed plugin whose entry replaces a default location', () => {
+  // `lspServers` merges, so Claude Code loads the `.lsp.json` of this plugin.
+  const files = {
+    '.claude-plugin/marketplace.json': JSON.stringify({
+      name: 'm',
+      owner: { name: 'o' },
+      plugins: [{ name: 'c', source: './plugins/c', commands: ['./other/y.md'] }],
+    }),
+    'plugins/c/README.md': '',
+  }
+  expect(ids(lintAt('plugins/c/.lsp.json', files))).toEqual([])
+})
 it('stays silent for a .lsp.json below a plugin root, where the manifest can name it', () => {
   expect(ids(lintAt('lsp/.lsp.json', PLUGIN))).toEqual([])
   expect(ids(lintAt('a/b/.lsp.json', PLUGIN))).toEqual([])

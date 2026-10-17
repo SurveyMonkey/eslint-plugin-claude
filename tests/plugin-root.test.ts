@@ -190,6 +190,19 @@ describe('a directory that a marketplace lists with no manifest', () => {
     expect(isPluginRoot(repo('q'))).toBe(true)
   })
 
+  it('shows an edit that keeps the time of the last write of the marketplace', () => {
+    mkdirSync(repo('p'))
+    mkdirSync(repo('longer'))
+    const file = market('.', [{ name: 'p', source: './p' }])
+    const time = new Date(2001, 0, 1)
+    utimesSync(file, time, time)
+    expect(isPluginRoot(repo('p'))).toBe(true)
+    market('.', [{ name: 'p', source: './longer' }])
+    utimesSync(file, time, time)
+    expect(isPluginRoot(repo('p'))).toBe(false)
+    expect(isPluginRoot(repo('longer'))).toBe(true)
+  })
+
   it('is not a plugin root after the marketplace is removed, or stops to parse', () => {
     mkdirSync(repo('p'))
     const file = market('.', [{ name: 'p', source: './p' }])
@@ -203,21 +216,44 @@ describe('a directory that a marketplace lists with no manifest', () => {
     expect(isPluginRoot(repo('p'))).toBe(false)
   })
 
-  it('is not a plugin root when the entry sets a key that replaces a default location', () => {
+  it('is unseen when the entry sets a key that replaces a default location', () => {
+    // Claude Code loads the plugin, but the checks read the component keys from `plugin.json`
+    // only. So they cannot say where its components are.
     market('.', [
       { name: 'c', source: './c', commands: ['./x.md'] },
       { name: 'a', source: './a', agents: './agents/' },
       { name: 's', source: './s', skills: ['./skills/one'] },
+      { name: 'o', source: './o', outputStyles: './styles/' },
+      { name: 'w', source: './w', workflows: './flows/' },
+      { name: 'e', source: './e', experimental: { themes: './themes/' } },
       { name: 'm', source: './m', mcpServers: { x: { command: 'x' } } },
     ])
-    for (const dir of ['c', 'a', 's', 'm']) {
+    const replaced = ['c', 'a', 's', 'o', 'w', 'e']
+    for (const dir of [...replaced, 'm', 'q']) {
       mkdirSync(repo(dir))
     }
-    expect(isPluginRoot(repo('c'))).toBe(false)
-    expect(isPluginRoot(repo('a'))).toBe(false)
-    expect(isPluginRoot(repo('s'))).toBe(false)
+    for (const dir of replaced) {
+      expect(isPluginRoot(repo(dir))).toBe(UNREADABLE)
+    }
     // `mcpServers` merges with the default `.mcp.json`, so the default layout still loads.
     expect(isPluginRoot(repo('m'))).toBe(true)
+    // No entry has the path of `q`.
+    expect(isPluginRoot(repo('q'))).toBe(false)
+  })
+
+  it('is a plugin root when a second entry lists the directory with no such key', () => {
+    market('.', [
+      { name: 'c', source: './p', commands: ['./x.md'] },
+      { name: 'p', source: './p' },
+    ])
+    mkdirSync(repo('p'))
+    expect(isPluginRoot(repo('p'))).toBe(true)
+  })
+
+  it('is unseen when the marketplace is JSON that is too deep to read', () => {
+    put(repo('.claude-plugin', 'marketplace.json'), `${'['.repeat(200_000)}${']'.repeat(200_000)}`)
+    mkdirSync(repo('p'))
+    expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
   })
 
   it('reads no marketplace above the repository root', () => {

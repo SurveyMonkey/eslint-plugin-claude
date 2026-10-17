@@ -3857,7 +3857,8 @@ const Q11_REPORTS = [
 // A tree of its own for #17: a marketplace lists `plugins/p`, which has no `plugin.json`. The
 // manifest is optional, and Claude Code then loads the standard layout. So `plugins/p` is a
 // plugin root. `plugins/q` has no manifest and no entry, and `r` has a remote source. The entry of
-// `plugins/c` sets `commands`, which replaces the default `commands/`, so it makes no root.
+// `plugins/c` sets `commands`, which replaces the default `commands/`. The rule cannot read that
+// key, so it makes no report there.
 // `plugins/m` has a manifest and no entry. It is a root as before. The marketplace of
 // `packages/self` lists its own root (`"."`).
 const E17_TREE: Record<string, string> = {
