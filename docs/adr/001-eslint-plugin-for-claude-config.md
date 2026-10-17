@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 23, 56, 86, 98, 99, 235, 236, 348]
+related_issues: [5, 6, 7, 8, 17, 23, 56, 86, 98, 99, 235, 236, 348]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -149,7 +149,17 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    central list.
 10. **Globs are broad, and a rule checks the plugin root in code.** For example, the glob
     `**/commands/**/*.md` matches many paths. The rule reports only under `.claude/commands/`, or
-    next to `.claude-plugin/plugin.json`.
+    under `commands/` at a plugin root.
+    - `isPluginRoot` in `src/plugin-root.ts` finds a plugin root. A directory with
+      `.claude-plugin/plugin.json` is a plugin root. The manifest is optional, and Claude Code
+      then loads the standard layout. So a directory with no manifest is a plugin root when a
+      `.claude-plugin/marketplace.json` lists it as a relative `source`
+      ([#17](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/17)).
+    - A user changes the `files` of a rule through the config blocks. The block of a rule has the
+      name `claude/<config>/<rule>`. The blocks of the files of each language have the name
+      `claude/<config>/<language>-files`. These names are a public contract from version 1.0.0.
+      A change to a name is a breaking change. The README shows the change of `files` by name.
+    - The plugin has no setting and no rule option for `files` or for plugin roots.
 11. **A value set that Claude Code owns lives in one data module.** Hook events, tool names and
     settings key scopes are examples. The module is in `src/data/`. It records the Claude Code
     version that the values came from, and a review date.
@@ -175,6 +185,10 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
       that exists is out. A rule cannot see it. A dangling link is a part that exists. A rule
       cannot see a path that has a dangling link in it.
     - A rule does not follow a link whose real path is out of the repository.
+    - A rule finds the marketplace of a plugin root with no manifest in the repository only. It
+      reads each `.claude-plugin/marketplace.json` at or above the directory, up to the
+      repository root. A remote source, a source out of the marketplace root, and a source out
+      of the repository make no plugin root.
     - A rule does not model what Claude Code loads from out of the repository, such as user
       settings or agents in `~/.claude/`.
     - A rule that cannot see a file because of this limit makes no report that rests on that file.
