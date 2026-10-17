@@ -1,8 +1,8 @@
 // A skill or command name with a character that Claude Code refuses, or with
 // more than 256 characters (docs/rules/skill-name-characters.md). A refused
-// folder or file name stops the load. A refused frontmatter `name` is not in the `/` menu. A folder in a
-// plugin `skills/` directory is out of scope: Claude Code changes the
-// characters to hyphens there.
+// folder or file name stops the load. A refused frontmatter `name` is not in
+// the `/` menu. A folder in a plugin `skills/` directory is out of scope:
+// Claude Code changes the characters to hyphens there.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
@@ -11,7 +11,8 @@ import { readFrontmatter } from '../skill-frontmatter.ts'
 const name = 'skill-name-characters' as const
 
 /** The most characters that Claude Code takes in a name (errors, "Skill or command
- *  name refused"; checked 2026-10-16). No setting moves it. The rule counts code points. */
+ *  name refused"; checked 2026-10-16). The rule has no option for it. The rule counts
+ *  code points. */
 const NAME_LIMIT = 256
 
 /** The length of `text` in characters when it is over the limit, or null. */
@@ -76,7 +77,7 @@ const rule: MarkdownRuleDefinition<{
       command:
         '`{{name}}` holds {{kind}} ({{code}}). Claude Code does not load this command. Rename the file or folder.',
       commandLength:
-        'The command name has {{length}} characters. Claude Code refuses a name over {{limit}} characters, and does not load this command. Rename the file or folder.',
+        'The command name, joined with `:`, has {{length}} characters. Claude Code refuses a name over {{limit}} characters. Rename the file or folder.',
       nameLength:
         'The `name` has {{length}} characters. Claude Code refuses a name over {{limit}} characters. The `/` menu does not show this name, and the name does not invoke the skill. Edit the `name` field.',
       name: '`{{name}}` holds {{kind}} ({{code}}). The `/` menu does not show this name, and the name does not invoke the skill. Edit the `name` field.',
