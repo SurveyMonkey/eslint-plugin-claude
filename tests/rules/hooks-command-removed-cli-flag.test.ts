@@ -235,6 +235,16 @@ jsonTester.run(`${name}: remote-control sandbox flags`, ruleOf(name), {
         filename: FILES.project,
         errors: [sandbox('--sandbox')],
       },
+      // Exec form gives one report at each item, also for a flag that occurs two times.
+      {
+        code: settings(
+          hooks('Stop', [
+            command({ command: 'claude', args: ['remote-control', '--sandbox', '--sandbox'] }),
+          ]),
+        ),
+        filename: FILES.project,
+        errors: [sandbox('--sandbox'), sandbox('--sandbox')],
+      },
       {
         code: shellCode('claude remote-control --sandbox --no-sandbox'),
         filename: FILES.project,
