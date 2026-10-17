@@ -36,9 +36,11 @@ describe('classifyFrontmatter', () => {
   it('gives the value of YAML that parses to a list or a scalar', () => {
     expect(classifyFrontmatter('- a\n- b\n')).toEqual({ kind: 'not-mapping', value: ['a', 'b'] })
     expect(classifyFrontmatter('just text\n')).toEqual({ kind: 'not-mapping', value: 'just text' })
-    // An empty block, and a block of comments only, parse to null.
+    // An empty block, a block of comments only, and a YAML null parse to null.
     expect(classifyFrontmatter('')).toEqual({ kind: 'not-mapping', value: null })
     expect(classifyFrontmatter('# note\n')).toEqual({ kind: 'not-mapping', value: null })
+    expect(classifyFrontmatter('~\n')).toEqual({ kind: 'not-mapping', value: null })
+    expect(classifyFrontmatter('false\n')).toEqual({ kind: 'not-mapping', value: false })
   })
 
   it('gives the first error and its line for YAML that does not parse', () => {

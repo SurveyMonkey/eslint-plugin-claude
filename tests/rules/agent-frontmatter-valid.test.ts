@@ -106,10 +106,15 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
         },
       ],
     },
-    // A block of comments only sets no field, as an empty block.
-    {
-      ...file('# Owner: web\n'),
+    // A block of comments only, and a YAML null, set no field, as an empty block.
+    ...['# Owner: web\n', '~\n', 'null\n'].map((frontmatter) => ({
+      ...file(frontmatter),
       errors: [{ messageId: 'missingName' }, { messageId: 'missingDescription' }],
+    })),
+    // A scalar that is false is a value, not an empty block.
+    {
+      ...file('false\n'),
+      errors: [{ messageId: 'invalidYaml' }],
     },
     // A whitespace-only block is an empty block.
     {
