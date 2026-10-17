@@ -130,6 +130,10 @@ it('does not read a path under .claude/', () => {
 it('does not read the servers of a plugin.json outside .claude-plugin/', () => {
   expect(ids(lintProject(NAME, at('http://example.com'), 'p/plugin.json'))).toEqual([])
 })
+it('does not read the servers of another file of .claude-plugin/', () => {
+  const path = '.claude-plugin/marketplace.json'
+  expect(ids(lintProject(NAME, at('http://example.com'), path))).toEqual([])
+})
 
 const bundle = (declared: unknown) => JSON.stringify({ mcpServers: declared })
 
@@ -150,6 +154,21 @@ it('reports the http:// item of a bundle array once, and not the path item', () 
   const found = lintManifest(NAME, bundle(['./servers/db.mcpb', 'http://example.com/db.mcpb']))
   expect(ids(found)).toEqual(['insecureBundle'])
   expect(found[0]).toMatchObject({ line: 1, column: 36, endColumn: 64 })
+  const first = lintManifest(NAME, bundle(['http://a.test/db.mcpb', './servers/db.mcpb']))
+  expect(ids(first)).toEqual(['insecureBundle'])
+  expect(first[0]).toMatchObject({ line: 1, column: 16, endColumn: 39 })
+})
+it('reports a bundle URL that validate reads as an http:// URL', () => {
+  // Validate 2.1.302 passes each one, so Claude Code reads it as a URL.
+  const found = lintManifest(
+    NAME,
+    bundle(['http:///a.test/db.mcpb', 'http://127.0.0.1@b.test/db.mcpb', 'hTtP://c.test/db.mcpb']),
+  )
+  expect(found.map(({ message }) => message.split(' over ')[0])).toEqual([
+    'The MCP bundle URL points to a.test',
+    'The MCP bundle URL points to b.test',
+    'The MCP bundle URL points to c.test',
+  ])
 })
 it('reports the last mcpServers member of a manifest', () => {
   const last = '{"mcpServers": "https://x.test/db.mcpb", "mcpServers": "http://x.test/db.mcpb"}'
@@ -186,9 +205,15 @@ it('stays silent for an empty, null, empty array or inline mcpServers in a manif
   expect(ids(lintManifest(NAME, '{"name": "p"}'))).toEqual([])
 })
 it('stays silent for a string that validate reads as a path', () => {
-  // Validate 2.1.302 fails each one with "Path not found", so Claude Code downloads nothing.
+  // Validate 2.1.302 fails each one with "Path not found". It says that the runtime loader reports
+  // a load failure.
   for (const declared of [
     ' http://example.com/db.mcpb',
+    '\thttp://example.com/db.mcpb',
+    '\nhttp://example.com/db.mcpb',
+    '\ufeffhttp://example.com/db.mcpb',
+    '\u00a0http://example.com/db.mcpb',
+    'ht\ttp://example.com/db.mcpb',
     'http:example.com/db.mcpb',
     'http:/example.com/db.mcpb',
     'http:\\\\example.com\\\\db.mcpb',
@@ -206,8 +231,8 @@ it('does not read a bundle string in another file of .claude-plugin/', () => {
 it('does not read a bundle string in a project .mcp.json', () => {
   expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb')))).toEqual([])
 })
-it('leaves a plugin under .claude/skills/ to mcp-project-plugin-bundle', () => {
-  // Claude Code skips each bundle of such a plugin, so it downloads nothing.
+it('stays silent for a plugin directly under .claude/skills/', () => {
+  // Claude Code skips each bundle of such a plugin (plugins/loading).
   const at = '.claude/skills/p/.claude-plugin/plugin.json'
   expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), at))).toEqual([])
   const other = 'tools/skills/p/.claude-plugin/plugin.json'

@@ -6,8 +6,8 @@
 // The rule also reads each string in the `mcpServers` of `.claude-plugin/plugin.json`: the path or
 // URL of an MCP bundle. Validate passes an `http://` bundle URL (v2.1.302), so the rule reports it.
 // The docs ask for "a path inside the plugin or an `https://` URL". A loopback host and a `${` host
-// are silent there too, for the same reasons. A plugin under `.claude/skills/` is silent, because
-// Claude Code skips its bundles, and `mcp-project-plugin-bundle` reports them.
+// are silent there too, for the same reasons. A plugin directly under `.claude/skills/` is silent,
+// because Claude Code skips its bundles.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -32,7 +32,8 @@ const isLoopback = (host: string) =>
   host === 'localhost' || host === '[::1]' || /^127(?:\.\d{1,3}){3}$/.test(host)
 
 /** A bundle string that `claude plugin validate` reads as an `http://` URL. Validate 2.1.302 reads
- *  `HTTP://` as a URL, but it reads ` http://`, `http:/` and `http:` as a path, and fails them. */
+ *  `HTTP://` as a URL. It reads `http:`, `http:/` and `http:\\` as a path, and fails them. It
+ *  also fails a string with a character before `http://`, such as a space, a tab or a BOM. */
 const HTTP_BUNDLE = /^http:\/\//i
 
 /** The host and the scheme of `url` when the scheme is in `schemes` and the host is not on the
@@ -93,8 +94,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
         },
       }
     }
-    // `claude plugin validate` warns for a plugin config. `mcpFileKind` does not read the file
-    // name, so the rule also checks it.
+    // `claude plugin validate` warns for a plugin config. `mcpFileKind` also gives `project` to a
+    // file that is not `.mcp.json`, so the rule checks the file name.
     if (
       mcpFileKind(context.filename) !== 'project' ||
       path.basename(context.filename) !== '.mcp.json'
