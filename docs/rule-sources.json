@@ -44,14 +44,14 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Available tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
     }
   ],
   "agent-field-min-version": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -63,7 +63,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -95,7 +95,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -117,7 +117,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -158,7 +158,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -218,7 +218,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -235,7 +235,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -285,7 +285,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Supported frontmatter fields",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -309,7 +309,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     }
   ],
   "agent-plugin-ignored-fields": [
@@ -361,6 +361,13 @@
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
       "hash": "13b3aafece25a689bcf19d24fa7764ae9c9cf18c2c4e9b52ab973b81210059ce"
+    }
+  ],
+  "agent-skills-preload-limit": [
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Preload skills into subagents",
+      "hash": "bcd52b780b5b7599d5c0fea1108d4176c8aac67a9bb09625d081aade1d5bfbf7"
     }
   ],
   "agent-skills-preloadable": [
@@ -420,7 +427,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Available tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -430,19 +437,19 @@
     {
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Agent would be spawned with zero tools",
-      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+      "hash": "b7679cde6d0cfc88a076120b65a9ad2b6afedd50bc640b3e6e65ead9bbe9679f"
     }
   ],
   "agent-tools-known": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Available tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -452,14 +459,14 @@
     {
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Agent would be spawned with zero tools",
-      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+      "hash": "b7679cde6d0cfc88a076120b65a9ad2b6afedd50bc640b3e6e65ead9bbe9679f"
     }
   ],
   "agent-tools-skill-for-preload": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Frontmatter reference",
-      "hash": "868c357490edca18345acff0717353a776b25f4fdec7b67950550e1c5c16dd21"
+      "hash": "211eb343555edf9226beefbd024958e57767c67291f96cfd097964a004a7eca1"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -478,12 +485,12 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Available tools",
-      "hash": "6f8dff90d3decb16b924f72e9fad8a92e8577e73e1ff2453236b88c29d503493"
+      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Agent would be spawned with zero tools",
-      "hash": "f8e661b07237821390ab3cc1b49081303f3b729ea2ea271d0fdb3db8ce0ef923"
+      "hash": "b7679cde6d0cfc88a076120b65a9ad2b6afedd50bc640b3e6e65ead9bbe9679f"
     }
   ],
   "claude-md-agents-md-prose-pointer": [
@@ -593,7 +600,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "claude-md-guardrail-to-hook": [
@@ -792,7 +799,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PreToolUse decision control",
-      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
+      "hash": "2cb2551dd1a5875d92d6e63bb8f6369b69b116a51c5c6b668e58d9f767d30e23"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -809,7 +816,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+      "hash": "333bdcc3475641b0a08d024e5b7261c26f9cf7ab5159a97021964843f3138cce"
     }
   ],
   "hooks-command-path-variable": [
@@ -826,7 +833,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
       "heading": "Hook error in output",
-      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+      "hash": "d01057e87f160b07171ed160c089339088053b06feb76e4fd66c21b27454fe0d"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -843,7 +850,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+      "hash": "333bdcc3475641b0a08d024e5b7261c26f9cf7ab5159a97021964843f3138cce"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -909,7 +916,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Command hook fields",
-      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+      "hash": "3312823885beab440f3b3b6507f2e8e2d113ed841530039e5af80d99012ccbcb"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -929,7 +936,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Block the action when a hook fails",
-      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
+      "hash": "052217aa5c6f600fcd47abb13916b1670fb48603052ed7659d7403a7e08687f9"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1084,7 +1091,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Command hook fields",
-      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+      "hash": "3312823885beab440f3b3b6507f2e8e2d113ed841530039e5af80d99012ccbcb"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1109,7 +1116,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Block the action when a hook fails",
-      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
+      "hash": "052217aa5c6f600fcd47abb13916b1670fb48603052ed7659d7403a7e08687f9"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1380,7 +1387,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PreToolUse decision control",
-      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
+      "hash": "2cb2551dd1a5875d92d6e63bb8f6369b69b116a51c5c6b668e58d9f767d30e23"
     }
   ],
   "hooks-no-standalone-file": [
@@ -1419,7 +1426,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Other exit codes",
-      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43"
+      "hash": "47705c0d375c122746e5beff5836ef6e753e100f8f397b1a03f67e02120177b2"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1429,19 +1436,19 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Block the action when a hook fails",
-      "hash": "eadd5b8ca15d955bb6b5519d409965881d243537ec77461a5b74bc235c9628c7"
+      "hash": "052217aa5c6f600fcd47abb13916b1670fb48603052ed7659d7403a7e08687f9"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exit code output",
-      "hash": "8afbcd7acfff314747257d301fa455e5c36246b81d100f879265969e2681d0dc"
+      "hash": "24c93ec1237ecfb00e6f23c63e36875c56d3e74eec270827f181584f1534ceaa"
     }
   ],
   "hooks-output-deprecated-fields": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PreToolUse decision control",
-      "hash": "d465a4265a51d685465092caceb10aa624278b1c0ba86e8a6ac7561d23861ea2"
+      "hash": "2cb2551dd1a5875d92d6e63bb8f6369b69b116a51c5c6b668e58d9f767d30e23"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1483,7 +1490,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PreModelSwitch decision control",
-      "hash": "2c384de0259af549ecbc40242dde4b6853651e86c89e7ed06fd9eeca431fb977"
+      "hash": "4a39411a8690b333ed0e010ecb04ea1d8a1185a92f1fd5dfd10818a4b25fb4d3"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1510,7 +1517,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exit code 0",
-      "hash": "9bd747d426e0b256983e46f526ad1c84dad5020321ca5d6fb3e8e3c4fddcd2e6"
+      "hash": "79c555af4d7d461a3081edccb4bfd96f126f2f24b243f9187918b256732cab57"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1544,7 +1551,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Command hook fields",
-      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+      "hash": "3312823885beab440f3b3b6507f2e8e2d113ed841530039e5af80d99012ccbcb"
     }
   ],
   "hooks-prefer-exec-form": [
@@ -1566,7 +1573,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
       "heading": "Hook error in output",
-      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+      "hash": "d01057e87f160b07171ed160c089339088053b06feb76e4fd66c21b27454fe0d"
     }
   ],
   "hooks-prompt-on-permission-request": [
@@ -1590,7 +1597,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Command hook fields",
-      "hash": "f1f0a8f07e057710409824eaeb2cf815ca7241cb687a8381fd0efe89596057ec"
+      "hash": "3312823885beab440f3b3b6507f2e8e2d113ed841530039e5af80d99012ccbcb"
     }
   ],
   "hooks-script-executable": [
@@ -1614,7 +1621,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Other exit codes",
-      "hash": "7c04aec83b59938ad3320736900a52329f1e04cb619a31fce4232c2364c51d43"
+      "hash": "47705c0d375c122746e5beff5836ef6e753e100f8f397b1a03f67e02120177b2"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1629,7 +1636,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
       "heading": "Hook error in output",
-      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6"
+      "hash": "d01057e87f160b07171ed160c089339088053b06feb76e4fd66c21b27454fe0d"
     }
   ],
   "hooks-script-shebang": [
@@ -2457,7 +2464,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -2503,7 +2510,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -2892,7 +2899,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -2904,7 +2911,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -3466,7 +3473,7 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Skip all checks with bypassPermissions mode",
-      "hash": "bb4f84c837824a834ebe180866bfd62c8d0b9dcd31ca6a33099768aec013aca5"
+      "hash": "68815eeeece6d5dfdab6cdd918d8d70e94e0a099b6540270726eaa5a944d44a0"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
@@ -3563,7 +3570,7 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Skip all checks with bypassPermissions mode",
-      "hash": "bb4f84c837824a834ebe180866bfd62c8d0b9dcd31ca6a33099768aec013aca5"
+      "hash": "68815eeeece6d5dfdab6cdd918d8d70e94e0a099b6540270726eaa5a944d44a0"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
@@ -3737,14 +3744,14 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d"
     }
   ],
   "permissions-mcp-server-exists": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -3836,7 +3843,7 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Protected paths",
-      "hash": "086b2fd4ad0c226ba292bbd269aec663843be0630bbadda8000fa935c2ac424c"
+      "hash": "43e511cc86c87d3fdc84f2b8d324b230cc37a7b74a47e5fb60d3514045d387a1"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
@@ -4227,7 +4234,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "plugin-evals-case-yaml": [
@@ -5590,7 +5597,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-deprecated-key": [
@@ -5722,7 +5729,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-env-credential": [
@@ -5739,7 +5746,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -5751,7 +5758,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -5778,7 +5785,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-env-ignored-var": [
@@ -5790,7 +5797,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/chrome",
@@ -5802,14 +5809,14 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-env-prompt-caching-off": [
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
       "heading": "How Claude Code uses prompt caching",
-      "hash": "39a39f725f669bdb05977333b1610a8878c2ecde0f238dd5faea67ff02f7646f"
+      "hash": "bf0e42060b519be1966b3cf3ea6540685fa416c16ef21063a8f76c3d46791f2d"
     },
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -5819,7 +5826,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-env-routing": [
@@ -5841,7 +5848,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
@@ -5858,7 +5865,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-env-shadowed": [
@@ -5907,7 +5914,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -6015,7 +6022,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "9926aa17bb02a07c34cef6124e7d261cffd0c5083f245fa839f319d345996482"
+      "hash": "333bdcc3475641b0a08d024e5b7261c26f9cf7ab5159a97021964843f3138cce"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -6366,7 +6373,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     }
   ],
   "settings-model-list": [
@@ -6970,7 +6977,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "MCP",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351"
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -7200,7 +7207,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "2189ca5e7b115fa79da16062bf03c9c7cf06d48e5b42aa79f7edfb44a5f53e03"
+      "hash": "a917c25d861285c7e37e281f8fa12a5e0d5b1ef7eca88a1ab26d8fd493cde095"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",

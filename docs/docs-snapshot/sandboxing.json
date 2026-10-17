@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/sandboxing",
-  "hash": "99de2ccafe112a2d5ba9aafe3ccd4e39571aec8d24733b7ca8f8eeb2be09b545",
+  "hash": "ac3bda4a1aa12361200c724edc2a1531d21f54fab50814ac7460a7226e987d75",
   "blocks": [
     {
       "id": "configure-the-sandboxed-bash-tool",
@@ -275,6 +275,11 @@
       "id": "sandbox-fails-with-sandbox-settings-are-overridden-by-a-higher-priority-configuration",
       "hash": "bb39ea4ee8d05e79461a91ad24488779ec4b30616c4d73b631f4119d04d531db",
       "bodyHash": "eff284d36832a53be603958739833f420d8e8cc226f958893cccd227b8abca64"
+    },
+    {
+      "id": "sandbox-prints-sandbox-settings-not-changed",
+      "hash": "c7b1029db7fc35b2f71cbd58d86f54c8779c7602c2b34d97d9a2532fdde33a5a",
+      "bodyHash": "914dbfb44d9e0f931b2f0b141f203bfabfee00ceed7e0820104041d1aae15b92"
     },
     {
       "id": "limitations",
