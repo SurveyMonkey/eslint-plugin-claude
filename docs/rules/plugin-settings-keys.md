@@ -7,7 +7,7 @@ related_issues: [11, 354]
 stale_after: 2027-04-17
 generated:
   by: claude-code
-  at: 2026-10-17T20:35:00Z
+  at: 2026-10-17T20:47:00Z
 ---
 
 # claude/plugin-settings-keys
@@ -37,7 +37,7 @@ places:
 
 The report is on the key, one report for each key. A key that appears two times gets one report,
 on the last one, as `JSON.parse` keeps it. The rule does not read the keys inside the value of a
-key. A key that differs from `agent` in case, such as `Agent`, is reported.
+key. The rule reports a key that differs from `agent` in case, such as `Agent`.
 
 `claude plugin validate` does not check these keys. Claude Code 2.1.302 passed a manifest
 `settings` with `model` and a root `settings.json` with `theme`.
@@ -48,11 +48,13 @@ The rule makes no report in these cases:
   fails it with `expected record`.
 - The root `settings.json` is not an object.
 - The `settings.json` is not at a plugin root, or the folder is no plugin.
-- The `settings.json` is in a `.claude` folder. Claude Code reads that file as project settings,
-  where each settings key can take effect. The settings rules read it.
+- The plugin has no `.claude-plugin/plugin.json`. The rule finds a plugin root by that file.
+- The `settings.json` is in a `.claude` folder, also when that folder is a plugin root. Claude
+  Code reads that file as project settings, where each settings key can take effect. The
+  settings rules read it.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin
   root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can
-  fail to parse.
+  fail to parse to an object.
 
 The rule does not compare the file and the manifest. When both exist and the file sets a
 supported key, Claude Code ignores the manifest `settings`.[^components]

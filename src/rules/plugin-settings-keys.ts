@@ -38,7 +38,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' }> = {
         if (plugin === undefined || settings?.type !== 'Object') {
           return
         }
-        // A map keeps the last member of a key, as `JSON.parse` keeps the last of two.
+        // A map keeps the last member of each key, as `JSON.parse` does.
         const members = new Map(settings.members.map((member) => [keyOf(member.name), member]))
         for (const [key, member] of members) {
           if (!PLUGIN_SETTINGS_KEYS.includes(key)) {
