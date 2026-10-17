@@ -47,6 +47,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'agent-plugin-ignored-fields',
     'agent-plugin-scoped-name-unique',
     'agent-skills-exist',
+    'agent-skills-preload-limit',
     'agent-skills-preloadable',
     'agent-teammate-ignored-fields',
     'agent-teams-no-project-config',

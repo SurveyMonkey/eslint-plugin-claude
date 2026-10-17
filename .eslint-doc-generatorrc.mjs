@@ -79,6 +79,7 @@ const GROUPS = [
       'agent-plugin-scoped-name-unique',
       'agent-tools-conditional',
       'agent-tools-task-alias',
+      'agent-skills-preload-limit',
       'output-style-force-for-plugin',
       'output-style-name-unique',
       'output-style-plugin-name-description',
