@@ -55,9 +55,20 @@ report a zero-width joiner, which is also a part of many emoji. The rule does no
 field of a command file. A command gets its name from its path, and the docs give the `name`
 effect for a skill only.
 
-The rule does not check the limit of 256 characters on a name.[^refused] It does not read the
-plugin manifest. So it does not check a skill or command at a manifest `skills` or `commands`
-path. When a manifest `commands` key replaces `commands/`, Claude Code does not load the files
+Claude Code also refuses a name over 256 characters.[^refused] The rule reports this length
+fault, with no option: the limit is fixed. It counts each character by code point.
+
+- A frontmatter `name` of a skill is one name.
+- The name of a command is its folders and its file name, joined with `:`. The docs do not say
+  if the limit applies to this joined name or to each part. The rule uses the joined name, which
+  is the longer count. A part over 256 characters cannot be on disk, so only the joined name
+  can be over the limit.
+- A skill folder name is not checked for length. A folder name of 256 bytes or more cannot exist.
+- The rule gives one report for each name over the limit. A name that also holds a refused
+  character gets both reports.
+
+The rule does not read the plugin manifest. So it does not check a skill or command at a
+manifest `skills` or `commands` path. When a manifest `commands` key replaces `commands/`, Claude Code does not load the files
 there. The rule still reports them.
 
 The rule checks the files that the other skill rules check:
@@ -69,10 +80,10 @@ The rule checks the files that the other skill rules check:
 - `<plugin>/commands/**/*.md`
 
 Fail: `.claude/skills/deploy<prod>/SKILL.md`, `.claude/commands/run  tests.md`, a `SKILL.md`
-with `name: " deploy"`.
+with `name: " deploy"`, and a `SKILL.md` with a `name` of 257 characters.
 
-Pass: `.claude/skills/deploy app/SKILL.md`, and `plugins/ops/skills/deploy<prod>/SKILL.md` with a
-manifest in `plugins/ops/.claude-plugin/`.
+Pass: a `SKILL.md` with a `name` of 256 characters, `.claude/skills/deploy app/SKILL.md`, and
+`plugins/ops/skills/deploy<prod>/SKILL.md` with a manifest in `plugins/ops/.claude-plugin/`.
 
 ## Usage
 

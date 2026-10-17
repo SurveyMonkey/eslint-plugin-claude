@@ -94,6 +94,12 @@ const GOOD = [
   'a\u200Cb',
 ]
 
+// Names at and over the limit of 256 characters. A file or folder name over 255 bytes cannot be
+// on disk, so these cases use a `filename` only.
+const LIMIT = 256
+const long = (length: number) => 'a'.repeat(length)
+const tooLong = (length: number) => ({ length: String(length), limit: String(LIMIT) })
+
 const at = (code: string, kind: string) => ({ code, kind })
 
 markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
@@ -117,6 +123,16 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     { code: '---\ndescription: d\n---\n', filename: skillIn('s') },
     // A key that is an alias has a value but no location, as in `skill-reserved-name`.
     { code: '---\nk: &k name\n*k : a<b\n---\n', filename: skillIn('s') },
+    // A name of 256 characters is at the limit. The joined command name counts the `:` too.
+    named(long(LIMIT)),
+    { code: '# C\n', filename: commandAt(`${long(LIMIT - 3)}.md`) },
+    { code: '# C\n', filename: commandAt(`${long(126)}/${long(129)}.md`) },
+    // A code point outside the BMP is one character, so 256 of them are at the limit.
+    named('\u{1F600}'.repeat(LIMIT)),
+    // Claude Code changes a plugin skill folder name, so its length is not a fault. The `name` is.
+    { code: '# S\n', filename: path.join(plugin, 'skills', long(LIMIT + 1), 'SKILL.md') },
+    // A command file has no `name` that counts.
+    named(long(LIMIT + 1), commandAt('c.md')),
     // Not a skill or command file.
     { code: '# S\n', filename: 'docs/a​b/SKILL.md' },
     { code: '# S\n', filename: 'docs/a<b.md' },
@@ -169,6 +185,50 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       errors: [
         { messageId: 'command', data: { name: 'a<b', ...at('U+003C', ANGLE) } },
         { messageId: 'command', data: { name: 'c​d', ...at('U+200B', ZERO_WIDTH) } },
+      ],
+    },
+    // A name of 257 characters is over the limit.
+    {
+      ...named(long(LIMIT + 1)),
+      errors: [{ messageId: 'nameLength', data: tooLong(LIMIT + 1), line: 2, column: 7 }],
+    },
+    {
+      code: '# C\n',
+      filename: commandAt(`${long(LIMIT + 1)}.md`),
+      errors: [{ messageId: 'commandLength', data: tooLong(LIMIT + 1), line: 1, column: 1 }],
+    },
+    // The joined name `a:b` counts, not each part: both parts fit, the joined name does not.
+    {
+      code: '# C\n',
+      filename: commandAt(`${long(128)}/${long(128)}.md`),
+      errors: [{ messageId: 'commandLength', data: tooLong(257) }],
+    },
+    {
+      code: '# C\n',
+      filename: commandAt(`${long(100)}/${long(100)}/${long(55)}.md`),
+      errors: [{ messageId: 'commandLength', data: tooLong(257) }],
+    },
+    // A name over the limit that is counted by code point, not by UTF-16 unit.
+    {
+      ...named('\u{1F600}'.repeat(LIMIT + 1)),
+      errors: [{ messageId: 'nameLength', data: tooLong(LIMIT + 1) }],
+    },
+    // A plugin command and a plugin skill `name` are not exempt.
+    {
+      code: '# C\n',
+      filename: path.join(plugin, 'commands', `${long(LIMIT + 1)}.md`),
+      errors: [{ messageId: 'commandLength', data: tooLong(LIMIT + 1) }],
+    },
+    {
+      ...named(long(LIMIT + 1), path.join(plugin, 'skills', 's', 'SKILL.md')),
+      errors: [{ messageId: 'nameLength', data: tooLong(LIMIT + 1) }],
+    },
+    // A name with a refused character and over the limit gets two reports.
+    {
+      ...named(`<${long(LIMIT)}`),
+      errors: [
+        { messageId: 'name', data: { name: `<${long(LIMIT)}`, ...at('U+003C', ANGLE) } },
+        { messageId: 'nameLength', data: tooLong(LIMIT + 1) },
       ],
     },
     // A plugin command file and a plugin skill `name` are not exempt.
