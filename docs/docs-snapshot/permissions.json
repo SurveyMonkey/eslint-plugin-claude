@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/permissions",
-  "hash": "6a5645eccd12331ec4f0867ee7bbac42446c3f506d974021b260f5dfeb3efd75",
+  "hash": "22f01bc144964cc7cf2ea3b2b71ba5a75d160adf6dbd9b954f6fbf5f707b0b56",
   "blocks": [
     {
       "id": "configure-permissions",
@@ -143,8 +143,8 @@
     },
     {
       "id": "mcp",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351",
-      "bodyHash": "1870ba277b210403a054805e36ff5ef568ab8a468302fc3b98d3814fec185ab5"
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d",
+      "bodyHash": "7deef0a227ef9d7705a1848857139e572dc3de50857c4b7117cb6718f21820ce"
     },
     {
       "id": "agent-subagents",
@@ -158,8 +158,18 @@
     },
     {
       "id": "extend-permissions-with-hooks",
-      "hash": "3e73b379d7be863acbd4a94a9c92fae0179aa61966394d0b588640e039a6a15f",
-      "bodyHash": "cac8f234d3bc410090e649f26f031961fd183fd3ff11266b94d06a2be2981e85"
+      "hash": "3308bb3f7251259bc8bc2cb6b2f4cdebf9847cf5c0d26c7c5dbf0b557c715c55",
+      "bodyHash": "40304fa0c46040e28cb1a15e2fb81fd5288038b01f2852d51ec73566c1297952"
+    },
+    {
+      "id": "precedence-among-rules-hooks-and-mods",
+      "hash": "efe9928edb4ab49818d3e86e452a47062b0c90b498fe9ae5854ed21ecdbca953",
+      "bodyHash": "45ef6707f3b065637c9739d5ff82b9f80f5e2fc435adac15b434093c39c836d4"
+    },
+    {
+      "id": "hook-approvals-in-plan-mode",
+      "hash": "c9c3af0854aa6974b5ed9c67504808ca623d3612945f7a7b5992f5e58f01134e",
+      "bodyHash": "ae642ee8cf5458495e62b923391134fb8b28542d8402a5550f65002e4bf6d7f5"
     },
     {
       "id": "working-directories",
@@ -178,8 +188,8 @@
     },
     {
       "id": "how-permissions-interact-with-sandboxing",
-      "hash": "f77b9fd8f16f623118b1476aa2a4857dcfc90597c38611311c5f0f33867e061e",
-      "bodyHash": "c6ad9528724c60458ef0573ff799b8b5ddbdafd589e4d80605c634b08edc44f9"
+      "hash": "d016fcf5bc8b6132055db41301b365e2c011ebe5a9c920371980879ba1c83879",
+      "bodyHash": "edfadc308798ecc143b8f3d58b2b37a32599d59bdc8bccc657c3daeaca6b8f16"
     },
     {
       "id": "managed-settings",
@@ -239,8 +249,8 @@
     {
       "heading": "MCP",
       "id": "mcp",
-      "hash": "940aea007c927baf1287cb5d4af3f756521ec6f92baccd635ee4e5b0dfb77351",
-      "text": "### MCP\n\nMCP rules use the server name as configured in Claude Code, optionally followed by the name of a tool from that server.\n\n* `mcp__puppeteer` matches any tool provided by the `puppeteer` server\n* `mcp__puppeteer__*` uses wildcard syntax and also matches all tools from the `puppeteer` server\n* `mcp__puppeteer__puppeteer_navigate` matches the `puppeteer_navigate` tool provided by the `puppeteer` server\n\nIf your organization has set a [claude.ai connector](/docs/en/mcp#organization-controls-on-connector-tools) tool to `ask` and that setting reaches Claude Code in your session, allow rules for that tool don't take effect: Claude Code prompts on every call, even in `auto` and `bypassPermissions` modes. In `dontAsk` mode, which never prompts, Claude Code denies the call instead. Tools from connectors Claude Code fetches itself appear as `mcp__claude_ai_<server>__<tool>`.\n\nIn a [Cowork](https://claude.com/docs/cowork/overview) session in the Claude Desktop app, Claude runs shell commands through Cowork's `mcp__workspace__bash` tool rather than the built-in `Bash` tool, and Cowork likewise provides `mcp__workspace__web_fetch` for web fetches. Claude Code also applies deny rules that name the whole `Bash` or `WebFetch` tool to these Cowork tools, so a managed `Bash` deny rule stops Claude from running shell commands in Cowork. When Claude Code blocks such a call, the message names the Cowork tool: `Permission to use mcp__workspace__bash has been denied.` Allow rules don't carry over: Claude Code never applies a `Bash` allow rule to `mcp__workspace__bash`."
+      "hash": "a41411350cecd15a960f78a902c4b2343f5dbb6000fa3051e6f3871ef35a9f5d",
+      "text": "### MCP\n\nTo match every tool from an MCP server, write `mcp__<server>__*`. To match one tool, write its full name, `mcp__<server>__<tool>`.\n\n* `mcp__puppeteer` matches any tool provided by the `puppeteer` server\n* `mcp__puppeteer__*` uses wildcard syntax and also matches all tools from the `puppeteer` server\n* `mcp__puppeteer__puppeteer_navigate` matches the `puppeteer_navigate` tool provided by the `puppeteer` server\n\nFor `<server>`, write the server's name the way it appears in that server's tool names. These examples show the rule to write for a name with special characters, a server from a plugin, and a name that contains `__` or ends in `_`:\n\n* **Names with characters such as `.` or spaces**: those characters become `_`, so for a server you configured as `my.server`, write `mcp__my_server__*`\n* **Servers that a plugin provides**: `<server>` takes the [plugin-scoped form](/docs/en/mcp#plugin-provided-mcp-servers), so for the `database-tools` server in a plugin named `my-plugin`, write `mcp__plugin_my-plugin_database-tools__*`\n* **A `<server>` that contains `__` or ends in `_`**: write the wildcard form, `mcp__<server>__*`, with the whole name. For a server named `reports__v2`, write `mcp__reports__v2__*`. The bare `mcp__reports__v2` and the shorter `mcp__reports` don't match its tools as allow rules, because Claude Code reads both as rules for a server named `reports`\n\nIf your organization has set a [claude.ai connector](/docs/en/mcp#organization-controls-on-connector-tools) tool to `ask` and that setting reaches Claude Code in your session, allow rules for that tool don't take effect: Claude Code prompts on every call, even in `auto` and `bypassPermissions` modes. In `dontAsk` mode, which never prompts, Claude Code denies the call instead. Tools from connectors Claude Code fetches itself appear as `mcp__claude_ai_<server>__<tool>`.\n\nIn a [Cowork](https://claude.com/docs/cowork/overview) session in the Claude Desktop app, Claude runs shell commands through Cowork's `mcp__workspace__bash` tool rather than the built-in `Bash` tool, and Cowork likewise provides `mcp__workspace__web_fetch` for web fetches. Claude Code also applies deny rules that name the whole `Bash` or `WebFetch` tool to these Cowork tools, so a managed `Bash` deny rule stops Claude from running shell commands in Cowork. When Claude Code blocks such a call, the message names the Cowork tool: `Permission to use mcp__workspace__bash has been denied.` Allow rules don't carry over: Claude Code never applies a `Bash` allow rule to `mcp__workspace__bash`."
     },
     {
       "heading": "Additional directories grant file access, not configuration",
@@ -347,8 +357,8 @@
     {
       "heading": "How permissions interact with sandboxing",
       "id": "how-permissions-interact-with-sandboxing",
-      "hash": "f77b9fd8f16f623118b1476aa2a4857dcfc90597c38611311c5f0f33867e061e",
-      "text": "## How permissions interact with sandboxing\n\nPermissions and [sandboxing](/docs/en/sandboxing) are complementary security layers:\n\n* **Permissions** control which tools Claude Code can use and which files or domains it can access. They apply to Bash, Read, Edit, WebFetch, MCP, and every other tool, except that a deny or ask rule can't block [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) while any other tool remains.\n* **Sandboxing** provides OS-level enforcement that restricts shell commands' filesystem and network access. It applies to Bash, PowerShell, and [Monitor](/docs/en/tools-reference#monitor-tool) tool commands and their child processes.\n\nUse both for defense-in-depth, since sandbox restrictions still apply even if a prompt injection bypasses Claude's decision-making. Paths and domains from both sandbox settings and permission rules are [merged into the final sandbox configuration](/docs/en/sandboxing#permission-rules).\n\nWhen you enable sandboxing and leave `autoAllowBashIfSandboxed` at its default of `true`, sandboxed Bash commands run without prompting even if your permissions include a bare `Bash` ask rule, or the [equivalent `Bash(*)` form](#match-all-uses-of-a-tool): the sandbox boundary substitutes for that whole-tool prompt.\n\nIn [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode), Claude Code skips this substitution. Without an ask rule, the [built-in read-only commands](#read-only-commands) still run without prompting, and any other shell command goes through the regular permission flow while you are still planning; see [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) for how Claude Code gates commands there. With a bare `Bash` ask rule, every Bash command prompts, including sandboxed read-only commands, the same as outside sandboxing. Before v2.1.212, the substitution applied in plan mode as well.\n\nThese checks still apply:\n\n* Content-scoped ask rules like `Bash(git push *)` still force a prompt\n* Explicit deny rules still apply\n* `rm` or `rmdir` commands that target a [critical path](/docs/en/permission-modes#critical-paths) still go through the regular permission flow\n* Other sandboxed commands can go through the regular permission flow too, as [Auto-allow mode](/docs/en/sandboxing#auto-allow-mode) describes\n\nCommands that won't run sandboxed, such as excluded commands, respect the bare `Bash` ask rule as usual. See [sandbox modes](/docs/en/sandboxing#sandbox-modes) to change this behavior.\n\n<span id=\"managed-only-settings\" />"
+      "hash": "d016fcf5bc8b6132055db41301b365e2c011ebe5a9c920371980879ba1c83879",
+      "text": "## How permissions interact with sandboxing\n\nPermissions and [sandboxing](/docs/en/sandboxing) are complementary security layers:\n\n* **Permissions** control which tools Claude Code can use and which files or domains it can access. They apply to Bash, Read, Edit, WebFetch, MCP, and every other tool, except that a deny or ask rule can't block [`EndConversation`](/docs/en/tools-reference#endconversation-tool-behavior) while any other tool remains.\n* **Sandboxing** provides OS-level enforcement that restricts shell commands' filesystem and network access. It applies to Bash, PowerShell, and [Monitor](/docs/en/tools-reference#monitor-tool) tool commands and their child processes.\n\nUse both for defense-in-depth, since sandbox restrictions still apply even if a prompt injection bypasses Claude's decision-making. Paths and domains from both sandbox settings and permission rules are [merged into the final sandbox configuration](/docs/en/sandboxing#permission-rules).\n\nWhen you enable sandboxing and leave `autoAllowBashIfSandboxed` at its default of `true`, sandboxed Bash commands run without prompting even if your permissions include a bare `Bash` ask rule, or the [equivalent `Bash(*)` form](#match-all-uses-of-a-tool): the sandbox boundary substitutes for that whole-tool prompt.\n\nIn [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode), Claude Code skips this substitution. Without an ask rule, the [built-in read-only commands](#read-only-commands) still run without prompting, and any other shell command goes through the regular permission flow while you are still planning; see [plan mode](/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode) for how Claude Code gates commands there. With a bare `Bash` ask rule, every Bash command prompts, including sandboxed read-only commands, the same as outside sandboxing. Before v2.1.212, the substitution applied in plan mode as well.\n\nThese checks still apply:\n\n* Content-scoped ask rules like `Bash(git push *)` still force a prompt\n* Other sandboxed commands can go through the regular permission flow too, as [Auto-allow mode](/docs/en/sandboxing#auto-allow-mode) describes\n\nCommands that won't run sandboxed, such as excluded commands, respect the bare `Bash` ask rule as usual. See [sandbox modes](/docs/en/sandboxing#sandbox-modes) to change this behavior.\n\n<span id=\"managed-only-settings\" />"
     },
     {
       "heading": "When your local settings file needs trust",

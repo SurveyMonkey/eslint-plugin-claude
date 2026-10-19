@@ -24,11 +24,13 @@ import * as agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import * as agentNameUnique from './rules/agent-name-unique.ts'
 import * as agentNoBom from './rules/agent-no-bom.ts'
 import * as agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
+import * as agentPermissionModeAutoUnavailable from './rules/agent-permission-mode-auto-unavailable.ts'
 import * as agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import * as agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
 import * as agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import * as agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
 import * as agentSkillsExist from './rules/agent-skills-exist.ts'
+import * as agentSkillsPreloadLimit from './rules/agent-skills-preload-limit.ts'
 import * as agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import * as agentTeammateIgnoredFields from './rules/agent-teammate-ignored-fields.ts'
 import * as agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
@@ -61,6 +63,7 @@ import * as claudeMdMaxLines from './rules/claude-md-max-lines.ts'
 import * as claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
 import * as claudeMdSymlink from './rules/claude-md-symlink.ts'
 import * as commandLegacyFormat from './rules/command-legacy-format.ts'
+import * as frontmatterYamlPortable from './rules/frontmatter-yaml-portable.ts'
 import * as hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
 import * as hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
 import * as hooksAsyncOnBlockingEvent from './rules/hooks-async-on-blocking-event.ts'
@@ -190,6 +193,7 @@ import * as mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
 import * as mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skills.ts'
 import * as mcpServerNameFormat from './rules/mcp-server-name-format.ts'
 import * as mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
+import * as mcpServerSchema from './rules/mcp-server-schema.ts'
 import * as mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
 import * as mcpStdioCommandHasArgs from './rules/mcp-stdio-command-has-args.ts'
 import * as mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
@@ -312,6 +316,7 @@ import * as pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import * as pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import * as pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
 import * as pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
+import * as pluginSettingsKeys from './rules/plugin-settings-keys.ts'
 import * as pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import * as pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import * as pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
@@ -590,6 +595,10 @@ const modules = [
   { target: agentOmitClaudeMdMain.target, default: agentOmitClaudeMdMain.default },
   { target: agentModelForced.target, default: agentModelForced.default },
   { target: agentTeamsNoProjectConfig.target, default: agentTeamsNoProjectConfig.default },
+  {
+    target: agentPermissionModeAutoUnavailable.target,
+    default: agentPermissionModeAutoUnavailable.default,
+  },
   { target: outputStyleFrontmatterValid.target, default: outputStyleFrontmatterValid.default },
   { target: outputStyleFrontmatterSchema.target, default: outputStyleFrontmatterSchema.default },
   { target: agentDisallowedToolsScope.target, default: agentDisallowedToolsScope.default },
@@ -601,8 +610,10 @@ const modules = [
   { target: agentNoBom.target, default: agentNoBom.default },
   { target: agentPermissionModeManual.target, default: agentPermissionModeManual.default },
   { target: agentPluginScopedNameUnique.target, default: agentPluginScopedNameUnique.default },
+  { target: agentSkillsPreloadLimit.target, default: agentSkillsPreloadLimit.default },
   { target: agentToolsConditional.target, default: agentToolsConditional.default },
   { target: agentToolsTaskAlias.target, default: agentToolsTaskAlias.default },
+  { target: frontmatterYamlPortable.target, default: frontmatterYamlPortable.default },
   { target: outputStyleForceForPlugin.target, default: outputStyleForceForPlugin.default },
   { target: outputStyleNameUnique.target, default: outputStyleNameUnique.default },
   {
@@ -984,6 +995,7 @@ const modules = [
   { target: mcpJsonLocation.target, default: mcpJsonLocation.default },
   { target: mcpJsonServersKey.target, default: mcpJsonServersKey.default },
   { target: mcpJsonFileSize.target, default: mcpJsonFileSize.default },
+  { target: mcpServerSchema.target, default: mcpServerSchema.default },
   { target: mcpServerNameReserved.target, default: mcpServerNameReserved.default },
   { target: mcpRemoteUrlEmpty.target, default: mcpRemoteUrlEmpty.default },
   { target: mcpHiddenWhitespace.target, default: mcpHiddenWhitespace.default },
@@ -1063,6 +1075,7 @@ const modules = [
     target: pluginUserConfigSensitiveInContent.target,
     default: pluginUserConfigSensitiveInContent.default,
   },
+  { target: pluginSettingsKeys.target, default: pluginSettingsKeys.default },
   { target: pluginFeatureMinVersion.target, default: pluginFeatureMinVersion.default },
   { target: pluginManifestMetadataFormat.target, default: pluginManifestMetadataFormat.default },
   { target: pluginManifestNoBom.target, default: pluginManifestNoBom.default },
@@ -1251,6 +1264,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-omit-claude-md-main': 'error',
   'agent-model-forced': 'error',
   'agent-teams-no-project-config': 'error',
+  'agent-permission-mode-auto-unavailable': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
   'agent-disallowed-tools-scope': 'warn',
@@ -1262,8 +1276,10 @@ const recommended: Record<RuleName, Severity> = {
   'agent-no-bom': 'warn',
   'agent-permission-mode-manual': 'warn',
   'agent-plugin-scoped-name-unique': 'warn',
+  'agent-skills-preload-limit': 'warn',
   'agent-tools-conditional': 'warn',
   'agent-tools-task-alias': 'warn',
+  'frontmatter-yaml-portable': 'warn',
   'output-style-force-for-plugin': 'warn',
   'output-style-name-unique': 'warn',
   'output-style-plugin-name-description': 'warn',
@@ -1486,6 +1502,7 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-json-location': 'error',
   'mcp-json-servers-key': 'error',
   'mcp-json-file-size': 'error',
+  'mcp-server-schema': 'error',
   'mcp-server-name-reserved': 'error',
   'mcp-remote-url-empty': 'error',
   'mcp-hidden-whitespace': 'error',
@@ -1556,6 +1573,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-settings-keys': 'error',
   'plugin-evals-case-yaml': 'error',
   'plugin-evals-dir': 'error',
   'plugin-evals-grader': 'error',

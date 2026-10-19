@@ -1465,6 +1465,12 @@
   ],
   "sources": [
     {
+      "heading": "disableAutoMode",
+      "id": "disableautomode",
+      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
+      "text": "### `disableAutoMode`\n\nRemove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the `Shift+Tab` cycle. Any session that would otherwise [start in auto mode](/docs/en/permission-modes#which-mode-a-session-starts-in), whether from `--permission-mode auto`, a settings file, or the built-in default, starts in `default` instead. Administrators set it in managed settings to prevent developers in their organization from using auto mode.\n\n* **Scope**: [`Any file`](#scopes). Most useful in [managed settings](/docs/en/managed-settings), where users can't override it. Also accepted under `permissions` as `permissions.disableAutoMode`.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"disableAutoMode\": \"disable\"\n}\n```"
+    },
+    {
       "heading": "claudeMdExcludes",
       "id": "claudemdexcludes",
       "hash": "55212116d6b50b8f98cdba64320760db9e784fccfe878a2b47290c261c9d159c",
@@ -1571,12 +1577,6 @@
       "id": "automode",
       "hash": "215582943f09fc9a67a9c68c74f0cc6db666c7773a7bf5dba8e0843401d76522",
       "text": "### `autoMode`\n\nAdd your own rules to what the [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) classifier blocks and allows. Use it to tell the classifier which repos, buckets, and domains your organization trusts, so it stops blocking routine internal operations. The classifier ships with [built-in allow and deny rules](/docs/en/auto-mode-config#inspect-the-defaults-and-your-effective-config). Include the literal string `\"$defaults\"` in an array to keep those built-in rules at that position and add yours around them; leave it out to replace them with yours.\n\n* **Scope**: [`User or managed`](#scopes)\n* **Type**: object with `environment`, `allow`, `soft_deny`, and `hard_deny` arrays of prose rules, plus the [`classifyAllShell`](#automode-classifyallshell) Boolean\n* **Default**: unset, so the classifier uses only its [built-in rules](/docs/en/auto-mode-config#inspect-the-defaults-and-your-effective-config)\n\nThis example keeps the built-in `soft_deny` rules, through `\"$defaults\"`, and adds one more that blocks `terraform apply`:\n\n```json settings.json theme={null}\n{\n  \"autoMode\": {\n    \"soft_deny\": [\"$defaults\", \"Never run terraform apply\"]\n  }\n}\n```\n\nWhen more than one of those files sets the same array, Claude Code concatenates the entries. For the rule format and how each array is applied, see [Configure auto mode](/docs/en/auto-mode-config)."
-    },
-    {
-      "heading": "disableAutoMode",
-      "id": "disableautomode",
-      "hash": "7b55decaf3fbb3f60b2e6c0923c355ceddc60652b0e35daf03f47cb9e380e359",
-      "text": "### `disableAutoMode`\n\nRemove [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode) from the `Shift+Tab` cycle. Any session that would otherwise [start in auto mode](/docs/en/permission-modes#which-mode-a-session-starts-in), whether from `--permission-mode auto`, a settings file, or the built-in default, starts in `default` instead. Administrators set it in managed settings to prevent developers in their organization from using auto mode.\n\n* **Scope**: [`Any file`](#scopes). Most useful in [managed settings](/docs/en/managed-settings), where users can't override it. Also accepted under `permissions` as `permissions.disableAutoMode`.\n* **Type**: the string `\"disable\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"disableAutoMode\": \"disable\"\n}\n```"
     },
     {
       "heading": "autoMode.classifyAllShell",

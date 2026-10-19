@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/sandboxing",
-  "hash": "f3feed627e09b91db74255475a605fd692a80e48b6b05be20b0b0b3efbfb378e",
+  "hash": "ac3bda4a1aa12361200c724edc2a1531d21f54fab50814ac7460a7226e987d75",
   "blocks": [
     {
       "id": "configure-the-sandboxed-bash-tool",
@@ -39,8 +39,8 @@
     },
     {
       "id": "auto-allow-mode",
-      "hash": "e18ffc3bafd51ce9974f3df2a811757876c86baaf5d97bc66cdb18f2a598421c",
-      "bodyHash": "70a8572a01db3c6a28a9ec211746c9fca9e70b7d51c62753301fffbe01f6f42b"
+      "hash": "ed97466eb25e55401cfee45af1875f1d325ef78bc79a1c1330d9c119130626ef",
+      "bodyHash": "f627f54def1aa8ba393a43c1dd68872a13651156451238e407d00503609be386"
     },
     {
       "id": "regular-permissions-mode",
@@ -275,6 +275,11 @@
       "id": "sandbox-fails-with-sandbox-settings-are-overridden-by-a-higher-priority-configuration",
       "hash": "bb39ea4ee8d05e79461a91ad24488779ec4b30616c4d73b631f4119d04d531db",
       "bodyHash": "eff284d36832a53be603958739833f420d8e8cc226f958893cccd227b8abca64"
+    },
+    {
+      "id": "sandbox-prints-sandbox-settings-not-changed",
+      "hash": "c7b1029db7fc35b2f71cbd58d86f54c8779c7602c2b34d97d9a2532fdde33a5a",
+      "bodyHash": "914dbfb44d9e0f931b2f0b141f203bfabfee00ceed7e0820104041d1aae15b92"
     },
     {
       "id": "limitations",

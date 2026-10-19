@@ -1,13 +1,13 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-frontmatter-schema, which reports a frontmatter key that Claude Code does not know, a near miss of a known key, a wrong type or value, and a name or paths field in a command file.
+description: The ESLint rule claude/skill-frontmatter-schema, which reports frontmatter that is not a map, a frontmatter key that Claude Code does not know, a near miss of a known key, a wrong type or value, and a name or paths field in a command file.
 owner: brianespinosa
 created: 2026-09-30
 related_issues: [8]
 stale_after: 2027-03-30
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 ---
 
 # claude/skill-frontmatter-schema
@@ -34,6 +34,9 @@ The rule uses the Frontmatter reference of the Claude Code docs as of Claude Cod
 (2026-09-30). The field list is in `src/data/skill-fields.ts`. The rule reports these faults, on
 the narrowest part of the key or value:
 
+- **Not a map.** The frontmatter parses, but its top level is a list or a single value that is not
+  null. It has no key, so it sets no field. The rule reports it in a skill or command file outside a
+  plugin. In a plugin, `claude plugin validate` 2.1.302 reports it.
 - **Unknown key.** A key that is not in the table.
 - **Near miss.** A key that matches a known key after you ignore case, hyphens and underscores,
   such as `allowed_tools`. The report has a suggestion that renames
@@ -57,7 +60,11 @@ takes the values of `/model`, or `inherit`.[^reference] The set of valid model i
 provider and by gateway.[^model] A check for an alias or a `claude-` prefix would report a valid
 value.
 
-The rule ignores a file with no frontmatter, and a file whose frontmatter does not parse.
+The rule ignores a file with no frontmatter, an empty block, a block of comments only, and a YAML
+null such as `~`. It also ignores frontmatter that the strict YAML parser cannot read. The docs say
+that a skill with YAML that does not parse loads with no field set.[^reference] Claude Code can read
+some YAML that the strict parser cannot, so
+[`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports it as a warning.
 
 The rule checks the files that the other skill rules check:
 
