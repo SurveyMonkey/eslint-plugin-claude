@@ -86,7 +86,8 @@ Code decides these cases with no model call:
 - A block is too large for one request, and no request with its changed lines can go:
   `needs-triage`. This is the case when the changed lines are too large, the block has one text
   only, or the two texts have no changed line. A block with one text has no earlier or later
-  text to compare. Its text is new, or removed, or it has no stored old text.
+  text to compare. Its text is new, or removed, or it has no stored old text (a snapshot file from
+  before Decision 9).
 
 A block that is too large for one request, and has a diff that fits, gets a model call. The
 request has the lines that each side adds and no full text. The Reason of a finding from that
@@ -464,10 +465,10 @@ The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
 ### 9. The snapshot stores the text of each page
 
 Before this decision, the snapshot stored the text of a mapped block only (#36). For a changed
-block that no rule cites, the issue showed the new text, and said that the old text is not
+block that no rule cites, the issue showed the new text only. It said that the old text is not
 available. These blocks are the `new-rule` candidates. So a reviewer needs the old text most for
-them. In #369, a block of the `errors` page was too large for one Jev request, and its issue had
-no diff.
+them. In #369, a changed block of the `errors` page had no stored text. So its issue had no
+diff.
 
 The sizes on `main` at `4735cf3d0` on 2026-10-19:
 
@@ -493,8 +494,8 @@ This decision declines two options:
 (`tests/settings-env.test.ts`). It duplicates about 1.7 MB of the page text. `bodyHash` stays on
 each block, because the move detection reads it with no split (Decision 6). `check` does not
 read `text`. A snapshot file from before this decision has no `text`, and it stays valid. The
-classifier then reads the old text from `sources`, as before. The issue then says that the old
-text is not available.
+classifier then reads the old text from `sources`, as before. For a changed block that no rule
+cites, the issue then says that the old text is not available.
 
 ## Consequences
 
