@@ -1,11 +1,11 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "7189eb4fb8c911911a95112837d2b811e246117f457db4c47c3ca623f02fa798",
+  "hash": "af4c030abd682cb2dfcf5a50a6aeb1d49884af46d11e61d114fb71b909ed94b4",
   "blocks": [
     {
       "id": "tools-reference",
-      "hash": "4a305d71644275fd14570b41a1868df556219fe3d481ad31186b8a45bc9f2027",
-      "bodyHash": "d6095a0bb92eb0951c86bec7cd4cf2b71388b15019f16f34ea1f85135532321e"
+      "hash": "bd07a3de849364c3799bf745d96fe4953979be305db2a694638f6f5e637a3c3b",
+      "bodyHash": "aa00df5e7e113128a0705c66f53c8b129f180c61a10551ae06b11df4b99e64b4"
     },
     {
       "id": "configure-tools-with-permission-rules-and-hooks",
@@ -14,8 +14,8 @@
     },
     {
       "id": "agent-tool-behavior",
-      "hash": "6b190f901ae9d9706504c0ed7bd3189796ac37d62809448faaa8d6dbc403d179",
-      "bodyHash": "66ff762765035815a7de0f4e58af3c43d0cce034f3e54f65fd36617eb16e4769"
+      "hash": "83adfe7f8e2fb7458e120c6f53ca78759c9c7ce4487532f929743695d656bcc0",
+      "bodyHash": "084580798e36fc4edc48b55d0123542404be7f0c4350fc3cfbefc6910c7853d5"
     },
     {
       "id": "askuserquestion-tool-behavior",
@@ -154,8 +154,8 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "3e1d798c4a8081ce87168b280b1e2437c73966037de1c8f5207054213323e3c6",
-      "bodyHash": "9cadfac975e45f6a72b477d3d67bff7d6905795748d6187f15c5c71edfb8b78d"
+      "hash": "446f0406f460e14ba640709834252780066d1829e65cc3aa32d187e0734ca145",
+      "bodyHash": "15de12a7bdf8385cd54eebfda31757dd93698bb2a4fd5856acd33724657e6ef1"
     },
     {
       "id": "large-files",
@@ -219,8 +219,8 @@
     },
     {
       "id": "session-search-limit",
-      "hash": "392f7df41ec2846f9dc84b410b822a60e74a3c96b1461850d42845b0fd99050f",
-      "bodyHash": "532ce0f202cc27ce1594b58075594d6ddc4d2f1503391e986652e95023e5112b"
+      "hash": "a3889b2cc6d2a981c80579d015a4624e830c5676515c7f4b540c67c5185e4058",
+      "bodyHash": "22c2397a9a6ab3498577ef629315d1c0f1ae5f8bdd30cfa61ce0286e76a70c4b"
     },
     {
       "id": "write-tool-behavior",

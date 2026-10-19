@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
-  "hash": "d72efaeaa78437561bda1d77ddce118fc146a85856f07274bba198b98526ea09",
+  "hash": "b296559c8c43d84bf49fef30413c1458f083117c4fd6253e4c34d4f5b4eaea73",
   "blocks": [
     {
       "id": "troubleshoot-plugins",
@@ -14,8 +14,8 @@
     },
     {
       "id": "plugin-isnt-available-in-this-environment",
-      "hash": "a5ed57a2febb01a04086e5d4fc7a81148ae57bab97aaf53667a9b4bc0a0cd797",
-      "bodyHash": "1edcee233feeb8d6634e026023f8b07e8c3d7d3c8dbe1280dee4ee9fe1ee97c8"
+      "hash": "f015e01fe55c938daecc6a10db63062c042bbb8fc74e7fbfa3ea9308ef3502ad",
+      "bodyHash": "96b1824b043d311fc7cce9e2943ca4e01559ed2e553ac46ad7ee5eb93795ef00"
     },
     {
       "id": "zsh-no-such-file-or-directory-plugin",

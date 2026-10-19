@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks",
-  "hash": "092d577fb05a274457821c93c5134db9fd5a6a17bee8d6152b2d832131325f24",
+  "hash": "dd0f114dac70bc7836abd37797fb486d3007d889eeb6bbc88c307ed2587a44ef",
   "blocks": [
     {
       "id": "hooks-reference",
@@ -364,8 +364,8 @@
     },
     {
       "id": "agent",
-      "hash": "7d4b3c0396c63897730f5d0230675b00efb83327e0c7e1a143526742bb3c2e07",
-      "bodyHash": "cc3e4a975fa047b62bdc8f0fe2e05b204b2981c503ea24b23ee86d5f399c9cc2"
+      "hash": "38a05729ed6638bd1bd2c466997376e08751f76d1f8dbd2f634301e0a688fc3e",
+      "bodyHash": "3a5a1d234b1b4f750347c551912e6adc2f84373706aac5716a0438bf93442679"
     },
     {
       "id": "askuserquestion",
@@ -684,8 +684,8 @@
     },
     {
       "id": "premodelswitch-input",
-      "hash": "8fbbbba272e4650b8a6c61d6679910fffc31fb26a9f14640ed67bec1a895e2a8",
-      "bodyHash": "d45c23cb6424c567a7d508ad4d23d6b31764c4c5cef63a1e4cece7cdf1ea9876"
+      "hash": "38c27d0a5977fb428f78dca6db5301f7041a23def9b5c005d4a8ffc1ff5da6eb",
+      "bodyHash": "7ea2aabcbf0722d159b7a5c32760eafa7eca2cca7c61411783246e6a4b00791c"
     },
     {
       "id": "premodelswitch-decision-control",

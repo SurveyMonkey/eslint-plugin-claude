@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/mcp",
-  "hash": "19bbef33fe4c2ad9877e5081b892328f08d6a22413b083158b29697bdda2b753",
+  "hash": "6415c1e5e233c26ef465a5e684fb26fd3806026b438ee35731a59c583e73f6f8",
   "blocks": [
     {
       "id": "connect-claude-code-to-tools-via-mcp",
@@ -303,8 +303,8 @@
     },
     {
       "id": "how-connectors-reach-claude-code",
-      "hash": "030fc36a334598ca81d32102ded37eda9e185712c717e89c7af2a0e219412a74",
-      "bodyHash": "47854d9bdf70554cd710039d5745bc1325df09adb57731d2bf1475be05a7aefb"
+      "hash": "2e9ebe678f05d8d996e9febb7d7569a412d1aa7fee72c389b17352079f9d593b",
+      "bodyHash": "77d1bae11748996a9b64b91054cbf9e71495e0b54e5b1b3f40beebb18b527194"
     },
     {
       "id": "organization-controls-on-connector-tools",
