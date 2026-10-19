@@ -63,6 +63,7 @@ import * as claudeMdMaxLines from './rules/claude-md-max-lines.ts'
 import * as claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
 import * as claudeMdSymlink from './rules/claude-md-symlink.ts'
 import * as commandLegacyFormat from './rules/command-legacy-format.ts'
+import * as frontmatterYamlPortable from './rules/frontmatter-yaml-portable.ts'
 import * as hooksAgentStopEvent from './rules/hooks-agent-stop-event.ts'
 import * as hooksAgentTypeExperimental from './rules/hooks-agent-type-experimental.ts'
 import * as hooksAsyncOnBlockingEvent from './rules/hooks-async-on-blocking-event.ts'
@@ -610,6 +611,7 @@ const modules = [
   { target: agentSkillsPreloadLimit.target, default: agentSkillsPreloadLimit.default },
   { target: agentToolsConditional.target, default: agentToolsConditional.default },
   { target: agentToolsTaskAlias.target, default: agentToolsTaskAlias.default },
+  { target: frontmatterYamlPortable.target, default: frontmatterYamlPortable.default },
   { target: outputStyleForceForPlugin.target, default: outputStyleForceForPlugin.default },
   { target: outputStyleNameUnique.target, default: outputStyleNameUnique.default },
   {
@@ -1273,6 +1275,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-skills-preload-limit': 'warn',
   'agent-tools-conditional': 'warn',
   'agent-tools-task-alias': 'warn',
+  'frontmatter-yaml-portable': 'warn',
   'output-style-force-for-plugin': 'warn',
   'output-style-name-unique': 'warn',
   'output-style-plugin-name-description': 'warn',

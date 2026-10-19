@@ -81,6 +81,7 @@ const GROUPS = [
       'agent-skills-preload-limit',
       'agent-tools-conditional',
       'agent-tools-task-alias',
+      'frontmatter-yaml-portable',
       'output-style-force-for-plugin',
       'output-style-name-unique',
       'output-style-plugin-name-description',

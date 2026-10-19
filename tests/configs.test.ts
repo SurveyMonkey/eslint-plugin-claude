@@ -1035,6 +1035,9 @@ const TREE: Record<string, string> = {
   'packages/lr/notes/loop.md': '/deploy now\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
+  // YAML that the strict parser cannot read, as in issues #288 and #273.
+  '.claude/agents/portable.md': '---\nname: p\ndescription: Use this when x. Context: y\n---\n',
+  '.claude/skills/portable/SKILL.md': '---\nname: portable\nargument-hint: [n] [n]\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
   '.claude/agents/bypass.md':
     '---\nname: b\ndescription: d\npermissionMode: bypassPermissions\n---\n',
@@ -1063,7 +1066,7 @@ const TREE: Record<string, string> = {
   'plugins/p/agents/versions.md': '---\nname: ver\ndescription: d\nomitClaudeMd: true\n---\n',
   'docs/agents/warn.md':
     '\uFEFF---\nname: Explore\ntools: CronCreate, Task\ndisallowedTools: Bash(x)\nomitClaudeMd: true\nmcpServers:\n  - pw:\n      command: npx\n---\n',
-  '.claude/output-styles/yaml.md': '---\nname: [unclosed\n---\n',
+  '.claude/output-styles/yaml.md': '---\n- name: list\n---\n',
   '.claude/output-styles/schema.md': '---\nforce-for-plugin: true\n---\n',
   'plugins/p/output-styles/forced.md': '---\nforce-for-plugin: true\n---\n',
   // The cross-file agent rules: one scope with settings, two agents of one name, a skill that
@@ -3859,6 +3862,7 @@ const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
   '.claude/agents/mcp.md: claude/agent-mcp-servers-schema@2',
   '.claude/agents/memory.md: claude/agent-memory-grants-write@2',
+  '.claude/agents/portable.md: claude/frontmatter-yaml-portable@1',
   '.claude/agents/review/deep/n.md: claude/agent-permission-mode-bypass@2',
   '.claude/agents/schema.md: claude/agent-frontmatter-schema@2',
   '.claude/agents/valid.md: claude/agent-frontmatter-valid@2',
@@ -3879,6 +3883,7 @@ const EXPECTED = [
   '.claude/skills/glob/SKILL.md: claude/skill-paths-glob-valid@2',
   '.claude/skills/layout/skill.md: claude/skill-file-layout@2',
   '.claude/skills/loose.md: claude/skill-file-layout@2',
+  '.claude/skills/portable/SKILL.md: claude/frontmatter-yaml-portable@1',
   '.claude/skills/position/SKILL.md: claude/skill-frontmatter-position@2',
   '.claude/skills/ref/SKILL.md: claude/skill-reference-exists@2',
   '.claude/skills/schema/SKILL.md: claude/skill-frontmatter-schema@2',
@@ -5423,7 +5428,8 @@ const AGENT_RULES = [
 ]
 
 // The agent and output style rules of #9 that are `warn`, in the order of the `modules` list.
-// They follow the agent and output style rules that are errors.
+// They follow the agent and output style rules that are errors. `frontmatter-yaml-portable` also
+// reads skill and command files.
 const AGENT_WARN_RULES = [
   'agent-disallowed-tools-scope',
   'agent-field-min-version',
@@ -5437,6 +5443,7 @@ const AGENT_WARN_RULES = [
   'agent-skills-preload-limit',
   'agent-tools-conditional',
   'agent-tools-task-alias',
+  'frontmatter-yaml-portable',
   'output-style-force-for-plugin',
   'output-style-name-unique',
   'output-style-plugin-name-description',

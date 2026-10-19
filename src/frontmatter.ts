@@ -1,22 +1,44 @@
 // Parse the YAML frontmatter of a Markdown file, for each rule that reads a
 // field. `@eslint/markdown` gives the frontmatter as one `yaml` node with the
 // raw text in `value`. It does not parse the fields.
-import { isMap, isScalar, type Node, parse, parseDocument } from 'yaml'
+import { isMap, isScalar, type Node, parse, parseDocument, YAMLParseError } from 'yaml'
+
+/** What the strict `yaml` parser makes of the text of a frontmatter block. An
+ *  empty block, a block of comments only, and a YAML null such as `~`, give
+ *  `not-mapping` with the value null. A parse error gives the first error, and
+ *  the line of the text where it starts. An error of alias resolution, such as
+ *  an alias with no anchor, has no line. */
+export type FrontmatterParse =
+  | { kind: 'mapping'; data: Record<string, unknown> }
+  | { kind: 'not-mapping'; value: unknown }
+  | { kind: 'error'; message: string; line: number | null }
+
+/** Tells YAML that gives a mapping from YAML that gives another value, and from
+ *  YAML that does not parse. */
+export function classifyFrontmatter(text: string): FrontmatterParse {
+  let value: unknown
+  try {
+    // With no pretty errors, the message has no position and no copy of the text.
+    value = parse(text, { prettyErrors: false })
+  } catch (error) {
+    // `parse` throws a YAMLParseError, with an offset, for text that does not parse. It throws a
+    // ReferenceError, with no offset, for an alias that it cannot resolve, or for too many aliases.
+    const line =
+      error instanceof YAMLParseError ? text.slice(0, error.pos[0]).split('\n').length : null
+    return { kind: 'error', message: (error as Error).message, line }
+  }
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return { kind: 'not-mapping', value }
+  }
+  return { kind: 'mapping', data: value as Record<string, unknown> }
+}
 
 /** The fields of a frontmatter block as a plain object. Returns null when
  *  the YAML does not parse, or when its top level is not a mapping. The rules
- *  stay silent on bad YAML. */
+ *  that read a field stay silent on bad YAML. */
 export function parseFrontmatter(text: string): Record<string, unknown> | null {
-  let data: unknown
-  try {
-    data = parse(text)
-  } catch {
-    return null
-  }
-  if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-    return null
-  }
-  return data as Record<string, unknown>
+  const result = classifyFrontmatter(text)
+  return result.kind === 'mapping' ? result.data : null
 }
 
 /** The field `key` when it is a string, or the empty string. */
