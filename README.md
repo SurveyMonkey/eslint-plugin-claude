@@ -124,8 +124,8 @@ for `files`.
 `strict` turns on six rules whose glob is `**/*.md`: `claude-md-location`, `agent-body-nonempty`,
 `agent-description-proactive`, `agent-descriptions-budget`, `agent-name-kebab-case` and
 `agent-teammate-ignored-fields`. So `strict` sets `markdown/gfm` with YAML frontmatter on each
-`.md` file. That overrides your own Markdown language for those files. To narrow the `files` of a
-rule, use the block name as [Change the files of a rule](#change-the-files-of-a-rule) shows.
+`.md` file. That replaces a `language` that an earlier block sets for those files. To narrow the
+`files` of a rule, follow [Change the files of a rule](#change-the-files-of-a-rule).
 
 ## Rules
 
