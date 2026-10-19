@@ -172,7 +172,18 @@ describe('bodyOf', () => {
     )
   })
 
-  it('says the snapshot has only the hash of a changed block that no rule cites', () => {
+  it('shows Before and After for a changed block that no rule cites, with its old text', () => {
+    const oldText = '### Agent frontmatter\n\nA plugin agent accepts `model`.'
+    const body = api.bodyOf({ ...newRule, change: 'changed', oldText }, REPO)
+    expect(body).toContain(
+      '```diff\n  ### Agent frontmatter\n  \n- A plugin agent accepts `model`.\n+ A plugin agent accepts `effort`.\n```',
+    )
+    expect(body).toContain('<details><summary>Before: the old section</summary>')
+    expect(body).toContain('<details><summary>After: the new section</summary>')
+    expect(body).not.toContain('The snapshot holds only the hash of this block')
+  })
+
+  it('says the old text is not available for a changed block from a snapshot file with no page text', () => {
     const body = api.bodyOf({ ...newRule, change: 'changed' }, REPO)
     expect(body).toContain('The snapshot holds only the hash of this block')
     expect(body).toContain('- New rule candidate')

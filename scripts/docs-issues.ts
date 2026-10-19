@@ -31,9 +31,12 @@
 // --repo or $GITHUB_REPOSITORY. The issue type is Task. Each issue gets the
 // claude-docs-change label (LABEL), so a person can find the docs watch issues.
 //
-// For a changed block with old and new text, the body shows a diff. Under
-// the diff, two collapsed sections quote the full old text and the full new
-// text. Past MAX_DIFF_LINES lines, the body quotes the two texts with no diff.
+// For a changed block, the body shows a diff. Under the diff, two collapsed
+// sections quote the full old text and the full new text. Past
+// MAX_DIFF_LINES lines, the body quotes the two texts with no diff. The
+// classifier gives the old text from the page text in the snapshot. A
+// snapshot file from before the page text can give no old text. The body
+// then says so, and quotes the new text only.
 //
 // A digest issue holds the new-rule and needs-triage findings of one page
 // that name no rule. The step finds them after the dedupe and the group
@@ -401,6 +404,8 @@ function blockText(
       lines.push(section('After: the new section', f.newText), '')
     }
   } else if (f.newText !== null) {
+    // A changed block with no old text has a snapshot file from before the
+    // page text.
     lines.push(
       f.change === 'added'
         ? 'The block is new. Its text, as quoted data:'
@@ -749,7 +754,7 @@ function rowsFit(sections: unknown[]): boolean {
 
 // Throws for a moved finding whose hashes, texts or move do not fit its kind.
 // It has the old hash, the new hash and the new text. Its old text can be
-// null, because the snapshot stores the text of a mapped block only. Its new
+// null, for a snapshot file from before the page text. Its new
 // block is not its old block. A rule or an inventory row cites the old block.
 function validateMove(f: Record<string, unknown>): void {
   if (
@@ -803,7 +808,9 @@ export function validateTracked(value: unknown): asserts value is Tracked {
     if (t[field] !== null && typeof t[field] !== 'string') fail(`has a ${field} that is not text`)
   }
   // An added block has no old hash and no old text. A removed block has no new
-  // hash and no new text. Other blocks have both hashes and the new text.
+  // hash and no new text. Other blocks have both hashes and the new text. A
+  // block that is not added has its old text, or null for a snapshot file
+  // from before the page text.
   const hasOld = t.change !== 'added'
   const hasNew = t.change !== 'removed'
   if (
