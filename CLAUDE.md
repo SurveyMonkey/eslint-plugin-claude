@@ -17,8 +17,8 @@ check that the tool covers in part is a rule, for the cases that it misses.
   a comment on a group issue for a tracked block. It opens a `moved` issue for a renamed section.
   It opens a digest for the uncited blocks of one page.
 - `docs/rule-sources.json` maps each rule to its docs sources. `docs/docs-snapshot/` holds the
-  block hashes of the last docs, and the text of each cited section. Only a reviewed pull request
-  changes them. The triage refresh is the one exception (ADR 002 Decision 4). The
+  page text and the block hashes of the last docs, and the text of each cited section. Only a
+  reviewed pull request changes them. The triage refresh is the one exception (ADR 002 Decision 4). The
   `docs-snapshot` check (`scripts/docs-verify.ts`) runs the docs watch on the base state in dry
   run. It fails a pull request that stores a change that no open issue or group issue comment
   names. It also fails a snapshot that is not the live docs.
