@@ -2612,6 +2612,21 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Validate the manifest",
       "hash": "46860fc6cf1523d23e5a3b66633391cab9fd45e70e44a1bab6873cc09dc05e05"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "mcpServers",
+      "hash": "5297b7f12cb8851318f200c4aa2afd89f27d6398b2c49fbd9bb38122c0627f41"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Include a packaged MCPB server",
+      "hash": "8a0ff461b0a91ad8c13072b917adf7982103e231d33a5c606b9650bc6e6b8015"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Plugins shared through a repository",
+      "hash": "71249e9304755651cccc811bd2487edf214505849e20bf6cfa7a3333a704a3e5"
     }
   ],
   "mcp-json-file-size": [
