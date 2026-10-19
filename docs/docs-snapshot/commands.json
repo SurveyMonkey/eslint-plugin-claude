@@ -1,11 +1,11 @@
 {
   "url": "https://code.claude.com/docs/en/commands",
-  "hash": "3857d8e6782aab339a1956bd41df854506a487e93df0764c2d882e6a322831df",
+  "hash": "ea13c6c08893d2f6d32a0172fae66a4bb34c76fee27367ea43334b1662e21dac",
   "blocks": [
     {
       "id": "commands",
-      "hash": "caa056256c1a3f02c726e93be0fb4dd08a5b66d78f9fa0aa7522dbdb6562ac71",
-      "bodyHash": "48b99bb17bc80d57aa65862acd8cf56e5c6c638521a549ff735df6e2d23cfc29"
+      "hash": "dcbb12b7e8099a38bba56e5fdd5c39c35f16d01704368afe3faee54e61b8dd0d",
+      "bodyHash": "c2d1dcf2a4b7b46d4bfa718c6e0c9a0fd08e40d6ad40ea36feedac8cd1a02b10"
     },
     {
       "id": "commands-across-a-typical-workflow",

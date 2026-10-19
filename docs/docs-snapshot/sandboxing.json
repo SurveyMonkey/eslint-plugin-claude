@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/sandboxing",
-  "hash": "f3feed627e09b91db74255475a605fd692a80e48b6b05be20b0b0b3efbfb378e",
+  "hash": "99de2ccafe112a2d5ba9aafe3ccd4e39571aec8d24733b7ca8f8eeb2be09b545",
   "blocks": [
     {
       "id": "configure-the-sandboxed-bash-tool",
@@ -39,8 +39,8 @@
     },
     {
       "id": "auto-allow-mode",
-      "hash": "e18ffc3bafd51ce9974f3df2a811757876c86baaf5d97bc66cdb18f2a598421c",
-      "bodyHash": "70a8572a01db3c6a28a9ec211746c9fca9e70b7d51c62753301fffbe01f6f42b"
+      "hash": "ed97466eb25e55401cfee45af1875f1d325ef78bc79a1c1330d9c119130626ef",
+      "bodyHash": "f627f54def1aa8ba393a43c1dd68872a13651156451238e407d00503609be386"
     },
     {
       "id": "regular-permissions-mode",

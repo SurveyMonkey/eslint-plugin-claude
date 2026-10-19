@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/plugins/mods/reference",
-  "hash": "e466c9b5ac7e5ecde1b5c5ac4097af98493d47f83f38a0534da56138058dd12b",
+  "hash": "83787e396a7ca50eaf93ab28e31f760a33286fab86aa087592042eb059f35725",
   "blocks": [
     {
       "id": "mods-reference",
@@ -99,13 +99,28 @@
     },
     {
       "id": "elements",
-      "hash": "597784c85d9e75d128286b47ccab1dbede1f05898aed235e5e6f84454b6cc624",
-      "bodyHash": "97a9a714fb7a1b20a3120d26e8dc0b8c56c4742b74e1c5758659025547ca6ba1"
+      "hash": "e0f053b0ddfcd1bef67b06ac915abf2b083d84d81ec5f80e89341835a81bd043",
+      "bodyHash": "1a85ae4c08aa2b2b54691a4f1743611752eb07e0aa30ce0b3fd9fd71b2b95c44"
     },
     {
       "id": "box-border-styles",
       "hash": "3058446d0fa6706eb331ea928344873356441367c10c6477aba1fcf03b90e402",
       "bodyHash": "13d50dbe93f25760fd909f5828bf61fd1c169fc40823d920dba97182a1a0292e"
+    },
+    {
+      "id": "box-spacing-steps",
+      "hash": "7e943e5ceec24bfa7d30b81ba8307820bd5fcde9c385311f90fa99d5932b1fa4",
+      "bodyHash": "5de7e076d37fc8f2d9e1e690747c25b6ad0276847cd9d289368caa7f5d231c01"
+    },
+    {
+      "id": "text-typography",
+      "hash": "9bf02a4fdf33391533ff0e0bb71bb017df1cf3909c04ce4a4a664625e500fccb",
+      "bodyHash": "29fb3992347e032613a519ba3bc8abb4f119b7664098cbca914a99da2c519668"
+    },
+    {
+      "id": "text-bold",
+      "hash": "68083b631d00b10815dc313eac283de5671acba2023d1568a68ab449d98825c3",
+      "bodyHash": "4ffc24e43891c8c0eca3d3cfcb78578ca4c5a782455173adef0beb6cac6fa33e"
     },
     {
       "id": "limits",

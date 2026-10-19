@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/agent-sdk/skills",
-  "hash": "c46492c7d4ae32ab5189ac6370a0a2bd0c8eaf62b395fce8105cb907a0093524",
+  "hash": "c515e05538b55ae79a3044229d742946785e0dcca66845478d542ceb0620d26c",
   "blocks": [
     {
       "id": "extend-agents-with-skills",
@@ -103,8 +103,8 @@
     },
     {
       "id": "next-steps",
-      "hash": "c554af92649d9e3de10b126e313e6ff9fe33ed4df06889cf1eeaa0c6296922be",
-      "bodyHash": "0e7bb495b7215572bdca0ed64b709618cfdbad50b329d4af64870cc9b483fb24"
+      "hash": "c82d3031f4ae52a7c54f9e605443c54025b414c8e7ce9b51191f33f4aa169181",
+      "bodyHash": "850606bcd1b8c7d938d336caf203b5d49f0b0e17e5f6c2f8da6bf30274004c73"
     },
     {
       "id": "related-resources",
