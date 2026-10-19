@@ -13,10 +13,12 @@
 //   cannot read. Both modes exit 1 on any failure.
 // update writes the snapshot, and sets `hash` on each source in the map. A
 //   person runs it, in a pull request. The scheduled job does not.
-// A snapshot file holds { url, hash, blocks, sources }. Each block is
-//   { id, hash, bodyHash }. bodyHash is the hash of the block text after its
-//   heading (see splitBlocks). It is optional: an old snapshot file, or a block
-//   with no body, does not have it. check does not read it.
+// A snapshot file holds { url, hash, text, blocks, sources }. text is the page
+//   text with LF line ends, and hash is its hash. text is optional: a snapshot
+//   file from before it does not have it. check does not read it.
+//   Each block is { id, hash, bodyHash }. bodyHash is the hash of the block
+//   text after its heading (see splitBlocks). It is optional: an old snapshot
+//   file, or a block with no body, does not have it. check does not read it.
 // root defaults to this repository.
 import { createHash } from 'node:crypto'
 import {
@@ -46,12 +48,14 @@ export type Block = {
 // A mapped source, resolved on its page.
 export type SnapshotSource = { heading: string; id: string; hash: string; text: string }
 
-// The stored state of one page. `id` of a block is its key. `bodyHash` is
-// optional: a snapshot from before the body hash, or a block with no body,
-// does not have it.
+// The stored state of one page. `text` is the page text, and `hash` is its
+// hash. `id` of a block is its key. `text` is optional: a snapshot from before
+// the page text does not have it. `bodyHash` is optional: a snapshot from
+// before the body hash, or a block with no body, does not have it.
 export type Snapshot = {
   url: string
   hash: string
+  text?: string
   blocks: { id: string; hash: string; bodyHash?: string }[]
   sources: SnapshotSource[]
 }
@@ -271,7 +275,8 @@ export const snapshotName = (url: string): string =>
     .replace(/^en\//, '')
     .replaceAll('/', '__')}.json`
 
-// Fetches, hashes and splits one page. Returns the state that update writes.
+// Fetches, hashes and splits one page. Returns the state that update writes:
+// the page text with LF line ends, its hash, the blocks and the sources.
 // Each block has its key, its hash and, when its body is not empty, its body
 // hash. It throws when the page has no title heading, or when a mapped heading
 // is not on the page or is on it twice.
@@ -292,6 +297,7 @@ export async function readPage(
   return {
     url,
     hash: sha256(pageText),
+    text: pageText,
     blocks: blocks.map(({ key, hash, bodyHash }) =>
       bodyHash === null ? { id: key, hash } : { id: key, hash, bodyHash },
     ),
