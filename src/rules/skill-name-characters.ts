@@ -1,14 +1,25 @@
-// A skill or command name with a character that Claude Code refuses
-// (docs/rules/skill-name-characters.md). A refused folder or file name stops
-// the load. A refused frontmatter `name` is not in the `/` menu. A folder in a
-// plugin `skills/` directory is out of scope: Claude Code changes the
-// characters to hyphens there.
+// A skill or command name with a character that Claude Code refuses, or with
+// more than 256 characters (docs/rules/skill-name-characters.md). A refused
+// folder or file name stops the load. A refused frontmatter `name` is not in
+// the `/` menu. A folder in a plugin `skills/` directory is out of scope:
+// Claude Code changes the characters to hyphens there.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'skill-name-characters' as const
+
+/** The most characters that Claude Code takes in a name (errors, "Skill or command
+ *  name refused"; checked 2026-10-16). The rule has no option for it. The rule counts
+ *  code points. */
+const NAME_LIMIT = 256
+
+/** The length of `text` in characters when it is over the limit, or null. */
+function overLimit(text: string): number | null {
+  const length = [...text].length
+  return length > NAME_LIMIT ? length : null
+}
 
 /** Each class of characters in the docs, with the text of the message.
  *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so the rule counts it
@@ -50,7 +61,9 @@ function firstFault(text: string): { code: string; kind: string } | null {
   return null
 }
 
-const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }> = {
+const rule: MarkdownRuleDefinition<{
+  MessageIds: 'folder' | 'command' | 'name' | 'commandLength' | 'nameLength'
+}> = {
   meta: {
     type: 'problem',
     docs: {
@@ -63,6 +76,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }
         '`{{name}}` holds {{kind}} ({{code}}). Claude Code does not load this skill. Rename the folder.',
       command:
         '`{{name}}` holds {{kind}} ({{code}}). Claude Code does not load this command. Rename the file or folder.',
+      commandLength:
+        'The command name, joined with `:`, has {{length}} characters. Claude Code refuses a name over {{limit}} characters. Rename the file or folder.',
+      nameLength:
+        'The `name` has {{length}} characters. Claude Code refuses a name over {{limit}} characters. The `/` menu does not show this name, and the name does not invoke the skill. Edit the `name` field.',
       name: '`{{name}}` holds {{kind}} ({{code}}). The `/` menu does not show this name, and the name does not invoke the skill. Edit the `name` field.',
     },
   },
@@ -89,6 +106,16 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }
             })
           }
         }
+        // A command name is its folders and its file name, joined with `:`. A skill folder
+        // name is under 256 characters: a name of 256 bytes or more cannot be on disk.
+        const length = file.kind === 'command' ? overLimit(file.names.join(':')) : null
+        if (length !== null) {
+          context.report({
+            loc: first,
+            messageId: 'commandLength',
+            data: { length: String(length), limit: String(NAME_LIMIT) },
+          })
+        }
       },
       yaml(node) {
         // The docs give the `name` effect for a skill only. A command takes its name
@@ -105,6 +132,14 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'folder' | 'command' | 'name' }
             loc: fm.at(field.valueStart, field.valueEnd),
             messageId: 'name',
             data: { name: value, code: fault.code, kind: fault.kind },
+          })
+        }
+        const length = overLimit(value)
+        if (length !== null) {
+          context.report({
+            loc: fm.at(field.valueStart, field.valueEnd),
+            messageId: 'nameLength',
+            data: { length: String(length), limit: String(NAME_LIMIT) },
           })
         }
       },

@@ -3,7 +3,7 @@ type: Reference
 description: The ESLint rule claude/skill-name-characters, which reports a skill folder, a command file or folder, or a frontmatter name that holds a character Claude Code refuses, such as a zero-width space, a control character, an extra blank or an angle bracket.
 owner: brianespinosa
 created: 2026-10-14
-related_issues: [304]
+related_issues: [304, 330]
 stale_after: 2027-04-14
 generated:
   by: claude-code
@@ -55,10 +55,22 @@ report a zero-width joiner, which is also a part of many emoji. The rule does no
 field of a command file. A command gets its name from its path, and the docs give the `name`
 effect for a skill only.
 
-The rule does not check the limit of 256 characters on a name.[^refused] It does not read the
-plugin manifest. So it does not check a skill or command at a manifest `skills` or `commands`
-path. When a manifest `commands` key replaces `commands/`, Claude Code does not load the files
-there. The rule still reports them.
+Claude Code also refuses a name over 256 characters.[^refused] The rule reports this length
+fault, with no option: the limit is fixed. The docs do not say how Claude Code counts
+characters. The rule counts code points.
+
+- A frontmatter `name` of a skill is one name.
+- The name of a command is its folders and its file name, joined with `:`. The docs do not say
+  if the limit applies to this joined name or to each part. The rule uses the joined name, which
+  is the longer count. A part over 256 characters cannot be on disk, so only the joined name
+  can be over the limit. The rule does not add the plugin name to a plugin command name.
+- A skill folder name is not checked for length. A folder name of 256 bytes or more cannot exist.
+- The rule gives one report for each name over the limit. A name that also holds a refused
+  character gets both reports.
+
+The rule does not read the plugin manifest. So it does not check a skill or command at a
+manifest `skills` or `commands` path. When a manifest `commands` key replaces `commands/`,
+Claude Code does not load the files there. The rule still reports them.
 
 The rule checks the files that the other skill rules check:
 
@@ -69,10 +81,10 @@ The rule checks the files that the other skill rules check:
 - `<plugin>/commands/**/*.md`
 
 Fail: `.claude/skills/deploy<prod>/SKILL.md`, `.claude/commands/run  tests.md`, a `SKILL.md`
-with `name: " deploy"`.
+with `name: " deploy"`, and a `SKILL.md` with a `name` of 257 characters.
 
-Pass: `.claude/skills/deploy app/SKILL.md`, and `plugins/ops/skills/deploy<prod>/SKILL.md` with a
-manifest in `plugins/ops/.claude-plugin/`.
+Pass: a `SKILL.md` with a `name` of 256 characters, `.claude/skills/deploy app/SKILL.md`, and
+`plugins/ops/skills/deploy<prod>/SKILL.md` with a manifest in `plugins/ops/.claude-plugin/`.
 
 ## Usage
 
