@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 35, 38, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316]
+related_issues: [25, 35, 36, 38, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -362,8 +362,8 @@ every issue applies. The body names the old and new headings and the new anchor.
 footnote to change in `docs/rules/<rule>.md` and `docs/rules-inventory.md`. Its Scope is the
 steps of "A moved section" in `docs/runbooks/docs-watch-triage.md`. The issue step refuses a
 `moved` finding that does not fit its kind (Decision 7). The finding must have both hashes, the
-new text, and the new heading and block. The old text can be absent, because the snapshot
-stores the text of a mapped block only.
+new text, and the new heading and block. The old text can be absent only for a snapshot file
+from before Decision 9.
 
 ### 7. The job fails closed
 
@@ -461,6 +461,41 @@ each, takes 57,826 characters.
 
 The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
 
+### 9. The snapshot stores the text of each page
+
+Before this decision, the snapshot stored the text of a mapped block only (#36). For a changed
+block that no rule cites, the issue showed the new text, and said that the old text is not
+available. These blocks are the `new-rule` candidates. So a reviewer needs the old text most for
+them. In #369, a block of the `errors` page was too large for one Jev request, and its issue had
+no diff.
+
+The sizes on `main` at `4735cf3d0` on 2026-10-19:
+
+| What | Size |
+| --- | --- |
+| `docs/docs-snapshot/` on disk | 2.4 MB: 57 files, 2,370 blocks, 639 sources |
+| The text in `sources[].text` | 1.7 MB |
+| The text of the 57 pages | 4.0 MB |
+
+**The choice.** Each snapshot file has `text`: the page text with LF line ends. `hash` is its
+hash. `update` writes it. The classifier splits `text` with `splitBlocks`, which also gives the
+block keys of the snapshot. So each changed or removed block has its old text, and so does a
+`moved` finding. The snapshot takes about 6.5 MB.
+
+These options were declined:
+
+- Store the text on each block. The size is the same. But the text is then in 2,370 places,
+  `sources[].text` duplicates it, and no reader becomes simpler.
+- Keep the scope, and record it. Each changed block that no rule cites then keeps the note, and
+  a reviewer reads the page.
+
+**What stays.** `sources[].text` stays, because the drift tests read it
+(`tests/settings-env.test.ts`). It duplicates about 1.7 MB of the page text. `bodyHash` stays on
+each block, because the move detection reads it with no split (Decision 6). `check` does not
+read `text`. A snapshot file from before this decision has no `text`, and it stays valid. The
+classifier then reads the old text from `sources`, as before. The issue then says that the old
+text is not available.
+
 ## Consequences
 
 - Each block costs one request of about 1,400 input tokens. At the price on 2026-09-29
@@ -472,8 +507,11 @@ The limit of 20 new issues counts issues, not blocks, so a digest counts as one.
   Each case ran once. The result can differ on real changes.
 - A new requirement inside a block that a heading cites gives no `new-rule` issue. The rule
   question for that block is the only signal.
-- The snapshot has only the hash of an uncited block. A change to the words only of such a block
-  can give a `new-rule` issue, because the question sees the new text only.
+- A snapshot file from before Decision 9 has only the hash of an uncited block. A change to the
+  words only of such a block can give a `new-rule` issue, because the question sees the new text
+  only.
+- Each refresh pull request holds the new text of each changed page (Decision 9). A reviewer
+  reads the code files, and reads the snapshot diff by file.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
 - `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed.
 - When all group issues of a tracked block are closed, each finding of the block opens its issue.

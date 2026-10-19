@@ -148,12 +148,18 @@ starts no block. A heading at level 1 makes the whole page the source. A mapped 
 title that the page shows, for example "Choose where skills load". The script finds its block by
 the ID. When no block has that ID, it finds the block by the slug of the title.
 
-A snapshot file holds `url`, `hash`, `blocks` and `sources` for one page. Each block has `id`
-(its key), `hash` (the hash of its text) and an optional `bodyHash`. `bodyHash` is the SHA-256
-of the block text after its heading. The heading of a Markdown block is its first line. The
-heading of an HTML block is all its lines, from the opening tag to the closing tag. Blank lines
-at the start of the body and white space at its end do not count. A block with no body has no
-`bodyHash`. `update` writes it. A file with no `bodyHash` stays valid, and `check` does not read
+A snapshot file holds `url`, `hash`, `text`, `blocks` and `sources` for one page. `text` is the
+page text with LF line ends, and `hash` is its hash. The classifier splits `text` into blocks to
+get the old text of each block. `update` writes `text`. A file with no `text` stays valid, and
+`check` does not read it. With `text`, the snapshot takes about 6.5 MB, from 2.4 MB before.
+
+Each block has `id` (its key), `hash` (the hash of its text) and an optional `bodyHash`.
+`bodyHash` is the SHA-256 of the block text after its heading. The heading of a Markdown block
+is its first line. The heading of an HTML block is all its lines, from the opening tag to the
+closing tag. Blank lines at the start of the body and white space at its end do not count. A
+block with no body has no `bodyHash`.
+
+`update` writes `bodyHash`. A file with no `bodyHash` stays valid, and `check` does not read
 it. The classifier uses it to find a moved section (see [Docs classifier](#docs-classifier)).
 
 To refresh the snapshot after a docs change, run `node scripts/docs-watch.ts update`. Read the
