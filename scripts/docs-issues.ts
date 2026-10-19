@@ -404,8 +404,8 @@ function blockText(
       lines.push(section('After: the new section', f.newText), '')
     }
   } else if (f.newText !== null) {
-    // A changed block with no old text has a snapshot file from before the
-    // page text.
+    // A changed or moved block with no old text has a snapshot file from
+    // before the page text.
     lines.push(
       f.change === 'added'
         ? 'The block is new. Its text, as quoted data:'
@@ -809,8 +809,8 @@ export function validateTracked(value: unknown): asserts value is Tracked {
   }
   // An added block has no old hash and no old text. A removed block has no new
   // hash and no new text. Other blocks have both hashes and the new text. A
-  // block that is not added has its old text, or null for a snapshot file
-  // from before the page text.
+  // block that is not added has its old text. The old text is null for a
+  // snapshot file from before the page text.
   const hasOld = t.change !== 'added'
   const hasNew = t.change !== 'removed'
   if (

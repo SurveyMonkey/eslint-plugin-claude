@@ -14,8 +14,10 @@
 // also has `move`, and other findings can have `possibleMoves` (see planPage).
 // A result is the outcome for each block, and includes the blocks that need
 // no change. oldText is the text of the old block in the stored page text.
-// It is null for an added block. It is also null when the snapshot file is
-// from before the page text and does not store the text of the block.
+// It is null for an added block. The findings of a new page, a new source,
+// an unknown heading and a duplicate heading also have no old text. A
+// snapshot file from before the page text stores the text of its mapped
+// sources only. For another block, oldText is then null.
 //
 // docs/rules-inventory.md is a second source map. Its footnotes cite docs
 // headings, and the rule rows of each `###` section of "Rules by group" cite
@@ -738,8 +740,8 @@ export function planPage({
   const now = new Map(blocks.map((block) => [block.key, block]))
   // The stored page text gives the old text of each block. splitBlocks gives
   // the keys that the snapshot stores. A snapshot file from before the page
-  // text has the text of the whole-page source, if any, and of each mapped
-  // block. The whole-page source has the ID of the title block.
+  // text has the text of each mapped block. It can also have the text of the
+  // whole-page source, which has the ID of the title block.
   const wholeStored = stored.sources.find((source) => source.id === stored.blocks[0]?.id)
   const oldPage = typeof stored.text === 'string' ? stored.text : wholeStored?.text
   const oldBlocks = new Map(
