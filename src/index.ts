@@ -24,6 +24,7 @@ import * as agentNameShadowsBuiltin from './rules/agent-name-shadows-builtin.ts'
 import * as agentNameUnique from './rules/agent-name-unique.ts'
 import * as agentNoBom from './rules/agent-no-bom.ts'
 import * as agentOmitClaudeMdMain from './rules/agent-omit-claude-md-main.ts'
+import * as agentPermissionModeAutoUnavailable from './rules/agent-permission-mode-auto-unavailable.ts'
 import * as agentPermissionModeBypass from './rules/agent-permission-mode-bypass.ts'
 import * as agentPermissionModeManual from './rules/agent-permission-mode-manual.ts'
 import * as agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
@@ -591,6 +592,10 @@ const modules = [
   { target: agentOmitClaudeMdMain.target, default: agentOmitClaudeMdMain.default },
   { target: agentModelForced.target, default: agentModelForced.default },
   { target: agentTeamsNoProjectConfig.target, default: agentTeamsNoProjectConfig.default },
+  {
+    target: agentPermissionModeAutoUnavailable.target,
+    default: agentPermissionModeAutoUnavailable.default,
+  },
   { target: outputStyleFrontmatterValid.target, default: outputStyleFrontmatterValid.default },
   { target: outputStyleFrontmatterSchema.target, default: outputStyleFrontmatterSchema.default },
   { target: agentDisallowedToolsScope.target, default: agentDisallowedToolsScope.default },
@@ -1253,6 +1258,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-omit-claude-md-main': 'error',
   'agent-model-forced': 'error',
   'agent-teams-no-project-config': 'error',
+  'agent-permission-mode-auto-unavailable': 'error',
   'output-style-frontmatter-valid': 'error',
   'output-style-frontmatter-schema': 'error',
   'agent-disallowed-tools-scope': 'warn',

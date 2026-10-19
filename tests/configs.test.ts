@@ -5417,6 +5417,7 @@ const AGENT_RULES = [
   'agent-model-forced',
   'agent-teams-no-project-config',
   'agent-teams-no-project-config',
+  'agent-permission-mode-auto-unavailable',
   'output-style-frontmatter-valid',
   'output-style-frontmatter-schema',
 ]
