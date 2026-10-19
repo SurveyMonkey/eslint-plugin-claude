@@ -334,6 +334,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'plugin-project-skills-dir-limits',
     'plugin-relevance-signal-hints',
     'plugin-settings-agent-exists',
+    'plugin-settings-keys',
     'plugin-settings-single-source',
     'plugin-skill-dir-layout',
     'plugin-skills-key-redundant-default',

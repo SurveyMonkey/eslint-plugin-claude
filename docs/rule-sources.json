@@ -4787,6 +4787,18 @@
       "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
     }
   ],
+  "plugin-settings-keys": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "settings",
+      "hash": "317fe5e02e8a921104edd38e5d07b6fa6d10ad1724e23c3b0bb1343c80f767a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/components",
+      "heading": "Default settings",
+      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
+    }
+  ],
   "plugin-settings-single-source": [
     {
       "url": "https://code.claude.com/docs/en/plugins/components",

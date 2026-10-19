@@ -316,6 +316,7 @@ import * as pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import * as pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import * as pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
 import * as pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
+import * as pluginSettingsKeys from './rules/plugin-settings-keys.ts'
 import * as pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import * as pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import * as pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
@@ -1074,6 +1075,7 @@ const modules = [
     target: pluginUserConfigSensitiveInContent.target,
     default: pluginUserConfigSensitiveInContent.default,
   },
+  { target: pluginSettingsKeys.target, default: pluginSettingsKeys.default },
   { target: pluginFeatureMinVersion.target, default: pluginFeatureMinVersion.default },
   { target: pluginManifestMetadataFormat.target, default: pluginManifestMetadataFormat.default },
   { target: pluginManifestNoBom.target, default: pluginManifestNoBom.default },
@@ -1571,6 +1573,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-npm-source-shrinkwrap': 'error',
   'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
+  'plugin-settings-keys': 'error',
   'plugin-evals-case-yaml': 'error',
   'plugin-evals-dir': 'error',
   'plugin-evals-grader': 'error',
