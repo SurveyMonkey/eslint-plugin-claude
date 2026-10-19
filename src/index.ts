@@ -29,6 +29,7 @@ import * as agentPermissionModeManual from './rules/agent-permission-mode-manual
 import * as agentPluginIgnoredFields from './rules/agent-plugin-ignored-fields.ts'
 import * as agentPluginScopedNameUnique from './rules/agent-plugin-scoped-name-unique.ts'
 import * as agentSkillsExist from './rules/agent-skills-exist.ts'
+import * as agentSkillsPreloadLimit from './rules/agent-skills-preload-limit.ts'
 import * as agentSkillsPreloadable from './rules/agent-skills-preloadable.ts'
 import * as agentTeammateIgnoredFields from './rules/agent-teammate-ignored-fields.ts'
 import * as agentTeamsNoProjectConfig from './rules/agent-teams-no-project-config.ts'
@@ -601,6 +602,7 @@ const modules = [
   { target: agentNoBom.target, default: agentNoBom.default },
   { target: agentPermissionModeManual.target, default: agentPermissionModeManual.default },
   { target: agentPluginScopedNameUnique.target, default: agentPluginScopedNameUnique.default },
+  { target: agentSkillsPreloadLimit.target, default: agentSkillsPreloadLimit.default },
   { target: agentToolsConditional.target, default: agentToolsConditional.default },
   { target: agentToolsTaskAlias.target, default: agentToolsTaskAlias.default },
   { target: outputStyleForceForPlugin.target, default: outputStyleForceForPlugin.default },
@@ -1262,6 +1264,7 @@ const recommended: Record<RuleName, Severity> = {
   'agent-no-bom': 'warn',
   'agent-permission-mode-manual': 'warn',
   'agent-plugin-scoped-name-unique': 'warn',
+  'agent-skills-preload-limit': 'warn',
   'agent-tools-conditional': 'warn',
   'agent-tools-task-alias': 'warn',
   'output-style-force-for-plugin': 'warn',

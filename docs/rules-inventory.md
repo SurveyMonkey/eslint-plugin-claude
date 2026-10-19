@@ -23,8 +23,8 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **455 candidate rules** in 9 groups. 338 rules go in `recommended`: 204 at `error` and 134 at
-  `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
+- **455 candidate rules** in 9 groups. 339 rules go in `recommended`: 204 at `error` and 135 at
+  `warn`. 116 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 141 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 78 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
@@ -121,9 +121,9 @@ below covers one kind of configuration file, and each rule name starts with its 
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 40 |
-| `limit` | `problem` | A size, count or length limit, or a truncation. | 20 |
+| `limit` | `problem` | A size, count or length limit, or a truncation. | 21 |
 | `deprecated` | `suggestion` | A legacy or renamed form that still works. | 12 |
-| `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 85 |
+| `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 84 |
 
 A `limit` rule with a number takes it as an optional rule option, with the docs value as its default. Its row names the option and the default. Where the docs give no number, the row says so. Claude Code can cut or skip the file at a number. If no setting moves that number, the row also names the schema maximum (ADR 001, Decision 2). A `limit` row that compares no number says so.
 
@@ -166,7 +166,7 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Group | `recommended` error | `recommended` warn | `off` | Total |
 |-------|--------------------:|-------------------:|------:|------:|
 | Skills and commands | 16 | 13 | 9 | 38 |
-| Subagents and output styles | 16 | 14 | 12 | 42 |
+| Subagents and output styles | 16 | 15 | 11 | 42 |
 | Hooks | 19 | 16 | 21 | 56 |
 | Plugin manifest and layout | 27 | 19 | 9 | 55 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
@@ -174,10 +174,10 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Settings | 18 | 19 | 14 | 51 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **204** | **134** | **117** | **455** |
+| **Total** | **204** | **135** | **116** | **455** |
 
-By severity, 204 rules are `error` and 251 are `warn`: the 134 `recommended` `warn` rules and
-the 117 `off` rules that `strict` turns on at `warn`.
+By severity, 204 rules are `error` and 251 are `warn`: the 135 `recommended` `warn` rules and
+the 116 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
 of the check for plugins (`partial`) or none of it (`–`).
@@ -310,7 +310,7 @@ Target shorthand: SKILL = `**/.claude/skills/*/SKILL.md`, `<plugin>/skills/*/SKI
 
 ### Subagents and output styles
 
-Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), output style files (`.claude/output-styles/*.md`, plugin `output-styles/*.md`), and agent teams configuration: 42 rules: 16 error and 14 warn in `recommended`, and 12 `off`. "Local" means a project, user, managed or `--add-dir` agent file; "plugin" means a file under a plugin's `agents/` directory or its `agents` manifest key.
+Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), output style files (`.claude/output-styles/*.md`, plugin `output-styles/*.md`), and agent teams configuration: 42 rules: 16 error and 15 warn in `recommended`, and 11 `off`. "Local" means a project, user, managed or `--add-dir` agent file; "plugin" means a file under a plugin's `agents/` directory or its `agents` manifest key.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -331,7 +331,8 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 | `agent-tools-agent-type-list` | `Agent(a, b)` type list is used only when the agent runs as main thread (`--agent`, `agent` setting); it is ignored in a subagent. Listed types name known agents. The rule checks local agents only, and a plugin agent gets no report. Where no committed `agent` setting names the agent, each `Agent(...)` or `Task(...)` entry with a type list is reported as ignored. Where one does, each listed type must be a built-in agent, the `name` of a file in `.claude/agents/`, a scoped name with `:`, or a value of option `allow`. The rule reads `settings.json`, `settings.local.json` and the agent files in the project folder and each folder above it, up to the repository root. It cannot see `--agent`. Option `allow` names an agent that a team starts with `--agent`: that silences the ignored report, and the type list of that agent is still checked. Option `allow` also names an agent type from outside the repository. (heuristic, cross-file) | off | warn | no-op | – | [^sub-agents-restrict-which-subagents-can-be-spawned] |
 | `agent-tools-skill-for-preload` | `Skill` in `tools` with no `skills` field: to preload skills use `skills`. The rule reports a bare `Skill` entry only, because `agent-tools-known` reports `Skill(name)`. A `skills` field with no value, or an empty list, counts as no field. (heuristic) | off | warn | practice | – | [^sub-agents-frontmatter-reference] |
 | `agent-skills-preloadable` | Each `skills` entry that resolves to a repo skill does not set `disable-model-invocation: true`. Such skills are never preloaded. The bundled `verify` gets no report: a skill that the repository cannot see can replace it. The rule matches an entry to a skill folder name in the scope of the agent. It does not check a plugin form entry, a skill from `~/.claude/skills/` or managed settings, or an entry that resolves to no skill. (cross-file) | recommended | error | no-op | – | [^sub-agents-preload-skills-into-subagents] [^skills-frontmatter-reference] |
-| `agent-skills-exist` | Each `skills` entry resolves to a project or plugin skill; missing ones are skipped with a debug-log warning. The rule does not report the total size of the preloaded `SKILL.md` files, because the docs give no size limit. It does not check the limit of 32 distinct names either. An entry matches a skill folder name, a `SKILL.md` `name`, a command file name or a bundled skill. The rule looks in the project folder and each folder above it, or in the plugin of the agent. Option `allow` names skills that the repository cannot see. (heuristic: user and managed skills are not visible) | off | warn | consistency | – | [^sub-agents-preload-skills-into-subagents] [^sub-agents-frontmatter-reference] |
+| `agent-skills-exist` | Each `skills` entry resolves to a project or plugin skill; missing ones are skipped with a debug-log warning. The rule does not report the total size of the preloaded `SKILL.md` files, because the docs give no size limit. `agent-skills-preload-limit` checks the limit of 32 distinct names. An entry matches a skill folder name, a `SKILL.md` `name`, a command file name or a bundled skill. The rule looks in the project folder and each folder above it, or in the plugin of the agent. Option `allow` names skills that the repository cannot see. (heuristic: user and managed skills are not visible) | off | warn | consistency | – | [^sub-agents-preload-skills-into-subagents] [^sub-agents-frontmatter-reference] |
+| `agent-skills-preload-limit` | `skills` lists at most 32 distinct names. Option `max`, default 32, schema maximum 32: the docs name no setting that moves the limit. Claude Code preloads only the first 32 distinct names, and skips the rest with no error. A repeated name counts once. Two names that differ only in case count once, because the docs do not say if case matters. Local and plugin agents. `claude plugin validate` on 2.1.302 passes a plugin agent with 33 distinct names. | recommended | warn | limit | – | [^sub-agents-preload-skills-into-subagents] |
 | `agent-mcp-servers-schema` | `mcpServers` is a list; each entry is a string or a single-key map `name: config`. Inline config follows the `.mcp.json` server schema (mcp-lsp rules) with `type` in `stdio`, `http`, `sse`, `ws`; `sdk` is skipped with a warning. | recommended | error | load | – | [^sub-agents-scope-mcp-servers-to-a-subagent] [^sub-agents-frontmatter-reference] [^changelog-claude-code-changelog] |
 | `agent-mcp-servers-inline-trust` | Inline server in a local `.claude/agents/` file: Claude Code connects it only after that folder is trusted (parent trust and `-p` do not count), and a `stdio` server also runs its command. Review each server. One report for each file, on the `mcpServers` value, naming each inline server. A name reference and a plugin agent get no report. The rule cannot tell a project agent from a `~/.claude/agents/` file by its path, and a user agent needs no trust. | recommended | warn | security | – | [^sub-agents-scope-mcp-servers-to-a-subagent] [^changelog-claude-code-changelog] |
 | `agent-mcp-servers-ref-exists` | Each string `mcpServers` entry names a server in `.mcp.json`. The docs show no server definition in a project settings file, so the rule reads `.mcp.json` only, in the project folder and each folder above it, up to the repository root. It checks local agents only. Option `allow` names servers that the repository cannot see. (heuristic: user config is not visible) | off | warn | consistency | – | [^sub-agents-scope-mcp-servers-to-a-subagent] |
@@ -355,7 +356,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 | `output-style-plugin-name-description` | Plugin output style sets `name` and `description` frontmatter. | recommended | warn | practice | – | [^plugins-components-themes-and-output-styles] |
 | `output-style-name-unique` | Effective style name (`name`, else file name) is unique across nested project `.claude/output-styles/` directories; the closest to the working directory wins. The rule reports in the nearer file, by a walk up to the repo root. It also reports two styles of one folder with one name, where the docs give no precedence. It reads direct children of `output-styles/` only: the page does not say that subfolders load (checked 2026-10-10). Project styles only. (cross-file) | recommended | warn | consistency | – | [^output-styles-create-a-custom-output-style] [^output-styles-frontmatter-reference] |
 | `output-style-force-for-plugin` | Plugin style sets `force-for-plugin: true`: it overrides each user's `outputStyle`. | recommended | warn | practice | – | [^output-styles-frontmatter-reference] |
-| `output-style-keep-coding-instructions` | Custom style omits `keep-coding-instructions: true`, so the built-in software engineering instructions are dropped. (heuristic: matters only for coding sessions) | off | warn | practice | – | [^output-styles-how-output-styles-work] [^output-styles-frontmatter-reference] |
+| `output-style-keep-coding-instructions` | **Dropped (v1 round ruling 8).** The docs say "Leave it out if Claude won't be doing software engineering" [^output-styles-create-a-custom-output-style]. So the fault depends on what the user intends, which is a judgment (README Scope). Was: Custom style omits `keep-coding-instructions: true`, so the built-in software engineering instructions are dropped. (heuristic: matters only for coding sessions) | off | warn | practice | – | [^output-styles-how-output-styles-work] [^output-styles-frontmatter-reference] [^output-styles-create-a-custom-output-style] |
 
 #### Subagents and output styles: notes
 
@@ -375,7 +376,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 - Two headings used here are HTML `<h3>` tags, not `#` lines: sub-agents "Frontmatter reference" (anchor `supported-frontmatter-fields`) and output-styles "Frontmatter reference" (anchor `frontmatter`). The same holds for the two errors.md headings and the troubleshooting heading.
 - Rows handed to other groups: frontmatter `hooks` shape, `Stop` to `SubagentStop`, hook script executable, `shell: powershell`, frontmatter-hook trust, `SubagentStart`/`SubagentStop` matchers (hooks). `agent-memory/*/MEMORY.md` size, memory dir orphans, `agent-memory-local/` gitignore (memory). Plugin `settings.json` `agent` and allowed keys, manifest `agents`/`outputStyles` replacing the folder scan (plugin). Settings `agent`, `outputStyle` case and resolution, `subagentPromptCacheTtl`, and env `CLAUDE_CODE_SUBAGENT_MODEL`, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, `CLAUDE_CODE_FORK_SUBAGENT`, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` (settings). `Agent(name)` deny rules and `Agent(model:...)` (permissions). Glob/Grep with Bash in `tools` (mcp-lsp).
 - Open question: the scope table ranks project agents over plugin agents by name [^sub-agents-choose-the-subagent-scope], but plugin agents register under `<plugin>:<name>`. The docs do not say whether a bare-name clash between them shadows anything, so no rule checks it.
-- One row was dropped: `output-style-force-for-plugin-unique` (at most one style with `force-for-plugin: true` across the plugins of a marketplace). The set of enabled plugins is user state. The repository does not show it (ADR 001, Decision 14). A marketplace lists plugins that a user may not enable. A rule cannot tell which styles compete.
+- Two rows were dropped. `output-style-keep-coding-instructions` is dropped in its row above. The other is `output-style-force-for-plugin-unique` (at most one style with `force-for-plugin: true` across the plugins of a marketplace). The set of enabled plugins is user state. The repository does not show it (ADR 001, Decision 14). A marketplace lists plugins that a user may not enable. A rule cannot tell which styles compete.
 
 ### Hooks
 

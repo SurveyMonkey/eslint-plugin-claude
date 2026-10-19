@@ -5433,6 +5433,7 @@ const AGENT_WARN_RULES = [
   'agent-no-bom',
   'agent-permission-mode-manual',
   'agent-plugin-scoped-name-unique',
+  'agent-skills-preload-limit',
   'agent-tools-conditional',
   'agent-tools-task-alias',
   'output-style-force-for-plugin',

@@ -1,7 +1,7 @@
 // Each built rule in the `limit` category takes its number as an option. The
 // inventory row names the option and the default (ADR 001, Decision 2).
 // The test reads the rows and the registered rules, so a new `limit` rule
-// with no option fails here. The count of 21 is a tripwire: a new `limit`
+// with no option fails here. The count of 22 is a tripwire: a new `limit`
 // row makes this test fail until its author updates the count.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -42,7 +42,7 @@ const built = rows.filter(({ name }) => name in plugin.rules)
 
 describe('limit rule options', () => {
   it('finds the limit rows and the built rules among them', () => {
-    expect(rows).toHaveLength(21)
+    expect(rows).toHaveLength(22)
     expect(built.map(({ name }) => name)).toContain('skill-description-max-length')
   })
 
