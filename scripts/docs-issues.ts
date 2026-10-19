@@ -809,8 +809,8 @@ export function validateTracked(value: unknown): asserts value is Tracked {
   }
   // An added block has no old hash and no old text. A removed block has no new
   // hash and no new text. Other blocks have both hashes and the new text. A
-  // block that is not added has its old text. The old text is null for a
-  // snapshot file from before the page text.
+  // block that is not added has its old text. The old text can be null when
+  // the snapshot file is from before the page text.
   const hasOld = t.change !== 'added'
   const hasNew = t.change !== 'removed'
   if (
