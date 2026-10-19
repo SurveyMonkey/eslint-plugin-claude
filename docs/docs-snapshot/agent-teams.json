@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/agent-teams",
-  "hash": "e09abc4e91fd29fc83e308ee66c7386d8de71f399b606e081c629673361d1250",
+  "hash": "13cabc09f8a99aa0f990290f28acdf57f80f7842bc4afedc5e18d21559979dd8",
   "blocks": [
     {
       "id": "orchestrate-teams-of-claude-code-sessions",
@@ -192,8 +192,8 @@
     },
     {
       "id": "limitations",
-      "hash": "c47aac4c2ce3bc835f798eb7bbf3d24674f490f876cd1230a1873f0d5758cfe7",
-      "bodyHash": "2cb1bbe6949682d9e7cd6a6ef013a974e5fe0f6c011db18d061abdf7ef0a7261"
+      "hash": "225c4c0013ff77e0cfaf5b82041d1c1495ce62e84751124f2a8573c7b453b2b1",
+      "bodyHash": "abfa66c8fcac250ef36ed5264763b9d676cfd3f99cf687f44b0e6db9e9fb91fd"
     },
     {
       "id": "next-steps",
@@ -211,8 +211,8 @@
     {
       "heading": "Limitations",
       "id": "limitations",
-      "hash": "c47aac4c2ce3bc835f798eb7bbf3d24674f490f876cd1230a1873f0d5758cfe7",
-      "text": "## Limitations\n\nAgent teams are experimental. Current limitations to be aware of:\n\n* **No session resumption with in-process teammates**: `/resume` and `/rewind` do not restore in-process teammates. After resuming a session, the lead may attempt to message teammates that no longer exist. If this happens, tell the lead to spawn new teammates.\n* **Task status can lag**: teammates sometimes fail to mark tasks as completed, which blocks dependent tasks. If a task appears stuck, check whether the work is actually done and update the task status manually or tell the lead to nudge the teammate.\n* **Shutdown can be slow**: teammates finish their current request or tool call before shutting down, which can take time.\n* **One team per session**: a session has exactly one team, scoped to that session. You can't create additional named teams or share a team across sessions.\n* **No nested teams**: teammates cannot spawn their own teammates. Only the lead can manage the team.\n* **No background subagents from in-process teammates**: an in-process teammate's own subagents run in the foreground, because a teammate's background work can't outlive the lead's process. Claude Code returns an error when a teammate spawns a subagent whose definition sets `background: true`. A teammate's `run_in_background: true` request also fails, either with an error or by running silently in the foreground, as described in [how Claude Code picks foreground or background](/docs/en/sub-agents#run-subagents-in-foreground-or-background). Subagents launched from the main conversation follow the [background default](/docs/en/sub-agents#run-subagents-in-foreground-or-background).\n* **Lead is fixed**: the main session is the lead for its lifetime. You can't promote a teammate to lead or transfer leadership.\n* **Permissions set at spawn**: teammates start with the permission mode described under [Permissions](#permissions). You can change an individual teammate's permission mode after spawning, but you can't set per-teammate permission modes at spawn time.\n* **Split panes require tmux or iTerm2**: the default in-process mode works in any terminal. Split-pane mode isn't supported in VS Code's integrated terminal, Windows Terminal, or Ghostty."
+      "hash": "225c4c0013ff77e0cfaf5b82041d1c1495ce62e84751124f2a8573c7b453b2b1",
+      "text": "## Limitations\n\nAgent teams are experimental. Current limitations to be aware of:\n\n* **No session resumption with in-process teammates**: `/resume` and `/rewind` do not restore in-process teammates. After resuming a session, the lead may attempt to message teammates that no longer exist. If this happens, tell the lead to spawn new teammates.\n* **Task status can lag**: teammates sometimes fail to mark tasks as completed, which blocks dependent tasks. If a task appears stuck, check whether the work is actually done and update the task status manually or tell the lead to nudge the teammate.\n* **Shutdown can be slow**: teammates finish their current request or tool call before shutting down, which can take time.\n* **One team per session**: a session has exactly one team, scoped to that session. You can't create additional named teams or share a team across sessions.\n* **No nested teams**: teammates cannot spawn their own teammates. Only the lead can manage the team.\n* **No background subagents from in-process teammates**: an in-process teammate's own subagents run in the foreground, because a teammate's background work can't outlive the lead's process. Claude Code returns an error when a teammate spawns a subagent whose definition sets `background: true`. A teammate's `run_in_background: true` request also fails, either with an error or by running silently in the foreground. Subagents launched from the main conversation follow the [background default](/docs/en/sub-agents#run-subagents-in-foreground-or-background).\n* **Lead is fixed**: the main session is the lead for its lifetime. You can't promote a teammate to lead or transfer leadership.\n* **Permissions set at spawn**: teammates start with the permission mode described under [Permissions](#permissions). You can change an individual teammate's permission mode after spawning, but you can't set per-teammate permission modes at spawn time.\n* **Split panes require tmux or iTerm2**: the default in-process mode works in any terminal. Split-pane mode isn't supported in VS Code's integrated terminal, Windows Terminal, or Ghostty."
     },
     {
       "heading": "Enable agent teams",
