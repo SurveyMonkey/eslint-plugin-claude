@@ -482,7 +482,7 @@ hash. `update` writes it. The classifier splits `text` with `splitBlocks`, which
 block keys of the snapshot. So each changed or removed block has its old text, and so does a
 `moved` finding. The snapshot takes about 6.5 MB.
 
-These options were declined:
+This decision declines two options:
 
 - Store the text on each block. The size is the same. But the text is then in 2,370 places,
   `sources[].text` duplicates it, and no reader becomes simpler.
