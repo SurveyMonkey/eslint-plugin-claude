@@ -13,7 +13,9 @@
 // rule-update, rule-removal, new-rule, needs-triage or moved. A moved finding
 // also has `move`, and other findings can have `possibleMoves` (see planPage).
 // A result is the outcome for each block, and includes the blocks that need
-// no change.
+// no change. oldText is the text of the old block in the stored page text.
+// It is null for an added block. It is also null when the snapshot file is
+// from before the page text and does not store the text of the block.
 //
 // docs/rules-inventory.md is a second source map. Its footnotes cite docs
 // headings, and the rule rows of each `###` section of "Rules by group" cite
@@ -310,7 +312,7 @@ export function buildRequest({
       heading,
       old_text: diffOnly
         ? omitted
-        : (oldText ?? '(no earlier text: the block is new, or the snapshot has its hash only)'),
+        : (oldText ?? '(no earlier text: the block is new, or the snapshot file has no page text)'),
       new_text: diffOnly ? omitted : (newText ?? '(the block is gone)'),
       removed_lines: diff.removed,
       added_lines: diff.added,
@@ -734,10 +736,14 @@ export function planPage({
   if (stored.hash === pageHash) return { items: [], findings, tracked }
 
   const now = new Map(blocks.map((block) => [block.key, block]))
-  // The whole-page source has the ID of the title block.
+  // The stored page text gives the old text of each block. splitBlocks gives
+  // the keys that the snapshot stores. A snapshot file from before the page
+  // text has the text of the whole-page source, if any, and of each mapped
+  // block. The whole-page source has the ID of the title block.
   const wholeStored = stored.sources.find((source) => source.id === stored.blocks[0]?.id)
+  const oldPage = typeof stored.text === 'string' ? stored.text : wholeStored?.text
   const oldBlocks = new Map(
-    (wholeStored ? splitBlocks(wholeStored.text) : []).map((block) => [block.key, block]),
+    (oldPage === undefined ? [] : splitBlocks(oldPage)).map((block) => [block.key, block]),
   )
   const oldText = new Map([...oldBlocks].map(([key, block]) => [key, block.text]))
   for (const source of stored.sources) {

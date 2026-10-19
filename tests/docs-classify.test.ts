@@ -62,6 +62,7 @@ const rules = new Map([
 
 // Stores a snapshot of PAGE for the map, then classifies the edited page.
 // With `noBody`, the snapshot has no body hash, as a file from before it.
+// With `noText`, the snapshot has no page text, as a file from before it.
 async function run(
   sourceMap: SourceMap,
   edited: string,
@@ -69,15 +70,17 @@ async function run(
   base = PAGE,
   inventory: Inventory = new Map(),
   noBody = false,
+  noText = false,
 ) {
   const headings = Object.values(sourceMap)
     .flat()
     .map((s) => s.heading)
     .filter((h, i, all) => all.indexOf(h) === i)
-  const read = await watch.readPage(URL_, headings, serve(base))
+  const { text, ...read } = await watch.readPage(URL_, headings, serve(base))
+  const page = noText ? read : { ...read, text }
   const stored = noBody
-    ? { ...read, blocks: read.blocks.map(({ id, hash }) => ({ id, hash })) }
-    : read
+    ? { ...page, blocks: page.blocks.map(({ id, hash }) => ({ id, hash })) }
+    : page
   return api.classify({
     map: sourceMap,
     inventory,
@@ -496,18 +499,56 @@ describe('classify', () => {
     expect(jev.calls.map((c) => c.request.state.docs_block.heading)).toEqual(['hook files'])
   })
 
-  it('gives new-rule for a changed block that no rule cites, and says the old text is unknown', async () => {
+  it('gives new-rule for a changed block that no rule cites, with its old text from the page text', async () => {
     const edited = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
+    const old = watch.splitBlocks(PAGE).find((block) => block.key === 'path-rules')?.text
+    expect(old).toBe('## Path rules')
     const jev = fakeJev(answer({ requirement: 0.85 }))
     const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY })
     expect(findings.map((f) => [f.kind, f.blockId, f.change, f.oldText, f.link])).toEqual([
-      ['new-rule', 'path-rules', 'changed', null, URL_],
+      ['new-rule', 'path-rules', 'changed', old, URL_],
     ])
+    expect(jev.calls[0]?.request.state.docs_block.old_text).toBe(old)
     const low = fakeJev(answer({ requirement: 0.05 }))
     expect((await run(cited, edited, { fetch: low.fetch, key: KEY })).findings).toEqual([])
     const mid = fakeJev(answer({ requirement: 0.45 }))
     const triage = await run(cited, edited, { fetch: mid.fetch, key: KEY })
     expect(triage.findings.map((f) => [f.kind, f.rules])).toEqual([['needs-triage', []]])
+  })
+
+  it('gives a changed block that no rule cites no old text, on a snapshot with no page text', async () => {
+    const edited = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
+    const jev = fakeJev(answer({ requirement: 0.85 }))
+    const jevCall = { fetch: jev.fetch, key: KEY }
+    const { findings } = await run(cited, edited, jevCall, PAGE, new Map(), false, true)
+    expect(findings.map((f) => [f.kind, f.blockId, f.change, f.oldText])).toEqual([
+      ['new-rule', 'path-rules', 'changed', null],
+    ])
+    expect(jev.calls[0]?.request.state.docs_block.old_text).toContain('no earlier text')
+  })
+
+  it('finds the old text of a block whose heading is on the page twice by its suffix key', async () => {
+    const edited = PAGE.replace(
+      'An unknown path field is a warning too.',
+      'An unknown path field is an error.',
+    )
+    const jev = fakeJev(answer({ requirement: 0.85 }))
+    const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY })
+    expect(findings.map((f) => [f.blockId, f.change, f.oldText, f.newText])).toEqual([
+      [
+        'unrecognized-fields-1',
+        'changed',
+        '### Unrecognized fields\n\nAn unknown path field is a warning too.',
+        '### Unrecognized fields\n\nAn unknown path field is an error.',
+      ],
+    ])
+  })
+
+  it('gives no finding and makes no call for a page with the stored hash and text', async () => {
+    const jev = fakeJev(() => 1)
+    const output = await run(cited, PAGE, { fetch: jev.fetch, key: KEY })
+    expect(output).toEqual(expect.objectContaining({ findings: [], results: [], tracked: [] }))
+    expect(jev.calls).toEqual([])
   })
 
   it('asks a whole-page rule about each changed block, with its old text', async () => {
@@ -1091,7 +1132,7 @@ describe('classify with the inventory', () => {
         change: 'changed',
         oldHash: watch.splitBlocks(PAGE).find((b) => b.key === 'path-rules')?.hash,
         newHash: watch.splitBlocks(EDIT_PATH).find((b) => b.key === 'path-rules')?.hash,
-        oldText: null,
+        oldText: '## Path rules',
         newText: '## Path rules\n\nA path must start with `./`.',
         sections: [{ section: 'Hooks', rules: ['hooks-a'] }],
       },
@@ -1120,10 +1161,16 @@ describe('classify with the inventory', () => {
     const jev = fakeJev(() => 0)
     const removed = PAGE.replace('## Path rules', 'Path rules')
     const output = await runPath(cited, removed, jev)
-    expect(output.tracked.map((t) => [t.blockId, t.change, t.newHash, t.newText])).toEqual([
-      ['path-rules', 'removed', null, null],
-    ])
+    expect(
+      output.tracked.map((t) => [t.blockId, t.change, t.newHash, t.oldText, t.newText]),
+    ).toEqual([['path-rules', 'removed', null, '## Path rules', null]])
     expect(output.tracked[0]?.oldHash).toMatch(/^[0-9a-f]{64}$/)
+    // A snapshot file with no page text has no old text for the block.
+    const jevCall = { fetch: jev.fetch, key: KEY }
+    const old = await run(cited, removed, jevCall, PAGE, inventoryOf(pathRows), false, true)
+    expect(old.tracked.map((t) => [t.blockId, t.change, t.oldText])).toEqual([
+      ['path-rules', 'removed', null],
+    ])
     expect(output.findings).toEqual([])
     expect(jev.calls.map((c) => c.request.state.docs_block.heading)).not.toContain('Path rules')
     expect(output.results).toContainEqual(
@@ -1379,13 +1426,18 @@ describe('a moved section (#152)', () => {
     map: SourceMap,
     base: string,
     edited: string,
-    { inventory = [], noBody = false }: { inventory?: Cite[]; noBody?: boolean } = {},
+    {
+      inventory = [],
+      noBody = false,
+      noText = false,
+    }: { inventory?: Cite[]; noBody?: boolean; noText?: boolean } = {},
   ) {
     const headings = [...new Set(Object.values(map).flatMap((list) => list.map((s) => s.heading)))]
-    const read = await watch.readPage(url, headings, serve(base))
+    const { text, ...read } = await watch.readPage(url, headings, serve(base))
+    const page = noText ? read : { ...read, text }
     const stored = noBody
-      ? { ...read, blocks: read.blocks.map(({ id, hash }) => ({ id, hash })) }
-      : read
+      ? { ...page, blocks: page.blocks.map(({ id, hash }) => ({ id, hash })) }
+      : page
     const jev = fakeJev(answer({ requirement: 0.57 }))
     const output = await api.classify({
       map,
@@ -1455,8 +1507,8 @@ describe('a moved section (#152)', () => {
         'From an mcpServers JSON block',
         'from-an-mcpservers-json-block',
         [],
-        // The snapshot stores the text of a mapped block only.
-        null,
+        // The stored page text gives the old text of a block that no rule cites.
+        watch.splitBlocks(MCP_OLD).find((b) => b.key === 'from-an-mcpservers-json-block')?.text,
         {
           heading: 'Add a server from an mcpServers JSON block',
           blockId: 'add-a-server-from-an-mcpservers-json-block',
@@ -1469,6 +1521,11 @@ describe('a moved section (#152)', () => {
     )
     expect(calls).toEqual([])
     expect(output.tracked).toEqual([])
+    // A snapshot file with no page text has no old text for the block.
+    const old = await classifyPage(MCP, map, MCP_OLD, MCP_NEW, { inventory, noText: true })
+    expect(old.output.findings.map((f) => [f.kind, f.blockId, f.oldText])).toEqual([
+      ['moved', 'from-an-mcpservers-json-block', null],
+    ])
   })
 
   it('names the heading of a removed block that only the inventory cites, in its tracked entry', async () => {
@@ -1623,14 +1680,20 @@ describe('a moved section (#152)', () => {
 
   it('counts words in lowercase, split at punctuation, each word once', async () => {
     const map: SourceMap = { 'a-rule': [{ url: URL_, heading: 'Keep' }] }
-    // The snapshot has no text for a block that no rule cites, so the old
-    // heading is its key.
+    // The old heading is the title in the stored page text. A snapshot file
+    // with no page text has no title for a block that no rule cites, so the
+    // old heading is its key.
     const base = '# Title\n\nIntro.\n\n## Keep\n\nKeep text.\n\n## Hook event names\n\nOld text.\n'
     const edited =
       '# Title\n\nIntro.\n\n## Keep\n\nKeep text.\n\n## The Hook, EVENT names\n\nNew text.\n'
     const jev = fakeJev(answer({ requirement: 0.9 }))
     const output = await run(map, edited, { fetch: jev.fetch, key: KEY }, base)
     expect(output.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
+      ['the-hook-event-names', [{ heading: 'Hook event names', blockId: 'hook-event-names' }]],
+    ])
+    const jevCall = { fetch: jev.fetch, key: KEY }
+    const old = await run(map, edited, jevCall, base, new Map(), false, true)
+    expect(old.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
       ['the-hook-event-names', [{ heading: 'hook-event-names', blockId: 'hook-event-names' }]],
     ])
     // "names" twice is one word, so the headings share two words.
@@ -1647,7 +1710,7 @@ describe('a moved section (#152)', () => {
       base.replace('## Hook event names', '## Add MCP server'),
     )
     expect(short.findings.map((f) => [f.blockId, f.possibleMoves])).toEqual([
-      ['mcp-server-add', [{ heading: 'add-mcp-server', blockId: 'add-mcp-server' }]],
+      ['mcp-server-add', [{ heading: 'Add MCP server', blockId: 'add-mcp-server' }]],
     ])
   })
 
