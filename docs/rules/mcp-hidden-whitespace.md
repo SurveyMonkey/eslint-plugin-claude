@@ -45,7 +45,8 @@ value, because the value is often a credential. A key of `env` or `headers` gets
 
 The rule reads the `mcpServers` object. A plugin `.mcp.json` may omit that wrapper. Then the
 rule reads the top-level entries of the file. A directory
-counts as a plugin root when it holds `.claude-plugin/plugin.json`. The rule makes no report when
+counts as a plugin root when it holds `.claude-plugin/plugin.json`, or when a `marketplace.json`
+of the repository lists it. The rule makes no report when
 it cannot read that directory. It skips the paths under `.claude/`, which `mcp-json-location`
 reports.
 

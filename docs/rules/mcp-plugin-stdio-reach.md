@@ -43,8 +43,9 @@ inline or in a `.json` file. A project `.mcp.json` is not a plugin config, so it
 The rule makes no report for a remote server, or for a bundle (`.mcpb`, `.dxt`).
 
 Of two servers with one name, or two keys with one name, the last one counts, as `JSON.parse`
-keeps it. A directory counts as a plugin root when it holds `.claude-plugin/plugin.json`. The rule
-makes no report when it cannot read that directory.
+keeps it. A directory counts as a plugin root when it holds `.claude-plugin/plugin.json`, or when a
+`marketplace.json` of the repository lists it. The rule makes no report when it cannot read that
+directory.
 
 Fail, with `targets: ["claude-ai"]`:
 

@@ -76,6 +76,18 @@ put('mixed/.git/HEAD', '')
 put('mixed/.claude/agents/top.md', agentFile('top'))
 mkdirSync(path.join(scratch, 'mixed/sub/.claude/agents'), { recursive: true })
 symlinkSync('../../../../out/elsewhere', path.join(scratch, 'mixed/sub/.claude/agents/team'))
+// A plugin with no manifest that a marketplace lists. Its name is `entry`, not `tools`.
+put('listed/.git/HEAD', '')
+put(
+  'listed/.claude-plugin/marketplace.json',
+  JSON.stringify({
+    name: 'm',
+    owner: { name: 'o' },
+    plugins: [{ name: 'entry', source: './tools' }],
+  }),
+)
+put('listed/tools/agents/helper.md', agentFile('helper'))
+const listedSkill = path.join(scratch, 'listed', 'tools', 'skills', 's', 'SKILL.md')
 // No `.git`: the agents of the project directory still count.
 put('nogit/.claude/agents/local.md', agentFile('local'))
 // No `.git`: `.claude/` is the bound, so a link from `.claude/agents/` to a directory beside it
@@ -175,6 +187,10 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     },
     // The agent of another plugin is out of sight.
     { code: fork('other-plugin:helper'), filename: pluginSkill },
+    // With no manifest, the plugin name is not known, so a scoped name is out of sight.
+    { code: fork('tools:ghost'), filename: listedSkill },
+    { code: fork('entry:ghost'), filename: listedSkill },
+    { code: fork('helper'), filename: listedSkill },
     // The `agents` key replaces the scan of `agents/`, and the rule cannot read it.
     {
       code: fork('anything'),
@@ -254,6 +270,8 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     },
     // A plugin: its own agents, and not the agents of the repository or the user.
     { code: fork('ghost'), filename: pluginSkill, errors: [{ messageId: 'plugin' }] },
+    // The bare name of a missing agent still gets a report.
+    { code: fork('ghost'), filename: listedSkill, errors: [{ messageId: 'plugin' }] },
     { code: fork('p:ghost'), filename: pluginSkill, errors: [{ messageId: 'plugin' }] },
     { code: fork('reviewer'), filename: pluginSkill, errors: [{ messageId: 'plugin' }] },
     { code: fork('ghost'), filename: pluginCommand, errors: [{ messageId: 'plugin' }] },

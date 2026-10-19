@@ -7,10 +7,10 @@
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { keyOf, lastMember } from '../marketplace-json.ts'
-import { realSource } from '../marketplace-source.ts'
-import { lastMembers } from '../mcp-servers.ts'
-import { isPluginRoot } from '../plugin-root.ts'
+import { keyOf, lastMember, pluginEntries } from '../marketplace-json.ts'
+import { realSource, sourceReader } from '../marketplace-source.ts'
+import { lastMembers, readJsonBody } from '../mcp-servers.ts'
+import { hasManifest } from '../plugin-root.ts'
 import { wordsOf } from '../script-refs.ts'
 import { isInside, readJson, realDirectory, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
 
@@ -44,9 +44,30 @@ function pluginDirs(script: string): { value: string; source: string }[] {
   })
 }
 
+/** True when each entry of the `marketplace.json` at `file` has the folder `real` as its source.
+ *  `--plugin-dir` then loads the standard layout of that folder. The result is also true when the
+ *  rule cannot see the source of an entry (ADR 001, Decision 14). A file that does not parse, and
+ *  a file with no entry, give false. */
+function listsOnlyItself(file: string, real: string, bound: string): boolean {
+  const body = readJsonBody(file, bound)
+  if (body === null) {
+    return false
+  }
+  const read = sourceReader(file, { body })
+  const found = pluginEntries({ body }).map(read)
+  return (
+    found.some((source) => source.kind === 'unreadable') ||
+    (found.length > 0 &&
+      found.every((source) => source.kind === 'no-manifest' && source.dir === real))
+  )
+}
+
 /** True when `value`, from the folder `base`, is a folder that holds `.claude-plugin/marketplace.json`
  *  and no `.claude-plugin/plugin.json`. A folder with both is a plugin root too, and Claude Code
- *  loads it. A file that does not parse still marks the folder. */
+ *  loads it. A file that does not parse still marks the folder. Each entry of a marketplace can be
+ *  the folder itself (`"."`). Then the folder is a plugin too, and the rule does not report it.
+ *  `--plugin-dir` does not read `marketplace.json`, so a marketplace with another entry still gets
+ *  a report. */
 function isMarketplaceRoot(base: string, bound: string, value: string): boolean {
   if (value === '' || UNRESOLVED.test(value)) {
     return false
@@ -60,8 +81,14 @@ function isMarketplaceRoot(base: string, bound: string, value: string): boolean 
   if (typeof real !== 'string') {
     return false
   }
-  const file = readJson(path.join(real, '.claude-plugin', 'marketplace.json'), bound)
-  return file !== null && file !== UNREADABLE && isPluginRoot(real) === false
+  const file = path.join(real, '.claude-plugin', 'marketplace.json')
+  const found = readJson(file, bound)
+  return (
+    found !== null &&
+    found !== UNREADABLE &&
+    hasManifest(real) === false &&
+    !listsOnlyItself(file, real, bound)
+  )
 }
 
 const rule: JSONRuleDefinition<{ MessageIds: 'marketplaceRoot' }> = {

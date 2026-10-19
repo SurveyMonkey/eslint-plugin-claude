@@ -18,6 +18,20 @@ export function lintPluginFile(name: string, code: string) {
   return lintJson(name, code, path.join(root, 'p', '.mcp.json'))
 }
 
+/** Lint `code` as the `.mcp.json` at the root of the plugin `p`, which has no manifest. The
+ *  `marketplace.json` of the repository lists `p`, so `p` is a plugin root. */
+export function lintListedPluginFile(name: string, code: string) {
+  const root = repo({
+    '.claude-plugin/marketplace.json': JSON.stringify({
+      name: 'm',
+      owner: { name: 'o' },
+      plugins: [{ name: 'p', source: './p' }],
+    }),
+    'p/README.md': '',
+  })
+  return lintJson(name, code, path.join(root, 'p', '.mcp.json'))
+}
+
 /** Lint `code` as the manifest of the plugin `p`, in a repository with `files`. */
 export function lintManifest(name: string, code: string, files: Record<string, string> = {}) {
   const root = repo(files)

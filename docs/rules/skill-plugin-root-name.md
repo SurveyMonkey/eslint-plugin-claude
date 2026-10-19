@@ -35,11 +35,11 @@ The rule reports a plugin-root `SKILL.md` in these cases:
 - The frontmatter is empty, or it holds only comments.
 - The frontmatter has no `name`, or `name` is empty, blank or null.
 
-A plugin root is a directory with `.claude-plugin/plugin.json`. The rule is silent in these
-cases:
+A plugin root is a directory with `.claude-plugin/plugin.json`, or a directory that a
+`marketplace.json` of the repository lists. The rule is silent in these cases:
 
 - A skill in `skills/<name>/SKILL.md`. Its folder gives the name.
-- A `SKILL.md` in a directory that has no manifest.
+- A `SKILL.md` in a directory that is not a plugin root.
 - A frontmatter block that does not parse. The `name` is not known then.
 - A `name` that is not a string and is not null.
   [`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports it.

@@ -30,8 +30,10 @@ Use `https://` or `wss://` for a host that is not on the machine.
 `claude plugin validate` checks each MCP server entry that a plugin declares, in its `.mcp.json`,
 in a `.json` file that `mcpServers` names, or inline in `plugin.json`. It warns about an `http://`
 or `ws://` URL to a host that is not loopback. This check needs Claude Code v2.1.281 or later.[^validate]
-So the rule reads the servers of the project `.mcp.json` only. It makes no report for a plugin
-`.mcp.json` or for the servers of a `plugin.json`.
+So the rule makes no report for the `.mcp.json` of a plugin with a manifest. It makes none for the
+servers of a `plugin.json` either. Validate 2.1.302 fails a plugin with no `plugin.json` ("No
+manifest found in directory"). On the marketplace, it does not read the `.mcp.json` of the plugin.
+So the rule reads the project `.mcp.json`, and the `.mcp.json` of a plugin with no manifest.
 
 The rule reports a server whose `type` is `http`, `streamable-http`, `sse` or `ws`, and whose
 `url` has the scheme `http` or `ws`. The report is on the `url`. The scheme and the host match

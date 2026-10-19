@@ -1,10 +1,12 @@
 // A plain `http://` or `ws://` URL to a host that is not on the machine sends the traffic in
 // clear text. `claude plugin validate` warns for plugin MCP configs (manifest reference,
-// "Validate the manifest"). The rule reads the servers of the project `.mcp.json` only. It also
-// reads each MCP bundle string of a plugin manifest. Validate passes an `http://` bundle URL.
+// "Validate the manifest"). The rule reads the project `.mcp.json`, and the `.mcp.json` of a
+// plugin with no manifest, which validate fails. It also reads each MCP bundle string of a plugin
+// manifest. Validate passes an `http://` bundle URL.
 import { expect, it } from 'vitest'
 import {
   ids,
+  lintListedPluginFile,
   lintManifest,
   lintPluginFile,
   lintProject,
@@ -123,6 +125,14 @@ it('leaves plugin configs to claude plugin validate', () => {
     mcpServers: { b: { type: 'http', url: 'http://example.com' } },
   })
   expect(ids(lintManifest(NAME, manifest))).toEqual([])
+})
+it('reports in a plugin with no manifest, which claude plugin validate fails', () => {
+  // `claude plugin validate` 2.1.302 on such a plugin: "No manifest found in directory". On the
+  // marketplace, it does not read the `.mcp.json` of the plugin.
+  expect(ids(lintListedPluginFile(NAME, at('http://example.com')))).toEqual(['insecure'])
+  // A plugin `.mcp.json` can hold the servers with no `mcpServers` wrapper.
+  const bare = JSON.stringify({ a: { type: 'http', url: 'http://example.com' } })
+  expect(ids(lintListedPluginFile(NAME, bare))).toEqual(['insecure'])
 })
 it('does not read a path under .claude/', () => {
   expect(ids(lintProject(NAME, at('http://example.com'), '.claude/.mcp.json'))).toEqual([])

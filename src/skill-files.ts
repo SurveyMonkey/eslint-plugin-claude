@@ -1,6 +1,6 @@
 // Find out if a file is a skill or a command file. The globs of the rules are
 // broad, so each rule asks here where the file sits (ADR 001, Decision 10).
-// A plugin root is found by its manifest. A root that the check cannot see gives null.
+// `isPluginRoot` finds a plugin root. A root that the check cannot see gives null.
 import path from 'node:path'
 import { isPluginRoot } from './plugin-root.ts'
 import { UNREADABLE } from './skill-tree.ts'

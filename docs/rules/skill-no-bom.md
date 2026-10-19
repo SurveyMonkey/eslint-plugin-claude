@@ -54,7 +54,7 @@ The rule checks these files:
 - `<plugin>/commands/**/*.md`
 
 A file elsewhere, such as `docs/SKILL.md`, is not a report. A plugin root is a directory with
-`.claude-plugin/plugin.json`.
+`.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the repository lists.
 
 To remove the mark, save the file again as "UTF-8" and not as "UTF-8 with BOM".
 

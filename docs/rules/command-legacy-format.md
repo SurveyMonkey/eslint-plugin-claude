@@ -32,13 +32,17 @@ The glob is broad. The rule then reports a file only when its `commands/` direct
 these places:
 
 - `.claude/commands/`, and any directory below it;
-- a `commands/` directory at the root of a plugin, next to `.claude-plugin/plugin.json`.
+- a `commands/` directory at the root of a plugin.
 
+A plugin root is a directory with `.claude-plugin/plugin.json`. The manifest is
+optional.[^optional] A directory with no manifest is also a plugin root when a
+`.claude-plugin/marketplace.json` at or above it lists it. The entry must have a relative
+`source`. An entry can set `commands`, or another key that replaces a default
+location.[^manifest] The rule does not read that key, so it makes no report in that plugin.
 Any other `commands/` directory, for example `docs/commands/`, is not a report. A plugin with no
-`.claude-plugin/plugin.json` is not a report either, because the rule finds a plugin root by
-its manifest. Claude Code still loads such a plugin.[^optional] When `plugin.json` sets
-`commands`, Claude Code does not read the `commands/` directory.[^manifest] The rule still
-reports it.
+manifest that no marketplace of the repository lists is not a report either. Claude Code can still
+load it, for example with `--plugin-dir`.[^optional] When `plugin.json` sets `commands`, Claude
+Code does not read the `commands/` directory.[^manifest] The rule still reports it.
 
 The rule makes no report in a plugin whose `.claude-plugin/` directory it cannot see. This is the
 case when the rule cannot search that directory, or when its real path is out of the repository.

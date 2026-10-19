@@ -69,8 +69,8 @@ The rule makes no report in these cases:
   Claude Code copies the plugin.
 - **A link hides the path.** A link on the path has no target, or leads out of the repository.
 - **The rule cannot read a directory on the path.**
-- **`hooks/hooks.json` is in no plugin.** The file must be in a directory with
-  `.claude-plugin/plugin.json`.
+- **`hooks/hooks.json` is in no plugin.** The file must be in a plugin root: a directory with
+  `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the repository lists.
 - **The file is a hidden drop-in** in `managed-settings.d/`, which Claude Code ignores.
 
 When a file has two `hooks` keys, the rule reads the last, as `JSON.parse` does. The rule

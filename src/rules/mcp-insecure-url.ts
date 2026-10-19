@@ -1,7 +1,8 @@
 // A remote server at an `http://` or `ws://` URL (docs/rules/mcp-insecure-url.md). The traffic to
 // a host that is not on the machine goes in clear text. `claude plugin validate` warns about this
-// URL in the MCP configs of a plugin (v2.1.281 or later), so the rule reads the servers of the
-// project `.mcp.json` only. A loopback host is on the machine, so it is silent. A host with a `${`
+// URL in the MCP configs of a plugin with a manifest (v2.1.281 or later). It fails a plugin with
+// no `plugin.json` (v2.1.302). So the rule reads the project `.mcp.json`, and the `.mcp.json` of
+// such a plugin. A loopback host is on the machine, so it is silent. A host with a `${`
 // reference is not known, so it is silent too.
 // The rule also reads each string in the `mcpServers` of `.claude-plugin/plugin.json`: the path or
 // URL of an MCP bundle. Validate passes an `http://` bundle URL (v2.1.302), so the rule reports it.
@@ -20,6 +21,7 @@ import {
   REMOTE_SERVER_TYPES,
 } from '../mcp-servers.ts'
 import { isSkillsPlugin } from '../plugin-manifest.ts'
+import { hasManifest } from '../plugin-root.ts'
 
 const name = 'mcp-insecure-url' as const
 
@@ -94,10 +96,12 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
         },
       }
     }
-    // `claude plugin validate` warns for a plugin config. `mcpFileKind` also gives `project` to a
-    // file that is not `.mcp.json`, so the rule checks the file name.
+    // `claude plugin validate` warns for the config of a plugin with a manifest. `mcpFileKind`
+    // also gives `project` to a file that is not `.mcp.json`, so the rule checks the file name.
+    const kind = mcpFileKind(context.filename)
     if (
-      mcpFileKind(context.filename) !== 'project' ||
+      kind === null ||
+      (kind === 'plugin' && hasManifest(path.dirname(path.resolve(context.filename))) === true) ||
       path.basename(context.filename) !== '.mcp.json'
     ) {
       return {}
