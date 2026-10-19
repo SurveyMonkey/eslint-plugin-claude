@@ -505,6 +505,12 @@
       "text": "<h3 id=\"plugin-has-conflicting-manifests\">\n  `Plugin <name> has conflicting manifests`\n</h3>\n\nThe plugin fails to load with `Plugin <name> has conflicting manifests: both plugin.json and marketplace entry specify components.`\n\nThe plugin has its own `plugin.json`, and its marketplace entry sets `strict: false` while also declaring any of `commands`, `agents`, `skills`, `hooks`, `outputStyles`, or `themes`. Remove those fields from the entry, or set `strict: true` in the entry so Claude Code appends them to `plugin.json`. See [Strict mode](/docs/en/plugins/marketplace-reference#strict-mode)."
     },
     {
+      "heading": "Server is configured but never connects",
+      "id": "server-is-configured-but-never-connects",
+      "hash": "ff2ea3c7b84db438b4d9d29c6d635ef25cc9549e67f853b8e3271918464bc4dd",
+      "text": "#### Server is configured but never connects\n\nRun `/mcp` to see the server's status. When the server is healthy, `/mcp` lists it as connected.\n\nTo read the error the server printed while starting, run `claude --debug` and open the log at `~/.claude/debug/<session-id>.txt`. The `--debug` flag doesn't print to the terminal.\n\nA server entry in `.mcp.json` that fails the schema doesn't appear in the **Errors** tab. Claude Code drops that server and records `Invalid MCP server config for <server> in <path>` only in that debug log. To find the entry without loading the plugin, run `claude plugin validate` in your shell on the plugin directory, which reports it as an error.\n\nBefore v2.1.281, `claude plugin validate` didn't check `.mcp.json`."
+    },
+    {
       "heading": "Warning: No commands found in plugin <name> custom directory",
       "id": "warning-no-commands-found-in-plugin-custom-directory",
       "hash": "2cb2897b72750eeaceb4ddf915b05564fc36ae62a53463abe7638854864a0836",

@@ -1,5 +1,5 @@
-// The SSE transport is deprecated. The rule reports `type: "sse"`. Another value of `type` is for
-// `mcp-server-schema`.
+// The SSE transport is deprecated. The rule reports `type: "sse"`. `mcp-server-schema` reports
+// another value of `type` in a project file.
 import { expect, it } from 'vitest'
 import {
   ids,

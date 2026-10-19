@@ -451,6 +451,7 @@ const GROUPS = [
       'mcp-json-location',
       'mcp-json-servers-key',
       'mcp-json-file-size',
+      'mcp-server-schema',
       'mcp-server-name-reserved',
       'mcp-remote-url-empty',
       'mcp-hidden-whitespace',

@@ -7,7 +7,7 @@ related_issues: [16]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 ---
 
 # claude/mcp-no-sse-transport
@@ -38,7 +38,8 @@ The rule reports `"type": "sse"`. The report is on the value. It reads these pla
 The rule leaves these cases alone:
 
 - A `type` value other than the exact string `sse`, such as `SSE`. The rule
-  `mcp-server-schema` owns a `type` value that is not a known transport.
+  `mcp-server-schema` reports a `type` value that is not a known transport in a project file.
+  `claude plugin validate` reports it in a plugin.
 - A settings file. The rule does not read it, because an `sse` entry of `managedMcpServers` is valid
   and `mcp-managed-servers-entry` owns that list.
 - The `.mcp.json` at the plugin root, when the rule lints `plugin.json`. The rule reads that file as

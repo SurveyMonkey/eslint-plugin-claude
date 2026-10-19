@@ -1,8 +1,9 @@
 // A server with `type: "sse"` (docs/rules/mcp-no-sse-transport.md). The docs call the SSE
 // transport deprecated and say to use HTTP where the server has it. Claude Code tries HTTP first
 // for `claude mcp add --transport http`, and falls back to SSE. The rule reports the exact value
-// `sse`. `mcp-server-schema` owns a `type` value that is not a known transport. The rule reads a
-// `.mcp.json` and the servers that a plugin manifest declares.
+// `sse`. `mcp-server-schema` reports a `type` value that is not a known transport in a project
+// file, and `claude plugin validate` reports it in a plugin. The rule reads a `.mcp.json` and the
+// servers that a plugin manifest declares.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'

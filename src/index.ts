@@ -193,6 +193,7 @@ import * as mcpRemoteUrlEmpty from './rules/mcp-remote-url-empty.ts'
 import * as mcpServerNameAnthropicSkills from './rules/mcp-server-name-anthropic-skills.ts'
 import * as mcpServerNameFormat from './rules/mcp-server-name-format.ts'
 import * as mcpServerNameReserved from './rules/mcp-server-name-reserved.ts'
+import * as mcpServerSchema from './rules/mcp-server-schema.ts'
 import * as mcpSettingsMcpservers from './rules/mcp-settings-mcpservers.ts'
 import * as mcpStdioCommandHasArgs from './rules/mcp-stdio-command-has-args.ts'
 import * as mcpStdioRelativePath from './rules/mcp-stdio-relative-path.ts'
@@ -993,6 +994,7 @@ const modules = [
   { target: mcpJsonLocation.target, default: mcpJsonLocation.default },
   { target: mcpJsonServersKey.target, default: mcpJsonServersKey.default },
   { target: mcpJsonFileSize.target, default: mcpJsonFileSize.default },
+  { target: mcpServerSchema.target, default: mcpServerSchema.default },
   { target: mcpServerNameReserved.target, default: mcpServerNameReserved.default },
   { target: mcpRemoteUrlEmpty.target, default: mcpRemoteUrlEmpty.default },
   { target: mcpHiddenWhitespace.target, default: mcpHiddenWhitespace.default },
@@ -1498,6 +1500,7 @@ const recommended: Record<RuleName, Severity> = {
   'mcp-json-location': 'error',
   'mcp-json-servers-key': 'error',
   'mcp-json-file-size': 'error',
+  'mcp-server-schema': 'error',
   'mcp-server-name-reserved': 'error',
   'mcp-remote-url-empty': 'error',
   'mcp-hidden-whitespace': 'error',
