@@ -322,6 +322,12 @@
       "text": "### `monitors`\n\n`experimental.monitors` takes a `.json` file path or the inline array. When you omit the key, Claude Code loads `monitors/monitors.json` if it exists.\n\nEach entry is a strict object with these fields.\n\n| Field | Required | Description |\n| :- | :- | :- |\n| `name` | Yes | Identifier unique within the plugin |\n| `command` | Yes | Shell command Claude Code runs as a persistent background process in the session working directory |\n| `description` | Yes | Short summary shown in the task panel and notification summaries |\n| `when` | No | With `\"always\"`, the default, the monitor starts at session start and on plugin reload. With `\"on-skill-invoke:<skill>\"`, it starts the first time that skill runs |\n\nThis inline array declares one monitor that starts the first time the `deploy` skill runs:\n\n```json theme={null}\n{\n  \"experimental\": {\n    \"monitors\": [\n      {\n        \"name\": \"deploy-status\",\n        \"command\": \"\\\"${CLAUDE_PLUGIN_ROOT}\\\"/scripts/poll-deploy.sh\",\n        \"description\": \"Deployment status changes\",\n        \"when\": \"on-skill-invoke:deploy\"\n      }\n    ]\n  }\n}\n```\n\nA monitor `command` can't reference `${user_config.*}`. See [Fields that run through a shell](#fields-that-run-through-a-shell)."
     },
     {
+      "heading": "settings",
+      "id": "settings",
+      "hash": "317fe5e02e8a921104edd38e5d07b6fa6d10ad1724e23c3b0bb1343c80f767a6",
+      "text": "### `settings`\n\nSettings Claude Code applies while the plugin is enabled. Only `agent` and `subagentStatusLine` take effect; other keys are dropped at load. A `settings.json` at the plugin root takes precedence over this key. See [Default settings](/docs/en/plugins/components#default-settings)."
+    },
+    {
       "heading": "Path-only fields",
       "id": "path-only-fields",
       "hash": "fb1ab7da2bb7bc0d9b1513a812ae422b32ea951b2d9d7d3f0711a2fc12839059",

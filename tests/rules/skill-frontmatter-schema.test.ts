@@ -58,7 +58,17 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
     file('model: claude-sonnet-5\n'),
     file('model: sonnet\n'),
     { code: '# No frontmatter\n', filename: skill },
+    // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`.
     file('name: [unclosed\n'),
+    file('name: s\nargument-hint: [n] [n]\n'),
+    // An empty block, a block of comments only, and a YAML null set no field.
+    { code: '---\n---\n\n# S\n', filename: skill },
+    file('# Owner: web\n'),
+    file('~\n'),
+    file('null\n'),
+    // `claude plugin validate` reports a value that is not a map in a plugin.
+    file('- name: s\n', pluginSkill()),
+    file('- name: c\n', pluginCommand()),
     // Not a skill or command file.
     file('made_up: 1\n', 'docs/SKILL.md'),
     file('made_up: 1\n', '.claude/agents/a.md'),
@@ -66,6 +76,25 @@ markdownTester.run('skill-frontmatter-schema', ruleOf('skill-frontmatter-schema'
     file('description: d\n', 'commands/c.md'),
   ],
   invalid: [
+    {
+      ...file('- name: s\n- description: A skill.\n'),
+      errors: [
+        {
+          message: 'The frontmatter is YAML, but not a map of fields, so it sets no skill field.',
+          line: 1,
+          endLine: 4,
+        },
+      ],
+    },
+    {
+      ...file('A skill.\n', command),
+      errors: [{ messageId: 'notMapping' }],
+    },
+    // A scalar that is false is a value, not an empty block.
+    {
+      ...file('false\n'),
+      errors: [{ messageId: 'notMapping' }],
+    },
     {
       ...file('description: d\nmade_up: 1\n'),
       errors: [

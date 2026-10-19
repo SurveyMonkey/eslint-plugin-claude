@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks-guide",
-  "hash": "23c91d7cbe6086c6bd5c789554cfef6649785fafe71f1fadc510f3572994a083",
+  "hash": "7f0084f6bd89fa9678ba9e0fa14e409b7b831c671c2716df68103d531114dc8e",
   "blocks": [
     {
       "id": "automate-actions-with-hooks",
@@ -74,13 +74,13 @@
     },
     {
       "id": "hook-output",
-      "hash": "862d3c623fba8e9c7df54368d71e723c850180682a117b24247990567ea09aef",
-      "bodyHash": "4be9a1305eca176d2e7f7a461ff1b0a017c26c8865d8c3578e18571eb1797974"
+      "hash": "cc480cf2cb6cd3f1e9d72e16927781885a654f931d59ede6efba3887a0ca24c9",
+      "bodyHash": "cc720de46a9f46ee34d504d346ba07a769e77b9cca29067ecd4bb8581ac51233"
     },
     {
       "id": "structured-json-output",
-      "hash": "68cdbf2b459018a8f4f12dc3269267914d3203ce89588452cece65fe1b68c42c",
-      "bodyHash": "7103016fa8f1c464f10a6edfa1cc1367aa6d87818f73969eef303878ee8ec4e4"
+      "hash": "1774d3912c4304f2ad9c5311534590b85026a41cac7da2e893f8dbdc9ebad9d9",
+      "bodyHash": "d705091741e5b0c10ccb8c8d7ca5f1105e58652fda6bf57c5b78d3e101a9986a"
     },
     {
       "id": "filter-hooks-with-matchers",
@@ -123,8 +123,8 @@
     },
     {
       "id": "hooks-and-permission-modes",
-      "hash": "cd80905ee09b2e5bb7e25ab355c4621e7cac39ced119aabb344a5a888a45c982",
-      "bodyHash": "9d49b9ace5fd8834afd071bfbc419925683fe7fe53dab0419b9ee476c96ebe91"
+      "hash": "96ab40a9f4ea6d3585f395aa4124511197fff0ab65db6f7827a168996a22a0e8",
+      "bodyHash": "fe2f3bd8252bf5795e64ab77b07157fbc71c6234376a15a04e08cfc09422113d"
     },
     {
       "id": "hook-not-firing",
@@ -133,8 +133,8 @@
     },
     {
       "id": "hook-error-in-output",
-      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6",
-      "bodyHash": "e17e3d381c5ac204257c55ebdea2cf7330b2faba27e4084c86b608e182cd7bdb"
+      "hash": "d01057e87f160b07171ed160c089339088053b06feb76e4fd66c21b27454fe0d",
+      "bodyHash": "16c2e74228785a8a1a68c6de8a39a592d4c3af0036f0a01803005688ec067ac4"
     },
     {
       "id": "hooks-shows-no-hooks-configured",
@@ -182,8 +182,8 @@
     {
       "heading": "Hook error in output",
       "id": "hook-error-in-output",
-      "hash": "109e2861c32931a1a1687f7587ab79649cfb177989deb8f6eb6297ffc0e2e6b6",
-      "text": "### Hook error in output\n\nYou see a message like \"PreToolUse hook error: ...\" in the transcript.\n\n* Your script exited with a non-zero code unexpectedly. Test it manually by piping sample JSON:\n  ```bash theme={null}\n  echo '{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"ls\"}}' | ./my-hook.sh\n  echo $?  # Check the exit code\n  ```\n* If you see \"command not found\", use absolute paths or `${CLAUDE_PROJECT_DIR}` to reference scripts. To avoid shell quoting entirely, add `\"args\": []` to switch to [exec form](/docs/en/hooks#exec-form-and-shell-form), which spawns the script directly without a shell\n* If you see \"jq: command not found\", install `jq` or use Python/Node.js for JSON parsing\n* If the notice shows a JSON validation message, your hook's stdout parsed as JSON but failed schema validation. If it shows a JSON parse message, the stdout looked like a JSON object but wasn't valid JSON. Both happen even on exit 0.\n\n  To fix a parse failure, build the payload with a JSON encoder such as `jq` instead of string concatenation, so quotes and backslashes inside values are escaped. The reference's [Exit code output](/docs/en/hooks#exit-code-output) section covers the exit-code and JSON combinations\n* If the script isn't running at all, make it executable: `chmod +x ./my-hook.sh`"
+      "hash": "d01057e87f160b07171ed160c089339088053b06feb76e4fd66c21b27454fe0d",
+      "text": "### Hook error in output\n\nYou see a message like \"PreToolUse hook error: ...\" in the transcript.\n\n* Your script exited with a non-zero code unexpectedly. Test it manually by piping sample JSON:\n  ```bash theme={null}\n  echo '{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"ls\"}}' | ./my-hook.sh\n  echo $?  # Check the exit code\n  ```\n* If you see \"command not found\", use absolute paths or `${CLAUDE_PROJECT_DIR}` to reference scripts. To avoid shell quoting entirely, add `\"args\": []` to switch to [exec form](/docs/en/hooks#exec-form-and-shell-form), which spawns the script directly without a shell\n* If you see \"jq: command not found\", install `jq` or use Python/Node.js for JSON parsing\n* If the message includes `blocking because Git Bash wasn't found`, you're on Windows, Claude Code didn't find Git Bash, and the failed or timed-out hook blocked the tool call. See [Failed hooks on Windows without Git Bash](/docs/en/hooks#failed-hooks-on-windows-without-git-bash) for the fixes\n* If the notice shows a JSON validation message, your hook's stdout parsed as JSON but failed schema validation. If it shows a JSON parse message, the stdout looked like a JSON object but wasn't valid JSON. Both happen even on exit 0.\n\n  To fix a parse failure, build the payload with a JSON encoder such as `jq` instead of string concatenation, so quotes and backslashes inside values are escaped. The reference's [Exit code output](/docs/en/hooks#exit-code-output) section covers the exit-code and JSON combinations\n* If the script isn't running at all, make it executable: `chmod +x ./my-hook.sh`"
     },
     {
       "heading": "Hook not firing",

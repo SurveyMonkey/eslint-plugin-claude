@@ -514,6 +514,8 @@ const badMcpServers = {
   legacy: { type: 'sse', url: 'https://x.test/sse' },
   relHelper: { type: 'http', url: 'https://x.test/mcp', headersHelper: './h.sh' },
   relCommand: { command: './server.js' },
+  // A `url` with no `type`, which `mcp-server-schema` reports in a project file and not in a plugin.
+  noType: { url: 'https://x.test/mcp' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
 
@@ -1035,6 +1037,9 @@ const TREE: Record<string, string> = {
   'packages/lr/notes/loop.md': '/deploy now\n',
   // One bad file for each agent and output style rule, and the same fault where it is silent.
   '.claude/agents/valid.md': '---\nname: v\n---\n',
+  // YAML that the strict parser cannot read, as in issues #288 and #273.
+  '.claude/agents/portable.md': '---\nname: p\ndescription: Use this when x. Context: y\n---\n',
+  '.claude/skills/portable/SKILL.md': '---\nname: portable\nargument-hint: [n] [n]\n---\n',
   '.claude/agents/schema.md': '---\nname: s\ndescription: d\nmade_up: 1\n---\n',
   '.claude/agents/bypass.md':
     '---\nname: b\ndescription: d\npermissionMode: bypassPermissions\n---\n',
@@ -1063,7 +1068,7 @@ const TREE: Record<string, string> = {
   'plugins/p/agents/versions.md': '---\nname: ver\ndescription: d\nomitClaudeMd: true\n---\n',
   'docs/agents/warn.md':
     '\uFEFF---\nname: Explore\ntools: CronCreate, Task\ndisallowedTools: Bash(x)\nomitClaudeMd: true\nmcpServers:\n  - pw:\n      command: npx\n---\n',
-  '.claude/output-styles/yaml.md': '---\nname: [unclosed\n---\n',
+  '.claude/output-styles/yaml.md': '---\n- name: list\n---\n',
   '.claude/output-styles/schema.md': '---\nforce-for-plugin: true\n---\n',
   'plugins/p/output-styles/forced.md': '---\nforce-for-plugin: true\n---\n',
   // The cross-file agent rules: one scope with settings, two agents of one name, a skill that
@@ -2226,8 +2231,8 @@ const TREE: Record<string, string> = {
   'packages/me/managed-settings.d/30-b.txt': badManagedEntry,
   'packages/me/managed-settings.d/sub/40-c.json': badManagedEntry,
   'packages/me/.vscode/settings.json': badManagedEntry,
-  // `mcp-insecure-url`: an `http://` URL in a project file. A plugin file is for `claude plugin
-  // validate`, and a loopback host is silent.
+  // `mcp-insecure-url`: an `http://` URL in a project file. A plugin server entry is for `claude
+  // plugin validate`, and the inline map here is not a bundle string. A loopback host is silent.
   'packages/iu/.mcp.json':
     '{"mcpServers": {"a": {"type": "http", "url": "http://example.com/mcp"}}}',
   'packages/iu/dev/.mcp.json':
@@ -3271,6 +3276,10 @@ const MCP_RULES: {
   { name: 'mcp-json-location', files: MCP_PATHS },
   { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
+  {
+    name: 'mcp-server-schema',
+    files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
+  },
   { name: 'mcp-server-name-reserved', files: ['**/.mcp.json'] },
   { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
   { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
@@ -3335,7 +3344,11 @@ const MCP_RULES: {
   { name: 'mcp-stdio-relative-path', files: ['**/.mcp.json'], severity: 'warn' },
   // The warn rules of the URL and the policy lists.
   { name: 'mcp-allowlist-empty', files: MANAGED_FILES, severity: 'warn' },
-  { name: 'mcp-insecure-url', files: ['**/.mcp.json'], severity: 'warn' },
+  {
+    name: 'mcp-insecure-url',
+    files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
+    severity: 'warn',
+  },
   {
     name: 'mcp-plugin-stdio-reach',
     files: ['**/.mcp.json', '**/.claude-plugin/plugin.json'],
@@ -3496,6 +3509,7 @@ const PLUGIN_RULES: {
     language: 'markdown/gfm',
     files: ['**/SKILL.md', '**/agents/**/*.md'],
   },
+  { name: 'plugin-settings-keys', files: ['**/.claude-plugin/plugin.json', '**/settings.json'] },
   // The rules with the option `minVersion` give no report in the config run, which sets no option.
   {
     name: 'plugin-feature-min-version',
@@ -3895,6 +3909,7 @@ const EXPECTED = [
   '.claude/agents/bypass.md: claude/agent-permission-mode-bypass@2',
   '.claude/agents/mcp.md: claude/agent-mcp-servers-schema@2',
   '.claude/agents/memory.md: claude/agent-memory-grants-write@2',
+  '.claude/agents/portable.md: claude/frontmatter-yaml-portable@1',
   '.claude/agents/review/deep/n.md: claude/agent-permission-mode-bypass@2',
   '.claude/agents/schema.md: claude/agent-frontmatter-schema@2',
   '.claude/agents/valid.md: claude/agent-frontmatter-valid@2',
@@ -3915,6 +3930,7 @@ const EXPECTED = [
   '.claude/skills/glob/SKILL.md: claude/skill-paths-glob-valid@2',
   '.claude/skills/layout/skill.md: claude/skill-file-layout@2',
   '.claude/skills/loose.md: claude/skill-file-layout@2',
+  '.claude/skills/portable/SKILL.md: claude/frontmatter-yaml-portable@1',
   '.claude/skills/position/SKILL.md: claude/skill-frontmatter-position@2',
   '.claude/skills/ref/SKILL.md: claude/skill-reference-exists@2',
   '.claude/skills/schema/SKILL.md: claude/skill-frontmatter-schema@2',
@@ -4783,9 +4799,10 @@ const EXPECTED = [
   'packages/pw/commands/cbad.md: claude/plugin-path-var-braced@2',
   'packages/pw/skills/bad/SKILL.md: claude/plugin-path-var-braced@2',
   'packages/se/.claude/commands/cpush.md: claude/command-legacy-format@1',
-  // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`, and no other file.
-  // The paths under `.claude/` get the location report only.
+  // The `.mcp.json` rules read `.mcp.json` and the three paths under `.claude/`. They read no other
+  // file of these packages. The paths under `.claude/` get the location report only.
   ...[
+    'mcp-server-schema',
     'mcp-server-name-reserved',
     'mcp-remote-url-empty',
     'mcp-hidden-whitespace',
@@ -5453,12 +5470,14 @@ const AGENT_RULES = [
   'agent-model-forced',
   'agent-teams-no-project-config',
   'agent-teams-no-project-config',
+  'agent-permission-mode-auto-unavailable',
   'output-style-frontmatter-valid',
   'output-style-frontmatter-schema',
 ]
 
 // The agent and output style rules of #9 that are `warn`, in the order of the `modules` list.
-// They follow the agent and output style rules that are errors.
+// They follow the agent and output style rules that are errors. `frontmatter-yaml-portable` also
+// reads skill and command files.
 const AGENT_WARN_RULES = [
   'agent-disallowed-tools-scope',
   'agent-field-min-version',
@@ -5469,8 +5488,10 @@ const AGENT_WARN_RULES = [
   'agent-no-bom',
   'agent-permission-mode-manual',
   'agent-plugin-scoped-name-unique',
+  'agent-skills-preload-limit',
   'agent-tools-conditional',
   'agent-tools-task-alias',
+  'frontmatter-yaml-portable',
   'output-style-force-for-plugin',
   'output-style-name-unique',
   'output-style-plugin-name-description',

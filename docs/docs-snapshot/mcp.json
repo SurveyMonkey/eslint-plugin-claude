@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/mcp",
-  "hash": "60647b46b63a1115cd3dad47ff1bb53824304df1fd5d76ab6bf05bf83f23c170",
+  "hash": "f5dc6d1ddc01ceb1fec2cb601d8e5296417f960524d8c3d3549c293e100a2065",
   "blocks": [
     {
       "id": "connect-claude-code-to-tools-via-mcp",
@@ -14,8 +14,8 @@
     },
     {
       "id": "find-and-build-mcp-servers",
-      "hash": "beaf6aeb02b496c30865d048429cb6ff7358afbf3306aede0b68bc5f511ff10e",
-      "bodyHash": "4b35673333f627c72ba3239080b42254fbf957ef113a6079542d8cca65a8dddb"
+      "hash": "003e7807d3d183021c0bc444ec48ec9edb4020f2b372f7cffb460ba6bd6a25e3",
+      "bodyHash": "b0af13da82af66ff2254c9c49a9760981f5431fa9c255c8dfb841751878a46c7"
     },
     {
       "id": "installing-mcp-servers",

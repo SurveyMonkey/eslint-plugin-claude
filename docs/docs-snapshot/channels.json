@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/channels",
-  "hash": "d735d4da249ca349cb691da09c5db7b85ac55cbc17faf9a4449cbab3d1ace76a",
+  "hash": "bc9798ae1c8bd8b5eb665f0778e9ffa5a05b01f1b57773fbe61706b00474a4ad",
   "blocks": [
     {
       "id": "push-events-into-a-running-session-with-channels",
@@ -9,13 +9,13 @@
     },
     {
       "id": "supported-channels",
-      "hash": "820e7274d1b013a936893b9da748c84b4880fe9b235f16f61b908ad965c98220",
-      "bodyHash": "a063e1a9b44afeff5730fc1aa89aa558f476927f2d2083e5a8d730c0fdfc3311"
+      "hash": "957e4d13b43b80a53f4ad35b3dd664c1737e347deb366d7fff9cac8f096b42b1",
+      "bodyHash": "0ed24ff56eaf13c9038513c0a43c881887551583c11543ee70d4a9c892defc56"
     },
     {
       "id": "quickstart",
-      "hash": "33d734d718f25525c7b6f9331f61cd47fca9d332ae9ade43c916e7223fdfa64c",
-      "bodyHash": "db70082d69db7e769a2162e2efec3ad0658689fc87d952d6b3646d6f7ee2809e"
+      "hash": "5a56b575a341cbd1c5782ce83ca014a27b69cbe0efa92249f74f90a42303f2ad",
+      "bodyHash": "f2e5f60df597dec62ae3a1225ea9db11295595fd50d8fc5567928379c3473ce3"
     },
     {
       "id": "security",
