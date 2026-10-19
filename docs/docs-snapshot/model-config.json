@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/model-config",
-  "hash": "cf781dd9bd0954efc98d52e09a5967a743e89b3bcfa762571501e0e1e5c712eb",
+  "hash": "91065b0bc6d7953e6d467000529010d74c7c4bdd1d82aedce41e065467fda109",
   "blocks": [
     {
       "id": "model-configuration",
@@ -44,8 +44,8 @@
     },
     {
       "id": "restrict-model-selection",
-      "hash": "5b9b2432071d621fb4a31293c05c7a9435be578b17621df5974f6d1c4f060d99",
-      "bodyHash": "12d4880a77dc74f4049b29eac4674883f680b0115a31fcebc634c4d2fcdae760"
+      "hash": "a58856a7ed15d0cc81aa8e166a461e0400cfc403b770dadcc39721c7f7822f10",
+      "bodyHash": "e834b852bd0b7436a94dddd31a2f8bfd21fb5bd12068ccb93ae37be548b43c1e"
     },
     {
       "id": "surface-coverage",

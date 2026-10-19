@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/errors",
-  "hash": "400451afb27d4d92f2fdbaf71aebd1b11531e7171da1b139a13e4f9876fd39e1",
+  "hash": "ff5aef0993ad77086fd79fbe58c43e2d094c33c2ef392fd2e35ef7d25eb44b79",
   "blocks": [
     {
       "id": "error-reference",
@@ -9,8 +9,8 @@
     },
     {
       "id": "find-your-error",
-      "hash": "5fff0d7365af4df55a3efa983b2e6131cd3256514f49556782784aa016a5e0fe",
-      "bodyHash": "b1ae406928cd74cd2e55a598841f6fe3d844d9aa1d5d101663c37d646f1a4a7f"
+      "hash": "6ba4b17d1df36bd4bca9424140014ab2613007141e89a1174d3f3925658a731d",
+      "bodyHash": "2c0edc41a417471319c3fa8670312270a35fa0661b7092b62f9f8d5ccc774095"
     },
     {
       "id": "automatic-retries",
@@ -59,13 +59,18 @@
     },
     {
       "id": "auto-mode-cannot-determine-the-safety-of-an-action",
-      "hash": "54c9c246922f35cee898a56a1e873197596904658ebe69582896840de739e220",
-      "bodyHash": "f76261af1f55b821bb8aca8aefd0816ad52d2673e7dbe408eb1802d88e4be01c"
+      "hash": "23a7d6db21dbc893a14d64719b75cbb06d9c8723bf176f655f197efa19861fde",
+      "bodyHash": "967c24fc289ceecba631008d61f5d1bbb606afb5154597820842e12db3bd2996"
     },
     {
       "id": "the-server-returned-no-safety-verdict",
-      "hash": "626b49bd14d962fefb1e0f824e7a539b6ce5f57a7c56a2ea3483d76b61f03be5",
-      "bodyHash": "2b109f30cdc513cebfa18a4708f465da0d473c397c413de62f23f941eee2fecc"
+      "hash": "2209163d0ea94142a3ff13d2b00ddb999ebe6b13d578197157d09c8664de9410",
+      "bodyHash": "16c49314a8dfaba67c70818b32a75cc9d0a86cb001fdc66d028126f3c81b7904"
+    },
+    {
+      "id": "was-not-reviewed-and-did-not-run",
+      "hash": "80b100d8b138aaeadee39afc8988af18fc55c841ea0999a3cffd8e1918f5c99b",
+      "bodyHash": "3b9249bc2573585a61c741c5d6cb245331a92f005c60d9f905a2400d4adb2896"
     },
     {
       "id": "agent-terminated-early-due-to-an-api-error",

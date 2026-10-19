@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/memory",
-  "hash": "768be47946cafc36d6fbe3988a04229521f5433bc038736739204e2ed258f6a7",
+  "hash": "485f8fff5acec2f72bccf4ec4e0f835fd54c6cf0cf00052a7d4af2dd16d3e50e",
   "blocks": [
     {
       "id": "how-claude-remembers-your-project",
@@ -139,8 +139,8 @@
     },
     {
       "id": "migrate-instructions-from-other-tools",
-      "hash": "cc4305690f7c55c2e0b9bf25c1fe5f02d88e8419096745d342266a77370ba356",
-      "bodyHash": "336dbe7c64d07f94ca561cc1707faabb8763c92554d1417cf5d473f020c14a29"
+      "hash": "d164ee3786571560d577eb94587f41b5319be8a4fab4f19b1f3a092bcfe870ce",
+      "bodyHash": "3406d81bd6599369959c3b0d2d3cbf189a3c5e4316390541e286852552972ddf"
     },
     {
       "id": "auto-memory",
@@ -159,8 +159,8 @@
     },
     {
       "id": "how-it-works",
-      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd",
-      "bodyHash": "61b02a8f7f7d6b5b3e5ebeec77a74d940118f445f3c7558cbdeadc207ae9bccf"
+      "hash": "8f1708199936a2f2a86de3b3a13c9cf5c32750ff4bb16ac6934b97198378bdd0",
+      "bodyHash": "4079ef72823b1c89f65a2b2f681c1955e3007e203c38c84946838d693959df58"
     },
     {
       "id": "audit-and-edit-your-memory",
@@ -296,8 +296,8 @@
     {
       "heading": "How it works",
       "id": "how-it-works",
-      "hash": "7866048f2092ab176c6716bb7a4c57146705902937e555855dbb93dbf01512fd",
-      "text": "### How it works\n\nThe first 200 lines of `MEMORY.md`, or the first 25KB, whichever comes first, are loaded at the start of every conversation. Content beyond that threshold is not loaded at session start. Claude keeps `MEMORY.md` concise by moving detailed notes into separate topic files.\n\nAfter Claude writes to `MEMORY.md`, Claude Code measures the file against the 200-line and 25KB read limits. If the file is near a limit, Claude Code reminds Claude to shorten it: keep one line per entry, move detail into topic files, and merge or drop stale entries. If the file is over a limit, the write still succeeds, but Claude Code returns an [error telling Claude to rewrite the index](/docs/en/errors#memory-index-is-over-its-read-limit), because everything past the limit is dropped on the next load.\n\nThis limit applies only to `MEMORY.md`. Claude Code loads a CLAUDE.md file of up to 4 MiB in full and skips a larger file. Shorter files produce better adherence.\n\nClaude Code doesn't load topic files such as `user_role.md` or `feedback_testing.md` at startup. Claude reads them on demand using its standard file tools when it needs the information.\n\nThe main conversation's auto memory isn't loaded into [subagents](/docs/en/sub-agents#what-loads-at-startup); the exception is a [fork](/docs/en/sub-agents#fork-the-current-conversation), which inherits the parent conversation and system prompt. A subagent's own auto memory, enabled with the subagent `memory` field, is a separate directory.\n\nClaude reads and writes memory files during your session. When you see messages like \"Saved 2 memories\" or \"Recalled 2 memories\" in the Claude Code interface, Claude is actively updating or reading from `~/.claude/projects/<project>/memory/`.\n\nWhen Claude writes a memory file that begins with YAML frontmatter, Claude Code records the write time in a `modified` frontmatter field as an ISO 8601 timestamp. The timestamp shows how current the fact is, both to you and to Claude when it reads the memory back. Any file that has frontmatter gets the field the next time Claude writes it, including files created on earlier versions; Claude Code never adds frontmatter to a file that has none. The `modified` field requires Claude Code v2.1.214 or later."
+      "hash": "8f1708199936a2f2a86de3b3a13c9cf5c32750ff4bb16ac6934b97198378bdd0",
+      "text": "### How it works\n\nThe first 200 lines of `MEMORY.md`, or the first 25KB, whichever comes first, are loaded at the start of every conversation. Content beyond that threshold is not loaded at session start. Claude keeps `MEMORY.md` concise by moving detailed notes into separate topic files.\n\nAfter Claude writes to `MEMORY.md`, Claude Code measures the file against the 200-line and 25KB read limits. If the file is near a limit, Claude Code reminds Claude to shorten it: keep one line per entry, move detail into topic files, and merge or drop stale entries. If the file is over a limit, the write still succeeds, but Claude Code returns an [error telling Claude to rewrite the index](/docs/en/errors#memory-index-is-over-its-read-limit), because everything past the limit is dropped on the next load.\n\nThis limit applies only to `MEMORY.md`. Claude Code loads a CLAUDE.md file of up to 4 MiB in full and skips a larger file. Shorter files produce better adherence.\n\nClaude Code doesn't load topic files such as `user_role.md` or `feedback_testing.md` at startup. Claude reads them on demand using its standard file tools when it needs the information.\n\nThe main conversation's auto memory isn't loaded into [subagents](/docs/en/sub-agents#what-loads-at-startup); the exception is a [fork](/docs/en/sub-agents#fork-the-current-conversation), which inherits the parent conversation and system prompt. A subagent's own auto memory, enabled with the subagent `memory` field, is a separate directory.\n\nClaude reads and writes memory files during your session. When you see messages like \"Saved 2 memories\" or \"Recalled 2 memories\" in the Claude Code interface, Claude is actively updating or reading from `~/.claude/projects/<project>/memory/`.\n\nWhen Claude writes a memory file that begins with YAML frontmatter, Claude Code records the write time in a `modified` frontmatter field as an ISO 8601 timestamp. The timestamp shows how current the fact is, both to you and to Claude when it reads the memory back."
     },
     {
       "heading": "When to add to CLAUDE.md",

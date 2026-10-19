@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/mcp",
-  "hash": "f5dc6d1ddc01ceb1fec2cb601d8e5296417f960524d8c3d3549c293e100a2065",
+  "hash": "19bbef33fe4c2ad9877e5081b892328f08d6a22413b083158b29697bdda2b753",
   "blocks": [
     {
       "id": "connect-claude-code-to-tools-via-mcp",
@@ -84,8 +84,8 @@
     },
     {
       "id": "server-status-detail",
-      "hash": "c7905ba8c09b780cd000645e341c982056103923e9f66d292f5cae4b769c3703",
-      "bodyHash": "5133208a12f14aac1de63873cbe333c8a5442d65c72214067db044041e266d84"
+      "hash": "4034ec1f2c966c8fa55364ddfd83fa2e9b886049ba3680f253dc55661c4d2213",
+      "bodyHash": "878016f137332abddbd325a57437e036511a5a4881695a6cc917bd04ecc3dc75"
     },
     {
       "id": "configuration-warnings",
@@ -109,8 +109,8 @@
     },
     {
       "id": "dynamic-tool-updates",
-      "hash": "014bea87f9b1325e2a0292f0979accf88101e6283604e5a8b5cd4cc77faa2c7b",
-      "bodyHash": "8c806bb6894b56d76ada0e70dd8287ab1c8f42691e16e81760175289d09763d1"
+      "hash": "5ca5450de72cfab9beb47885ccd2e8219aa57cc07d599270b77e76d3ea8319d5",
+      "bodyHash": "513b739ab1c8bae166ac32b1b0438411fac79c5d0ddcaf44d17a89564205c7a3"
     },
     {
       "id": "notification-streams-on-the-v2-runtime",
@@ -154,8 +154,8 @@
     },
     {
       "id": "automatic-backgrounding-of-long-tool-calls",
-      "hash": "d51f0ff2c13b67255bfb6e4ebc420998b5c91fc66f76eae9db696509a00511cd",
-      "bodyHash": "27427a5ad0a08625ef632cbf12bd42c534f8da6f768d3177be3c9f58b983108d"
+      "hash": "39f1a85077ceafb3d93ae48c24e258a41bc14640fe36aec349137e12836c2f00",
+      "bodyHash": "e84a9ad8a19d55a8ecfd29cafe23f93e6223cb5aa1f42b118e5baaf06b8b0c8e"
     },
     {
       "id": "plugin-provided-mcp-servers",
@@ -353,8 +353,8 @@
     },
     {
       "id": "require-approval-for-a-specific-tool",
-      "hash": "5a73c97ae21e0cf4d34a92d10cb37141346b0e3204217d1607f338f2b086359c",
-      "bodyHash": "4f1eaf25388336106e570f84b958ec39ebfdc25f0261db1520e976f1b83415bc"
+      "hash": "1e06dcf0cfa27342c30c063892f921b8a2ad54a05708f500d75563e6f50d04c8",
+      "bodyHash": "d781310aeed8b88c1a5097e64f86a62211dae9937f0a0c80378ce88343b9bfa2"
     },
     {
       "id": "respond-to-mcp-elicitation-requests",
@@ -577,8 +577,8 @@
     {
       "heading": "Server status detail",
       "id": "server-status-detail",
-      "hash": "c7905ba8c09b780cd000645e341c982056103923e9f66d292f5cae4b769c3703",
-      "text": "#### Server status detail\n\nIn `/mcp`, including a server's menu there, and in the [`/plugin`](/docs/en/plugins/install) manager, a remote HTTP or SSE server you've used before can show a `cached` status such as `cached 2h ago · connects on first use · 5 tools`. Claude Code loaded the server's tool list from its discovery cache, saved in a previous session, instead of connecting at startup, and Claude Code connects the server the first time Claude calls one of the server's tools. The tools are available from your first message, so you don't need to do anything. The discovery cache and its `cached` status require Claude Code v2.1.221 or later.\n\nThe discovery cache is off by default unless a gradual rollout has enabled it for your account. Set [`MCP_DISCOVERY_CACHE=1`](/docs/en/env-vars) to turn it on, or `0` to keep it off even when the rollout has enabled it. Before v2.1.238, the cache was on by default.\n\nWhen you select **Disable** or **Clear authentication** from a server's menu in `/mcp`, Claude Code also discards that server's cache entry. **Reconnect** discards it too on a connected or failed server; on a `cached` server, **Reconnect** connects the server now and keeps the entry. The next time Claude Code connects to the server after discarding the entry, it fetches the tool list from the server instead of from the cache.\n\nWhen a server's status is `✘ Failed to connect`, `claude mcp list` appends the failure detail to that status line, and `claude mcp get <name>` shows it on an `Issue:` line: the HTTP status or error code, plus any error text the server returned. The server's detail view in `/mcp` includes the same server-reported text in its `Issue:` row. Claude Code redacts credential-like text from this detail and never includes the expanded server URL, which can carry secrets. Claude Code appends no detail to a `✘ Connection error` status, because the exception text it would print there can embed that URL. Before v2.1.219, both commands showed only the bare failure status, without the status code or the server's error text.\n\nWhen you complete authentication from `/mcp` and the connection still fails with an HTTP status or a transport error code, Claude Code adds that code and the origin of the server's URL to the message it prints after the attempt. The origin is the scheme and host, plus the port when the URL names one, such as `https://mcp.example.com`.\n\n* The path and query never appear in that message.\n* For a server in the local, project, or user [scope](#mcp-installation-scopes) or in managed MCP configuration, the origin shows the host as written in that configuration, so a `${VAR}` reference in the host isn't expanded in the message.\n* For a failure with no status or error code, Claude Code shows the error text without the origin.\n\nA remote server whose configuration has an empty `url` shows as `not configured` in `/mcp`, in `claude mcp list`, and in the [`/plugin`](/docs/en/plugins/install) manager, and Claude Code doesn't attempt to connect to it. A plugin can include a placeholder entry like this for a connector you configure later, so Claude Code doesn't report it as an error or a setup issue. The server's detail view in `/mcp` reads `No URL configured for this server`; set the entry's `url` to connect it. Before v2.1.208, Claude Code reported an empty `url` as a configuration issue with a prompt to reconnect."
+      "hash": "4034ec1f2c966c8fa55364ddfd83fa2e9b886049ba3680f253dc55661c4d2213",
+      "text": "#### Server status detail\n\nIn `/mcp`, including a server's menu there, and in the [`/plugin`](/docs/en/plugins/install) manager, a remote HTTP or SSE server you've used before can show a `cached` status such as `cached 2h ago · connects on first use · 5 tools`. Claude Code loaded the server's tool list from its discovery cache, saved in a previous session, instead of connecting at startup, and Claude Code connects the server the first time Claude calls one of the server's tools. The tools are available from your first message, so you don't need to do anything. The discovery cache and its `cached` status require Claude Code v2.1.221 or later.\n\nThe discovery cache is off by default unless a gradual rollout has enabled it for your account. Set [`MCP_DISCOVERY_CACHE=1`](/docs/en/env-vars) to turn it on, or `0` to keep it off even when the rollout has enabled it. Before v2.1.238, the cache was on by default.\n\nWhen you select **Disable** or **Clear authentication** from a server's menu in `/mcp`, Claude Code also discards that server's cache entry. **Reconnect** discards it too on a connected or failed server; on a `cached` server, **Reconnect** connects the server now and keeps the entry. The next time Claude Code connects to the server after discarding the entry, it fetches the tool list from the server instead of from the cache.\n\nWhen a server's status is `✘ Failed to connect`, `claude mcp list` appends the failure detail to that status line, and `claude mcp get <name>` shows it on an `Issue:` line: the HTTP status or error code, plus any error text the server returned. The server's detail view in `/mcp` includes the same server-reported text in its `Issue:` row. Claude Code redacts credential-like text from this detail and never includes the expanded server URL, which can carry secrets. Claude Code appends no detail to a `✘ Connection error` status, because the exception text it would print there can embed that URL. Before v2.1.219, both commands showed only the bare failure status, without the status code or the server's error text.\n\nWhen you complete authentication from `/mcp` and the connection still fails with an HTTP status or a transport error code, Claude Code adds that code and the origin of the server's URL to the message it prints after the attempt. The origin is the scheme and host, plus the port when the URL names one, such as `https://mcp.example.com`.\n\n* The path and query never appear in that message.\n* For a server in the local, project, or user [scope](#mcp-installation-scopes) or in managed MCP configuration, the origin shows the host as written in that configuration, so a `${VAR}` reference in the host isn't expanded in the message.\n* For a failure with no status or error code, Claude Code shows the error text without the origin.\n\nA remote server whose configuration has an empty `url` shows as `not configured` in `/mcp`, in `claude mcp list`, and in the [`/plugin`](/docs/en/plugins/install) manager, and Claude Code doesn't attempt to connect to it. A plugin can include a placeholder entry like this for a connector you configure later, so Claude Code doesn't report it as an error or a setup issue. The server's detail view in `/mcp` reads `No URL configured for this server`; set the entry's `url` to connect it."
     },
     {
       "heading": "Use MCP prompts as commands",

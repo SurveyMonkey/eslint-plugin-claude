@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/hooks-guide",
-  "hash": "7f0084f6bd89fa9678ba9e0fa14e409b7b831c671c2716df68103d531114dc8e",
+  "hash": "b775fbc4f025ee9d753438a2f213e7a97c3be18165fbdbd30afa72589443fdb4",
   "blocks": [
     {
       "id": "automate-actions-with-hooks",
@@ -74,13 +74,13 @@
     },
     {
       "id": "hook-output",
-      "hash": "cc480cf2cb6cd3f1e9d72e16927781885a654f931d59ede6efba3887a0ca24c9",
-      "bodyHash": "cc720de46a9f46ee34d504d346ba07a769e77b9cca29067ecd4bb8581ac51233"
+      "hash": "9465765893c23bb36f9d0a647f29a0c405afc56c210d7595e079214aa22529cf",
+      "bodyHash": "4e302331909c10692dd28d713b27f3213726d3e1f277ad93d6c34e632824e34f"
     },
     {
       "id": "structured-json-output",
-      "hash": "1774d3912c4304f2ad9c5311534590b85026a41cac7da2e893f8dbdc9ebad9d9",
-      "bodyHash": "d705091741e5b0c10ccb8c8d7ca5f1105e58652fda6bf57c5b78d3e101a9986a"
+      "hash": "83541486a29b2f126f65b2fcc7d92429bf959d0a9c38c40b44dcaa28214e5544",
+      "bodyHash": "3463c30a9b5c860df5f50c23e120ea1caa3bbc2ca5c9ad20044bebd1300296c7"
     },
     {
       "id": "filter-hooks-with-matchers",
@@ -99,8 +99,8 @@
     },
     {
       "id": "prompt-based-hooks",
-      "hash": "bbde674952aff23e76c90493318fccca07d4a56bea9d859bf59c8428f672cd63",
-      "bodyHash": "81e4a08cc5dc8b1359fae197e85cdc04941497d4c552fd3b0d4a88ee476b4a50"
+      "hash": "8d0e90f71251a3caafaa7fb7611bae4c9b78ee426db6eb31f9ea2628fef6496c",
+      "bodyHash": "de251ade0396e26390bba40f2626498dd202d11dd7a6ac41d2b8f09c18fbf33e"
     },
     {
       "id": "agent-based-hooks",
@@ -123,8 +123,8 @@
     },
     {
       "id": "hooks-and-permission-modes",
-      "hash": "96ab40a9f4ea6d3585f395aa4124511197fff0ab65db6f7827a168996a22a0e8",
-      "bodyHash": "fe2f3bd8252bf5795e64ab77b07157fbc71c6234376a15a04e08cfc09422113d"
+      "hash": "c87011c505c489354870ddd14518d76931aab26bb09e6cb39c7c1e1030669d4e",
+      "bodyHash": "18826dd195eab8ddee5aff2183673db25c907ae27a27f8b4239a762a97aea289"
     },
     {
       "id": "hook-not-firing",

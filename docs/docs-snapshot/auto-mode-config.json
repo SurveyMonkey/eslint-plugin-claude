@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/auto-mode-config",
-  "hash": "22735f1d1ee1f3083cd5f208f653aae71eab00264bbf867ce1f07c738efc2064",
+  "hash": "3052dc2a76cebd5b98825838d109190b0d46fef4eea2ad4a65ac48cf8b1d2cbf",
   "blocks": [
     {
       "id": "configure-auto-mode",
@@ -64,8 +64,8 @@
     },
     {
       "id": "inspect-the-defaults-and-your-effective-config",
-      "hash": "a8230396c9e0b04251d5fa5e43b275fdbbe816d5937a0f21564917e28ae72038",
-      "bodyHash": "58c1df3ed432ad7f772e4e601d281a66a94217bfa69d32b2b18ec47b75f7e2a0"
+      "hash": "ca318c63b7de3c18baaa201045844666f01342a85809382b31f26613a6a7ac9d",
+      "bodyHash": "a46f4dba9573ebb1fe8da307dab4848ceb74a301bb3c2e5764609ce9a871cd5b"
     },
     {
       "id": "review-denials",

@@ -1,16 +1,16 @@
 {
   "url": "https://code.claude.com/docs/en/tools-reference",
-  "hash": "320420019ef6584aa61d1b3e30c91f07885c9dc90b5a184f68f1f0ca13c59b50",
+  "hash": "7189eb4fb8c911911a95112837d2b811e246117f457db4c47c3ca623f02fa798",
   "blocks": [
     {
       "id": "tools-reference",
-      "hash": "278a9b7791395717b8d081e037748a4765eda2ecb0ba5252557239eb61a785f6",
-      "bodyHash": "66bb2d90bd8d3b349e9640ccf31ad4a65fb2fdc244fe3fbd4db71fd4f72b3847"
+      "hash": "4a305d71644275fd14570b41a1868df556219fe3d481ad31186b8a45bc9f2027",
+      "bodyHash": "d6095a0bb92eb0951c86bec7cd4cf2b71388b15019f16f34ea1f85135532321e"
     },
     {
       "id": "configure-tools-with-permission-rules-and-hooks",
-      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",
-      "bodyHash": "4c315264884b6be4392deaee4d2525731dcefffdfb02002944f5e109b0c04555"
+      "hash": "9812e43e7a8f8265f0afd4cdf4861cf7a890db4942ea3291f2bd06baefa2cc03",
+      "bodyHash": "a775fbf7ffd8835920c6b57b79aebe63af7724aee8486fd729180e36f0ba70db"
     },
     {
       "id": "agent-tool-behavior",
@@ -79,8 +79,8 @@
     },
     {
       "id": "edit-tool-behavior",
-      "hash": "5e046e4380c1d67c674f347680698bcc270a573f2acf767c51969c9225875d44",
-      "bodyHash": "8eb6a9bc233f8b592882ddf7f3d310f73b497ca30ffd7aa6be8b210440cc40ca"
+      "hash": "0154d07354bf7cc7c594d1f00bda656b44e2e291a05a381c8e6f883ae73b7940",
+      "bodyHash": "87561966aae4b8ad66dc0242ce7f45c02aa9e94a91ec14775249beea0702892b"
     },
     {
       "id": "non-utf-8-files",
@@ -89,18 +89,18 @@
     },
     {
       "id": "endconversation-tool-behavior",
-      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea",
-      "bodyHash": "13c2f919f54fbacdde601730e01905a69af0982cc8b64b0db97066f9a236bd04"
+      "hash": "0a0501d90823133be2fa47fb211b8799eedee887ebf83feda5958126fdb62872",
+      "bodyHash": "90cba756c2204fe652ec463617ca74e775886091a6d564effa31fc9817568a96"
     },
     {
       "id": "glob-tool-behavior",
-      "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429",
-      "bodyHash": "d9673d252af90cbadd97ab8c5a694f5be147bb674d15ab497b7ae88ff278ceac"
+      "hash": "387d3b6b3f6b564fa97bbcca31e742d23e78f5cd82aa53dd87a2438a807ef2cf",
+      "bodyHash": "4467fd358bf2ec407f66fc1c0cd98233331089111db4ac8e03776a36e11c1891"
     },
     {
       "id": "grep-tool-behavior",
-      "hash": "025efe7fdee3674adecd5c556baed309cc857f324bedfbc8f9b5d1316bfae273",
-      "bodyHash": "400e9724eac6287ba698fd9e8570719b8e6395660e8cd86065109295cca3e11f"
+      "hash": "1d80b69e646888fee72fc1eee8e52c5d4f529f393551e16ff59ef869d23ab98a",
+      "bodyHash": "2edd97a7f22037f372952351fa5971d34d3c0dbb67565d462252c4d8a4b80324"
     },
     {
       "id": "lsp-tool-behavior",
@@ -144,8 +144,8 @@
     },
     {
       "id": "windows-encoding-and-exit-codes",
-      "hash": "6708a112ee09d788c0e1e21b3b004ec3b0d083079a2fb51044fa247a9aaba87a",
-      "bodyHash": "18eda3f9119bbd7130d90de810aa18ae882603e2af82542cd8ae7c50f6afbe10"
+      "hash": "25253b3ab3bf2c430fdbdde642719d2b22329d7876e1628ec1f9b33a710d777a",
+      "bodyHash": "f6b4152b797aac2437f46e7400f47835a51edf30a5d47ca891d4412e07c33b8f"
     },
     {
       "id": "preview-limitations",
@@ -154,8 +154,8 @@
     },
     {
       "id": "read-tool-behavior",
-      "hash": "934d7f37f6999d1e7f954d8cfe5336f91e8a0b595bf31dd65ae889c1b6fd053a",
-      "bodyHash": "867ac13d737fabbcfaea08e295b81b06eb45093748e5da8738352e8256d7b468"
+      "hash": "3e1d798c4a8081ce87168b280b1e2437c73966037de1c8f5207054213323e3c6",
+      "bodyHash": "9cadfac975e45f6a72b477d3d67bff7d6905795748d6187f15c5c71edfb8b78d"
     },
     {
       "id": "large-files",
@@ -204,8 +204,8 @@
     },
     {
       "id": "webfetch-tool-behavior",
-      "hash": "125ad96d4795b1089c1c135d507e76daaba2b84e9c6abe1929a639c896addfde",
-      "bodyHash": "da185bc23054320122589d6d3d9367b55c2632c95dacce4f7b31a9423cb3e217"
+      "hash": "01c93111e0941056ec317e109d18ed8db3fea2b685203a0ff6ed5ac74261b147",
+      "bodyHash": "a7aba988c00f776cbb943803919fdd9ae0c2e62099515498affee93d03f2f5ac"
     },
     {
       "id": "webfetch-availability",
@@ -214,13 +214,13 @@
     },
     {
       "id": "websearch-tool-behavior",
-      "hash": "4b641de2e0fa4a02456d59e0409d7a260cf9f8450019bb3cc55f9efc7554d0b5",
-      "bodyHash": "eae5f6d856bf064c792999c79780e1ff92717d4aa7842c2064598cdab77dfc51"
+      "hash": "be0a5ac42d33075273400b86e09e60b02868666ee735eb8544d95cfc71c0f153",
+      "bodyHash": "42fd1a53032d1098d254c2ba8a921b9996fd0217f639977945a94d6d0d865932"
     },
     {
       "id": "session-search-limit",
-      "hash": "e1594683d0bd61236e7eb88184c47840c616e71ac14a299e4384f7618b2f1688",
-      "bodyHash": "dc5b45407e0a377920f720fb3eb1f28aacff3683f2cffc7ba6fe15252ece363b"
+      "hash": "392f7df41ec2846f9dc84b410b822a60e74a3c96b1461850d42845b0fd99050f",
+      "bodyHash": "532ce0f202cc27ce1594b58075594d6ddc4d2f1503391e986652e95023e5112b"
     },
     {
       "id": "write-tool-behavior",
@@ -242,8 +242,8 @@
     {
       "heading": "Configure tools with permission rules and hooks",
       "id": "configure-tools-with-permission-rules-and-hooks",
-      "hash": "1bdce39aca4316139a0136a0de3c4d3d8cd1598da37d8d47b90af1340a277f53",
-      "text": "## Configure tools with permission rules and hooks\n\nFor the most part, Claude decides when to use these tools and you don't need to name them yourself when interacting with Claude. You reference tool names directly when defining permissions and other configuration:\n\n* in [`permissions.allow`](/docs/en/settings-reference#permissions-allow) and [`permissions.deny`](/docs/en/settings-reference#permissions-deny) in settings, and the `/permissions` interface\n* in the `--allowedTools` and `--disallowedTools` [CLI flags](/docs/en/cli-reference)\n* in the Agent SDK's [`allowedTools` and `disallowedTools`](/docs/en/agent-sdk/permissions#allow-and-deny-rules) options\n* in a [skill's `allowed-tools`](/docs/en/skills#frontmatter-reference) frontmatter\n* in a hook's [`if` condition](/docs/en/hooks-guide#filter-by-tool-name-and-arguments-with-the-if-field)\n\nAll of these accept the same rule format, `ToolName(specifier)`. The specifier depends on the tool, and several tools share a format:\n\n| Rule format | Applies to | Details |\n| :- | :- | :- |\n| `Bash(npm run *)` | Bash, Monitor | [Command pattern matching](/docs/en/permissions#bash) |\n| `PowerShell(Get-ChildItem *)` | PowerShell | [Command pattern matching](/docs/en/permissions#powershell) |\n| `Read(~/secrets/**)` | Read, Grep, Glob, LSP | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Edit(/src/**)` | Edit, Write, NotebookEdit | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Skill(deploy *)` | Skill | [Skill name matching](/docs/en/skills#restrict-claude’s-skill-access) |\n| `Agent(Explore)` | Agent | [Subagent type matching](/docs/en/permissions#agent-subagents) |\n| `WebFetch(domain:example.com)` | WebFetch | [Domain matching](/docs/en/permissions#webfetch) |\n| `WebSearch` | WebSearch | No specifier; allow or deny the tool as a whole |\n\nTools not listed here, such as `ExitPlanMode` or `ShareOnboardingGuide`, accept only the bare tool name with no specifier.\n\nAn `Edit(...)` allow rule also grants read access to the same path, so you don't need a matching `Read(...)` rule. A `Read(...)` deny rule also blocks the Edit and Write tools on the same path, including creating a new file there, because both tools change content Claude has to be able to read back. The `Read` deny check requires Claude Code v2.1.208 or later on edits, and v2.1.228 or later on writes.\n\nHook `matcher` fields use bare tool names, not the parenthesized rule format. See [matcher patterns](/docs/en/hooks#matcher-patterns) for the matching rules. For the field names each tool passes to `tool_input` in hooks, see the [PreToolUse input reference](/docs/en/hooks#pretooluse-input)."
+      "hash": "9812e43e7a8f8265f0afd4cdf4861cf7a890db4942ea3291f2bd06baefa2cc03",
+      "text": "## Configure tools with permission rules and hooks\n\nFor the most part, Claude decides when to use these tools and you don't need to name them yourself when interacting with Claude. You reference tool names directly when defining permissions and other configuration:\n\n* in [`permissions.allow`](/docs/en/settings-reference#permissions-allow) and [`permissions.deny`](/docs/en/settings-reference#permissions-deny) in settings, and the `/permissions` interface\n* in the `--allowedTools` and `--disallowedTools` [CLI flags](/docs/en/cli-reference)\n* in the Agent SDK's [`allowedTools` and `disallowedTools`](/docs/en/agent-sdk/permissions#allow-and-deny-rules) options\n* in a [skill's `allowed-tools`](/docs/en/skills#frontmatter-reference) frontmatter\n* in a hook's [`if` condition](/docs/en/hooks-guide#filter-by-tool-name-and-arguments-with-the-if-field)\n\nAll of these accept the same rule format, `ToolName(specifier)`. The specifier depends on the tool, and several tools share a format:\n\n| Rule format | Applies to | Details |\n| :- | :- | :- |\n| `Bash(npm run *)` | Bash, Monitor | [Command pattern matching](/docs/en/permissions#bash) |\n| `PowerShell(Get-ChildItem *)` | PowerShell | [Command pattern matching](/docs/en/permissions#powershell) |\n| `Read(~/secrets/**)` | Read, Grep, Glob, LSP | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Edit(/src/**)` | Edit, Write, NotebookEdit | [Path pattern matching](/docs/en/permissions#read-and-edit) |\n| `Skill(deploy *)` | Skill | [Skill name matching](/docs/en/skills#restrict-claude’s-skill-access) |\n| `Agent(Explore)` | Agent | [Subagent type matching](/docs/en/permissions#agent-subagents) |\n| `WebFetch(domain:example.com)` | WebFetch | [Domain matching](/docs/en/permissions#webfetch) |\n| `WebSearch` | WebSearch | No specifier; allow or deny the tool as a whole |\n\nTools not listed here, such as `ExitPlanMode` or `ShareOnboardingGuide`, accept only the bare tool name with no specifier.\n\nAn `Edit(...)` allow rule also grants read access to the same path, so you don't need a matching `Read(...)` rule. A `Read(...)` deny rule also blocks the Edit and Write tools on the same path, including creating a new file there, because both tools change content Claude has to be able to read back. For the Write tool, the `Read` deny check requires Claude Code v2.1.228 or later.\n\nHook `matcher` fields use bare tool names, not the parenthesized rule format. See [matcher patterns](/docs/en/hooks#matcher-patterns) for the matching rules. For the field names each tool passes to `tool_input` in hooks, see the [PreToolUse input reference](/docs/en/hooks#pretooluse-input)."
     },
     {
       "heading": "PowerShell tool",
@@ -272,20 +272,20 @@
     {
       "heading": "EndConversation tool behavior",
       "id": "endconversation-tool-behavior",
-      "hash": "7f818bd038724779174b963a6d3333c058bbd911669a25dc6ce9daf9027d82ea",
-      "text": "## EndConversation tool behavior\n\nThe EndConversation tool ends the current session. Claude uses it only in two situations:\n\n* as a last resort against sustained abusive input, after attempts to redirect the conversation have failed and after a clear warning in an earlier message\n* when you explicitly ask to see the tool demonstrated and confirm that you want the session to end\n\nGeneral frustration, profanity, or a task going badly don't qualify, and neither do requests for harmful content, which Claude declines instead of ending the session. Claude Code follows the same approach as claude.ai, which can [end a rare subset of chats](https://www.anthropic.com/research/end-subset-conversations).\n\nAfter Claude ends an interactive session, the session locks. New prompts and most commands return `Claude ended this conversation. Start a new session (or /clear) to continue.`, and only `/clear`, `/resume`, `/help`, `/exit`, and `/feedback` still run. Claude Code records the end in the session's transcript, so resuming an ended session restores the lock; the session's history isn't deleted.\n\nResuming an ended session in [non-interactive mode](/docs/en/headless) with the `-p` flag errors and exits with code 1, so a script doesn't read the ended run as a success.\n\nThe tool never prompts for permission, and [PreToolUse hooks](/docs/en/hooks#pretooluse) don't run for it. While any other tool remains, you can't block it either: [deny and ask rules](/docs/en/permissions#tool-specific-permission-rules) naming `EndConversation` have no effect, and neither `--disallowedTools` nor a `--tools` list can remove it. The exemption is deliberate: the tool does nothing except end the conversation, never reading or modifying files or data, and a safeguard of this kind holds only if the session it applies to can't turn it off. When your deny rules remove every other tool and also match `EndConversation`, as `\"*\"` does, Claude Code removes it too rather than leaving it as the only tool, unless an allow rule names `EndConversation` explicitly. A deny list that removes every other tool without matching `EndConversation` leaves it in place.\n\n[Subagents](/docs/en/sub-agents) never get the tool. Background tasks that share the main conversation's tool list see it, but calling it there ends nothing.\n\nThe tool appears only when all of the following are true:\n\n* **Version**: Claude Code v2.1.213 or later.\n* **Model**: the session's model is Claude Opus 4.8, Claude Sonnet 5, Claude Fable 5, or a later version of one of those families.\n* **Surface**: an interactive terminal session, including a `claude` session in an IDE's integrated terminal, which is how the [JetBrains plugin](/docs/en/jetbrains) runs it. Other surfaces don't include the tool, such as:\n  * non-interactive `-p` runs\n  * sessions through the [Agent SDK](/docs/en/agent-sdk/overview) TypeScript and Python packages\n  * the [VS Code extension](/docs/en/vs-code) panel, which bundles its own CLI\n  * [GitHub Actions](/docs/en/github-actions)\n  * [cloud sessions](/docs/en/claude-code-on-the-web)\n* **Startup mode**: not a [`--bare`](/docs/en/headless#start-faster-with-bare-mode) session. Bare mode loads only shell and file tools, so the tool is never registered there.\n* **Provider**: not available on [Amazon Bedrock](/docs/en/amazon-bedrock), [Claude Platform on AWS](/docs/en/claude-platform-on-aws), [Google Cloud's Agent Platform](/docs/en/google-vertex-ai), or [Microsoft Foundry](/docs/en/microsoft-foundry), or on sessions signed in through a [cloud gateway](/docs/en/claude-apps-gateway)."
+      "hash": "0a0501d90823133be2fa47fb211b8799eedee887ebf83feda5958126fdb62872",
+      "text": "## EndConversation tool behavior\n\nThe EndConversation tool ends the current session. Claude uses it only in two situations:\n\n* as a last resort against sustained abusive input, after attempts to redirect the conversation have failed and after a clear warning in an earlier message\n* when you explicitly ask to see the tool demonstrated and confirm that you want the session to end\n\nGeneral frustration, profanity, or a task going badly don't qualify, and neither do requests for harmful content, which Claude declines instead of ending the session. Claude Code follows the same approach as claude.ai, which can [end a rare subset of chats](https://www.anthropic.com/research/end-subset-conversations).\n\nAfter Claude ends an interactive session, the session locks. New prompts and most commands return `Claude ended this conversation. Start a new session (or /clear) to continue.`, and only `/clear`, `/resume`, `/help`, `/exit`, and `/feedback` still run. Claude Code records the end in the session's transcript, so resuming an ended session restores the lock; the session's history isn't deleted.\n\nResuming an ended session in [non-interactive mode](/docs/en/headless) with the `-p` flag errors and exits with code 1, so a script doesn't read the ended run as a success.\n\nThe tool never prompts for permission, and [PreToolUse hooks](/docs/en/hooks#pretooluse) don't run for it. While any other tool remains, you can't block it either: [deny and ask rules](/docs/en/permissions#tool-specific-permission-rules) naming `EndConversation` have no effect, and neither `--disallowedTools` nor a `--tools` list can remove it. The exemption is deliberate: the tool does nothing except end the conversation, never reading or modifying files or data, and a safeguard of this kind holds only if the session it applies to can't turn it off. When your deny rules remove every other tool and also match `EndConversation`, as `\"*\"` does, Claude Code removes it too rather than leaving it as the only tool, unless an allow rule names `EndConversation` explicitly. A deny list that removes every other tool without matching `EndConversation` leaves it in place.\n\n[Subagents](/docs/en/sub-agents) never get the tool. Background tasks that share the main conversation's tool list see it, but calling it there ends nothing.\n\nThe tool appears only when all of the following are true:\n\n* **Model**: the session's model is Claude Opus 4.8, Claude Sonnet 5, Claude Fable 5, or a later version of one of those families.\n* **Surface**: an interactive terminal session, including a `claude` session in an IDE's integrated terminal, which is how the [JetBrains plugin](/docs/en/jetbrains) runs it. Other surfaces don't include the tool, such as:\n  * non-interactive `-p` runs\n  * sessions through the [Agent SDK](/docs/en/agent-sdk/overview) TypeScript and Python packages\n  * the [VS Code extension](/docs/en/vs-code) panel, which bundles its own CLI\n  * [GitHub Actions](/docs/en/github-actions)\n  * [cloud sessions](/docs/en/claude-code-on-the-web)\n* **Startup mode**: not a [`--bare`](/docs/en/headless#start-faster-with-bare-mode) session. Bare mode loads only shell and file tools, so the tool is never registered there.\n* **Provider**: not available on [Amazon Bedrock](/docs/en/amazon-bedrock), [Claude Platform on AWS](/docs/en/claude-platform-on-aws), [Google Cloud's Agent Platform](/docs/en/google-vertex-ai), or [Microsoft Foundry](/docs/en/microsoft-foundry), or on sessions signed in through a [cloud gateway](/docs/en/claude-apps-gateway)."
     },
     {
       "heading": "Glob tool behavior",
       "id": "glob-tool-behavior",
-      "hash": "3b3c09141e5bff2b7d14d11a076bd299848f27572e478ebf5bd5bf9596a15429",
-      "text": "## Glob tool behavior\n\nThe Glob tool finds files by name pattern. On Windows, it's part of the default tool set. On macOS, Linux, and WSL, Claude Code leaves Glob and [Grep](#grep-tool-behavior) out of the default tool set, and Claude searches with `find` and `grep` through the Bash tool instead. In Claude's shell those two commands run embedded versions of `bfs` and `ugrep`, and the searches reach your hooks and permission rules as `Bash` calls.\n\nOn macOS, Linux, and WSL, you get the Glob and Grep tools back in these cases:\n\n* You name `Glob` or `Grep` in [`--tools` or `--allowedTools`](/docs/en/cli-reference#cli-flags) when you start the session, or in the equivalent [Agent SDK](/docs/en/agent-sdk/overview) options. With `--tools` you get the ones you list, and naming either tool in `--allowedTools` restores both. An allow rule in a settings file doesn't have this effect.\n* A permissions [deny rule](/docs/en/permissions#match-all-uses-of-a-tool), the `--disallowedTools` flag, or [`--restricted`](/docs/en/cli-reference#cli-flags) removes `Bash` from the session.\n* A [subagent](/docs/en/sub-agents#available-tools) lists `Glob` or `Grep` in its `tools` field and leaves out `Bash`. The listed tools come back for that subagent only, or for the whole session when it runs as the main session agent through [`--agent`](/docs/en/sub-agents#invoke-subagents-explicitly) or the `agent` setting.\n\nGlob supports standard glob syntax including `**` for recursive directory matching:\n\n* `**/*.js` matches all `.js` files at any depth\n* `src/**/*.ts` matches all `.ts` files under `src/`\n* `*.{json,yaml}` matches `.json` and `.yaml` files in the current directory\n\nResults are sorted by modification time and capped at 100 files. If the cap is hit, Claude sees a truncation flag in the result and can narrow the pattern.\n\nGlob doesn't respect `.gitignore` by default, so it finds gitignored files alongside tracked ones. This differs from [Grep](#grep-tool-behavior), which skips gitignored files. To make Glob respect `.gitignore`, set `CLAUDE_CODE_GLOB_NO_IGNORE=false` before launching Claude Code.\n\nClaude Code decides permission for a Glob call before it checks whether the search directory exists. It still runs the read-permission check for a missing `path` outside the [working directories](/docs/en/permissions#working-directories), so a permission prompt for a path doesn't mean the path exists.\n\nA `pattern` or `path` value that contains a null byte returns an error asking Claude to remove it.&#x20;"
+      "hash": "387d3b6b3f6b564fa97bbcca31e742d23e78f5cd82aa53dd87a2438a807ef2cf",
+      "text": "## Glob tool behavior\n\nThe Glob tool finds files by name pattern. On Windows, it's part of the default tool set. On macOS, Linux, and WSL, Claude Code leaves Glob and [Grep](#grep-tool-behavior) out of the default tool set, and Claude searches with `find` and `grep` through the Bash tool instead. In Claude's shell those two commands run embedded versions of `bfs` and `ugrep`, and the searches reach your hooks and permission rules as `Bash` calls.\n\nOn macOS, Linux, and WSL, you get the Glob and Grep tools back in these cases:\n\n* You name `Glob` or `Grep` in [`--tools` or `--allowedTools`](/docs/en/cli-reference#cli-flags) when you start the session, or in the equivalent [Agent SDK](/docs/en/agent-sdk/overview) options. With `--tools` you get the ones you list, and naming either tool in `--allowedTools` restores both. An allow rule in a settings file doesn't have this effect.\n* A permissions [deny rule](/docs/en/permissions#match-all-uses-of-a-tool), the `--disallowedTools` flag, or [`--restricted`](/docs/en/cli-reference#cli-flags) removes `Bash` from the session.\n* A [subagent](/docs/en/sub-agents#available-tools) lists `Glob` or `Grep` in its `tools` field and leaves out `Bash`. The listed tools come back for that subagent only, or for the whole session when it runs as the main session agent through [`--agent`](/docs/en/sub-agents#invoke-subagents-explicitly) or the `agent` setting.\n\nGlob supports standard glob syntax including `**` for recursive directory matching:\n\n* `**/*.js` matches all `.js` files at any depth\n* `src/**/*.ts` matches all `.ts` files under `src/`\n* `*.{json,yaml}` matches `.json` and `.yaml` files in the current directory\n\nResults are sorted by modification time and capped at 100 files. If the cap is hit, Claude sees a truncation flag in the result and can narrow the pattern.\n\nGlob doesn't respect `.gitignore` by default, so it finds gitignored files alongside tracked ones. This differs from [Grep](#grep-tool-behavior), which skips gitignored files. To make Glob respect `.gitignore`, set `CLAUDE_CODE_GLOB_NO_IGNORE=false` before launching Claude Code.\n\nClaude Code decides permission for a Glob call before it checks whether the search directory exists. It still runs the read-permission check for a missing `path` outside the [working directories](/docs/en/permissions#working-directories), so a permission prompt for a path doesn't mean the path exists.\n\nA `pattern` or `path` value that contains a null byte returns an error asking Claude to remove it."
     },
     {
       "heading": "WebSearch tool behavior",
       "id": "websearch-tool-behavior",
-      "hash": "4b641de2e0fa4a02456d59e0409d7a260cf9f8450019bb3cc55f9efc7554d0b5",
-      "text": "## WebSearch tool behavior\n\nWebSearch runs a query against Anthropic's [web search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) backend and returns result titles and URLs. It doesn't fetch the result pages. To read a page Claude finds in search results, it follows up with [WebFetch](#webfetch-tool-behavior).\n\nThe tool may issue up to eight backend searches per call, refining the search internally before returning results. Claude can scope results with `allowed_domains` to include only certain hosts, or `blocked_domains` to exclude them. The two lists can't be combined in a single call.\n\nWhen the search request hits an overloaded API, Claude Code retries it with backoff; a call that still fails returns an error result. Before v2.1.212, the API error text could reach Claude as if it were search results.\n\nWebSearch permission rules take no specifier. A bare `WebSearch` entry in `allow` or `deny` is the only form.\n\nThe search backend is not configurable. To search with a different provider, add an [MCP server](/docs/en/mcp) that exposes a search tool.\n\n<Note>\n  WebSearch is available on the Claude API, [Claude Platform on AWS](/docs/en/claude-platform-on-aws), and Microsoft Foundry. On Google Cloud's Agent Platform it works with Opus 4, Sonnet 4, Haiku 4.5, and later models. Amazon Bedrock doesn't expose the server-side web search tool.\n</Note>"
+      "hash": "be0a5ac42d33075273400b86e09e60b02868666ee735eb8544d95cfc71c0f153",
+      "text": "## WebSearch tool behavior\n\nWebSearch runs a query against Anthropic's [web search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) backend and returns result titles and URLs. It doesn't fetch the result pages. To read a page Claude finds in search results, it follows up with [WebFetch](#webfetch-tool-behavior).\n\nThe tool may issue up to eight backend searches per call, refining the search internally before returning results. Claude can scope results with `allowed_domains` to include only certain hosts, or `blocked_domains` to exclude them. The two lists can't be combined in a single call.\n\nWhen the search request hits an overloaded API, Claude Code retries it with backoff; a call that still fails returns an error result.\n\nWebSearch permission rules take no specifier. A bare `WebSearch` entry in `allow` or `deny` is the only form.\n\nThe search backend is not configurable. To search with a different provider, add an [MCP server](/docs/en/mcp) that exposes a search tool.\n\n<Note>\n  WebSearch is available on the Claude API, [Claude Platform on AWS](/docs/en/claude-platform-on-aws), and Microsoft Foundry. On Google Cloud's Agent Platform it works with Opus 4, Sonnet 4, Haiku 4.5, and later models. Amazon Bedrock doesn't expose the server-side web search tool.\n</Note>"
     },
     {
       "heading": "Shell selection in settings, hooks, and skills",
