@@ -979,6 +979,9 @@ describe('docs/docs-snapshot', () => {
       const snapshot = JSON.parse(readFileSync(path.join(dir, file), 'utf8')) as Snapshot
       expect(typeof snapshot.text, file).toBe('string')
       expect(api.sha256(snapshot.text ?? ''), file).toBe(snapshot.hash)
+      // The classifier finds the old text of a block by its stored key.
+      const keys = api.splitBlocks(snapshot.text ?? '').map((block) => block.key)
+      expect(keys, file).toEqual(snapshot.blocks.map((block) => block.id))
     }
   })
 })

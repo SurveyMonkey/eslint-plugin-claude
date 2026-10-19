@@ -501,8 +501,7 @@ describe('classify', () => {
 
   it('gives new-rule for a changed block that no rule cites, with its old text from the page text', async () => {
     const edited = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
-    const old = watch.splitBlocks(PAGE).find((block) => block.key === 'path-rules')?.text
-    expect(old).toBe('## Path rules')
+    const old = '## Path rules'
     const jev = fakeJev(answer({ requirement: 0.85 }))
     const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY })
     expect(findings.map((f) => [f.kind, f.blockId, f.change, f.oldText, f.link])).toEqual([
@@ -1508,7 +1507,9 @@ describe('a moved section (#152)', () => {
         'from-an-mcpservers-json-block',
         [],
         // The stored page text gives the old text of a block that no rule cites.
-        watch.splitBlocks(MCP_OLD).find((b) => b.key === 'from-an-mcpservers-json-block')?.text,
+        expect.stringMatching(
+          /^#### From an `mcpServers` JSON block\n\nAn `mcpServers` block written for another MCP client/,
+        ),
         {
           heading: 'Add a server from an mcpServers JSON block',
           blockId: 'add-a-server-from-an-mcpservers-json-block',
