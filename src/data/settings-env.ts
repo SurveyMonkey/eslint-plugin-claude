@@ -9,7 +9,7 @@
 
 // The first Claude Code version that reads a variable. Source: the sentence "Requires Claude Code
 // vX or later" in the row of a variable in the env vars reference
-// (https://code.claude.com/docs/en/env-vars#variables). The review date is 2026-10-15, against
+// (https://code.claude.com/docs/en/env-vars#variables). The review date is 2026-10-19, against
 // the stored text in docs/docs-snapshot/env-vars.json. The list holds each variable where the
 // sentence covers the whole variable and X is v2.1.211 or later. This is the range that
 // `settings-env-numeric-spelling` needs. The list leaves out a sentence for one part of a
@@ -28,6 +28,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_ARTIFACT_COMMENTS', '2.1.221'],
   ['CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT', '2.1.228'],
   ['CLAUDE_CODE_ARTIFACT_PUBLISH_EDITS', '2.1.300'],
+  ['CLAUDE_CODE_AUTO_MODE_MODEL', '2.1.302'],
   ['CLAUDE_CODE_AUTO_MODE_SERVER', '2.1.271'],
   ['CLAUDE_CODE_BASH_EDIT_DIFF', '2.1.269'],
   ['CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION', '2.1.223'],
