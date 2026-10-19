@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/settings-reference",
-  "hash": "8ba90434d2801f9e7b3dc44e304bea0e3ca94c25d540cdcf9763369deeb355e4",
+  "hash": "733e4eaec22c70ff8f1cfd28b314c191b19c3a400a275a57dd78aba07b43b42d",
   "blocks": [
     {
       "id": "all-settings",
@@ -739,8 +739,8 @@
     },
     {
       "id": "viminsertmoderemaps",
-      "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181",
-      "bodyHash": "2ca97d4800df872362c818ab53d7c5e44780d8ff9b664738e97115cd908d06e0"
+      "hash": "f60ebfb3da0be8f200d7def3beae972716ff7c76a06110d1a137f0e7f0da733b",
+      "bodyHash": "5d16bc0593c07db075462ca5f2c973dde8fa92c55c6e378ab91a258278f030bb"
     },
     {
       "id": "voice",
@@ -1935,8 +1935,8 @@
     {
       "heading": "vimInsertModeRemaps",
       "id": "viminsertmoderemaps",
-      "hash": "1b7480cc2118e3d29ec0e5aa5e28520a25171824ceb6879e73661a604fcca181",
-      "text": "### `vimInsertModeRemaps`\n\nMap two-key INSERT-mode sequences to Escape in [vim editor mode](/docs/en/interactive-mode#vim-editor-mode). Each key is exactly two printable characters typed in sequence, and `\"<Esc>\"` is the only supported target; Claude Code ignores other entries. Requires Claude Code v2.1.208 or later.\n\n* **Scope**: [`User or managed`](#scopes). A repository can't remap your keystrokes.\n* **Type**: object mapping a two-character sequence to `\"<Esc>\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"vimInsertModeRemaps\": {\n    \"jj\": \"<Esc>\"\n  }\n}\n```\n\nHas no effect unless `editorMode` is `\"vim\"`. See [Remap INSERT-mode key sequences](/docs/en/interactive-mode#remap-insert-mode-key-sequences). Requires Claude Code v2.1.208 or later."
+      "hash": "f60ebfb3da0be8f200d7def3beae972716ff7c76a06110d1a137f0e7f0da733b",
+      "text": "### `vimInsertModeRemaps`\n\nMap two-key INSERT-mode sequences to Escape in [vim editor mode](/docs/en/interactive-mode#vim-editor-mode). Each key is exactly two printable characters typed in sequence, and `\"<Esc>\"` is the only supported target; Claude Code ignores other entries.\n\n* **Scope**: [`User or managed`](#scopes). A repository can't remap your keystrokes.\n* **Type**: object mapping a two-character sequence to `\"<Esc>\"`\n* **Default**: unset\n\n```json settings.json theme={null}\n{\n  \"vimInsertModeRemaps\": {\n    \"jj\": \"<Esc>\"\n  }\n}\n```\n\nHas no effect unless `editorMode` is `\"vim\"`. See [Remap INSERT-mode key sequences](/docs/en/interactive-mode#remap-insert-mode-key-sequences)."
     },
     {
       "heading": "editorMode",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/statusline",
-  "hash": "bbe651578fa8edf2ec5a1db3a0823c56d7708248c3d35dc7587b67c4246bb356",
+  "hash": "257fd62e5d0c182d0132d0f8dd88b2388b4019e1dfd538944f16167955fbd24a",
   "blocks": [
     {
       "id": "customize-your-status-line",
@@ -54,8 +54,8 @@
     },
     {
       "id": "available-data",
-      "hash": "dc0bbafcc4d9561b0ae65a05660228ef73d3e1dcf46425226e796b9788c4c236",
-      "bodyHash": "66f67ad29be7b13e214fa5d023cab7f91eea82b9f860cc34a19b2e7849efc772"
+      "hash": "812a1fd8bd21d59d63e6c73d02ca7e1d0a47542f5ddd7cd067a6d87413794ca2",
+      "bodyHash": "5e45501972d393c977fe42c8dbfc94e19a5141e96b357eb3bb3e80dd800991c1"
     },
     {
       "id": "context-window-fields",
@@ -129,8 +129,8 @@
     },
     {
       "id": "task-fields",
-      "hash": "3a32bf16af12181207f118ee2977f9e4599fcf42c9a0661928b1f1c5e0f1ec09",
-      "bodyHash": "637fe63945555e3534e9de6c42ff9b405d54a4719f45ffe5c8e679f574a3f301"
+      "hash": "ae528de01e1ea3d327282fa5ecd06f694b15880906a2f43a7ba69463a6db20b6",
+      "bodyHash": "b7bc148b521d973c6fbcb20a39597acf3cdf35659a648716088dc55f8ebdf999"
     },
     {
       "id": "tips",

@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/terminal-config",
-  "hash": "71841ee2104be84e2c24bf2219748c0c97dd4e087fd9edac79ea17c3859f0c13",
+  "hash": "b28078b25fec4fd23a25189561201b0c39d16a34dc687d0cf27933a1ec4b3666",
   "blocks": [
     {
       "id": "configure-your-terminal-for-claude-code",
@@ -14,8 +14,8 @@
     },
     {
       "id": "enable-option-key-shortcuts-on-macos",
-      "hash": "664d507f2eb5d714df90b4d625efb2f639a8fc2c32178966fa82b006f0995adf",
-      "bodyHash": "ae61441a7cc3b7f74fcc308cb776bf9c62cb9556c1fe292f8681f4a5cd70ce80"
+      "hash": "882514f61b4b25d42905838ab90b8ffb8e73d0c1c5b7e3ba11871c0b56be8d6a",
+      "bodyHash": "a02a8eb6d962cc25bc5675933b49c88c5504757a6aea6d5b55d04e5a3813b9e6"
     },
     {
       "id": "get-a-terminal-bell-or-notification",

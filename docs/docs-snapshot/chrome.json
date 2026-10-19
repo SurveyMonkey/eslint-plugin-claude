@@ -1,6 +1,6 @@
 {
   "url": "https://code.claude.com/docs/en/chrome",
-  "hash": "afadfd9114496fac25143a94b59c3a5d553b71df45ba08827dfda901fdb42fd9",
+  "hash": "d2e02e7056580e53357a6940b821c4e04e6135b2248d861fd8d91a052b7cc671",
   "blocks": [
     {
       "id": "use-claude-code-with-chrome",
@@ -29,8 +29,8 @@
     },
     {
       "id": "enable-chrome-by-default",
-      "hash": "c6cf0c7a83ec2bfe130dfa670d75377baa64d9d8c00630aca0636de0c04e8590",
-      "bodyHash": "5806e4f5a855d375e69a829ffd5ccc358a9786754fefef3cf87a3bf0f7a2c526"
+      "hash": "0f9f54e232b9160dbfad067caf919a691bf4e858ae2eb2b08db176512cacfdc3",
+      "bodyHash": "ff92f05f77c6407d92b8ba525d3f437255cc3baae51889f5447f84a750440f98"
     },
     {
       "id": "manage-site-permissions",
@@ -69,8 +69,8 @@
     },
     {
       "id": "upload-files-to-web-pages",
-      "hash": "7f72c8a564fd27d2cd24b11b630eef2061fb2f05b91469268e0de0ebef50ea3a",
-      "bodyHash": "bdf3f6832b2db78638945dbae3347eff752e7015c0a40288b10c7a3fa6b3e7d0"
+      "hash": "e6e5ce2744912953b7bdb26b75a1a5a14944051488799e8948acf4aef85bab67",
+      "bodyHash": "e034aae6adc9e903275b518a6fb99d391f5dd60db6a82fc0981d942165f03af6"
     },
     {
       "id": "draft-content-in-google-docs",
@@ -94,8 +94,8 @@
     },
     {
       "id": "save-screenshots-to-disk",
-      "hash": "b30f0cebdcfa7d7c423076ba71d2166691cb94111f02000b1c7570eaa93639dc",
-      "bodyHash": "d4c1fc8c8313aa9f1129ee652d52cfa6225e252ac1ab07919db55f0a31dece59"
+      "hash": "ad10efd99f6abee0cd46c9ff860bc966fef2e8a16f749b386c7f5916b6e7a2bc",
+      "bodyHash": "c19c8954328bc4de53f962d4e15e71a015917228838e2be2535fa4ea99ac3cb4"
     },
     {
       "id": "troubleshooting",
