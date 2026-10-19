@@ -491,11 +491,12 @@ This decision declines two options:
   a reviewer reads the page.
 
 **What stays.** `sources[].text` stays, because the drift tests read it
-(`tests/settings-env.test.ts`). It duplicates about 1.7 MB of the page text. `bodyHash` stays on
-each block, because the move detection reads it with no split (Decision 6). `check` does not
-read `text`. A snapshot file from before this decision has no `text`, and it stays valid. The
-classifier then reads the old text from `sources`, as before. For a changed block that no rule
-cites, the issue then says that the old text is not available.
+(`tests/settings-env.test.ts`, `tests/rules/settings-key-scope.test.ts`). It duplicates about
+1.7 MB of the page text. `bodyHash` stays on each block, because the move detection reads it
+with no split (Decision 6). `check` does not read `text`. A snapshot file from before this
+decision has no `text`, and it stays valid. The classifier then reads the old text from
+`sources`, as before. For a changed block that no rule cites, the issue then says that the old
+text is not available.
 
 ## Consequences
 
@@ -509,10 +510,9 @@ cites, the issue then says that the old text is not available.
 - A new requirement inside a block that a heading cites gives no `new-rule` issue. The rule
   question for that block is the only signal.
 - A snapshot file from before Decision 9 has only the hash of an uncited block. A change to the
-  words only of such a block can give a `new-rule` issue, because the question sees the new text
-  only.
-- Each refresh pull request holds the new text of each changed page (Decision 9). A reviewer
-  reads the code files, and reads the snapshot diff by file.
+  words only of such a block can give a `new-rule` issue. The question sees the new text only.
+- Each refresh pull request holds the new text of each changed page (Decision 9). A reviewer of
+  a refresh pull request reads the snapshot diff one file at a time.
 - A page with no snapshot gives one `needs-triage` issue, not one issue for each block.
 - `GROUP_ISSUES` must change when a section of "Rules by group" is added or renamed.
 - When all group issues of a tracked block are closed, each finding of the block opens its issue.
