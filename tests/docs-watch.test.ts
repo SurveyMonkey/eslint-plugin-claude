@@ -437,6 +437,13 @@ describe('line ends and blank lines', () => {
     expect(crlf.sources[0]?.hash).toBe(lf.sources[0]?.hash)
   })
 
+  it('stores the page text with LF line ends, and the page hash is its hash', async () => {
+    const read = await api.readPage(URL_, [], serve('# Title\r\n\r\nOne.\rTwo.\r\n'))
+    expect(read.text).toBe('# Title\n\nOne.\nTwo.\n')
+    expect(api.sha256(read.text ?? '')).toBe(read.hash)
+    expect(Object.keys(read)).toEqual(['url', 'hash', 'text', 'blocks', 'sources'])
+  })
+
   it('ignores blank lines at the end of a block', async () => {
     const spaced = FIXTURE.replace('### `hooks`', '\n\n### `hooks`')
     const report = await api.checkPages({
@@ -738,6 +745,7 @@ describe('update and check on a temporary tree', () => {
       bodyHash: hooks?.bodyHash,
     })
     expect(hooks?.bodyHash).toMatch(/^[0-9a-f]{64}$/)
+    expect(snapshot.text).toBe(FIXTURE)
     const checked = await run([root], FIXTURE)
     expect(checked.code).toBe(0)
     expect(JSON.parse(checked.out).changed).toBe(0)
