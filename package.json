@@ -1,13 +1,23 @@
 {
   "name": "eslint-plugin-claude",
   "version": "0.10.0",
-  "description": "An ESLint plugin that lints Claude Code configuration files.",
+  "description": "An ESLint plugin that lints Claude Code configuration: CLAUDE.md, skills, subagents, hooks, settings, permissions, MCP servers, and plugin manifests.",
   "keywords": [
+    "claude-code",
+    "claude-md",
+    "claude-code-skills",
+    "subagents",
+    "claude-code-hooks",
+    "mcp",
+    "model-context-protocol",
+    "claude-code-plugins",
+    "plugin-marketplace",
     "eslint",
-    "eslintplugin",
     "eslint-plugin",
-    "claude",
-    "claude-code"
+    "eslintplugin",
+    "linter",
+    "lint",
+    "anthropic"
   ],
   "homepage": "https://github.com/SurveyMonkey/eslint-plugin-claude#readme",
   "bugs": {

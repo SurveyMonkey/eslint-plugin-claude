@@ -42,7 +42,8 @@ string:
   is also here. The `skills` field also accepts `.`.[^rules]
 - **The path has a `..` segment.** The docs call this the usual case of a path that escapes. A
   name that holds two dots, such as `./a..b`, has no `..` segment. In a probe with Claude Code
-  2.1.295, `claude plugin validate` passes `./a..b` and fails `./a/../b`.
+  2.1.304, `claude plugin validate` of a `plugin.json` passes `./skills/a..b` and fails
+  `./skills/a/../b`. For a marketplace entry, it passes both.
 - **The path contains a backslash.** Write the path with forward slashes.
 - **The path does not exist.** The rule resolves it from the plugin directory.
 - **The path resolves out of the marketplace through a link.** Claude Code drops a link that leads

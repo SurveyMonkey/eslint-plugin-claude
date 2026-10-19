@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/v/eslint-plugin-claude)](https://www.npmjs.com/package/eslint-plugin-claude)
 [![npm downloads](https://img.shields.io/npm/dm/eslint-plugin-claude?label=npm%20downloads&color=ea7233)](https://www.npmjs.com/package/eslint-plugin-claude)
 
-> An ESLint plugin that lints Claude Code configuration files
+> An ESLint plugin that lints Claude Code configuration: CLAUDE.md, skills, subagents, hooks, settings, permissions, MCP servers, and plugin manifests.
 
 It checks skills, commands and hooks against the Claude Code docs. It runs on
 [`@eslint/markdown`](https://github.com/eslint/markdown) and
@@ -120,6 +120,12 @@ for `files`.
 |--------|-------|
 | `recommended` | The rules for faults that the [Claude Code docs](https://code.claude.com/docs) describe. A heuristic rule can report a false positive, so it is off. |
 | `strict` | `recommended`, plus each rule that is still off, at `warn`. Use it to test the full rule set. |
+
+`strict` turns on six rules whose glob is `**/*.md`: `claude-md-location`, `agent-body-nonempty`,
+`agent-description-proactive`, `agent-descriptions-budget`, `agent-name-kebab-case` and
+`agent-teammate-ignored-fields`. So `strict` sets `markdown/gfm` with YAML frontmatter on each
+`.md` file. That overrides your own Markdown language for those files. To narrow the `files` of a
+rule, use the block name as [Change the files of a rule](#change-the-files-of-a-rule) shows.
 
 ## Rules
 
