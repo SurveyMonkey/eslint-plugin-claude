@@ -223,13 +223,8 @@ describe('the first versions of the variables, against the env vars reference', 
     }
   })
 
-  it('leaves out the four variables with a sentence for one part', () => {
-    for (const name of [
-      'BASH_DEFAULT_TIMEOUT_MS',
-      'BASH_MAX_TIMEOUT_MS',
-      'CLAUDE_CODE_FORK_SUBAGENT',
-      'MCP_DISCOVERY_CACHE',
-    ]) {
+  it('leaves out the three variables with a sentence for one part', () => {
+    for (const name of ['BASH_DEFAULT_TIMEOUT_MS', 'BASH_MAX_TIMEOUT_MS', 'MCP_DISCOVERY_CACHE']) {
       expect(envFirstVersion(name), name).toBeUndefined()
       expect(VARIABLES, name).toMatch(new RegExp(`\\| \`${name}\` \\|.*requires Claude Code v`))
     }

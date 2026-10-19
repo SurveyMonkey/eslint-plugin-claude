@@ -13,8 +13,8 @@
 // the stored text in docs/docs-snapshot/env-vars.json. The list holds each variable where the
 // sentence covers the whole variable and X is v2.1.211 or later. This is the range that
 // `settings-env-numeric-spelling` needs. The list leaves out a sentence for one part of a
-// variable (`BASH_DEFAULT_TIMEOUT_MS`, `BASH_MAX_TIMEOUT_MS`, `CLAUDE_CODE_FORK_SUBAGENT` and
-// `MCP_DISCOVERY_CACHE`). Review it on or before 2027-04-08, with the lists above.
+// variable (`BASH_DEFAULT_TIMEOUT_MS`, `BASH_MAX_TIMEOUT_MS` and `MCP_DISCOVERY_CACHE`). Review it
+// on or before 2027-04-08, with the lists above.
 // `tests/settings-env.test.ts` checks the list against the stored text.
 
 /** The first Claude Code version that reads each variable, when that version is v2.1.211 or later.
@@ -122,7 +122,7 @@ export const CREDENTIAL_HEADERS: readonly string[] = ['Authorization', 'X-Api-Ke
 // reference, the tool search table of the MCP page, the memory limit section of the tools
 // reference, and the capabilities table of the model configuration page. A variable that the
 // docs name without a rule for other spellings has no form here. These are
-// `CLAUDE_CODE_FORK_SUBAGENT` (the docs give `1` or `0`) and
+// `CLAUDE_CODE_FORK_SUBAGENT` (the docs give `0`) and
 // `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` (the docs give `1`).
 
 /** The form of the value of one variable. */
