@@ -526,14 +526,43 @@ describe('classify', () => {
     expect(jev.calls[0]?.request.state.docs_block.old_text).toContain('no earlier text')
   })
 
+  it('gives the old text of the whole-page source, on a snapshot with no page text', async () => {
+    const whole: SourceMap = { 'b-rule': [{ url: URL_, heading: 'Plugin manifest reference' }] }
+    const edited = PAGE.replace('## Path rules', '## Path rules\n\nA path must start with `./`.')
+    const jev = fakeJev(answer({ alters: 0.9, obsolete: 0.01, requirement: 0.1 }))
+    const jevCall = { fetch: jev.fetch, key: KEY }
+    const { findings } = await run(whole, edited, jevCall, PAGE, new Map(), false, true)
+    expect(findings.map((f) => [f.kind, f.blockId, f.oldText])).toEqual([
+      ['rule-update', 'path-rules', '## Path rules'],
+    ])
+    expect(jev.calls[0]?.request.state.docs_block.old_text).toBe('## Path rules')
+  })
+
+  it('gives the old text of a mapped block, on a snapshot with no page text', async () => {
+    const jev = fakeJev(answer({ alters: 0.9, obsolete: 0.01, requirement: 0.1 }))
+    const jevCall = { fetch: jev.fetch, key: KEY }
+    const { findings } = await run(cited, EDIT_HOOKS, jevCall, PAGE, new Map(), false, true)
+    expect(findings.map((f) => [f.kind, f.blockId])).toEqual([['rule-update', 'hooks']])
+    expect(findings[0]?.oldText).toContain('an array mixing both')
+    expect(jev.calls[0]?.request.state.docs_block.old_text).toContain('an array mixing both')
+  })
+
   it('finds the old text of a block whose heading is on the page twice by its suffix key', async () => {
+    // Both blocks change, so a lookup by the title gives one block the text of
+    // the other.
     const edited = PAGE.replace(
       'An unknown path field is a warning too.',
       'An unknown path field is an error.',
-    )
+    ).replace('An unknown field is a warning.', 'An unknown field is an error.')
     const jev = fakeJev(answer({ requirement: 0.85 }))
     const { findings } = await run(cited, edited, { fetch: jev.fetch, key: KEY })
     expect(findings.map((f) => [f.blockId, f.change, f.oldText, f.newText])).toEqual([
+      [
+        'unrecognized-fields',
+        'changed',
+        '### Unrecognized fields\n\nAn unknown field is a warning.',
+        '### Unrecognized fields\n\nAn unknown field is an error.',
+      ],
       [
         'unrecognized-fields-1',
         'changed',
