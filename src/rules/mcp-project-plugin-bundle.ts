@@ -16,20 +16,12 @@ import { pathFault } from './marketplace-relative-source-format.ts'
 
 const name = 'mcp-project-plugin-bundle' as const
 
+// `claude plugin validate` 2.1.304 checks the end of the whole string, so a query or a fragment
+// after the extension makes the string no bundle, and one that ends in it makes a bundle.
 const BUNDLE_EXTENSIONS = ['.mcpb', '.dxt']
 
 // A URL has a scheme and two slashes. A drive letter has one letter, and `pathFault` reads it first.
 const URL_SCHEME = /^[A-Za-z][A-Za-z0-9+.-]*:\/\//
-
-/** The path part of a bundle URL, or `declared` itself when it is not a URL. A query or a
- *  fragment does not count as part of the file name. */
-function pathOf(declared: string): string {
-  try {
-    return new URL(declared).pathname
-  } catch {
-    return declared
-  }
-}
 
 const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }> = {
   meta: {
@@ -57,7 +49,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }
         const bound = repositoryRoot(root)
         for (const declared of declaredMcpStrings(node.body)) {
           const text = declared.value
-          if (BUNDLE_EXTENSIONS.some((extension) => pathOf(text).endsWith(extension))) {
+          if (BUNDLE_EXTENSIONS.some((extension) => text.endsWith(extension))) {
             context.report({ node: declared, messageId: 'skipped', data: { bundle: text } })
             continue
           }
