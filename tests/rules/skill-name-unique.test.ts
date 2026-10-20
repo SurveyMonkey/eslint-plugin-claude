@@ -80,16 +80,18 @@ const DIFFERENT: [string, string][] = [
   ['deploy', 'deploys'],
 ]
 put('three/.claude/commands/t.md', bare)
-// A folder name that Claude Code refuses, with a `name` that it takes. The rule compares the
-// loaded `name`. The message prints the folder with each refused character as a code point.
-put('escaped/.claude/skills/de\u200bploy/SKILL.md', named('deploy'))
-put('escaped/.claude/skills/x\u202ey/SKILL.md', named('deploy'))
-put('edge/.claude/skills/ deploy/SKILL.md', named('deploy'))
-put('edge/.claude/skills/deploy /SKILL.md', named('deploy'))
 put('plug/.claude-plugin/plugin.json', '{"name":"p"}')
+// A plugin skill folder that Claude Code refuses, with a `name` that it takes. The rule compares
+// the loaded `name`. The message prints the folder with each refused character as a code point.
+put('escaped/.claude-plugin/plugin.json', '{"name":"e"}')
+put('escaped/skills/de\u200bploy/SKILL.md', named('deploy'))
+put('escaped/skills/x\u202ey/SKILL.md', named('deploy'))
+put('edge/.claude-plugin/plugin.json', '{"name":"g"}')
+put('edge/skills/ deploy/SKILL.md', named('deploy'))
+put('edge/skills/deploy /SKILL.md', named('deploy'))
 put('edge4/.claude/skills/a .md/SKILL.md', bare)
 // A refused `name` is ignored, and the skill loads under its folder name.
-put('ignored/.claude/skills/deploy/SKILL.md', named(quote('dep​loy')))
+put('ignored/.claude/skills/deploy/SKILL.md', named(quote('dep\u{200b}loy')))
 put('ignored/.claude/skills/other/SKILL.md', named('deploy'))
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
@@ -163,15 +165,25 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     ...refusedCases,
     // A zero-width space in a folder name and a double space in a command name. Each folds to
     // `ab`. `skill-name-characters` reports each one, and Claude Code loads neither.
-    { code: bare, filename: put('refused/.claude/skills/a​b/SKILL.md', bare) },
+    { code: bare, filename: put('refused/.claude/skills/a\u{200b}b/SKILL.md', bare) },
     { code: bare, filename: put('refused/.claude/commands/a  b.md', bare) },
     { code: bare, filename: put('refused/.claude/skills/ab/SKILL.md', bare) },
     // A refused command folder or file name is not compared, in the path or in the name.
     { code: bare, filename: put('refused/.claude/commands/ops /x.md', bare) },
     { code: bare, filename: put('refused/.claude/commands/ops/x.md', bare) },
     { code: bare, filename: put('refused/.claude/commands/ops/x .md', bare) },
+    // A project skill folder that Claude Code refuses is not loaded, even with a loaded `name`.
+    // The rule compares it in neither file.
+    {
+      code: named('deploy'),
+      filename: put('projname/.claude/skills/de\u{200b}ploy/SKILL.md', named('deploy')),
+    },
+    {
+      code: named('deploy'),
+      filename: put('projname/.claude/skills/deploy/SKILL.md', named('deploy')),
+    },
     // A plugin skill folder with a refused name loads with hyphens. The rule does not compare it.
-    { code: bare, filename: put('plug/skills/a​b/SKILL.md', bare) },
+    { code: bare, filename: put('plug/skills/a\u{200b}b/SKILL.md', bare) },
     { code: bare, filename: put('plug/skills/ab/SKILL.md', bare) },
     { code: bare, filename: put('edge2/.claude/commands/a.md', bare) },
     { code: bare, filename: put('edge2/.claude/commands/a .md', bare) },
@@ -399,7 +411,7 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // The files that the message names print each refused character as its code point.
     {
       code: bare,
-      filename: put('escaped/.claude/skills/deploy/SKILL.md', bare),
+      filename: put('escaped/skills/deploy/SKILL.md', bare),
       errors: [
         {
           messageId: 'duplicate',
@@ -410,10 +422,10 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
-    // A refused folder with a loaded `name` is a subject too.
+    // A plugin skill folder that is refused, with a loaded `name`, is a subject too.
     {
       code: named('deploy'),
-      filename: put('escaped/.claude/skills/de​ploy/SKILL.md', named('deploy')),
+      filename: put('escaped/skills/de\u{200b}ploy/SKILL.md', named('deploy')),
       errors: [
         {
           messageId: 'duplicate',
@@ -427,8 +439,8 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     },
     // A refused `name` gives way to the folder name, and the report is on line 1.
     {
-      code: named(quote('dep​loy')),
-      filename: put('ignored/.claude/skills/deploy/SKILL.md', named(quote('dep​loy'))),
+      code: named(quote('dep\u{200b}loy')),
+      filename: put('ignored/.claude/skills/deploy/SKILL.md', named(quote('dep\u{200b}loy'))),
       errors: [
         {
           messageId: 'duplicate',
@@ -451,7 +463,7 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // A space at the edge of one folder name is a fault.
     {
       code: bare,
-      filename: put('edge/.claude/skills/deploy/SKILL.md', bare),
+      filename: put('edge/skills/deploy/SKILL.md', bare),
       errors: [
         {
           messageId: 'duplicate',
