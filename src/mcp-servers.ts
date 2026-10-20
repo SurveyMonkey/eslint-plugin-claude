@@ -1,10 +1,10 @@
 // The reader that the `.mcp.json` rules share. A rule asks where the file is, and gets
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
 // may omit that wrapper, so its map is the top-level object. The root `.mcp.json` of a
-// repository that is a plugin is a project file and a plugin file. The module also holds the
-// reader of the servers that a plugin declares, the reader of a JSON file as an AST, and the
-// policy key reader of the allow and deny lists. It also holds the reader of a URL that holds a
-// reference in its port.
+// repository that is a plugin is a project file and a plugin file. A `managed-mcp.json` is a
+// project file in all directories. The module also holds the reader of the servers that a
+// plugin declares, the reader of a JSON file as an AST, and the policy key reader of the allow
+// and deny lists. It also holds the reader of a URL that holds a reference in its port.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import { existsSync } from 'node:fs'
 import path from 'node:path'
@@ -75,6 +75,14 @@ export function mcpFileKind(filename: string): McpFileKind | null {
     return 'project'
   }
   return existsSync(path.join(dir, '.git')) ? 'both' : 'plugin'
+}
+
+/** The kind of the MCP config at `filename`, as `mcpFileKind` gives it. A `managed-mcp.json` is
+ *  `project` in all directories: it uses the format of a project `.mcp.json`, and a plugin has no
+ *  such component.
+ *  (https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcpjson) */
+export function mcpConfigKind(filename: string): McpFileKind | null {
+  return path.basename(filename) === 'managed-mcp.json' ? 'project' : mcpFileKind(filename)
 }
 
 /** True when Claude Code reads the `.mcp.json` at `filename` as the config of a plugin: a

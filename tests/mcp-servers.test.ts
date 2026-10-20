@@ -14,6 +14,7 @@ import {
   jsonBodyState,
   MANAGED_SERVER_TYPES,
   type McpFileKind,
+  mcpConfigKind,
   mcpFileKind,
   parseUrl,
   pluginMcpDeclarations,
@@ -109,6 +110,23 @@ describe('mcpFileKind', () => {
       expect(mcpFileKind(repo('p', '.mcp.json'))).toBeNull()
     },
   )
+})
+
+describe('mcpConfigKind', () => {
+  it('is project for a managed-mcp.json, also at a plugin root and in an unread path', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    put(repo('p', '.claude-plugin', 'plugin.json'))
+    expect(mcpConfigKind(repo('managed-mcp.json'))).toBe('project')
+    expect(mcpConfigKind(repo('p', 'managed-mcp.json'))).toBe('project')
+    expect(mcpConfigKind(repo('.claude', 'managed-mcp.json'))).toBe('project')
+  })
+  it('is the kind of mcpFileKind for a .mcp.json', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    put(repo('p', '.claude-plugin', 'plugin.json'))
+    expect(mcpConfigKind(repo('.mcp.json'))).toBe('both')
+    expect(mcpConfigKind(repo('p', '.mcp.json'))).toBe('plugin')
+    expect(mcpConfigKind(repo('.claude', '.mcp.json'))).toBeNull()
+  })
 })
 
 describe('serverMembers', () => {

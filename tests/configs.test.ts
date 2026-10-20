@@ -2128,6 +2128,9 @@ const TREE: Record<string, string> = {
   // with the VS Code key, and a clean file. `MCP_SIZE_TREE` holds the file over the size limit.
   'packages/mc/.mcp.json': badMcp,
   'packages/mk2/.mcp.json': '{"servers": {"db": {"command": "x"}}}',
+  // A `managed-mcp.json` with no wrapper, and one with an empty remote `url` (#383).
+  'packages/mm/managed-mcp.json': '{"github": {"type": "http", "url": "https://x.test/mcp"}}',
+  'packages/mm2/managed-mcp.json': '{"mcpServers": {"corp": {"type": "http", "url": ""}}}',
   'packages/mok/.mcp.json': '{"mcpServers": {"db": {"command": "x", "timeout": 5000}}}',
   // The three paths under `.claude/` that Claude Code does not read. Only `mcp-json-location`
   // reports them, and the content rules skip them. A nearby path is silent for every rule.
@@ -3275,14 +3278,14 @@ const MCP_RULES: {
   severity?: 'warn'
 }[] = [
   { name: 'mcp-json-location', files: MCP_PATHS },
-  { name: 'mcp-json-servers-key', files: ['**/.mcp.json'] },
+  { name: 'mcp-json-servers-key', files: ['**/.mcp.json', '**/managed-mcp.json'] },
   { name: 'mcp-json-file-size', files: ['**/.mcp.json'] },
   {
     name: 'mcp-server-schema',
     files: ['**/.mcp.json', '**/managed-mcp.json', '**/.claude-plugin/plugin.json'],
   },
   { name: 'mcp-server-name-reserved', files: ['**/.mcp.json'] },
-  { name: 'mcp-remote-url-empty', files: ['**/.mcp.json'] },
+  { name: 'mcp-remote-url-empty', files: ['**/.mcp.json', '**/managed-mcp.json'] },
   { name: 'mcp-hidden-whitespace', files: ['**/.mcp.json'] },
   { name: 'mcp-timeout-min', files: ['**/.mcp.json'] },
   { name: 'mcp-oauth-transport', files: ['**/.mcp.json'] },
@@ -4818,6 +4821,8 @@ const EXPECTED = [
     'mcp-anthropic-hosted-url',
   ].map((rule) => `packages/mc/.mcp.json: claude/${rule}@2`),
   'packages/mk2/.mcp.json: claude/mcp-json-servers-key@2',
+  'packages/mm/managed-mcp.json: claude/mcp-json-servers-key@2',
+  'packages/mm2/managed-mcp.json: claude/mcp-remote-url-empty@2',
   // The settings and approval rules of #16. The hidden drop-ins are for `settings-managed-file`.
   'packages/mcs/.claude/settings.json: claude/mcp-settings-mcpservers@2',
   'packages/mcs/.claude/settings.json: claude/settings-schema@2',

@@ -1,13 +1,14 @@
-// A remote server with an empty `url` in a project `.mcp.json`
+// A remote server with an empty `url` in a project `.mcp.json` or a committed `managed-mcp.json`
 // (docs/rules/mcp-remote-url-empty.md). Claude Code shows such a server as `not configured`
 // and never connects it. A plugin can ship such a placeholder for a connector. The user
 // configures it later. So the rule skips plugin files. It also skips a `both` file, the root
 // `.mcp.json` of a repository that is a plugin. There the project shows the placeholder as
-// `not configured`, which does no harm.
+// `not configured`, which does no harm. A plugin has no `managed-mcp.json` component, so the
+// rule reads that file in all directories.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
-import { mcpFileKind, REMOTE_SERVER_TYPES, serverMembers } from '../mcp-servers.ts'
+import { mcpConfigKind, REMOTE_SERVER_TYPES, serverMembers } from '../mcp-servers.ts'
 
 const name = 'mcp-remote-url-empty' as const
 
@@ -26,7 +27,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'empty' }> = {
   },
   create(context) {
     // A `both` file is a plugin file too, so it can hold a placeholder.
-    const kind = mcpFileKind(context.filename)
+    const kind = mcpConfigKind(context.filename)
     if (kind !== 'project') {
       return {}
     }
@@ -52,7 +53,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'empty' }> = {
 export const target = {
   name,
   language: 'json' as const,
-  files: ['**/.mcp.json'],
+  files: ['**/.mcp.json', '**/managed-mcp.json'],
 }
 
 export default rule
