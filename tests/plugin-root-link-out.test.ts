@@ -9,8 +9,8 @@ import json from '@eslint/json'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import claude from '../src/index.ts'
-import { readPluginAt } from '../src/plugin-manifest.ts'
-import { link, noLinks, tree } from './marketplace-tree.test-support.ts'
+import { readListedPluginAt, readPluginAt } from '../src/plugin-manifest.ts'
+import { link, marketplaceOf, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from './plugin-tree.test-support.ts'
 import { lintMarkdown } from './rule-tester.test-support.ts'
 
@@ -416,5 +416,16 @@ describe('readPluginAt', () => {
   })
   linked('gives no plugin for a root that links out of the repository', () => {
     expect(readPluginAt(linkedOut({}).dir)).toBeUndefined()
+  })
+  // A marketplace lists `plugins/p`, which has no `plugin.json`. Only `readListedPluginAt` gives
+  // a plugin for it, so the other callers of `readPluginAt` keep their reports (#384).
+  it('gives no plugin for a listed root with no manifest', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([{ name: 'p', source: './plugins/p' }]),
+      'plugins/p/README.md': '',
+    })
+    const dir = path.join(top, 'plugins', 'p')
+    expect(readPluginAt(dir)).toBeUndefined()
+    expect(readListedPluginAt(dir)).toMatchObject({ fields: {}, root: dir })
   })
 })
