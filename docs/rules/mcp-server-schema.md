@@ -53,8 +53,8 @@ The rule reports these faults of a server entry:
 
 For the last four faults, a `null` value is a fault too. Claude Code 2.1.304 skips each of these
 entries in a project `.mcp.json`, and names the field in `claude mcp list`.[^quickstart] It does
-not check `env` in a remote entry, `headers` or `oauth` in a stdio entry, or `oauth` in a `ws`
-entry. So the rule does not check them there.
+not check `env` in a remote entry, or `headers` and `oauth` in a stdio entry. It does not check
+`oauth` in a `ws` entry. So the rule does not check them there.
 
 A stdio entry has the `type` `stdio`, or no `type`. A remote entry has the `type` `http`,
 `streamable-http`, `sse` or `ws`. An entry with no `type` and a `url` gets one report only.

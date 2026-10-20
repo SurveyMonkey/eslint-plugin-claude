@@ -312,8 +312,8 @@ jsonTester.run('mcp-server-schema (valid shapes)', rule, {
       code: wrap('{"command": "x", "url": "https://x.test", "url": null}'),
       filename: project,
     },
-    // Claude Code 2.1.304 checks `env` in a stdio entry, `headers` in a remote entry, and `oauth`
-    // in an `http`, `streamable-http` or `sse` entry. It loads these entries.
+    // Claude Code 2.1.304 checks `env` in a stdio entry, and `headers` in a remote entry. It
+    // checks `oauth` in an `http`, `streamable-http` or `sse` entry. It loads these entries.
     {
       name: 'a stdio env object',
       code: wrap('{"command": "x", "env": {}}'),
@@ -598,7 +598,8 @@ it('reports only a url with a command and no type in a plugin manifest', () => {
   expect(ids(lintManifest('mcp-server-schema', root, rootFile))).toEqual([])
 })
 it('stays silent in a plugin on an entry that validate reports or that has no url', () => {
-  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio.
+  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio. The `env`
+  // entry was checked on validate 2.1.304.
   const entries = [
     { url: URL },
     { command: '', url: URL },

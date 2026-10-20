@@ -52,8 +52,8 @@ function objectFault(
   return value !== undefined && value.type !== 'Object' ? [{ node: value, messageId }] : []
 }
 
-/** The faults of the stdio entry `entry`: `command` is a string that is not empty, `args`, when
- *  present, is an array of strings, and `env`, when present, is an object. */
+/** The faults of the stdio entry `entry`. `command` is a string that is not empty. When present,
+ *  `args` is an array of strings, and `env` is an object. */
 function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
   const faults: { node: ValueNode; messageId: MessageIds }[] = []
   const command = lastMember(entry, 'command')?.value
@@ -76,8 +76,8 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
   return [...faults, ...objectFault(entry, 'env', 'envType')]
 }
 
-/** The `url` fault of the remote entry `entry`, whose `type` value is `type`: `url` is there and
- *  is a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports
+/** The `url` fault of the remote entry `entry`, whose `type` value is `type`. The `url` is there,
+ *  and is a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports
  *  in a project `.mcp.json`. A `${` reference can expand to any text, so the rule does not parse
  *  a URL that holds one. */
 function urlFaults(
@@ -97,9 +97,9 @@ function urlFaults(
   return [{ node: url, messageId: 'invalidUrl' }]
 }
 
-/** The faults of the remote entry `entry`, whose `type` value is the string `type`: the `url`
- *  fault, and `headers` that is not an object. Claude Code 2.1.304 also skips an `oauth` that is
- *  not an object, in each remote type but `ws`. */
+/** The faults of the remote entry `entry`, whose `type` value is the string `type`. They are the
+ *  `url` fault, and a `headers` that is not an object. Claude Code 2.1.304 also skips an `oauth`
+ *  that is not an object, in each remote type but `ws`. */
 function remoteFaults(
   entry: ValueNode,
   type: Extract<ValueNode, { type: 'String' }>,
@@ -137,9 +137,9 @@ function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 }
 
 /** The faults of the plugin server entry `entry`. Validate 2.1.302 passes an entry with a `url`
- *  and no `type` when the entry has a good stdio shape: a `command` that is not empty, `args` of
- *  strings, and an `env` object (2.1.304). It reports each other fault, so the result is
- *  `urlNoType` or nothing. */
+ *  and no `type` when the entry has a good stdio shape. That shape is a `command` that is not
+ *  empty, and `args` of strings. Validate 2.1.304 also needs an `env` object. It reports each
+ *  other fault, so the result is `urlNoType` or nothing. */
 function pluginFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
   if (stdioFaults(entry).length > 0) {
     return []
