@@ -308,6 +308,11 @@ describe('scanCommands', () => {
       ['echo', `\${x/>#/y}`],
       ['rm', '-rf', '$T'],
     ])
+    // A tab in the expansion is plain text, as a space is.
+    expect(commandsOf(`echo \${x:-a\tb}; rm -rf $T`)).toEqual([
+      ['echo', `\${x:-a\tb}`],
+      ['rm', '-rf', '$T'],
+    ])
   })
 
   it(`reads the commands of a substitution in a \${...} expansion`, () => {
