@@ -86,6 +86,19 @@ describe(`${name}: shell form`, () => {
     expect(shell('claude.EXE --enable-auto-mode')).toEqual(['removed'])
   })
 
+  it('reads a Windows path to claude in quotes, where the shell keeps each backslash', () => {
+    expect(shell('"C:\\Tools\\claude.exe" --enable-auto-mode')).toEqual(['removed'])
+    expect(shell("'C:\\Tools\\claude' --enable-auto-mode")).toEqual(['removed'])
+    expect(shell('env FOO=1 "C:\\Tools\\claude.exe" --enable-auto-mode')).toEqual(['removed'])
+    expect(shell('"C:\\Tools\\my-claude.exe" --enable-auto-mode')).toEqual([])
+  })
+
+  it('is silent for a Windows path out of quotes, because the shell removes each backslash', () => {
+    // bash runs `C:Toolsclaude.exe` and `C:claude.exe`, not claude.
+    expect(shell('C:\\Tools\\claude.exe --enable-auto-mode')).toEqual([])
+    expect(shell('C:\\claude.exe --enable-auto-mode')).toEqual([])
+  })
+
   it('reads a backslash, a quote that is not closed, and an assignment alone', () => {
     expect(shell('claude \\--enable-auto-mode')).toEqual(['removed'])
     expect(shell('claude --enable-auto-mode "unclosed')).toEqual(['removed'])
@@ -124,6 +137,40 @@ describe(`${name}: exec form`, () => {
     expect(exec('claude', ['--permission-mode', 'auto'])).toEqual([])
     expect(exec('claude', [])).toEqual([])
     expect(exec('claude', ['-p', 5, null, ['--enable-auto-mode']])).toEqual([])
+  })
+
+  it('reads past env and its assignments to the executable that env runs', () => {
+    expect(exec('env', ['FOO=1', 'claude', '--enable-auto-mode'])).toEqual(['removed'])
+    expect(exec('env', ['claude', '-p', '--enable-auto-mode'])).toEqual(['removed'])
+    expect(exec('env', ['A=1', 'B=2', '/usr/bin/claude', '--enable-auto-mode'])).toEqual([
+      'removed',
+    ])
+    const text = settings(
+      hooks('Stop', [command({ command: 'env', args: ['FOO=1', 'claude', '--enable-auto-mode'] })]),
+    )
+    const found = lintJson(name, text, FILES.project)
+    expect(found.map(({ column }) => column)).toEqual([88])
+  })
+
+  it('is silent for env with no claude, and for a flag before claude', () => {
+    expect(exec('env', ['FOO=1', 'node', '--enable-auto-mode'])).toEqual([])
+    expect(exec('env', ['--enable-auto-mode', 'claude'])).toEqual([])
+    expect(exec('env', ['FOO=1'])).toEqual([])
+    expect(exec('env', [])).toEqual([])
+    expect(exec('env', ['FOO=1', 5, 'claude', '--enable-auto-mode'])).toEqual([])
+    // The shell form does not skip an option of env, so the exec form does not.
+    expect(exec('env', ['-i', 'claude', '--enable-auto-mode'])).toEqual([])
+    expect(shell('env -i claude --enable-auto-mode')).toEqual([])
+  })
+
+  it('reads a Windows path with backslashes to claude', () => {
+    expect(exec('C:\\Tools\\claude.exe', ['--enable-auto-mode'])).toEqual(['removed'])
+    expect(exec('C:\\Tools\\claude', ['--enable-auto-mode'])).toEqual(['removed'])
+    expect(exec('env', ['FOO=1', 'C:\\Tools\\claude.exe', '--enable-auto-mode'])).toEqual([
+      'removed',
+    ])
+    expect(exec('C:\\Tools\\my-claude.exe', ['--enable-auto-mode'])).toEqual([])
+    expect(exec('C:\\claude\\node.exe', ['--enable-auto-mode'])).toEqual([])
   })
 
   it('reads a command in exec form as the executable, not as a shell line', () => {
@@ -173,6 +220,8 @@ describe(`${name}: the handlers and the files`, () => {
 // v2.1.300 removed `--sandbox` and `--no-sandbox` from `claude remote-control`. With one of them,
 // the server exits with code 1 and does not start
 // (https://code.claude.com/docs/en/errors#sandbox-is-not-supported-by-claude-remote-control).
+// The sandboxing page tells how to turn on the sandbox: set `sandbox.enabled` to true in a settings
+// file (https://code.claude.com/docs/en/sandboxing#what-the-sandbox-restricts).
 const shellCode = (text: string) => settings(hooks('Stop', [command({ command: text })]))
 const sandbox = (flag: string): RuleTester.TestCaseError => ({
   messageId: 'removedFromSubcommand',
@@ -267,9 +316,34 @@ describe(`${name}: the two kinds of removed flag`, () => {
       ],
       [
         'removedFromSubcommand',
-        'Claude Code removed "--sandbox" from "claude remote-control" in v2.1.300. With it, the server exits with code 1 and does not start. Remove the flag.',
+        'Claude Code removed "--sandbox" from "claude remote-control" in v2.1.300. With it, the server exits with code 1 and does not start. Remove the flag. To sandbox the sessions of the server, set "sandbox.enabled" to true in a settings file.',
       ],
     ])
+  })
+
+  it('gives the sandbox advice for a sandbox flag after env and in a Windows path', () => {
+    const message = (flag: string) =>
+      `Claude Code removed "${flag}" from "claude remote-control" in v2.1.300. With it, the server exits with code 1 and does not start. Remove the flag. To sandbox the sessions of the server, set "sandbox.enabled" to true in a settings file.`
+    const messages = (handler: object) =>
+      lintJson(name, settings(hooks('Stop', [handler])), FILES.project).map(
+        ({ message }) => message,
+      )
+    expect(
+      messages(
+        command({ command: 'env', args: ['FOO=1', 'claude', 'remote-control', '--sandbox'] }),
+      ),
+    ).toEqual([message('--sandbox')])
+    expect(
+      messages(
+        command({ command: 'C:\\Tools\\claude.exe', args: ['remote-control', '--no-sandbox'] }),
+      ),
+    ).toEqual([message('--no-sandbox')])
+    expect(
+      messages(command({ command: '"C:\\Tools\\claude.exe" remote-control --sandbox' })),
+    ).toEqual([message('--sandbox')])
+    expect(
+      messages(command({ command: 'env', args: ['--sandbox', 'claude', 'remote-control'] })),
+    ).toEqual([])
   })
 
   it('reports a removed flag once for each command string', () => {

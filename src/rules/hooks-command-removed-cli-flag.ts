@@ -2,14 +2,16 @@
 // (docs/rules/hooks-command-removed-cli-flag.md). `src/data/removed-cli-flags.ts` lists the flags.
 // `--enable-auto-mode` is gone since v2.1.111, and `--permission-mode auto` replaces it (the CLI
 // reference, "CLI flags"). v2.1.300 removed `--sandbox` and `--no-sandbox` from
-// `claude remote-control` (the error reference). A command in exec form (with `args`) is an
-// executable and its arguments. A command in shell form is a shell line, so the rule splits it into
-// the simple commands and their words, and checks each command that runs `claude`.
+// `claude remote-control` (the error reference). To sandbox the sessions, set `sandbox.enabled` to
+// true in a settings file (the sandboxing page, "What the sandbox restricts"). A command in exec
+// form (with `args`) is an executable and its arguments. A command in shell form is a shell line,
+// so the rule splits it into the simple commands and their words, and checks each command that
+// runs `claude`.
 import type { Rule } from 'eslint'
 import { REMOVED_FLAGS, type RemovedFlag } from '../data/removed-cli-flags.ts'
 import { docsUrl } from '../docs-url.ts'
 import { HOOKS_TARGET, handlersOf, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
-import { claudeArguments, isClaude } from '../shell-words.ts'
+import { claudeArguments, commandWordAt, isClaude } from '../shell-words.ts'
 
 const name = 'hooks-command-removed-cli-flag' as const
 
@@ -45,7 +47,7 @@ const rule: Rule.RuleModule = {
       removed:
         'Claude Code removed "{{flag}}" in {{version}}. Auto mode is in the Shift+Tab cycle. Use "--permission-mode auto" to start in it.',
       removedFromSubcommand:
-        'Claude Code removed "{{flag}}" from "claude {{subcommand}}" in {{version}}. With it, the server exits with code 1 and does not start. Remove the flag.',
+        'Claude Code removed "{{flag}}" from "claude {{subcommand}}" in {{version}}. With it, the server exits with code 1 and does not start. Remove the flag. To sandbox the sessions of the server, set "sandbox.enabled" to true in a settings file.',
     },
   },
   create(context) {
@@ -57,10 +59,15 @@ const rule: Rule.RuleModule = {
         }
         const args = memberOf(handler, 'args')?.value
         if (args?.kind === 'array') {
-          // Exec form: `command` is the executable, and each item of `args` is one argument.
+          // Exec form: `command` is the executable, and each item of `args` is one argument. The
+          // rule steps past `env` and its assignments to the executable that `env` runs.
           const values = args.items.map((item) => (item.kind === 'string' ? item.value : undefined))
-          for (const [at, item] of args.items.entries()) {
-            const removed = isClaude(command.value) ? removedFlagAt(values, at) : undefined
+          const words = [command.value, ...values.map((value) => value ?? '')]
+          const start = commandWordAt(words)
+          const claude = isClaude(words[start] ?? '')
+          const after = values.slice(start)
+          for (const [at, item] of args.items.slice(start).entries()) {
+            const removed = claude ? removedFlagAt(after, at) : undefined
             if (removed !== undefined) {
               context.report({ loc: item.loc, ...reportOf(removed) })
             }

@@ -5,6 +5,7 @@ import {
   commandsOf,
   commandWordAt,
   isAssignment,
+  isClaude,
   isPrinter,
   printedBy,
   scanCommands,
@@ -58,6 +59,22 @@ describe('commandWordAt', () => {
     expect(isAssignment('A_1=x')).toBe(true)
     expect(isAssignment('1A=x')).toBe(false)
     expect(isAssignment('--a=b')).toBe(false)
+  })
+})
+
+describe('isClaude', () => {
+  it('reads the last part of a path with slashes or backslashes', () => {
+    expect(isClaude('claude')).toBe(true)
+    expect(isClaude('/usr/local/bin/claude')).toBe(true)
+    expect(isClaude('C:\\Tools\\claude.exe')).toBe(true)
+    expect(isClaude('C:\\Tools\\claude')).toBe(true)
+    expect(isClaude('C:/Tools/Claude.EXE')).toBe(false)
+  })
+
+  it('takes no drive letter off a word that has no separator', () => {
+    // bash gives `C:claude.exe` for an unquoted `C:\claude.exe`.
+    expect(isClaude('C:claude.exe')).toBe(false)
+    expect(isClaude('C:\\claude\\node.exe')).toBe(false)
   })
 })
 
