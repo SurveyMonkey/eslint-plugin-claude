@@ -54,17 +54,18 @@ export function skillsPlugin(file: string): Plugin | undefined {
 
 /** The plugin at the plugin root `root`, for a rule that lints a file of the
  *  plugin other than the manifest. The result is undefined in the cases of
- *  `readPlugin`. */
+ *  `readPlugin`. A root that a `marketplace.json` lists, with no `plugin.json`,
+ *  also gives no plugin. */
 export function readPluginAt(root: string): Plugin | undefined {
   return pluginAt(root, false)
 }
 
 /** The plugin at the plugin root `root`, as `readPluginAt` gives it. A plugin
  *  root that a `marketplace.json` lists, with no `plugin.json`, also gives a
- *  plugin. Its `fields` are empty, because the entry is the manifest (ADR 001,
- *  Decision 10). An entry can have a key that replaces a default location.
- *  `isPluginRoot` cannot see the plugin of such an entry, so it gives no
- *  result. */
+ *  plugin. With no `plugin.json`, the entry is the manifest (ADR 001, Decision
+ *  10). This function does not read the entry, so the `fields` are empty. Such
+ *  a root whose entry has a key that replaces a default location gives no
+ *  plugin, because `isPluginRoot` gives `UNREADABLE` for it. */
 export function readListedPluginAt(root: string): Plugin | undefined {
   return pluginAt(root, true)
 }

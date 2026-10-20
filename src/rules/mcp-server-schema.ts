@@ -149,9 +149,9 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     if (kind === null) {
       return {}
     }
-    // Validate reads the manifest. When the plugin has a manifest, validate also reads a `plugin` or
-    // `both` file. These files get the plugin faults. Validate fails a plugin with no manifest, so
-    // its file gets each fault.
+    // Validate reads the manifest, so `plugin.json` gets the plugin faults. When the plugin has a
+    // manifest, validate also reads its `plugin` or `both` file, so that file gets them too.
+    // Validate fails a plugin with no manifest, so its file gets each fault.
     const validated =
       base === 'plugin.json' ||
       (kind !== 'project' && hasManifest(path.dirname(path.resolve(context.filename))) === true)

@@ -514,7 +514,8 @@ const badMcpServers = {
   legacy: { type: 'sse', url: 'https://x.test/sse' },
   relHelper: { type: 'http', url: 'https://x.test/mcp', headersHelper: './h.sh' },
   relCommand: { command: './server.js' },
-  // A `url` with no `type`, which `mcp-server-schema` reports in a project file and not in a plugin.
+  // A `url` with no `type`, which `mcp-server-schema` reports in a project file and not in a
+  // plugin with a manifest.
   noType: { url: 'https://x.test/mcp' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
