@@ -1,10 +1,10 @@
 // A server entry of `.mcp.json` with a bad shape (docs/rules/mcp-server-schema.md). Claude Code
 // skips such an entry and loads the others. The rule reads each fault in a project `.mcp.json` and
 // a committed `managed-mcp.json`. `claude plugin validate` 2.1.302 reports each fault of a plugin
-// entry but one: a `url` with a `command` and no `type`. So in a plugin, the rule reports that
-// fault only (rulings 14 and 20 of #355). Validate does not read a `both` file with no manifest, so
-// the rule reports each fault there. An entry with no `type` is a stdio server. Claude Code
-// skips a `sdk` entry with its own message, and #355 leaves that entry to it.
+// entry but one: a `url` with a `command` and no `type`. So in a plugin with a manifest, the rule
+// reports that fault only (rulings 14 and 20 of #355). Validate fails a plugin with no manifest,
+// so the rule reports each fault there (#384). An entry with no `type` is a stdio server. Claude
+// Code skips a `sdk` entry with its own message, and #355 leaves that entry to it.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -149,12 +149,12 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     if (kind === null) {
       return {}
     }
-    // Validate reads a `both` file with a manifest, so that file gets the plugin faults. Validate
-    // does not read a `both` file with no manifest, so that file gets each fault. A `plugin` file
-    // gets the plugin faults, with or without a manifest.
+    // Validate reads the manifest. It also reads a `plugin` or `both` file when the plugin has a
+    // manifest, so these files get the plugin faults. Validate fails a plugin with no manifest, so
+    // its file gets each fault.
     const validated =
-      kind === 'plugin' ||
-      (kind === 'both' && hasManifest(path.dirname(path.resolve(context.filename))) === true)
+      base === 'plugin.json' ||
+      (kind !== 'project' && hasManifest(path.dirname(path.resolve(context.filename))) === true)
     const faultsOf = validated ? pluginFaults : entryFaults
     return {
       Document(node) {
