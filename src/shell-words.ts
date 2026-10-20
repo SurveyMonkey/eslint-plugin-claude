@@ -114,7 +114,7 @@ export interface Command {
 
 /** The simple commands of a shell line. A command ends at `;`, `&`, `|`, a parenthesis, a backtick or a new line
  *  that no backslash joins. A `#` that starts a word, or that follows a redirect operator, starts a
- *  comment. The reader skips it to the next new line, or in backticks to the closing backtick. A
+ *  comment. The reader skips it to the next new line, or, in backticks, to the one that ends them. A
  *  backslash in a comment joins no lines. A quote or a backslash joins characters into one word. A
  *  quote is not part of the word. A command substitution in double quotes is part of the word, and
  *  holds quotes of its own. A `${...}` expansion is part of the word, with its spaces, operators and
@@ -209,7 +209,7 @@ export function scanCommands(line: string): Command[] {
       open = true
     } else if (char === '#' && (redirected || (!open && !glued))) {
       // A comment ends before the next new line. In a backtick substitution it also ends before
-      // the closing backtick. Each character in it, such as a quote, is plain text.
+      // the backtick that ends it. Each character in it, such as a quote, is plain text.
       const length = line.slice(i).search(ticks ? /[\n`]/ : /\n/)
       i = length === -1 ? line.length : i + length - 1
     } else if (char === '(') {
