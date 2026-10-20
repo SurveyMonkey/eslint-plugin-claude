@@ -19,8 +19,9 @@
 //   runs the docs watch check on the head map and the head snapshot. The page
 //   text of the snapshot takes the place of the live docs. It reads no live
 //   page, needs no key and runs no dry run. It exits 1 when the check finds a
-//   change or an error. A change means that the map changed and `update` did
-//   not run. A file that the gate cannot read goes to the steps below.
+//   change or an error. Usually a change means that the map changed and
+//   `update` did not run. A file that the gate cannot read goes to the steps
+//   below.
 // Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
 //   from a fork or from Dependabot gets no secret.
 // It classifies the live pages against the base state
