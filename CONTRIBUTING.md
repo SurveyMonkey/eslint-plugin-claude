@@ -173,14 +173,15 @@ request. It passes at once when the diff does not change `docs/docs-snapshot/` o
 `docs/rule-sources.json`.
 
 Else it compares the head snapshot with the base snapshot, for each page that the head map
-cites. The page hash and each block hash of the head can be the base. Then it runs `check` on
-the head state. The stored page text takes the place of the live docs. A change of the snapshot
-format or of the map then passes, when the docs change after `update`. This step reads no live page
-and needs no key. It fails when the map changed and `update` did not run, or when `check` has
-an error. Run `update` again, and push.
+cites. Each such page must have a base file and a head file with the same page hash and block
+hashes, and page text. When they do, it runs `check` on the head state. The stored page text
+takes the place of the live docs. So a change of the snapshot format or of the map passes, also
+when the docs change after `update`. This step reads no live page and needs no key. It fails
+when `check` finds a change or an error. Usually the map changed and `update` did not run. Run
+`update` again, and push.
 
-Else it runs the classifier on the base state, and the issue step in dry run, against the live
-docs. Then it runs `check` on the head state. It fails in these cases:
+When they do not, it runs the classifier on the base state, and the issue step in dry run,
+against the live docs. Then it runs `check` on the head state. It fails in these cases:
 
 - The dry run would open an issue or post a group issue comment for a block. No open issue or
   group issue comment has the key of that block. The rules do not count. The log names the

@@ -266,10 +266,10 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 
 1. It copies the base map, inventory, rule docs and snapshot to a temporary root.
 2. It compares the head snapshot with the base snapshot, for each page that the head map cites.
-   When the page hash and each block hash of the head is the base, the head stores no docs
-   change. Then the gate runs `check` on the head map and the head snapshot, and stops. The
-   stored page text takes the place of the live docs. It reads no live page and needs no key.
-   It fails when the check finds a change or an error.
+   Each such page must have a base file and a head file with the same page hash and block
+   hashes, and page text. Then the head stores no docs change. The gate runs `check` on the head map and the
+   head snapshot, and stops. The stored page text takes the place of the live docs. It reads no
+   live page and needs no key. It fails when the check finds a change or an error.
 3. Else it classifies the live pages against the base state, then runs the issue step in dry run.
    The dry run names each block that it would put in an issue or a group issue comment. The
    gate accepts such a block when the marker of an open issue or group issue comment has its
@@ -285,11 +285,12 @@ changed the snapshot format and no block hash. It failed the check four times, e
 docs change outside its diff. So step 2 does not compare such a head with the live docs. The
 hashes that count are the page `hash`, and the `id` and `hash` of each block, in page order.
 `bodyHash`, `text` and `sources` do not count. `update` makes them from the same page text, and
-a format change or a map change adds them. `check` with the stored text still finds two faults:
-a map hash that is not the snapshot hash, and a cited heading that the head does not store. The page text
-comes from the base file. When the base file has no text, it comes from the head file. The page
-hash is the same, so the two texts are the same. A page with no text in the two files, or with
-no base file, goes to step 3.
+a format change or a map change adds them. `check` with the stored text still finds faults. An
+example is a map hash that is not the snapshot hash. Another is a cited heading that the head
+does not store. The page text comes from the head file. `check` hashes it again, so a head text
+that is not the page hash fails. When the head file has no text, it comes from the base file,
+which has the same page hash. Some pages go to step 3: a page with no base file or no head file,
+or with no text in the two files. A file that the gate cannot read also goes to step 3.
 
 This decision declines two options from #419:
 
@@ -562,11 +563,12 @@ the old text is not available.
   later run gets an issue of its own, or a new digest with the other new blocks.
 - A new Jev version needs a new run of the spike before the pin moves.
 - The `docs-snapshot` check (Decision 4) needs `TYPESAFE_API_KEY` in a `pull_request` run of CI.
-  A pull request from a fork or from Dependabot gets no secret. When it changes the snapshot or
-  the map, and a page hash or a block hash changes, the check fails closed. A head whose hashes
-  are the base needs no key (Decision 4, step 2). When a hash changes, a docs change during the
-  pull request also fails the check. The author then runs `update` again. Each run of the check
-  that changes the state costs Jev calls.
+  A pull request from a fork or from Dependabot gets no secret. It can change the snapshot or
+  the map. When the gate does not compare the head with the base, the check then fails closed.
+  The base compare needs no key (Decision 4, step 2). It needs a base file and a head file with
+  the same hashes, and page text, for each cited page. Without the base compare, a docs change
+  during the pull request also fails the check. The author then runs `update` again. Each run
+  of the check that changes the state costs Jev calls.
 - The triage refresh merges with no person review (Decision 4). The project has one developer,
   and the rulesets "Require CI" and "Require CodeQL" have no review rule. A second developer,
   or a review rule, reopens this part of the decision. A refresh whose check fails stays open,

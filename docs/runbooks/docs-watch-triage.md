@@ -88,16 +88,17 @@ It writes `Part of #<n>`, not `Closes`, for the issue. The refresh pull request 
 
 The log names each failure. Do the steps for the failure that it names.
 
-The page hash and each block hash of the head snapshot can be the base. Then the log says that
-the gate compares the head with the base. It does not read the live docs, so a docs change after
-`update` does not fail it. Two failures are possible:
+First the gate examines each page that the head map cites. The page must have a base file and a
+head file with the same page hash and block hashes, and page text. When each page does, the log
+says that the gate compares the head with the base. It does not read the live docs, so a docs
+change after `update` does not fail it. Two failures are possible:
 
-- **The head snapshot is not the base snapshot.** The map changed and `update` did not run.
-  Run `node scripts/docs-watch.ts update` again, and push. If the docs changed, a hash can then
-  change, and the gate does the checks below.
+- **The head snapshot is not the base snapshot.** Usually the map changed and `update` did not
+  run. Run `node scripts/docs-watch.ts update` again, and push. If the docs changed, a hash can
+  then change, and the gate does the checks below.
 - **The check of the head has an error.** Do the steps of the same item below.
 
-When a hash changes, the gate does these checks:
+When a page does not, the gate does these checks:
 
 - **The dry run would open an issue or post a comment for a block with no key match.** No open
   issue or group issue comment has its key: its page, block and hash. The log names the kind,
@@ -123,8 +124,8 @@ When a hash changes, the gate does these checks:
   page shows more than one time. Correct it in the map and the footnote. `update` gives the same
   error until then. For a failed fetch, run the check again.
 - **No `TYPESAFE_API_KEY`.** A pull request from a fork or from Dependabot gets no secret. A
-  maintainer pushes the snapshot change from a branch of this repository. A head whose hashes
-  are the base needs no key.
+  maintainer pushes the snapshot change from a branch of this repository. The compare with the
+  base needs no key.
 - **The dry run failed, or the check of the head failed.** A step threw, or gave an output that
   the gate cannot read. The gate fails closed. Read the error, and run the check again when the
   cause is gone.
