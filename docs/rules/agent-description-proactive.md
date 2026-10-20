@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| practice | `**/*.md`, in the agent folders |
+| practice | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 The rule is `off` in `recommended`. The rule is a heuristic.
 

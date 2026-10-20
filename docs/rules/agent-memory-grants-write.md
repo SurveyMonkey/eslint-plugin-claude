@@ -37,8 +37,8 @@ when `tools` is absent or has no value, because the agent then inherits each too
 `tools` is neither a string nor a list of strings. `agent-frontmatter-schema` reports that fault.
 
 Both local agents in `.claude/agents/` and plugin agents take `memory` and `tools`. So the rule
-checks both. A plugin agent is in the `agents/` directory of a plugin, or in a file that the
-manifest key `agents` names. Other files get no report.
+checks both. A plugin agent is in the `agents/` directory of a plugin. When the manifest has the
+key `agents`, the files that it names replace that directory. Other files get no report.
 The rule ignores a file whose frontmatter does not parse.
 
 Fail:

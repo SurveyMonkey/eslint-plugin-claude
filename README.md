@@ -121,11 +121,11 @@ for `files`.
 | `recommended` | The rules for faults that the [Claude Code docs](https://code.claude.com/docs) describe. A heuristic rule can report a false positive, so it is off. |
 | `strict` | `recommended`, plus each rule that is still off, at `warn`. Use it to test the full rule set. |
 
-Each config turns on rules whose glob is `**/*.md`, such as the agent rules. A plugin manifest can
-name an agent file at any path, so each rule finds its files in code. So each config sets
+Each config turns on rules whose glob is `**/*.md`, such as the agent rules. So each config sets
 `markdown/gfm` with YAML frontmatter on each `.md` file. That replaces a `language` that an earlier
-block sets for those files. To narrow the `files` of a rule, follow
-[Change the files of a rule](#change-the-files-of-a-rule).
+block sets for those files. The agent rules have this glob because a plugin manifest can name an
+agent file at any path in the plugin. Each rule finds its files in code. To narrow the `files` of
+a rule, follow [Change the files of a rule](#change-the-files-of-a-rule).
 
 ## Rules
 

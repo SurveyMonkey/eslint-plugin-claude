@@ -59,11 +59,13 @@ letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` wo
 model ids differs by provider and by gateway.
 
 The rule checks local agents in `.claude/agents/` and plugin agents. A plugin agent is in the
-`agents/` directory of a plugin, or in a file that the manifest key `agents` names. A plugin agent ignores four of the fields. [`agent-plugin-ignored-fields`](agent-plugin-ignored-fields.md)
-reports them. This rule does not check the shape of `hooks` or `mcpServers`.
+`agents/` directory of a plugin. When the manifest has the key `agents`, the files that it names
+replace that directory. A plugin agent ignores four of the fields.
+[`agent-plugin-ignored-fields`](agent-plugin-ignored-fields.md) reports them. This rule does not
+check the shape of `hooks` or `mcpServers`.
 [`agent-mcp-servers-schema`](agent-mcp-servers-schema.md) checks `mcpServers` in a local agent.
 
-A file outside the agent folders gets no report, such as `docs/agents/a.md`. The rule ignores a
+A file that is not an agent file gets no report, such as `docs/agents/a.md`. The rule ignores a
 file with no frontmatter, and a file whose frontmatter does not parse.
 
 Fail:

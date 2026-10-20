@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| limit | `**/*.md`, in the agent folders |
+| limit | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 The rule is `off` in `recommended`. The rule is a heuristic, and it reads more than one file.
 

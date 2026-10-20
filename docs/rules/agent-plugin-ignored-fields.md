@@ -33,9 +33,9 @@ each of the four fields, and shows no error. The rule reports each key. The repo
 - `permissionMode`: copy the agent to `.claude/agents/` if it needs the field.
 - `initialPrompt`: remove the field.
 
-The rule checks an agent file in the `agents/` directory of a plugin, at any depth, and a file that
-the manifest key `agents` of a plugin names. A plugin root
-is a directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
+The rule checks an agent file in the `agents/` directory of a plugin, at any depth. When the
+manifest has the key `agents`, the files that it names replace that directory. A plugin root is a
+directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
 repository lists.
 
 A local agent can set each of the four fields, so the rule is silent there. A file outside the agent

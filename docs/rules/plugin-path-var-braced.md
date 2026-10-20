@@ -39,7 +39,8 @@ The rule reads these files, when they belong to a plugin:
 
 - `skills/<name>/SKILL.md`, and a `SKILL.md` at the plugin root.
 - A Markdown file at any depth below `commands/`.
-- A Markdown file at any depth below `agents/`, and each file that the manifest key `agents` names.
+- A Markdown file at any depth below `agents/`. When the manifest has the key `agents`, the files
+  that it names replace that directory.
 
 The rule makes no report in these cases:
 
