@@ -11,6 +11,7 @@ import { docsUrl } from '../docs-url.ts'
 import { enclosingMarketplace, entriesIn } from '../marketplace-file.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { lookup, type Plugin, readListedPluginAt, readPlugin } from '../plugin-manifest.ts'
+import { hasManifest } from '../plugin-root.ts'
 import { readJson, UNREADABLE } from '../skill-tree.ts'
 import { pluginAgents } from './skill-agent-exists.ts'
 
@@ -90,7 +91,12 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
         const wanted = agent.value.toLowerCase()
         const same = (other: string) => other.toLowerCase() === wanted
         // A scoped name holds `:`. One that does not start with this plugin names another plugin.
-        if (wanted.includes(':') && !wanted.startsWith(`${pluginName.toLowerCase()}:`)) {
+        // With no `plugin.json`, the entry name is the plugin name, and the rule does not read it.
+        // So the rule cannot tell which plugin a scoped name names.
+        if (
+          wanted.includes(':') &&
+          (!wanted.startsWith(`${pluginName.toLowerCase()}:`) || hasManifest(plugin.root) !== true)
+        ) {
           return
         }
         if (BUILT_IN_AGENTS.some(same)) {
