@@ -335,23 +335,30 @@ const hashesOf = (snapshot: Snapshot): string =>
   JSON.stringify([snapshot.hash, snapshot.blocks.map((block) => [block.id, block.hash])])
 
 // The page text of each page that the head map cites, by the URL that the
-// check reads. It is undefined in these cases: a page has no base file or no
-// head file, a hash of the head file is not the base hash, or no file has the
-// page text. It is also undefined when a file cannot be read.
+// check reads. It is undefined in these cases: a file of the head has other
+// hashes than the base file, a cited page has no base file or no head file,
+// or no file has the page text. It is also undefined when a file cannot be
+// read.
 function baseTexts(root: string, baseRoot: string): Map<string, string> | undefined {
   try {
     const head = loadSnapshots(root)
     const base = loadSnapshots(baseRoot)
+    // Each base file that the head also has, cited or not. `update` deletes
+    // the file of a page that the map does not cite, so a missing head file
+    // is correct.
+    for (const [name, was] of base) {
+      const now = head.get(name)
+      if (now !== undefined && hashesOf(was) !== hashesOf(now)) return undefined
+    }
     const texts = new Map<string, string>()
     for (const url of pagesOf(loadMap(root)).keys()) {
       const was = base.get(snapshotName(url))
       const now = head.get(snapshotName(url))
       const text = now?.text ?? was?.text
       if (was === undefined || now === undefined || text === undefined) return undefined
-      if (hashesOf(was) !== hashesOf(now)) return undefined
-      // The check hashes the head text again, so a head text that is not the
-      // page hash fails. When the head has no text, the base text has the
-      // same page hash.
+      // The check hashes the head text again, so a head text with another
+      // hash than the page hash fails. When the head has no text, the base
+      // file has the same page hash, and the check hashes the base text.
       texts.set(`${url}.md`, text)
     }
     return texts

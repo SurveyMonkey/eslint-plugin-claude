@@ -702,8 +702,9 @@ describe('a head that the gate does not compare with the base', () => {
     expect(code).toBe(0)
   })
 
-  // The check compares no block when the page hash is the same, so only the
-  // compare with the base sees a block that changed by hand.
+  // The check compares no block when the page hash is the same. So the base
+  // compare must send a block that changed by hand to the live path. The
+  // live path has the same limit: with a key, it can pass such a head.
   it.each([
     ['key', (block: { id: string }) => Object.assign(block, { id: `${block.id}-x` })],
     ['hash', (block: { hash: string }) => Object.assign(block, { hash: 'f'.repeat(64) })],
@@ -714,6 +715,33 @@ describe('a head that the gate does not compare with the base', () => {
       }),
     )
     expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('TYPESAFE_API_KEY is not set')
+    expect(code).toBe(1)
+  })
+
+  // `update` deletes the file of a page that the map does not cite. A head
+  // that keeps the file with other hashes stores a docs change.
+  it('compares a head with the live docs when an uncited page has new hashes', async () => {
+    const both: SourceMap = {
+      ...cited,
+      'b-rule': [{ url: SKILLS_URL, heading: 'Choose where skills load' }],
+    }
+    const edited = SKILLS.replace('decides which sessions', 'sets which sessions')
+    expect(edited).not.toBe(SKILLS)
+    const { root, base } = await repoWith(
+      async (dir) => {
+        await refresh(servePages({ [`${URL_}.md`]: PAGE, [`${SKILLS_URL}.md`]: edited }))(dir)
+        writeFileSync(path.join(dir, 'docs/rule-sources.json'), `${JSON.stringify(cited)}\n`)
+      },
+      servePages({ [`${URL_}.md`]: PAGE, [`${SKILLS_URL}.md`]: SKILLS }),
+      both,
+    )
+    expect(changed(root, base)).toEqual([
+      'docs/docs-snapshot/skills.json',
+      'docs/rule-sources.json',
+    ])
     const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
     expect(text).not.toContain('The gate compares the head with the base')
     expect(text).toContain('TYPESAFE_API_KEY is not set')
