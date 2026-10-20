@@ -122,7 +122,7 @@ rule that lacks the option that its row names.
 
 ## Deprecate and remove a rule
 
-An official Claude Code CLI tool can start to make the check of a built rule (ADR 001,
+A tool of the Claude Code CLI can start to make the check of a built rule (ADR 001,
 Decision 2). Then a minor release deprecates the rule, and the next major release removes it.
 
 ### Deprecate a rule
@@ -161,9 +161,9 @@ table. A user keeps its reports until the major release. No test lists the depre
 
 Do this in the major release that `availableUntil` names. Run each step in order.
 
-1. Delete `src/rules/<rule>.ts` and `tests/rules/<rule>.test.ts`. In `src/index.ts`, delete its
-   `import` line, its entry in `modules` and its entry in `recommended`. `pnpm typecheck` finds a
-   miss. Then delete its name from the group in `.eslint-doc-generatorrc.mjs`. Until you do,
+1. Delete `src/rules/<rule>.ts`, `tests/rules/<rule>.test.ts` and `tests/fixtures/<rule>/`, if
+   it exists. In `src/index.ts`, delete its `import` line, its entry in `modules` and its entry in
+   `recommended`. `pnpm typecheck` finds a miss. Then delete its name from the group in `.eslint-doc-generatorrc.mjs`. Until you do,
    `pnpm docs:check` stops with "names <rule>, which is not a rule".
 2. Run `pnpm docs:generate`. It removes the row of the rule from the README list. Delete
    `docs/rules/<rule>.md`, and the line of the rule in `docs/rules/index.md`. `pnpm docs:check`
@@ -183,6 +183,8 @@ Do this in the major release that `availableUntil` names. Run each step in order
    not run.
 7. Commit as `feat(<group>)!: remove <rule>`, with a `BREAKING CHANGE:` footer that names the
    tool. release-please reads the `!` to pick the version. Do not change the version by hand.
+   While the version is 0.x, `bump-minor-pre-major` in `release-please-config.json` makes `!` a
+   minor bump. Add a `Release-As: 1.0.0` footer when `availableUntil` is `1.0.0`.
 
 ## Docs watch
 

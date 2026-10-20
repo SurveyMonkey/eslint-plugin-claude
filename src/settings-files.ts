@@ -1,7 +1,7 @@
 // The committed settings of a `.claude/` directory. A rule that checks a
-// setting reads both files through `readSettings`. The one exception is
-// `agent-permission-mode-auto-unavailable`. It reads each file alone through
-// `readSiblingSettings`.
+// setting reads both files through `readSettings`. A rule that reads each file alone does
+// not use `readSettings`. It calls `readSiblingSettings` or reads the file itself. One example
+// is `agent-permission-mode-auto-unavailable`.
 //
 // Order: the settings page says that a key at a higher level overrides the
 // same key below it. `.claude/settings.local.json` is above
