@@ -124,7 +124,7 @@ const HTML_TITLE_LINES = 5
 // the line is not an opening tag, or when no closing tag follows it soon. The
 // scan stops at a line that starts another heading or a code fence.
 function readHtmlHeading(lines: string[], start: number) {
-  const open = HTML_OPEN.exec(lines[start] ?? '')
+  const open = HTML_OPEN.exec(lines[start] as string)
   if (!open) return undefined
   const level = Number(open[1])
   for (let end = start + 1; end <= start + HTML_TITLE_LINES + 1; end++) {
@@ -136,7 +136,7 @@ function readHtmlHeading(lines: string[], start: number) {
           .join(' ')
           .replace(/\s+/g, ' '),
       )
-      return { level, title, id: HTML_ID.exec(open[2] ?? '')?.[1], end }
+      return { level, title, id: HTML_ID.exec(open[2] as string)?.[1], end }
     }
     if (HTML_OPEN.test(line) || HEADING.test(line) || FENCE.test(line)) break
   }
@@ -164,7 +164,7 @@ export function splitBlocks(markdown: string): Block[] {
   const blocks: { level: number; title: string; id?: string; head: number; lines: string[] }[] = []
   let fence: string | null = null
   for (let index = 0; index < lines.length; index++) {
-    const line = lines[index] ?? ''
+    const line = lines[index] as string
     const mark = FENCE.exec(line)?.[1]
     if (fence) {
       if (mark && mark[0] === fence[0] && mark.length >= fence.length) fence = null
@@ -190,8 +190,8 @@ export function splitBlocks(markdown: string): Block[] {
       const match = HEADING.exec(line)
       if (match) {
         blocks.push({
-          level: match[1]?.length ?? 1,
-          title: stripInline(match[2] ?? ''),
+          level: (match[1] as string).length,
+          title: stripInline(match[2] as string),
           head: 1,
           lines: [line],
         })
@@ -248,8 +248,7 @@ export function resolveSource(
   if (matches.length > 1) {
     throw new Error(`${url}: heading "${heading}" (id ${id}) appears ${matches.length} times`)
   }
-  const [block] = matches
-  if (block === undefined) throw new Error(`${url}: heading "${heading}" is not on the page`)
+  const block = matches[0] as Block
   if (block.level === 1) {
     return { heading, id: block.id, hash: sha256(pageText), text: pageText }
   }
