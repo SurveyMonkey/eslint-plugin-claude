@@ -621,7 +621,7 @@ describe('a head whose page hashes and block hashes are the base', () => {
     const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
     expect(text).toContain(
       '1 page(s) of the head snapshot are not the base snapshot. ' +
-        'The map changed and `update` did not run. ' +
+        'Usually the map changed and `update` did not run. ' +
         'Run `node scripts/docs-watch.ts update` again, and push.',
     )
     expect(text).not.toContain('The head snapshot is the base snapshot.')

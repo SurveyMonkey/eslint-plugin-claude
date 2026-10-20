@@ -11,17 +11,17 @@
 // It copies the base files that the classifier reads to a temporary root:
 //   docs/rule-sources.json, docs/rules-inventory.md, docs/rules/ and
 //   docs/docs-snapshot/.
-// Then it compares the head snapshot with the base snapshot (#419). The
-//   compare reads each page that the head map cites. Each such page must
-//   have a base file and a head file. The page hash and each block hash of
-//   the two files must be the same. Then the head stores no docs change. The
-//   head file or the base file must also have the page text. Then the gate
-//   runs the docs watch check on the head map and the head snapshot. The page
+// Then it compares the head snapshot with the base snapshot (#419). Each
+//   base file that the head keeps must have the same page hash, and the same
+//   key and hash for each block, in page order. Then the head stores no docs
+//   change. Each page that the head map cites must also have a base file and
+//   a head file. One of the two must have the page text. Then the gate runs
+//   the docs watch check on the head map and the head snapshot. The page
 //   text of the snapshot takes the place of the live docs. It reads no live
 //   page, needs no key and runs no dry run. It exits 1 when the check finds a
 //   change or an error. Usually a change means that the map changed and
-//   `update` did not run. A file that the gate cannot read goes to the steps
-//   below.
+//   `update` did not run. One failed condition, or a file that the gate
+//   cannot read, sends the whole head to the steps below.
 // Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
 //   from a fork or from Dependabot gets no secret.
 // It classifies the live pages against the base state
@@ -387,7 +387,7 @@ async function checkHead(
     if (report.changed > 0) {
       lines.push(
         `${report.changed} page(s) of the head snapshot are not ${docs}. ` +
-          (against === 'live' ? 'The docs changed after `update`, or the map' : 'The map') +
+          (against === 'live' ? 'The docs changed after `update`, or the map' : 'Usually the map') +
           ' changed and `update` did not run. ' +
           'Run `node scripts/docs-watch.ts update` again, and push.',
       )
