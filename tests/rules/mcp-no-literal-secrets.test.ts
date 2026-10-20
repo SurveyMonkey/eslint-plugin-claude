@@ -85,9 +85,7 @@ it('reads a managed-mcp.json at a plugin root as a project file', () => {
   // A plugin has no `managed-mcp.json` component. So the rule reads the headers, and only the
   // servers in `mcpServers`.
   const file = path.join(repo({ 'p/.claude-plugin/plugin.json': '{}' }), 'p', 'managed-mcp.json')
-  expect(ids(lintJson(NAME, remote({ Authorization: 'Bearer abc123' }), file))).toEqual([
-    'secret',
-  ])
+  expect(ids(lintJson(NAME, remote({ Authorization: 'Bearer abc123' }), file))).toEqual(['secret'])
   const unwrapped = JSON.stringify({ a: { command: 'x', env: { API_KEY: 'abc123' } } })
   expect(ids(lintJson(NAME, unwrapped, file))).toEqual([])
 })
