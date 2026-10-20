@@ -8,7 +8,7 @@
 
 > An ESLint plugin that lints Claude Code configuration: CLAUDE.md, skills, subagents, hooks, settings, permissions, MCP servers, and plugin manifests.
 
-It checks skills, commands and hooks against the Claude Code docs. It runs on
+It checks each of these files against the Claude Code docs. It runs on
 [`@eslint/markdown`](https://github.com/eslint/markdown) and
 [`@eslint/json`](https://github.com/eslint/json).
 
