@@ -88,17 +88,19 @@ It writes `Part of #<n>`, not `Closes`, for the issue. The refresh pull request 
 
 The log names each failure. Do the steps for the failure that it names.
 
-First the gate examines each page that the head map cites. The page must have a base file and a
-head file with the same page hash and block hashes, and page text. When each page does, the log
-says that the gate compares the head with the base. It does not read the live docs, so a docs
-change after `update` does not fail it. Two failures are possible:
+First the gate compares the head snapshot with the base snapshot. Each base file that the head
+keeps must have the same hashes in the head. These are the page hash, and the key and hash of
+each block. Each page that the head map cites must have a base file and a head file. One of the
+two must have the page text. When each condition holds, the log says that the gate compares the
+head with the base. It does not read the live docs, so a docs change after `update` does not
+fail it. Two failures are possible:
 
 - **The head snapshot is not the base snapshot.** Usually the map changed and `update` did not
   run. Run `node scripts/docs-watch.ts update` again, and push. If the docs changed, a hash can
   then change, and the gate does the checks below.
 - **The check of the head has an error.** Do the steps of the same item below.
 
-When a page does not, the gate does these checks:
+When one condition fails, the gate does these checks:
 
 - **The dry run would open an issue or post a comment for a block with no key match.** No open
   issue or group issue comment has its key: its page, block and hash. The log names the kind,

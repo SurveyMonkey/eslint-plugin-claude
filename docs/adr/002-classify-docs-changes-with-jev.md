@@ -265,11 +265,12 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 `docs/rule-sources.json`. Else it does these steps:
 
 1. It copies the base map, inventory, rule docs and snapshot to a temporary root.
-2. It compares the head snapshot with the base snapshot, for each page that the head map cites.
-   Each such page must have a base file and a head file with the same page hash and block
-   hashes, and page text. Then the head stores no docs change. The gate runs `check` on the head map and the
-   head snapshot, and stops. The stored page text takes the place of the live docs. It reads no
-   live page and needs no key. It fails when the check finds a change or an error.
+2. It compares the head snapshot with the base snapshot. Each base file that the head keeps
+   must have the same hashes. Then the head stores no docs change. Each page that the head map
+   cites must also have a base file and a head file. One of the two must have the page text.
+   Then the gate runs `check` on the head map and the head snapshot, and stops. The stored page
+   text takes the place of the live docs. It reads no live page and needs no key. It fails when
+   the check finds a change or an error.
 3. Else it classifies the live pages against the base state, then runs the issue step in dry run.
    The dry run names each block that it would put in an issue or a group issue comment. The
    gate accepts such a block when the marker of an open issue or group issue comment has its
@@ -284,13 +285,15 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 changed the snapshot format and no block hash. It failed the check four times, each time for a
 docs change outside its diff. So step 2 does not compare such a head with the live docs. The
 hashes that count are the page `hash`, and the `id` and `hash` of each block, in page order.
-`bodyHash`, `text` and `sources` do not count. `update` makes them from the same page text, and
-a format change or a map change adds them. `check` with the stored text still finds faults. An
+The compare examines each base file that the head keeps, cited or not. `update` deletes the
+file of a page that the map does not cite, so a deleted file passes. `bodyHash`, `text` and
+`sources` do not count in the compare. `update` makes them from the same page text, and a
+format change or a map change adds them. `check` with the stored text still finds faults. An
 example is a map hash that is not the snapshot hash. Another is a cited heading that the head
 does not store. The page text comes from the head file. `check` hashes it again, so a head text
-that is not the page hash fails. When the head file has no text, it comes from the base file,
-which has the same page hash. Some pages go to step 3: a page with no base file or no head file,
-or with no text in the two files. A file that the gate cannot read also goes to step 3.
+with another hash than the page hash fails. When the head file has no text, it comes from the
+base file, which has the same page hash. One failed condition sends the whole head to step 3.
+A file that the gate cannot read also does.
 
 This decision declines two options from #419:
 
@@ -565,10 +568,10 @@ the old text is not available.
 - The `docs-snapshot` check (Decision 4) needs `TYPESAFE_API_KEY` in a `pull_request` run of CI.
   A pull request from a fork or from Dependabot gets no secret. It can change the snapshot or
   the map. When the gate does not compare the head with the base, the check then fails closed.
-  The base compare needs no key (Decision 4, step 2). It needs a base file and a head file with
-  the same hashes, and page text, for each cited page. Without the base compare, a docs change
-  during the pull request also fails the check. The author then runs `update` again. Each run
-  of the check that changes the state costs Jev calls.
+  The base compare needs no key (Decision 4, step 2). It needs the conditions of that step:
+  the same hashes, and stored page text for each cited page. Without the base compare, a docs
+  change during the pull request also fails the check. The author then runs `update` again.
+  Each run of the check that changes the state costs Jev calls.
 - The triage refresh merges with no person review (Decision 4). The project has one developer,
   and the rulesets "Require CI" and "Require CodeQL" have no review rule. A second developer,
   or a review rule, reopens this part of the decision. A refresh whose check fails stays open,

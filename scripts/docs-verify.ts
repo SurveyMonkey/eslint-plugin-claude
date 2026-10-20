@@ -12,14 +12,14 @@
 //   docs/rule-sources.json, docs/rules-inventory.md, docs/rules/ and
 //   docs/docs-snapshot/.
 // Then it compares the head snapshot with the base snapshot (#419). Each
-//   base file that the head keeps must have the same page hash, and the same
-//   key and hash for each block, in page order. Then the head stores no docs
-//   change. Each page that the head map cites must also have a base file and
-//   a head file. One of the two must have the page text. Then the gate runs
-//   the docs watch check on the head map and the head snapshot. The page
-//   text of the snapshot takes the place of the live docs. It reads no live
-//   page, needs no key and runs no dry run. It exits 1 when the check finds a
-//   change or an error. Usually a change means that the map changed and
+//   base file that the head keeps must have the same hashes in the head.
+//   These are the page hash, and the key and hash of each block, in page
+//   order. Then the head stores no docs change. Each page that the head
+//   map cites must also have a base file and a head file. One of the two
+//   must have the page text. Then the gate runs the docs watch check on the
+//   head map and the head snapshot. The page text of the snapshot takes the
+//   place of the live docs. It reads no live page, needs no key and runs no
+//   dry run. It exits 1 when the check finds a change or an error. Usually a change means that the map changed and
 //   `update` did not run. One failed condition, or a file that the gate
 //   cannot read, sends the whole head to the steps below.
 // Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
