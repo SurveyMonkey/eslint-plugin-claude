@@ -44,7 +44,7 @@ Which servers count depends on the file:
   one counts, as Claude Code replaces the earlier one.
 - When a plugin root is also the repository root, its `.mcp.json` is the project file too. The
   rule gives it the plugin count only. A later source of the plugin can replace a server of that
-  file, so the project can load more `alwaysLoad` servers than the rule counts.
+  file. So the project can load more `alwaysLoad` servers than the rule counts.
 
 The report is on the `alwaysLoad: true` of the first server that the linted file holds. For a
 server of a file that `plugin.json` names, the report is on the path in the manifest. A file with

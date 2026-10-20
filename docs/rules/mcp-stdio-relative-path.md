@@ -42,8 +42,8 @@ The rule leaves these cases alone:
 - A plugin `.mcp.json`. A plugin has `${CLAUDE_PLUGIN_ROOT}` for its own files. When a plugin
   root is also the repository root, its `.mcp.json` is the project file too. So the rule reads its
   `mcpServers` object. `mcp-plugin-root-paths` can report the same string there. The two fixes
-  conflict: `${CLAUDE_PLUGIN_ROOT}` is not set in the project, and the project directory is not
-  the plugin directory after install.
+  conflict. The project does not set `${CLAUDE_PLUGIN_ROOT}`. After install, the project directory
+  is not the plugin directory.
 - A value that is not a string, and an `args` value that is not a list.
 - A path under `.claude/`, which `mcp-json-location` reports.
 

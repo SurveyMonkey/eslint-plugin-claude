@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-server-schema, which reports a server entry of a project .mcp.json or a committed managed-mcp.json that Claude Code skips for its shape, such as a url with no type or an args value that is not an array of strings. In a plugin, it reports a url with a command and no type only, except at a repository root with no manifest.
+description: The ESLint rule claude/mcp-server-schema, which reports a server entry of a project .mcp.json or a committed managed-mcp.json that Claude Code skips for its shape, such as a url with no type or an args value that is not an array of strings. In a plugin, it reports a url with a command and no type only. A plugin at a repository root with no manifest gets each report.
 owner: brianespinosa
 created: 2026-10-17
 related_issues: [16, 355]
