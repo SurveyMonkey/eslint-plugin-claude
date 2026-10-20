@@ -52,6 +52,10 @@ it('reports a host that only looks like loopback', () => {
     'http://[::7f00:1]/mcp',
     'http://foo.localhost.evil.test/mcp',
     'http://localhost@evil.test/mcp',
+    'http://126.0.0.1/mcp',
+    'http://10.0.0.5/mcp',
+    'http://[::ffff:255.0.0.1]/mcp',
+    'http://[::ffff:63.0.0.1]/mcp',
   ]) {
     expect(ids(lintProject(NAME, at(url)))).toEqual(['insecure'])
   }

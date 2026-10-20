@@ -60,6 +60,28 @@ jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
       code: plugin('https://x.test/dl?f=db.json'),
       filename: manifest,
     },
+    // Validate 2.1.304 fails a URL that ends in a tab, a line break or a no-break space.
+    // It drops only spaces.
+    {
+      name: 'a bundle URL with a trailing tab',
+      code: plugin('https://x.test/db.mcpb\t'),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a trailing line break',
+      code: plugin('https://x.test/db.mcpb\n'),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a trailing no-break space',
+      code: plugin('https://x.test/db.mcpb '),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a leading space and a trailing space',
+      code: plugin(' https://x.test/db.mcpb '),
+      filename: manifest,
+    },
     // A path that leaves the plugin directory fails `claude plugin validate`.
     {
       name: 'a path out of the plugin',
@@ -128,6 +150,24 @@ jsonTester.run('mcp-project-plugin-bundle (invalid)', rule, {
       code: plugin('https://x.test/db.mcpb '),
       filename: manifest,
       errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/db.mcpb ' } }],
+    },
+    {
+      name: 'a bundle URL with two trailing spaces',
+      code: plugin('https://x.test/db.mcpb  '),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/db.mcpb  ' } }],
+    },
+    {
+      name: 'a dxt bundle URL with a scheme other than http, and a trailing space',
+      code: plugin('ftp://x.test/db.dxt '),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'ftp://x.test/db.dxt ' } }],
+    },
+    {
+      name: 'a bundle extension at the end of the query of a path',
+      code: plugin('./dl?f=a.mcpb'),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: './dl?f=a.mcpb' } }],
     },
     {
       name: 'a dxt extension at the end of the query',
