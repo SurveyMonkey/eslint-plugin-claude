@@ -8,12 +8,23 @@
 // It does not detect a rename, so a file moved out of the snapshot counts.
 //   When no path is in docs/docs-snapshot/, and docs/rule-sources.json did
 //   not change, it prints one line and exits 0.
-// Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
-//   from a fork or from Dependabot gets no secret.
 // It copies the base files that the classifier reads to a temporary root:
 //   docs/rule-sources.json, docs/rules-inventory.md, docs/rules/ and
-//   docs/docs-snapshot/. It classifies the live pages against that base
-//   state (scripts/docs-classify.ts). Then it runs the issue step in dry run
+//   docs/docs-snapshot/.
+// Then it compares the head snapshot with the base snapshot (#419). The
+//   compare reads each page that the head map cites. When the page hash and
+//   each block hash of the head file is the base file, the head stores no docs
+//   change. The base file or the head file must also have the page text. Then
+//   the gate runs the docs watch check on the head map and the head snapshot,
+//   with the page text of the snapshot in place of the live docs. It reads no
+//   live page, needs no key and runs no dry run. It exits 1 when the check
+//   finds a change or an error: the map changed and `update` did not run.
+//   A head file that the gate cannot read, or a page with no base file, goes
+//   to the steps below.
+// Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
+//   from a fork or from Dependabot gets no secret.
+// It classifies the live pages against the base state
+//   (scripts/docs-classify.ts). Then it runs the issue step in dry run
 //   on the findings (scripts/docs-issues.ts). The step logs each issue and
 //   comment that it would make, with the key of each block.
 // Then it reads the markers of the open issues and the tracked markers of
@@ -69,8 +80,15 @@ import {
   readGroup,
   trackedMarkersIn,
 } from './docs-issues.ts'
-import type { FetchText } from './docs-watch.ts'
-import { checkPages, fetchMarkdown, loadMap, loadSnapshots } from './docs-watch.ts'
+import type { FetchText, Snapshot } from './docs-watch.ts'
+import {
+  checkPages,
+  fetchMarkdown,
+  loadMap,
+  loadSnapshots,
+  pagesOf,
+  snapshotName,
+} from './docs-watch.ts'
 
 const MAP_FILE = 'docs/rule-sources.json'
 const SNAPSHOT_DIR = 'docs/docs-snapshot/'
@@ -310,11 +328,42 @@ async function dryRun({
   }
 }
 
-// Checks the head snapshot against the live docs.
+// The hashes that tell if a page changed: the page hash, and the key and
+// the hash of each block, in page order.
+const hashesOf = (snapshot: Snapshot): string =>
+  JSON.stringify([snapshot.hash, snapshot.blocks.map((block) => [block.id, block.hash])])
+
+// The page text of each page that the head map cites, by the URL that the
+// check reads. It is undefined when a page has no base file, when a hash of
+// the head file is not the hash of the base file, or when neither file has
+// the page text. It is also undefined when a file cannot be read.
+function baseTexts(root: string, baseRoot: string): Map<string, string> | undefined {
+  try {
+    const head = loadSnapshots(root)
+    const base = loadSnapshots(baseRoot)
+    const texts = new Map<string, string>()
+    for (const url of pagesOf(loadMap(root)).keys()) {
+      const was = base.get(snapshotName(url))
+      const now = head.get(snapshotName(url))
+      // The hashes are the same, so the head text, when the base has none, is the base text.
+      const text = was?.text ?? now?.text
+      if (was === undefined || now === undefined || text === undefined) return undefined
+      if (hashesOf(was) !== hashesOf(now)) return undefined
+      texts.set(`${url}.md`, text)
+    }
+    return texts
+  } catch {
+    return undefined
+  }
+}
+
+// Checks the head snapshot against the live docs, or against the base.
 async function checkHead(
   root: string,
   fetchText: FetchText,
+  against: 'live' | 'base',
 ): Promise<{ lines: string[]; failures: string[] }> {
+  const docs = against === 'live' ? 'the live docs' : 'the base snapshot'
   try {
     const report = await checkPages({
       map: loadMap(root),
@@ -322,13 +371,14 @@ async function checkHead(
       fetchText,
     })
     if (report.changed === 0 && report.errors.length === 0) {
-      return { lines: ['The head snapshot is the live docs.'], failures: [] }
+      return { lines: [`The head snapshot is ${docs}.`], failures: [] }
     }
     const lines: string[] = []
     if (report.changed > 0) {
       lines.push(
-        `${report.changed} page(s) of the head snapshot are not the live docs. ` +
-          'The docs changed after `update`, or the map changed and `update` did not run. ' +
+        `${report.changed} page(s) of the head snapshot are not ${docs}. ` +
+          (against === 'live' ? 'The docs changed after `update`, or the map' : 'The map') +
+          ' changed and `update` did not run. ' +
           'Run `node scripts/docs-watch.ts update` again, and push.',
       )
     }
@@ -395,24 +445,35 @@ export async function main(
   }
   const lines = ['# docs-snapshot', '', `Base: \`${base}\``, '']
   const failures: string[] = []
-  const key = env.TYPESAFE_API_KEY
-  if (!key) {
-    const message =
-      'TYPESAFE_API_KEY is not set, and the diff changes the docs watch state. ' +
-      'The gate needs the key for the dry run. ' +
-      'A pull request from a fork or from Dependabot gets no secret: a maintainer pushes the change.'
-    failures.push(message)
-    lines.push(message)
-  } else {
-    const run = deps.run ?? ghRunner
-    const repo =
-      repoFlag ??
-      env.GITHUB_REPOSITORY ??
-      run(['repo', 'view', '--json', 'nameWithOwner', '--jq', '.nameWithOwner']).trim()
-    const fetchText = fetchOnce(deps.fetchText ?? fetchMarkdown)
-    const baseRoot = mkdtempSync(path.join(tmpdir(), 'docs-verify-'))
-    try {
-      copyBase(git, baseSha, baseRoot)
+  const baseRoot = mkdtempSync(path.join(tmpdir(), 'docs-verify-'))
+  try {
+    copyBase(git, baseSha, baseRoot)
+    const texts = baseTexts(root, baseRoot)
+    const key = env.TYPESAFE_API_KEY
+    if (texts !== undefined) {
+      const head = await checkHead(root, async (url) => texts.get(url) as string, 'base')
+      lines.push(
+        'Each page hash and block hash of the head snapshot is the base. ' +
+          'The gate compares the head with the base, not with the live docs.',
+        '',
+        ...head.lines,
+        '',
+      )
+      failures.push(...head.failures)
+    } else if (!key) {
+      const message =
+        'TYPESAFE_API_KEY is not set, and the diff changes the docs watch state. ' +
+        'The gate needs the key for the dry run. ' +
+        'A pull request from a fork or from Dependabot gets no secret: a maintainer pushes the change.'
+      failures.push(message)
+      lines.push(message)
+    } else {
+      const run = deps.run ?? ghRunner
+      const repo =
+        repoFlag ??
+        env.GITHUB_REPOSITORY ??
+        run(['repo', 'view', '--json', 'nameWithOwner', '--jq', '.nameWithOwner']).trim()
+      const fetchText = fetchOnce(deps.fetchText ?? fetchMarkdown)
       const dry = await dryRun({
         baseRoot,
         repo,
@@ -421,12 +482,12 @@ export async function main(
         jev: { fetch: deps.fetch ?? fetch, key, wait: deps.wait },
         steps: { classify: deps.classify ?? classify, openIssues: deps.openIssues ?? openIssues },
       })
-      const head = await checkHead(root, fetchText)
+      const head = await checkHead(root, fetchText, 'live')
       lines.push(...dry.lines, '', ...head.lines, '')
       failures.push(...dry.failures, ...head.failures)
-    } finally {
-      rmSync(baseRoot, { recursive: true, force: true })
     }
+  } finally {
+    rmSync(baseRoot, { recursive: true, force: true })
   }
   lines.push(failures.length === 0 ? 'docs-snapshot: pass' : 'docs-snapshot: fail', '')
   const text = lines.join('\n')
