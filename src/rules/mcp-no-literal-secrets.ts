@@ -13,7 +13,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { HELPER_CREDENTIAL_WORDS } from '../data/mcp-credential-vars.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import { lastMembers, lintedServers, mcpFileKind } from '../mcp-servers.ts'
+import { isPluginMcpFile, lastMembers, lintedServers } from '../mcp-servers.ts'
 import { hasManifest } from '../plugin-root.ts'
 
 const name = 'mcp-no-literal-secrets' as const
@@ -101,13 +101,12 @@ const rule: JSONRuleDefinition<{ MessageIds: 'secret' }> = {
     },
   },
   create(context) {
-    // `validate` warns about a header value in a plugin file, and in a `both` file. A manifest
-    // holds plugin servers. `validate` fails a plugin with no `plugin.json` (v2.1.302), so the rule
-    // reads its headers.
-    const kind = mcpFileKind(context.filename)
+    // `validate` warns about a header value in a plugin file with a manifest, and in a `both` file
+    // with a manifest. A manifest holds plugin servers. `validate` fails a plugin with no
+    // `plugin.json` (v2.1.302), so the rule reads its headers.
     const plugin =
       path.basename(context.filename) === 'plugin.json' ||
-      ((kind === 'plugin' || kind === 'both') &&
+      (isPluginMcpFile(context.filename) &&
         hasManifest(path.dirname(path.resolve(context.filename))) === true)
     return {
       Document(node) {
