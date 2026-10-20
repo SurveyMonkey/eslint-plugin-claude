@@ -233,6 +233,12 @@ describe(`${name}: an unquoted variable in the command`, () => {
     // A `#` after a blank in it starts a comment, so the `)` on the next line ends the outer one.
     expect(line(`echo "$(echo \${ a # it')\n})" $F`)).toEqual(['unquoted'])
     expect(line(`F=$(jq -r .x); echo \${| rm -rf $F; }`)).toEqual(['destructive'])
+    // A `|`, a tab and a new line after `${` also open a substitution of commands.
+    for (const blank of ['| ', '\t', '\n']) {
+      expect(line(`echo "$(echo \${${blank}a # it')\n})" $F`), JSON.stringify(blank)).toEqual([
+        'unquoted',
+      ])
+    }
   })
 
   it('reads the commands after a case pattern in a substitution in an expansion', () => {
