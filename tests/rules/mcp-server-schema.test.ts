@@ -1,13 +1,14 @@
 // Claude Code skips a server entry of `.mcp.json` that has a bad shape, and still loads the others.
 // The rule reads each fault in a project `.mcp.json` and a committed `managed-mcp.json`.
-// `claude plugin validate` 2.1.302 reports each fault in a plugin but one. In a plugin, the rule
-// reports that one fault only: a `url` with a `command` and no `type`. The files glob is in
-// tests/configs.test.ts.
+// `claude plugin validate` 2.1.302 reports each fault in a plugin but one. In a plugin with a
+// manifest, the rule reports that one fault only: a `url` with a `command` and no `type`. The files
+// glob is in tests/configs.test.ts.
 import path from 'node:path'
 import { expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
 import {
   ids,
+  lintListedPluginFile,
   lintManifest,
   lintPluginFile,
   lintProject,
@@ -505,4 +506,12 @@ it('reports the url with a command only in the root file of a plugin repository 
   ).toEqual([])
   const code = '{"mcpServers": {"a": {"command": "x", "url": "https://x.test"}}}'
   expect(ids(lintRootPluginFile('mcp-server-schema', code))).toEqual(['urlNoType'])
+})
+// #384: `claude plugin validate` 2.1.302 fails a plugin with no `plugin.json` outright. So it does
+// not check the `.mcp.json` of such a plugin, and the rule reports each fault there.
+it('reports each fault case of a plugin .mcp.json that a marketplace lists with no manifest', () => {
+  expect(ids(lintListedPluginFile('mcp-server-schema', FAULTS))).toEqual(FAULT_IDS)
+  // A plugin file with no `mcpServers` wrapper has its server map at the top level.
+  const bare = JSON.stringify(JSON.parse(FAULTS).mcpServers)
+  expect(ids(lintListedPluginFile('mcp-server-schema', bare))).toEqual(FAULT_IDS)
 })

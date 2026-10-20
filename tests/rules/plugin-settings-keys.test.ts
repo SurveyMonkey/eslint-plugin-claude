@@ -4,7 +4,7 @@
 // because the rule finds the plugin root. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
+import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-settings-keys'
@@ -112,6 +112,43 @@ describe(RULE, () => {
     const files = { 'settings.json': '{"agent": "a"}' }
     const found = inManifest({ name: 'p', settings: { agent: 'b', model: 'x' } }, files)
     expect(keys(found)).toEqual([['unsupported', 'model']])
+  })
+})
+
+// A marketplace lists `plugins/p`, which has no `plugin.json`. The manifest is optional, and the
+// entry is then the manifest (manifest reference, "Manifest file"; ADR 001 Decision 10, #384).
+describe(`${RULE} (a listed plugin with no manifest)`, () => {
+  /** The messages for `text` as `plugins/p/settings.json`, with the marketplace entry `entry`. */
+  const listed = (text: string, entry: Record<string, unknown> = {}) => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([
+        { name: 'p', source: './plugins/p', ...entry },
+      ]),
+      'plugins/p/settings.json': text,
+    })
+    return lintPluginFile(RULE, GLOBS, path.join(top, 'plugins', 'p', 'settings.json'), text)
+  }
+
+  check('reports a dropped key in the root settings.json', () => {
+    const found = listed('{"agent": "a", "theme": "dark"}')
+    expect(found.map((m) => [m.messageId, m.message, m.column])).toEqual([
+      ['unsupported', message('theme'), 16],
+    ])
+  })
+
+  check('stays silent when the entry sets a key that replaces a default location', () => {
+    // The plugin-root check cannot model such a plugin, so no report rests on it (ADR 001
+    // Decision 10).
+    expect(listed('{"theme": "dark"}', { agents: ['./x.md'] })).toEqual([])
+  })
+
+  check('stays silent for the settings.json of a folder that no marketplace lists', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([{ name: 'p', source: './plugins/p' }]),
+      'plugins/q/settings.json': '{"theme": "dark"}',
+    })
+    const file = path.join(top, 'plugins', 'q', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
   })
 })
 

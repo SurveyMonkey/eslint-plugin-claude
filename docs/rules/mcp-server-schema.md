@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-server-schema, which reports a server entry of a project .mcp.json or a committed managed-mcp.json that Claude Code skips for its shape, such as a url with no type or an args value that is not an array of strings. In a plugin, it reports a url with a command and no type only. A plugin at a repository root with no manifest gets each report.
+description: The ESLint rule claude/mcp-server-schema, which reports a server entry of a project .mcp.json or a committed managed-mcp.json that Claude Code skips for its shape, such as a url with no type or an args value that is not an array of strings. In a plugin with a manifest, it reports a url with a command and no type only. A plugin with no manifest gets each report.
 owner: brianespinosa
 created: 2026-10-17
 related_issues: [16, 355]
@@ -54,19 +54,23 @@ The rule reads the `mcpServers` object of a project `.mcp.json` and of a committ
 component, and `claude plugin validate` 2.1.302 does not read the file. Of two members with one
 name, the last one counts, as `JSON.parse` keeps it.
 
-In a plugin, the rule reports one fault only: a `url` with no `type`, in an entry with a good stdio
-shape. That entry has a `command` that is not empty, and `args` of strings. `claude plugin
-validate` 2.1.302 passes that entry, but Claude Code skips it.[^http] Validate reports each other
-fault that makes Claude Code drop a plugin entry at load. It also reports a remote `url` that is
-not a valid absolute URL.[^validate] [^plugin] The rule reads a plugin `.mcp.json`, and the inline servers of
-`plugin.json`. It also reads the servers of each `.json` file that `mcpServers` names, and puts
-the report on that path in `plugin.json`. A directory counts as a plugin root when it holds
-`.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository lists it. The rule
-makes no report for a `.mcp.json` when it cannot read that directory.
+In a plugin with a manifest, the rule reports one fault only. That fault is a `url` with no `type`,
+in an entry with a good stdio shape. That entry has a `command` that is not empty, and `args` of
+strings. `claude plugin validate` 2.1.302 passes that entry, but Claude Code skips it.[^http]
+Validate reports each other fault that makes Claude Code drop a plugin entry at load. It also
+reports a remote `url` that is not a valid absolute URL.[^validate] [^plugin] The rule reads a
+plugin `.mcp.json`, and the inline servers of `plugin.json`. It also reads the servers of each
+`.json` file that `mcpServers` names, and puts the report on that path in `plugin.json`. A
+directory counts as a plugin root when it holds `.claude-plugin/plugin.json`, or when a
+`marketplace.json` of the repository lists it. The rule makes no report for a `.mcp.json` when it
+cannot read that directory.
+
+A plugin root that a `marketplace.json` lists can have no manifest. `claude plugin validate`
+2.1.302 fails such a plugin, and does not check its servers. So the rule reports each fault in the
+`.mcp.json` of a plugin with no manifest.
 
 When a plugin root is also the repository root, its `.mcp.json` is the project file too. Validate
-reads that file when the plugin has a manifest, so the rule reports the one fault above. With no
-manifest, validate does not read the file, so the rule reports each fault.
+reads that file when the plugin has a manifest, so the rule reports the one fault above.
 
 The rule leaves these cases alone:
 
@@ -77,8 +81,9 @@ The rule leaves these cases alone:
 - An empty remote `url`. The rule `mcp-remote-url-empty` reports it in a project `.mcp.json`. No
   rule reports it in a `managed-mcp.json`.
 - A `url` that holds a `${` reference, because the reference can expand to any text.
-- Each other fault in a plugin `.mcp.json` and in the servers of `plugin.json`. Validate reports
-  it. The root file of a repository that is a plugin with no manifest is not in this case.
+- Each other fault in the `.mcp.json` of a plugin with a manifest, and in the servers of
+  `plugin.json`. Validate reports it. The `.mcp.json` of a plugin with no manifest is not in this
+  case.
 - A path under `.claude/`, which Claude Code never reads. The rule `mcp-json-location` reports it.
 
 Fail:

@@ -514,7 +514,8 @@ const badMcpServers = {
   legacy: { type: 'sse', url: 'https://x.test/sse' },
   relHelper: { type: 'http', url: 'https://x.test/mcp', headersHelper: './h.sh' },
   relCommand: { command: './server.js' },
-  // A `url` with no `type`, which `mcp-server-schema` reports in a project file and not in a plugin.
+  // A `url` with no `type`, which `mcp-server-schema` reports in a project file and not in a
+  // plugin with a manifest.
   noType: { url: 'https://x.test/mcp' },
 }
 const badMcp = JSON.stringify({ mcpServers: badMcpServers })
@@ -6338,6 +6339,24 @@ describe('configs', () => {
     const legacy = (found: string[]) =>
       found.filter((report) => report.includes(': claude/command-legacy-format@'))
     expect(legacy(await reports(plugin.configs.recommended, e17Root))).toEqual(E17_REPORTS)
+  }, 30_000)
+
+  // #380: a `.claude` folder that is also a plugin root. Its `settings.json` is the project
+  // settings and the plugin default settings. One `agent` key gets one report.
+  it('reports one agent key once in a .claude folder that is also a plugin root', async () => {
+    const top = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-380-'))
+    try {
+      mkdirSync(path.join(top, '.git'))
+      mkdirSync(path.join(top, '.claude', '.claude-plugin'), { recursive: true })
+      writeFileSync(path.join(top, '.claude', '.claude-plugin', 'plugin.json'), '{"name": "p"}')
+      writeFileSync(path.join(top, '.claude', 'settings.json'), '{"agent": "ghost"}')
+      const agents = (found: string[]) => found.filter((report) => report.includes('agent-exists@'))
+      expect(agents(await reports(plugin.configs.strict, top))).toEqual([
+        '.claude/settings.json: claude/settings-agent-exists@1',
+      ])
+    } finally {
+      rmSync(top, { recursive: true, force: true })
+    }
   }, 30_000)
 
   it('turns each sandbox off rule on in strict only, on the files that it reads', () => {
