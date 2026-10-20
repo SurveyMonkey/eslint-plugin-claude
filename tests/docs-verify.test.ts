@@ -500,6 +500,14 @@ const counted = () => {
   return { reads, fetchText }
 }
 
+// Edits the snapshot file by hand, and keeps the page hash.
+const editSnapshot = (dir: string, edit: (snapshot: watch.Snapshot) => void) => {
+  const file = path.join(dir, SNAPSHOT)
+  const snapshot = JSON.parse(readFileSync(file, 'utf8')) as watch.Snapshot
+  edit(snapshot)
+  writeFileSync(file, `${JSON.stringify(snapshot, null, 2)}\n`)
+}
+
 const changed = (root: string, base: string) =>
   git(root, 'diff', '--name-only', base, 'HEAD').split('\n')
 
@@ -537,6 +545,40 @@ describe('a head whose page hashes and block hashes are the base', () => {
     expect(live.reads).toEqual([])
     expect(jev.calls).toEqual([])
     expect(gh.calls).toEqual([])
+  })
+
+  it('compares a new format with the base when the key is set, as in CI', async () => {
+    const { root, base } = await repoWith(reformat)
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const live = counted()
+    const jev = fakeJev()
+    const gh = fakeGh()
+    const { code, text } = await verify(root, base, {
+      fetchText: live.fetchText,
+      fetch: jev.fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The gate compares the head with the base, not with the live docs.')
+    expect(text).toContain('The head snapshot is the base snapshot.')
+    expect(text).not.toContain('The dry run')
+    expect(code).toBe(0)
+    expect(live.reads).toEqual([])
+    expect(jev.calls).toEqual([])
+    expect(gh.calls).toEqual([])
+  })
+
+  it('fails a head text that is not the page hash, and keeps each hash', async () => {
+    const { root, base } = await repoWith((dir) =>
+      editSnapshot(dir, (snapshot) => {
+        snapshot.text = `${snapshot.text}\nA line that the docs do not have.\n`
+      }),
+    )
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).toContain('The gate compares the head with the base')
+    expect(text).toContain('1 page(s) of the head snapshot are not the base snapshot.')
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
   })
 
   it('passes a head that adds the page text to a base with none, as in #388', async () => {
@@ -658,6 +700,24 @@ describe('a head that the gate does not compare with the base', () => {
     expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
     expect(text).toContain('The head snapshot is the live docs.')
     expect(code).toBe(0)
+  })
+
+  // The check compares no block when the page hash is the same, so only the
+  // compare with the base sees a block that changed by hand.
+  it.each([
+    ['key', (block: { id: string }) => Object.assign(block, { id: `${block.id}-x` })],
+    ['hash', (block: { hash: string }) => Object.assign(block, { hash: 'f'.repeat(64) })],
+  ])('compares a head with the live docs when only a block %s changed', async (_, edit) => {
+    const { root, base } = await repoWith((dir) =>
+      editSnapshot(dir, (snapshot) => {
+        edit(snapshot.blocks.find((block) => block.id === 'hooks') as watch.Snapshot['blocks'][0])
+      }),
+    )
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('TYPESAFE_API_KEY is not set')
+    expect(code).toBe(1)
   })
 
   it('compares a head with the live docs when no snapshot file has the page text', async () => {

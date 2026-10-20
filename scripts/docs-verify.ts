@@ -12,15 +12,15 @@
 //   docs/rule-sources.json, docs/rules-inventory.md, docs/rules/ and
 //   docs/docs-snapshot/.
 // Then it compares the head snapshot with the base snapshot (#419). The
-//   compare reads each page that the head map cites. When the page hash and
-//   each block hash of the head file is the base file, the head stores no docs
-//   change. The base file or the head file must also have the page text. Then
-//   the gate runs the docs watch check on the head map and the head snapshot.
-//   The page text of the snapshot takes the place of the live docs. It reads
-//   no live page, needs no key and runs no dry run. It exits 1 when the check
-//   finds a change or an error: the map changed and `update` did not run.
-//   A head file that the gate cannot read, or a page with no base file, goes
-//   to the steps below.
+//   compare reads each page that the head map cites. Each such page must
+//   have a base file and a head file. The page hash and each block hash of
+//   the two files must be the same. Then the head stores no docs change. The
+//   head file or the base file must also have the page text. Then the gate
+//   runs the docs watch check on the head map and the head snapshot. The page
+//   text of the snapshot takes the place of the live docs. It reads no live
+//   page, needs no key and runs no dry run. It exits 1 when the check finds a
+//   change or an error. A change means that the map changed and `update` did
+//   not run. A file that the gate cannot read goes to the steps below.
 // Else it needs TYPESAFE_API_KEY. With no key, it exits 1: a pull request
 //   from a fork or from Dependabot gets no secret.
 // It classifies the live pages against the base state
@@ -334,9 +334,9 @@ const hashesOf = (snapshot: Snapshot): string =>
   JSON.stringify([snapshot.hash, snapshot.blocks.map((block) => [block.id, block.hash])])
 
 // The page text of each page that the head map cites, by the URL that the
-// check reads. It is undefined in these cases: a page has no base file, a
-// hash of the head file is not the base hash, or no file has the page text.
-// It is also undefined when a file cannot be read.
+// check reads. It is undefined in these cases: a page has no base file or no
+// head file, a hash of the head file is not the base hash, or no file has the
+// page text. It is also undefined when a file cannot be read.
 function baseTexts(root: string, baseRoot: string): Map<string, string> | undefined {
   try {
     const head = loadSnapshots(root)
@@ -345,10 +345,12 @@ function baseTexts(root: string, baseRoot: string): Map<string, string> | undefi
     for (const url of pagesOf(loadMap(root)).keys()) {
       const was = base.get(snapshotName(url))
       const now = head.get(snapshotName(url))
-      // The hashes are the same, so the head text, when the base has none, is the base text.
-      const text = was?.text ?? now?.text
+      const text = now?.text ?? was?.text
       if (was === undefined || now === undefined || text === undefined) return undefined
       if (hashesOf(was) !== hashesOf(now)) return undefined
+      // The check hashes the head text again, so a head text that is not the
+      // page hash fails. When the head has no text, the base text has the
+      // same page hash.
       texts.set(`${url}.md`, text)
     }
     return texts
