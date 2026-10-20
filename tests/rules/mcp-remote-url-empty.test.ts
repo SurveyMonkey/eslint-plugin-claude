@@ -2,6 +2,8 @@
 // connects it. A plugin may ship such an entry as a placeholder. The files glob is in
 // tests/configs.test.ts.
 import path from 'node:path'
+import { expect, it } from 'vitest'
+import { ids, lintRootListedFile, lintRootPluginFile } from '../mcp-server-rule.test-support.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -111,4 +113,13 @@ jsonTester.run('mcp-remote-url-empty (message text)', rule, {
       ],
     },
   ],
+})
+
+// The root file of a repository that is a plugin is the project file too.
+it('reports in the root file of a plugin repository, in the mcpServers object only', () => {
+  const code = wrap('{"type": "http", "url": ""}')
+  expect(ids(lintRootPluginFile('mcp-remote-url-empty', code))).toEqual(['empty'])
+  expect(ids(lintRootListedFile('mcp-remote-url-empty', code))).toEqual(['empty'])
+  const unwrapped = '{"a": {"type": "http", "url": ""}}'
+  expect(ids(lintRootPluginFile('mcp-remote-url-empty', unwrapped))).toEqual([])
 })

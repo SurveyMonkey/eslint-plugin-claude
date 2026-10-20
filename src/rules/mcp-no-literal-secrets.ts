@@ -4,7 +4,7 @@
 // already warns about a header value that looks like a literal credential in a plugin MCP config.
 // So the rule reads `headers` in a project file and in `managed-mcp.json`. Validate does not read
 // a plugin with no `plugin.json`, so the rule reads its `headers` too. It does not read them in a
-// plugin with a manifest.
+// plugin with a manifest, or in a `both` file with a manifest.
 // The docs name no credential format. So a credential is a literal value under a name that ends
 // in a credential word (a heuristic). The docs list no `oauth` key for a secret, so the rule does not read `oauth`. A message never holds
 // the value.
@@ -101,11 +101,13 @@ const rule: JSONRuleDefinition<{ MessageIds: 'secret' }> = {
     },
   },
   create(context) {
-    // `validate` warns about a header value in a plugin file. A manifest holds plugin servers.
-    // `validate` fails a plugin with no `plugin.json` (v2.1.302), so the rule reads its headers.
+    // `validate` warns about a header value in a plugin file, and in a `both` file. A manifest
+    // holds plugin servers. `validate` fails a plugin with no `plugin.json` (v2.1.302), so the rule
+    // reads its headers.
+    const kind = mcpFileKind(context.filename)
     const plugin =
       path.basename(context.filename) === 'plugin.json' ||
-      (mcpFileKind(context.filename) === 'plugin' &&
+      ((kind === 'plugin' || kind === 'both') &&
         hasManifest(path.dirname(path.resolve(context.filename))) === true)
     return {
       Document(node) {

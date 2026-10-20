@@ -1,7 +1,14 @@
 // A `./` or `../` path in the `command` or `args` of a project `.mcp.json` resolves against the
 // directory where the user starts Claude Code, not against `.mcp.json`.
 import { expect, it } from 'vitest'
-import { ids, lintPluginFile, lintProject, mapOf } from '../mcp-server-rule.test-support.ts'
+import {
+  ids,
+  lintPluginFile,
+  lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
+  mapOf,
+} from '../mcp-server-rule.test-support.ts'
 
 const NAME = 'mcp-stdio-relative-path'
 const stdio = (server: unknown) => mapOf({ a: server })
@@ -69,4 +76,14 @@ it('stays silent in a plugin file, where a path resolves against the plugin', ()
 it('does not read a path under .claude/ or a map that is not an object', () => {
   expect(ids(lintProject(NAME, stdio({ command: './x' }), '.claude/.mcp.json'))).toEqual([])
   expect(ids(lintProject(NAME, '{"mcpServers": []}'))).toEqual([])
+})
+it('reports in the root file of a plugin repository, which is a project file too', () => {
+  expect(ids(lintRootPluginFile(NAME, stdio({ command: './server.js' })))).toEqual(['relative'])
+  expect(ids(lintRootListedFile(NAME, stdio({ command: './server.js' })))).toEqual(['relative'])
+  expect(ids(lintRootPluginFile(NAME, JSON.stringify({ a: { command: './s.js' } })))).toEqual([])
+})
+it('runs with the plugin check on the root file of a plugin repository', () => {
+  const code = stdio({ command: './server.js' })
+  expect(ids(lintRootPluginFile('mcp-plugin-root-paths', code))).toEqual(['relative'])
+  expect(ids(lintRootPluginFile(NAME, code))).toEqual(['relative'])
 })

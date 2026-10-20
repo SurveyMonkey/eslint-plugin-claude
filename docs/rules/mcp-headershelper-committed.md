@@ -31,12 +31,14 @@ of each user who trusts the folder. Each review of the repository must include i
 
 The rule reports each server that has a `headersHelper` string. The report is on the value. It
 reads the project `.mcp.json` only. It cannot know whether git tracks the file, so it treats each
-project `.mcp.json` as a committed file.
+project `.mcp.json` as a committed file. When a plugin root is also the repository root, its
+`.mcp.json` is the project file too. So the rule reads it.
 
 The rule leaves these cases alone:
 
-- A plugin `.mcp.json`, and the servers in `plugin.json`. A user installs a plugin on purpose. The
-  docs name the project `.mcp.json` and the local scope for the trust rule.
+- A plugin `.mcp.json` below the repository root, and the servers in `plugin.json`. A user
+  installs a plugin on purpose. The docs name the project `.mcp.json` and the local scope for the
+  trust rule.
 - A `headersHelper` that is not a string.
 - A path under `.claude/`, which `mcp-json-location` reports.
 

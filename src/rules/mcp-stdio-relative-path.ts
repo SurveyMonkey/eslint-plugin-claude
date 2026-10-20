@@ -3,7 +3,8 @@
 // user started it, not in the directory of `.mcp.json`. So `./server.js` fails when the user
 // starts Claude Code in a subdirectory. The rule reports a string that starts with `./` or `../`.
 // It reads each `args` item as one word, as the file lists them. This ESLint plugin has no shell
-// word splitter. A `${...}` start is silent. A plugin file is out of scope.
+// word splitter. A `${...}` start is silent. A plugin file is out of scope. A `both` file, the root
+// `.mcp.json` of a repository that is a plugin, is a project file too.
 // `mcp-project-dir-default` owns a `${CLAUDE_PROJECT_DIR}` with no default.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -27,13 +28,14 @@ const rule: JSONRuleDefinition<{ MessageIds: 'relative' }> = {
     },
   },
   create(context) {
+    // A `both` file is a project file too. The project reads the `mcpServers` object only.
     const kind = mcpFileKind(context.filename)
-    if (kind !== 'project') {
+    if (kind === null || kind === 'plugin') {
       return {}
     }
     return {
       Document(node) {
-        for (const member of serverMembers(node.body, kind)) {
+        for (const member of serverMembers(node.body, 'project')) {
           const server = keyOf(member.name)
 
           /** Report a string `value` of the field `field` that starts with `./` or `../`. */

@@ -1,6 +1,8 @@
 // Claude Code reads the servers of a project `.mcp.json` from the top-level `mcpServers`
 // object. A plugin `.mcp.json` may omit the wrapper. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
+import { expect, it } from 'vitest'
+import { ids, lintRootListedFile, lintRootPluginFile } from '../mcp-server-rule.test-support.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -152,4 +154,15 @@ jsonTester.run('mcp-json-servers-key (message text)', rule, {
       ],
     },
   ],
+})
+
+// The root file of a repository that is a plugin is the project file too, so it needs the wrapper.
+it('reports a root file of a plugin repository with no wrapper', () => {
+  const code = `{"db": ${server}}`
+  expect(ids(lintRootPluginFile('mcp-json-servers-key', code))).toEqual(['unwrapped'])
+  expect(ids(lintRootListedFile('mcp-json-servers-key', code))).toEqual(['unwrapped'])
+})
+it('stays silent for a root file of a plugin repository with the wrapper', () => {
+  const code = `{"mcpServers": {"db": ${server}}}`
+  expect(ids(lintRootPluginFile('mcp-json-servers-key', code))).toEqual([])
 })

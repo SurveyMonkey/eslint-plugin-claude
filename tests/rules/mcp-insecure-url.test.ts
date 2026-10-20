@@ -10,6 +10,8 @@ import {
   lintManifest,
   lintPluginFile,
   lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
   mapOf,
 } from '../mcp-server-rule.test-support.ts'
 
@@ -249,4 +251,10 @@ it('stays silent for a plugin directly under .claude/skills/', () => {
   expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), other))).toEqual([
     'insecureBundle',
   ])
+})
+it('reports in the root file of a plugin repository with no manifest, which validate does not read', () => {
+  expect(ids(lintRootListedFile(NAME, at('http://example.com/mcp')))).toEqual(['insecure'])
+})
+it('stays silent in the root file of a plugin repository with a manifest, which validate reads', () => {
+  expect(ids(lintRootPluginFile(NAME, at('http://example.com/mcp')))).toEqual([])
 })

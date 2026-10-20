@@ -1,5 +1,5 @@
-// Where an MCP server rule runs: a project `.mcp.json`, a plugin `.mcp.json`, and the manifest of
-// a plugin. The files are on disk, so the helpers use `Linter` and a repository with `.git`.
+// Where an MCP server rule runs: a project `.mcp.json`, a plugin `.mcp.json`, the root `.mcp.json`
+// of a repository that is a plugin, and the manifest of a plugin. The files are on disk, so the helpers use `Linter` and a repository with `.git`.
 import path from 'node:path'
 import { repo } from './agent-settings.test-support.ts'
 import { lintJson } from './rule-tester.test-support.ts'
@@ -30,6 +30,26 @@ export function lintListedPluginFile(name: string, code: string) {
     'p/README.md': '',
   })
   return lintJson(name, code, path.join(root, 'p', '.mcp.json'))
+}
+
+/** Lint `code` as the `.mcp.json` at the root of a repository that is a plugin with a manifest.
+ *  The file is the project config and the plugin config. */
+export function lintRootPluginFile(name: string, code: string, options: unknown[] = []) {
+  const root = repo({ '.claude-plugin/plugin.json': '{}' })
+  return lintJson(name, code, path.join(root, '.mcp.json'), options)
+}
+
+/** Lint `code` as the `.mcp.json` at the root of a repository with no manifest. The
+ *  `marketplace.json` of the repository lists the root with the source `"./"`. */
+export function lintRootListedFile(name: string, code: string, options: unknown[] = []) {
+  const root = repo({
+    '.claude-plugin/marketplace.json': JSON.stringify({
+      name: 'm',
+      owner: { name: 'o' },
+      plugins: [{ name: 'p', source: './' }],
+    }),
+  })
+  return lintJson(name, code, path.join(root, '.mcp.json'), options)
 }
 
 /** Lint `code` as the manifest of the plugin `p`, in a repository with `files`. */

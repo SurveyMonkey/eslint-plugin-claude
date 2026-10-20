@@ -9,6 +9,8 @@ import {
   lintManifest,
   lintPluginFile,
   lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
   mapOf,
 } from '../mcp-server-rule.test-support.ts'
 
@@ -254,4 +256,14 @@ it('reports a password that holds a dollar sign, and stays silent for a scheme w
 it('stays silent for a flag whose next item is not a string', () => {
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', 5] })))).toEqual([])
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', null] })))).toEqual([])
+})
+it('reads headers in the root file of a plugin repository with no manifest', () => {
+  const code = remote({ Authorization: 'Bearer abc123' })
+  expect(ids(lintRootListedFile(NAME, code))).toEqual(['secret'])
+})
+it('reads env, and not headers, in the root file of a plugin repository with a manifest', () => {
+  expect(ids(lintRootPluginFile(NAME, remote({ Authorization: 'Bearer abc123' })))).toEqual([])
+  expect(ids(lintRootPluginFile(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } })))).toEqual([
+    'secret',
+  ])
 })
