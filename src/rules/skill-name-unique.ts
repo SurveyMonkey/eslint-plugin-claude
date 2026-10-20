@@ -45,18 +45,25 @@ function shownPath(relative: string): string {
     .join('/')
 }
 
-/** True when Claude Code refuses a part of a command name. Claude Code loads no such
- *  name, and `skill-name-characters` reports it. So the rule compares no such name.
- *  The check is for each part alone: a space at the edge of one part is a fault. */
+/** True when Claude Code refuses a part of a skill or command name. Claude Code does not
+ *  use such a name, and `skill-name-characters` reports it. So the rule compares no such
+ *  name. The check is for each part alone: a space at the edge of one part is a fault.
+ *  A skill folder in a plugin is an exception: Claude Code loads it with hyphens in place
+ *  of the refused characters. The rule does not compare that folder name either. */
 function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
 
+/** The value of the field `name` when it is a non-empty string that Claude Code accepts,
+ *  else null. Claude Code ignores a refused `name` and loads the skill under its folder. */
+function loadedName(value: unknown): string | null {
+  return typeof value === 'string' && value !== '' && firstFault(value) === null ? value : null
+}
+
 /** The name from the field `name`, or the folder when the field is not a
- *  non-empty string. */
+ *  loaded name. */
 function skillName(fields: Record<string, unknown> | null, folder: string): string {
-  const given = fields?.name
-  return typeof given === 'string' && given !== '' ? given : folder
+  return loadedName(fields?.name) ?? folder
 }
 
 interface Entry {
@@ -77,7 +84,8 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
 
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
- *  entry. A file with a refused name has no entry. */
+ *  entry. A skill or command with a refused folder or file name has no entry,
+ *  unless the skill has a loaded `name`. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
@@ -141,7 +149,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             return
           }
           given = fm.data
-          if (typeof fm.data.name === 'string' && fm.data.name !== '') {
+          if (loadedName(fm.data.name) !== null) {
             const field = fm.fields.get('name')
             // A key that is an alias has a value but no field.
             if (field !== undefined) {
@@ -151,7 +159,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const own =
           file.kind === 'skill' ? skillName(given, file.names[0] as string) : file.names.join(':')
-        // Claude Code loads no refused name, so this file has no name to share.
+        // A refused folder or command name has no loaded name to share. A refused `name`
+        // field is already replaced by the folder name in `own`.
         if (refused(file.kind === 'skill' ? [own] : file.names)) {
           return
         }
