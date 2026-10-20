@@ -108,6 +108,34 @@ describe(RULE, () => {
     expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toHaveLength(1)
   })
 
+  // `claude plugin validate` 2.1.304 passes a root `settings.json` that is an array (#383).
+  check.each([
+    ['null', 'null'],
+    ['a string', '"theme"'],
+    ['an array', '[{"theme": "dark"}]'],
+    ['a number', '3'],
+  ])('reports a root settings.json that is %s, on the value', (_title, text) => {
+    const found = inFile(text)
+    expect(found).toHaveLength(1)
+    expect(found[0]).toMatchObject({
+      messageId: 'notObject',
+      message:
+        'The default settings of a plugin are not an object, so Claude Code takes no key from this file. Write an object with `agent` or `subagentStatusLine`.',
+      line: 1,
+      column: 1,
+      endColumn: text.length + 1,
+    })
+  })
+
+  check('reports a root settings.json that is not an object in a plugin with no manifest', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([{ name: 'p', source: './plugins/p' }]),
+      'plugins/p/settings.json': '[]',
+    })
+    const file = path.join(top, 'plugins', 'p', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '[]').map((m) => m.messageId)).toEqual(['notObject'])
+  })
+
   check('reports the manifest settings when the root settings.json sets a supported key', () => {
     const files = { 'settings.json': '{"agent": "a"}' }
     const found = inManifest({ name: 'p', settings: { agent: 'b', model: 'x' } }, files)
@@ -174,13 +202,13 @@ describe(`${RULE} (silent)`, () => {
     expect(inManifest({ name: 'p', settings })).toEqual([])
   })
 
-  check.each([
-    ['null', 'null'],
-    ['a string', '"theme"'],
-    ['an array', '[{"theme": "dark"}]'],
-    ['a number', '3'],
-  ])('stays silent for a root settings.json that is %s', (_title, text) => {
-    expect(inFile(text)).toEqual([])
+  // `plugin-manifest-location` reports a `settings.json` inside `.claude-plugin/`. Claude Code
+  // does not read it as the default settings, so this rule leaves it alone.
+  check('stays silent for a settings.json inside .claude-plugin/', () => {
+    const { dir } = pluginTree({ name: 'p' }, { '.claude-plugin/settings.json': '[]' })
+    const file = path.join(dir, '.claude-plugin', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
+    expect(lintPluginFile(RULE, GLOBS, file, '[]')).toEqual([])
   })
 
   check('stays silent for a manifest with no settings key', () => {

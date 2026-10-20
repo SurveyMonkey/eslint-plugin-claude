@@ -609,6 +609,10 @@ const TREE: Record<string, string> = {
   // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
   'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
   'plugins/loc/.claude-plugin/bin/tool': '',
+  // A `settings.json` inside `.claude-plugin/`, which `plugin-manifest-location` names, and a
+  // root `settings.json` that is not an object, which `plugin-settings-keys` reports (#383).
+  'plugins/loc/.claude-plugin/settings.json': '{"agent": "a"}',
+  'plugins/loc/settings.json': '[]',
   // The default `skills/` directory is in the `skills` key too. That entry is a report of
   // `plugin-skills-key-redundant-default`. Its loose file is a report of `skill-file-layout` only.
   // The loose file in `extra/` is a report of the manifest rule.
@@ -4194,6 +4198,7 @@ const EXPECTED = [
   'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',
   'plugins/msk2/monitors/monitors.json: claude/plugin-monitors-skill-exists@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
+  'plugins/loc/settings.json: claude/plugin-settings-keys@2',
   'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
   'plugins/bare/commands/c.md: claude/command-legacy-format@1',
   'plugins/bare/commands/c.md: claude/plugin-path-var-braced@2',
