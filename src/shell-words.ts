@@ -13,27 +13,6 @@ export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 /** How deep a quote and a substitution may nest before the reader gives up and takes the rest of the line. */
 const MAX_NESTING = 100
 
-/** True when the backslash at `at` in `line` escapes the next character: an odd count of
- *  backslashes ends at `at`. */
-function escapes(line: string, at: number): boolean {
-  let count = 0
-  while (line.charAt(at - count) === '\\') {
-    count++
-  }
-  return count % 2 === 1
-}
-
-/** True when the `#` at `at` in `line` starts a comment. `escaped` is true when a backslash escapes
- *  the character before it. The shell removes each backslash and new line pair, so the character
- *  before the pairs decides. Another escaped character, such as a space, stays in the word. */
-function startsComment(line: string, at: number, escaped: boolean): boolean {
-  let end = at - 1
-  while (escaped && line.charAt(end) === '\n' && escapes(line, end - 1)) {
-    end -= 2
-  }
-  return (!escaped || end < at - 1) && /[\s(;|&<>]/.test(line.charAt(end))
-}
-
 /** The index of the `)` that closes the `(` at `open` in `line`, or the last index. A quote, a backslash, a
  *  backtick and a nested substitution inside keep their own level. A comment inside ends at the next
  *  new line. A `#` in a `${...}` expansion starts no comment. */
@@ -42,11 +21,15 @@ function closingParen(line: string, open: number, nesting = 0): number {
     return line.length - 1
   }
   let depth = 0
-  // The open `${` expansions, and the index of the last escaped character.
+  // The open `${` expansions.
   let braces = 0
-  let escaped = -1
+  // True when the next character starts a word. The shell removes each backslash and new line
+  // pair first, so a pair keeps the value. A backslash in a comment joins no lines.
+  let boundary = true
   for (let i = open; i < line.length; i++) {
     const char = line.charAt(i)
+    const before: boolean = boundary
+    boundary = false
     if (char === "'") {
       const end = line.indexOf("'", i + 1)
       if (end === -1) {
@@ -59,23 +42,28 @@ function closingParen(line: string, open: number, nesting = 0): number {
       i = closingTick(line, i)
     } else if (char === '\\') {
       i++
-      escaped = i
-    } else if (char === '$' && line.charAt(i + 1) === '{') {
-      braces++
+      boundary = before && line.charAt(i) === '\n'
+    } else if (char === '$' && (line.charAt(i + 1) === '{' || line.charAt(i + 1) === '$')) {
+      // `$$` is a parameter, so a `{` after it opens no expansion.
+      braces += line.charAt(i + 1) === '{' ? 1 : 0
       i++
     } else if (char === '}' && braces > 0) {
       braces--
-    } else if (char === '#' && braces === 0 && startsComment(line, i, escaped === i - 1)) {
+    } else if (char === '#' && braces === 0 && before) {
       // A `#` that starts a word, or that follows a redirect operator, starts a comment, to the
-      // next new line. A quote or a parenthesis in it is plain text. A `#` after a `)` is not
-      // one: the reader does not know if that `)` closes a substitution, which the word goes on
-      // after.
+      // next new line. A quote or a parenthesis in it is plain text.
       const end = line.indexOf('\n', i)
       i = end === -1 ? line.length : end
+      boundary = true
     } else if (char === '(') {
       depth++
+      boundary = true
     } else if (char === ')' && --depth === 0) {
       return i
+    } else {
+      // A `#` after a `)` starts no comment. The reader does not know if that `)` closes a
+      // substitution. A word can go on after a substitution.
+      boundary = /[\s;|&<>]/.test(char)
     }
   }
   return line.length - 1
@@ -125,7 +113,8 @@ export interface Command {
  *  comment. The reader skips it to the next new line, or in backticks to the closing backtick. A
  *  backslash in a comment joins no lines. A quote or a backslash joins characters into one word. A
  *  quote is not part of the word. A command substitution in double quotes is part of the word, and
- *  holds quotes of its own. A `${...}` expansion is part of the word, with its spaces and operators. */
+ *  holds quotes of its own. A `${...}` expansion is part of the word, with its spaces, operators and
+ *  parentheses. A command substitution in it gives its own commands. */
 export function scanCommands(line: string): Command[] {
   const commands: Command[] = []
   let words: string[] = []
@@ -141,8 +130,8 @@ export function scanCommands(line: string): Command[] {
   let closed = false
   // True when the character before is a redirect operator, `<` or `>`.
   let redirect = false
-  // The open `${` expansions. A command substitution or a backtick pair in one starts with none.
-  // The stack keeps the count of each level outside.
+  // The open `${` expansions. A command substitution or a backtick pair starts with none. The
+  // stack keeps the count of the level outside each one.
   let braces = 0
   const outerBraces: number[] = []
   const enter = () => {
@@ -182,7 +171,7 @@ export function scanCommands(line: string): Command[] {
     } else if (char === '\\' && quote !== "'") {
       if (line.startsWith('\n', i + 1) || line.startsWith('\r\n', i + 1)) {
         // A backslash before a new line joins the two lines, and adds no character to the word.
-        // The character before the backslash stays the character before the next one.
+        // The next character keeps the state of the character before the backslash.
         i += line.charAt(i + 1) === '\r' ? 2 : 1
         closed = glued
         redirect = redirected
@@ -208,12 +197,17 @@ export function scanCommands(line: string): Command[] {
     } else if (char === "'" || char === '"') {
       quote = char
       open = true
-    } else if (char === '$' && line.charAt(i + 1) === '{') {
-      braces++
-      word += '${'
+    } else if (char === '$' && (line.charAt(i + 1) === '{' || line.charAt(i + 1) === '$')) {
+      // `$$` is a parameter, so a `{` after it opens no expansion.
+      braces += line.charAt(i + 1) === '{' ? 1 : 0
+      word += line.slice(i, i + 2)
       open = true
       i++
-    } else if (braces > 0 && (char === '}' || /[\s;|&]/.test(char))) {
+    } else if (
+      braces > 0 &&
+      (char === '}' || /[\s;|&)]/.test(char) || (char === '(' && line.charAt(i - 1) !== '$'))
+    ) {
+      // A parenthesis in the expansion is plain text, unless it starts a command substitution.
       braces -= char === '}' ? 1 : 0
       word += char
       open = true

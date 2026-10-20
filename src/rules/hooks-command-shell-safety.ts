@@ -49,71 +49,50 @@ function quoteEnd(text: string, start: number): number {
   return text.length
 }
 
-/** True when the backslash at `at` in `text` escapes the next character: an odd count of
- *  backslashes ends at `at`. */
-function escapes(text: string, at: number): boolean {
-  let count = 0
-  while (text.charAt(at - count) === '\\') {
-    count++
-  }
-  return count % 2 === 1
-}
-
-/** True when the `#` at `at` in `text` starts a word. `escaped` is true when a backslash escapes
- *  the character before it. `tick` is true when a backtick substitution is open. */
-function startsWord(text: string, at: number, escaped: boolean, tick: boolean): boolean {
-  const before = text.charAt(at - 1)
-  if (escaped) {
-    // The shell removes each backslash and new line pair, so the character before the pairs
-    // decides. Another escaped character, such as a space, stays in the word.
-    if (before !== '\n') {
-      return false
-    }
-    let end = at - 3
-    while (text.charAt(end) === '\n' && escapes(text, end - 1)) {
-      end -= 2
-    }
-    return /[\s(;|&<>]/.test(text.charAt(end))
-  }
-  // A redirect operator ends a word. A `#` after `)` or after a backtick that ends a
-  // substitution stays in the word, as in `src/shell-words.ts`. After a backtick that starts a
-  // substitution, it starts a word.
-  return /[\s(;|&<>]/.test(before) || (before === '`' && tick)
-}
-
 /** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A
  *  parenthesis in quotes, after a backslash or in a comment does not count. */
 function closingParen(text: string, open: number): number {
   let depth = 0
-  // The open `${` expansions, the index of the last escaped character, and if a backtick
-  // substitution is open.
+  // The open `${` expansions, and if a backtick substitution is open.
   let braces = 0
-  let escaped = -1
   let tick = false
+  // True when the next character starts a word. The shell removes each backslash and new line
+  // pair first, so a pair keeps the value. A backslash in a comment joins no lines.
+  let boundary = true
   for (let i = open; i < text.length; i++) {
     const char = text.charAt(i)
+    const before: boolean = boundary
+    boundary = false
     if (char === "'" || char === '"') {
       i = quoteEnd(text, i)
     } else if (char === '\\') {
       i++
-      escaped = i
-    } else if (char === '$' && text.charAt(i + 1) === '{') {
-      braces++
+      boundary = before && text.charAt(i) === '\n'
+    } else if (char === '$' && (text.charAt(i + 1) === '{' || text.charAt(i + 1) === '$')) {
+      // `$$` is a parameter, so a `{` after it opens no expansion.
+      braces += text.charAt(i + 1) === '{' ? 1 : 0
       i++
     } else if (char === '}' && braces > 0) {
       braces--
     } else if (char === '`') {
+      // A `#` after a backtick that starts a substitution starts a word. After a backtick that
+      // ends one, it stays in the word, as in `src/shell-words.ts`.
       tick = !tick
-    } else if (char === '#' && braces === 0 && startsWord(text, i, escaped === i - 1, tick)) {
-      // A `#` that starts a word starts a comment. A quote in it is plain text. The comment ends
-      // before the next new line. In a backtick substitution, it also ends before the backtick
-      // that ends the substitution. A `#` in a `${...}` expansion does not start a word.
+      boundary = tick
+    } else if (char === '#' && braces === 0 && before) {
+      // A `#` that starts a word, or that follows a redirect operator, starts a comment. A quote
+      // in it is plain text. The comment ends before the next new line. In a backtick
+      // substitution, it also ends before the backtick that ends the substitution.
       const length = text.slice(i).search(tick ? /[\n`]/ : /\n/)
       i = length === -1 ? text.length : i + length - 1
     } else if (char === '(') {
       depth++
+      boundary = true
     } else if (char === ')' && --depth === 0) {
       return i
+    } else {
+      // A `#` after a `)` stays in the word, as in `src/shell-words.ts`.
+      boundary = /[\s;|&<>]/.test(char)
     }
   }
   return text.length

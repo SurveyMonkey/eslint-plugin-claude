@@ -321,8 +321,53 @@ describe('scanCommands', () => {
       ['rm', '-rf', '$T'],
       ['}', 'a'],
     ])
+    // The `)` or the backtick that ends the substitution gives back the open expansion.
+    expect(commandsOf(`echo \${x:-$(a) #y}; rm -rf $T`)).toEqual([
+      ['echo', `\${x:-$`],
+      ['a'],
+      [' #y}'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf(`echo \${x:-\`a\` #y}; rm -rf $T`)).toEqual([
+      ['echo', `\${x:-`],
+      ['a'],
+      [' #y}'],
+      ['rm', '-rf', '$T'],
+    ])
     // A `)` with no `(` before it leaves no expansion open.
-    expect(commandsOf('a) b c')).toEqual([['a'], ['b', 'c']])
+    expect(commandsOf(`a) \${x} #y; b`)).toEqual([['a'], [`\${x}`]])
+  })
+
+  it(`reads a parenthesis in a \${...} expansion as plain text`, () => {
+    // bash prints `a(b` and `a)b`, then runs the next command.
+    expect(commandsOf(`echo \${x:-a(b} \${x:-a)b}; rm -rf $T`)).toEqual([
+      ['echo', `\${x:-a(b}`, `\${x:-a)b}`],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf(`: $(echo \${x//(/_}); rm -rf $T`)).toEqual([
+      [':', '$'],
+      ['echo', `\${x//(/_}`],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it('opens no expansion at a { after $$', () => {
+    // bash prints the process id and `{a`, then runs the next command.
+    expect(commandsOf('echo $${a; rm -rf $T')).toEqual([
+      ['echo', '$${a'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf(`echo "$(echo $\${a # ')\n)"; rm -rf $T`)).toEqual([
+      ['echo', `$(echo $\${a # ')\n)`],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it(`reads no comment in a nested \${...} expansion in a substitution`, () => {
+    expect(commandsOf(`x="$(echo \${@:-\${@} #*})" && rm -rf $T`)).toEqual([
+      [`x=$(echo \${@:-\${@} #*})`],
+      ['rm', '-rf', '$T'],
+    ])
   })
 
   it('reads no comment after an escaped character', () => {
@@ -368,6 +413,28 @@ describe('scanCommands', () => {
       ['rm', '-rf', '$T'],
     ])
     expect(commandsOf('echo a \\\n\\\n#b; rm -rf $T\nc')).toEqual([['echo', 'a'], ['c']])
+    // A backslash at the end of a comment joins no lines, so the next `#` follows a new line.
+    expect(commandsOf('echo "$(a #c\\\n\\\n#d \')\n)"; rm -rf $T')).toEqual([
+      ['echo', "$(a #c\\\n\\\n#d ')\n)"],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it('joins a # after an escaped character and line continuations to the word', () => {
+    // bash prints `a #b`: the escaped space stays in the word.
+    for (const escaped of [' ', ';', '>']) {
+      expect(commandsOf(`echo "$(echo a\\${escaped}\\\n#b)"\nrm -rf $T`)).toEqual([
+        ['echo', `$(echo a\\${escaped}\\\n#b)`],
+        ['rm', '-rf', '$T'],
+      ])
+    }
+  })
+
+  it('reads a comment after an earlier escaped character in the substitution', () => {
+    expect(commandsOf('echo "$(echo \\a # \')\n)"; rm -rf $T')).toEqual([
+      ['echo', "$(echo \\a # ')\n)"],
+      ['rm', '-rf', '$T'],
+    ])
   })
 
   it('reads a comment after a backtick that starts a substitution', () => {
@@ -409,6 +476,11 @@ describe('scanCommands', () => {
     ])
     expect(commandsOf('echo "$(echo \\>#x)"; rm -rf $T')).toEqual([
       ['echo', '$(echo \\>#x)'],
+      ['rm', '-rf', '$T'],
+    ])
+    // A quote or a backslash after the redirect operator starts its target.
+    expect(commandsOf('echo >"a"#b >\\a#c; rm -rf $T')).toEqual([
+      ['echo', '>a#b', '>a#c'],
       ['rm', '-rf', '$T'],
     ])
   })
