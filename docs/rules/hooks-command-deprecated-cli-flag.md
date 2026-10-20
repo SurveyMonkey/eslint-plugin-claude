@@ -27,13 +27,13 @@ generated:
 A hook can start Claude Code, for example to start a cloud session. The CLI reference calls `--remote` a
 deprecated alias for `--cloud`.[^flags] The rule reports a `command` hook that runs `claude` with `--remote`
 or `--remote=value`. It reads exec form and shell form. In exec form, it does not skip a wrapper such as
-`env`. [`hooks-command-removed-cli-flag`](hooks-command-removed-cli-flag.md) skips it.
+`env`, or a `NAME=value` item. [`hooks-command-removed-cli-flag`](hooks-command-removed-cli-flag.md) skips both.
 
 The rule does not report `--remote-control`, `--rc` or the `claude remote-control` command. These are other
 flags and commands.
 
 - **Exec form** (the handler sets `args`). The executable is `claude`, a path that ends in `claude`, or
-  `claude.exe`. A `/` or a `\` ends each directory of the path. The rule reports an item of `args` that is
+  `claude.exe`. A `/` or a `\` separates the directories of the path. The rule reports an item of `args` that is
   the flag, at the item.
 - **Shell form** (no `args`). The rule splits the line into simple commands and reads quotes and backslashes.
   It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`.

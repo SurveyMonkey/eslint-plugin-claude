@@ -78,10 +78,13 @@ describe('isClaude', () => {
   it('reads the name in lower case only, and the .exe in any case', () => {
     expect(isClaude('C:/Tools/claude.EXE')).toBe(true)
     expect(isClaude('C:/Tools/Claude.EXE')).toBe(false)
+  })
+
+  it('needs a literal dot before the exe', () => {
     expect(isClaude('claudeXexe')).toBe(false)
   })
 
-  it('takes no drive letter off a word that has no separator', () => {
+  it('keeps `C:claude.exe` whole, because it has no separator', () => {
     // bash gives `C:claude.exe` for an unquoted `C:\claude.exe`.
     expect(isClaude('C:claude.exe')).toBe(false)
     expect(isClaude('C:\\claude\\node.exe')).toBe(false)

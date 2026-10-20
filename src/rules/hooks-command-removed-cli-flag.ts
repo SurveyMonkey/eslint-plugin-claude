@@ -46,6 +46,8 @@ const rule: Rule.RuleModule = {
       // The advice of `removed` is for `--enable-auto-mode` only. A new global flag needs its own message.
       removed:
         'Claude Code removed "{{flag}}" in {{version}}. Auto mode is in the Shift+Tab cycle. Use "--permission-mode auto" to start in it.',
+      // The advice of `removedFromSubcommand` is for `remote-control --sandbox` and `--no-sandbox` only.
+      // A new subcommand flag needs its own message.
       removedFromSubcommand:
         'Claude Code removed "{{flag}}" from "claude {{subcommand}}" in {{version}}. With it, the server exits with code 1 and does not start. Remove the flag. To sandbox the sessions of the server, set "sandbox.enabled" to true in a settings file.',
     },

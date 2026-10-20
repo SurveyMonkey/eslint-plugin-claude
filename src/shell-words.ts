@@ -263,7 +263,7 @@ export function commandWordAt(words: string[]): number {
 }
 
 /** True when `word` runs Claude Code: `claude`, or a path that ends in it, with an optional `.exe`. A `/`
- *  or a `\` ends each directory of the path, as in `C:\Tools\claude.exe`. The name must be lower case. The
+ *  or a `\` separates the directories of the path, as in `C:\Tools\claude.exe`. The name must be lower case. The
  *  `.exe` can be in upper or lower case. */
 export function isClaude(word: string): boolean {
   const name = word.slice(Math.max(word.lastIndexOf('/'), word.lastIndexOf('\\')) + 1)

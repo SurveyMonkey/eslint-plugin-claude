@@ -36,8 +36,9 @@ A hook can start Claude Code, for example to run a headless check. The rule repo
   `claude --sandbox` and `claude mcp --sandbox` get no report. To sandbox the sessions of the server, set
   `sandbox.enabled` to `true` in a settings file.[^enable] The message gives this advice.
 
-The executable is `claude`, a path that ends in `claude`, or `claude.exe`. A `/` or a `\` ends each directory of
-the path, as in `C:\Tools\claude.exe`. The rule reads two forms of a command.
+The executable is `claude`, a path that ends in `claude`, or `claude.exe`. A `/` or a `\` separates the
+directories of the path, as in `C:\Tools\claude.exe`. In shell form, quote a path that has a `\`. The rule reads
+two forms of a command.
 
 - **Exec form** (the handler sets `args`). `command` is the executable.[^exec] The rule skips the wrappers `exec`,
   `env`, `command` and `nohup`, and the `NAME=value` items, as in shell form. So the `command` `env` with the
@@ -51,8 +52,11 @@ the path, as in `C:\Tools\claude.exe`. The rule reads two forms of a command.
 
 The rule does not know which global flags take a value. It finds the subcommand as a word `remote-control` before
 the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault. The rule does not
-skip an option of `env`, such as `-i`. In shell form, bash removes a backslash out of quotes, unless a backslash
-comes before it. So the shell line `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`, and the rule gives no report.
+skip an option of `env`, such as `-i`.
+
+In shell form, bash reads a backslash out of quotes as an escape. `\\` gives one backslash, and `\T` gives `T`.
+So the shell line `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`, and the rule gives no report.
+
 The rule reads no hidden file in `managed-settings.d/`, and no plugin agent, because Claude Code ignores the
 `hooks` field there.
 
