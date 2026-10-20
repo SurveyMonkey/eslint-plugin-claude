@@ -3,7 +3,7 @@
 // background set is gone when the subagent runs in the background, which is
 // the default. The tool `Agent` is gone at the depth limit.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { BACKGROUND_TOOL_NAMES, SUBAGENT_REMOVED_TOOLS, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
@@ -32,7 +32,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'background' | 'onlyAgent' }> =
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -76,7 +76,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'background' | 'onlyAgent' }> =
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

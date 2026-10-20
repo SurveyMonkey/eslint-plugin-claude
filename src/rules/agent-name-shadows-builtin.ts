@@ -3,7 +3,7 @@
 // scoped name, so it cannot shadow a built-in, and the rule checks only files
 // in `.claude/agents/`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -40,7 +40,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadows'
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename)?.plugin !== false) {
+    if (classifyLinted(context)?.plugin !== false) {
       return {}
     }
     const [{ allow }] = context.options
@@ -71,7 +71,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadows'
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

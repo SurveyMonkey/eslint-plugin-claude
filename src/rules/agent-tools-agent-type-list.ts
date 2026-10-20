@@ -2,7 +2,7 @@
 // agent runs as the main thread. In a subagent run Claude Code ignores the list
 // (docs/rules/agent-tools-agent-type-list.md). The `agent` setting makes an agent the main thread.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { mainAgentNames, projectAgentNames } from '../agent-project.ts'
 import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -52,7 +52,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null || scope.plugin) {
       return {}
     }
@@ -119,6 +119,6 @@ const rule: MarkdownRuleDefinition<{
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule
