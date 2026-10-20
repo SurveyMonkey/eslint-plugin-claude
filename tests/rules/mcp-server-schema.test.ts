@@ -562,8 +562,12 @@ it('reports each fault case of a managed-mcp.json in a directory that it cannot 
 // `type` in a plugin, and Claude Code skips that entry. So the rule reports it in a plugin too.
 // Validate fails each other fault there, and the rule stays silent on them.
 const URL = 'https://x.test/mcp'
-/** The servers of `FAULTS`, and the server `both`, which has a `url` and a `command`. */
-const pluginServers = { ...JSON.parse(FAULTS).mcpServers, both: { command: 'npx', url: URL } }
+/** The servers of `FAULTS`, and the server `both`, which has a `url` and a `command`. Its `env`
+ *  object is a good stdio shape, so the entry still gets the report. */
+const pluginServers = {
+  ...JSON.parse(FAULTS).mcpServers,
+  both: { command: 'npx', env: {}, url: URL },
+}
 /** The column of the `url` value of the server `both`, the last server of `code`. */
 const bothUrl = (code: string) => code.lastIndexOf(`"${URL}"`) + 1
 

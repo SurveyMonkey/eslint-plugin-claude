@@ -611,7 +611,7 @@ const TREE: Record<string, string> = {
   'plugins/loc/.claude-plugin/bin/tool': '',
   // A `settings.json` inside `.claude-plugin/`, which `plugin-manifest-location` names, and a
   // root `settings.json` that is not an object, which `plugin-settings-keys` reports (#383).
-  'plugins/loc/.claude-plugin/settings.json': '{"agent": "a"}',
+  'plugins/loc/.claude-plugin/settings.json': '{"theme": "dark"}',
   'plugins/loc/settings.json': '[]',
   // The default `skills/` directory is in the `skills` key too. That entry is a report of
   // `plugin-skills-key-redundant-default`. Its loose file is a report of `skill-file-layout` only.

@@ -246,13 +246,17 @@ describe(`${RULE} (silent)`, () => {
   check('stays silent for a settings.json that is not at the plugin root', () => {
     const { dir } = pluginTree({ name: 'p' }, { 'sub/settings.json': '{"theme": "dark"}' })
     const file = path.join(dir, 'sub', 'settings.json')
-    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
+    for (const text of ['{"theme": "dark"}', '[]', 'null']) {
+      expect(lintPluginFile(RULE, GLOBS, file, text)).toEqual([])
+    }
   })
 
   check('stays silent for a settings.json in a folder that is no plugin', () => {
     const top = tree({ 'settings.json': '{"theme": "dark"}' })
     const file = path.join(top, 'settings.json')
-    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
+    for (const text of ['{"theme": "dark"}', '[]', 'null']) {
+      expect(lintPluginFile(RULE, GLOBS, file, text)).toEqual([])
+    }
   })
 
   check('stays silent for a manifest that does not parse', () => {
