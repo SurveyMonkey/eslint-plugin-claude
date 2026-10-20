@@ -34,6 +34,8 @@ So the rule makes no report for the `.mcp.json` of a plugin with a manifest. It 
 servers of a `plugin.json` either. Validate 2.1.302 fails a plugin with no `plugin.json` ("No
 manifest found in directory"). On the marketplace, it does not read the `.mcp.json` of the plugin.
 So the rule reads the project `.mcp.json`, and the `.mcp.json` of a plugin with no manifest.
+When a plugin root with a manifest is also the repository root, validate reads its `.mcp.json`.
+So the rule skips that file, though it is the project file too.
 
 The rule reports a server whose `type` is `http`, `streamable-http`, `sse` or `ws`, and whose
 `url` has the scheme `http` or `ws`. The report is on the `url`. The scheme and the host match

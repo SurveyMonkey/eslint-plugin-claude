@@ -71,6 +71,30 @@ describe('mcpFileKind', () => {
     put(repo('p', '.claude-plugin', 'plugin.json'))
     expect(mcpFileKind(repo('p', '.mcp.json'))).toBe('plugin')
   })
+  it('is both for the root .mcp.json of a repository that is a plugin with a manifest', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(repo('.mcp.json'))).toBe('both')
+  })
+  it('is both for the root .mcp.json when a marketplace lists the root as "./"', () => {
+    const marketplace = { name: 'm', owner: { name: 'o' }, plugins: [{ name: 'p', source: './' }] }
+    put(repo('.claude-plugin', 'marketplace.json'), JSON.stringify(marketplace))
+    expect(mcpFileKind(repo('.mcp.json'))).toBe('both')
+  })
+  it('is both for the root .mcp.json when .git is a file, as in a worktree', () => {
+    const root = path.join(scratch, 'worktree')
+    put(path.join(root, '.git'), 'gitdir: elsewhere\n')
+    put(path.join(root, '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(path.join(root, '.mcp.json'))).toBe('both')
+  })
+  it('is plugin for a plugin root below the repository root', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    put(repo('p', '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(repo('p', '.mcp.json'))).toBe('plugin')
+  })
+  it('is plugin for a plugin root with no .git, such as an installed copy', () => {
+    put(path.join(scratch, 'outside', '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(path.join(scratch, 'outside', '.mcp.json'))).toBe('plugin')
+  })
   it('is null for a path under .claude/, even in a plugin', () => {
     put(repo('p', '.claude-plugin', 'plugin.json'))
     expect(mcpFileKind(repo('.claude', '.mcp.json'))).toBeNull()
@@ -134,6 +158,10 @@ describe('serverMembers', () => {
   it('reads the top-level object of a plugin file with no wrapper only', () => {
     expect(namesOf('{"a": {}, "b": {}}', 'plugin')).toEqual(['a', 'b'])
     expect(namesOf('{"a": {}, "b": {}}', 'project')).toEqual([])
+  })
+  it('reads the wrapper of a file of both kinds, or the top-level object with no wrapper', () => {
+    expect(namesOf('{"mcpServers": {"a": {}}, "b": {}}', 'both')).toEqual(['a'])
+    expect(namesOf('{"a": {}, "b": {}}', 'both')).toEqual(['a', 'b'])
   })
   it('gives nothing for a wrapper or a body that is not an object', () => {
     expect(namesOf('{"mcpServers": []}', 'plugin')).toEqual([])

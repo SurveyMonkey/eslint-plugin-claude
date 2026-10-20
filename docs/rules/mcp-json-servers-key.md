@@ -41,8 +41,9 @@ cause:
 The rule skips the `.mcp.json` at the root of a plugin. The docs say that such a file can omit the
 `mcpServers` wrapper. Then the servers are at the top level.[^plugin] A directory counts as a plugin
 root when it holds `.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository
-lists it. The rule makes no report when it cannot read that
-directory.
+lists it. The rule makes no report when it cannot read that directory. When a plugin root is also
+the repository root, its `.mcp.json` is the project file too. So it needs the wrapper, and the rule
+reads it.
 
 The rule does not check the entries inside the object. It also skips the paths under `.claude/`,
 which `mcp-json-location` reports.

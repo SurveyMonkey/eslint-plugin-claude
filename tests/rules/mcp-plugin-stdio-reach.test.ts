@@ -7,7 +7,12 @@ import { Linter } from 'eslint'
 import { expect, it } from 'vitest'
 import plugin from '../../src/index.ts'
 import { repo } from '../agent-settings.test-support.ts'
-import { ids, mapOf } from '../mcp-server-rule.test-support.ts'
+import {
+  ids,
+  lintRootListedFile,
+  lintRootPluginFile,
+  mapOf,
+} from '../mcp-server-rule.test-support.ts'
 
 const NAME = 'mcp-plugin-stdio-reach'
 const ON = [{ targets: ['claude-ai'] }]
@@ -100,4 +105,9 @@ it('reads the last command member and the last type member', () => {
   expect(ids(pluginFile(server))).toEqual(['stdio'])
   const remote = '{"mcpServers": {"a": {"type": "stdio", "type": "http", "command": "x"}}}'
   expect(ids(pluginFile(remote))).toEqual([])
+})
+it('reports in the root file of a plugin repository', () => {
+  const code = mapOf({ db: stdio })
+  expect(ids(lintRootPluginFile(NAME, code, ON))).toEqual(['stdio'])
+  expect(ids(lintRootListedFile(NAME, code, ON))).toEqual(['stdio'])
 })

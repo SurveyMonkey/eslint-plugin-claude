@@ -34,7 +34,9 @@ A plugin can ship an entry with an empty `url` as a placeholder for a connector 
 configures later. Claude Code does not report that entry as an error.[^status] So the rule skips the
 `.mcp.json` at the root of a plugin. A directory counts as a plugin root when it holds
 `.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository lists it. The rule
-makes no report when it cannot read that directory.
+makes no report when it cannot read that directory. When a plugin root is also the repository root,
+its `.mcp.json` is a plugin file too. So the rule skips it. The project then shows the placeholder
+as `not configured`.
 
 The rule leaves these cases alone:
 

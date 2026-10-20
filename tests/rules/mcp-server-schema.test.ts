@@ -6,7 +6,14 @@
 import path from 'node:path'
 import { expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
-import { ids, lintManifest, lintPluginFile, lintProject } from '../mcp-server-rule.test-support.ts'
+import {
+  ids,
+  lintManifest,
+  lintPluginFile,
+  lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
+} from '../mcp-server-rule.test-support.ts'
 import {
   chmodCannotBlock,
   jsonTester,
@@ -485,4 +492,17 @@ it('stays silent on a plugin .mcp.json in a directory that it cannot read', () =
     lintJson('mcp-server-schema', code, path.join(root, 'p', '.mcp.json')),
   )
   expect(ids(found)).toEqual([])
+})
+// `claude plugin validate` reads the root file of a repository that is a plugin with a manifest. It
+// does not read that root file when the plugin has no manifest, so the project check runs there.
+it('reports each fault in the root file of a plugin repository with no manifest', () => {
+  const code = '{"mcpServers": {"a": {"command": 5}}}'
+  expect(ids(lintRootListedFile('mcp-server-schema', code))).toEqual(['commandType'])
+})
+it('reports the url with a command only in the root file of a plugin repository with a manifest', () => {
+  expect(
+    ids(lintRootPluginFile('mcp-server-schema', '{"mcpServers": {"a": {"command": 5}}}')),
+  ).toEqual([])
+  const code = '{"mcpServers": {"a": {"command": "x", "url": "https://x.test"}}}'
+  expect(ids(lintRootPluginFile('mcp-server-schema', code))).toEqual(['urlNoType'])
 })

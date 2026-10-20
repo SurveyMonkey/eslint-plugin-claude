@@ -2,7 +2,8 @@
 // (docs/rules/mcp-project-dir-default.md). Claude Code sets the variable in the environment of the
 // server it starts. It does not set it in its own environment, where `${VAR}` expansion reads it.
 // So `command` and `args` need a default such as `${CLAUDE_PROJECT_DIR:-.}`. A plugin config
-// substitutes the variable directly, so the rule skips plugin files.
+// substitutes the variable directly, so the rule skips plugin files. A `both` file, the root
+// `.mcp.json` of a repository that is a plugin, is a project file too, so the rule reads it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
@@ -26,13 +27,14 @@ const rule: JSONRuleDefinition<{ MessageIds: 'noDefault' }> = {
     },
   },
   create(context) {
+    // A `both` file is a project file too. The project reads the `mcpServers` object only.
     const kind = mcpFileKind(context.filename)
-    if (kind !== 'project') {
+    if (kind === null || kind === 'plugin') {
       return {}
     }
     return {
       Document(node) {
-        for (const member of serverMembers(node.body, kind)) {
+        for (const member of serverMembers(node.body, 'project')) {
           const server = keyOf(member.name)
 
           /** Report a string `value` of the field `field` that holds a bare reference. */

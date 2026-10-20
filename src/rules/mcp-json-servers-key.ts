@@ -1,7 +1,9 @@
 // The top level of a project `.mcp.json` (docs/rules/mcp-json-servers-key.md). Claude Code
 // reads the servers from the `mcpServers` object. The rule reports a file that has no such
 // object, and names the two usual causes: VS Code's `servers` key, and server entries
-// at the top level. A plugin `.mcp.json` may omit the wrapper, so the rule skips it.
+// at the top level. A plugin `.mcp.json` may omit the wrapper, so the rule skips it. A `both`
+// file, the root `.mcp.json` of a repository that is a plugin, is a project file too, so the rule
+// reads it.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type MemberNode } from '../marketplace-json.ts'
@@ -38,7 +40,9 @@ const rule: JSONRuleDefinition<{
     },
   },
   create(context) {
-    if (mcpFileKind(context.filename) !== 'project') {
+    // A `both` file is a project file too, so it needs the wrapper.
+    const kind = mcpFileKind(context.filename)
+    if (kind === null || kind === 'plugin') {
       return {}
     }
     return {
