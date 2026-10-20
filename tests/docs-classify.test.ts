@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type {
   Answers,
@@ -185,6 +185,25 @@ describe('askJev', () => {
     await expect(api.askJev(body, { fetch, key: KEY, wait: noWait })).resolves.toEqual({
       answers: { requirement: { type: 'noul', noul: 1 } },
     })
+  })
+
+  it('waits one second after the first failed try, with the real timer by default', async () => {
+    vi.useFakeTimers()
+    try {
+      let tries = 0
+      const fetch: FakeFetch = async () => {
+        tries++
+        return tries === 1 ? json({}, 429) : json({ answers: {} })
+      }
+      const result = api.askJev(body, { fetch, key: KEY })
+      await vi.advanceTimersByTimeAsync(999)
+      expect(tries).toBe(1)
+      await vi.advanceTimersByTimeAsync(1)
+      await expect(result).resolves.toEqual({ answers: {} })
+      expect(tries).toBe(2)
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('fails at once for an auth error, and the message holds no key', async () => {
@@ -635,6 +654,49 @@ describe('classify', () => {
       'needs-triage',
       'duplicate heading',
       ['a-rule'],
+    ])
+  })
+
+  it('gives a duplicate heading no old hash when the snapshot has no block with its key', async () => {
+    const twice: SourceMap = { 'a-rule': [{ url: URL_, heading: 'Path rules' }] }
+    const stored = await watch.readPage(
+      URL_,
+      ['hooks'],
+      serve(PAGE.replace('## Path rules', '## Other rules')),
+    )
+    const jev = fakeJev(() => 0)
+    const output = await api.classify({
+      map: twice,
+      snapshots: new Map([[watch.snapshotName(URL_), stored]]),
+      rules,
+      links: new Map(),
+      fetchText: serve(`${PAGE}\n## Path rules\n\nMore.\n`),
+      jev: { fetch: jev.fetch, key: KEY },
+    })
+    const duplicate = output.findings.find((f) => f.change === 'duplicate heading')
+    expect([duplicate?.kind, duplicate?.blockId, duplicate?.oldHash]).toEqual([
+      'needs-triage',
+      'path-rules',
+      null,
+    ])
+  })
+
+  it('finds the old block of a gone heading by its slug, when the snapshot has no source for it', async () => {
+    const gone: SourceMap = { 'a-rule': [{ url: URL_, heading: 'commands' }] }
+    const stored = await watch.readPage(URL_, ['hooks'], serve(PAGE))
+    const jev = fakeJev(() => 0)
+    const output = await api.classify({
+      map: gone,
+      snapshots: new Map([[watch.snapshotName(URL_), stored]]),
+      rules,
+      links: new Map(),
+      fetchText: serve(PAGE.replace('### `commands`', '### `skills`')),
+      jev: { fetch: jev.fetch, key: KEY },
+    })
+    // The heading has no stored source, but the snapshot has a block with its
+    // slug. The block is the old one, so the retitled block is a move.
+    expect(output.findings.map((f) => [f.kind, f.change, f.blockId, f.rules])).toEqual([
+      ['moved', 'moved', 'commands', ['a-rule']],
     ])
   })
 
@@ -2007,5 +2069,95 @@ describe('main on a temporary tree', () => {
       ],
     })
     expect(text).not.toContain('`mixed`')
+  })
+
+  it('writes "none" for a finding with no rule and no probability', () => {
+    const text = api.renderMarkdown({
+      model: 'jev-1.13.0',
+      findings: [
+        {
+          kind: 'needs-triage',
+          page: URL_,
+          heading: 'H',
+          blockId: 'h',
+          oldHash: null,
+          newHash: 'a'.repeat(64),
+          rules: [],
+          probability: null,
+          confidence: null,
+          reason: 'r',
+          link: URL_,
+          change: 'new source',
+          oldText: null,
+          newText: null,
+        },
+      ],
+      tracked: [],
+      results: [],
+    })
+    expect(text).toContain(`| needs-triage | ${URL_} | \`h\` | none | none |`)
+  })
+})
+
+describe('citationsOf', () => {
+  it('lists a rule once for a heading that it cites twice', () => {
+    const source = { url: URL_, heading: 'hooks' }
+    const map: SourceMap = { 'a-rule': [source, source], 'b-rule': [source] }
+    expect(api.citationsOf(map)).toEqual(
+      new Map([[URL_, new Map([['hooks', ['a-rule', 'b-rule']]])]]),
+    )
+  })
+})
+
+describe('loadRules', () => {
+  const dirs: string[] = []
+  afterEach(() => {
+    for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true })
+  })
+
+  it('gives an empty description for a doc with no frontmatter or no description', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'docs-classify-'))
+    dirs.push(root)
+    mkdirSync(path.join(root, 'docs/rules'), { recursive: true })
+    writeFileSync(path.join(root, 'docs/rules/plain.md'), '# plain\n')
+    writeFileSync(path.join(root, 'docs/rules/bare.md'), '---\ntype: Reference\n---\n\n# bare\n')
+    expect(api.loadRules(root).rules).toEqual(
+      new Map([
+        ['bare', ''],
+        ['plain', ''],
+      ]),
+    )
+  })
+
+  it('keeps no link for a footnote with an anchor and a label with no colon', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'docs-classify-'))
+    dirs.push(root)
+    mkdirSync(path.join(root, 'docs/rules'), { recursive: true })
+    writeFileSync(
+      path.join(root, 'docs/rules/a-rule.md'),
+      `[^a]: [hooks](${URL_}#hooks)\n[^b]: [Reference: Hooks](${URL_}#hooks)\n[^c]: [Reference: Plain](${URL_})\n`,
+    )
+    expect(api.loadRules(root).links).toEqual(new Map([[`${URL_}\nHooks`, `${URL_}#hooks`]]))
+  })
+})
+
+describe('main with the defaults', () => {
+  const ROOT = path.resolve(import.meta.dirname, '..')
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('reads this repository, the docs through the global fetch, and writes to stdout', async () => {
+    const pages = [...watch.loadSnapshots(ROOT).values()]
+    vi.stubGlobal('fetch', async (url: string) => {
+      const page = pages.find((one) => `${one.url}.md` === url)
+      return new Response(page?.text ?? '', { status: page ? 200 : 404 })
+    })
+    const write = vi.spyOn(process.stdout, 'write').mockReturnValue(true)
+    const code = await api.main([], {})
+    expect(code).toBe(0)
+    const output = JSON.parse(String(write.mock.calls[0]?.[0])) as Output
+    expect([output.findings, output.tracked, output.results]).toEqual([[], [], []])
   })
 })
