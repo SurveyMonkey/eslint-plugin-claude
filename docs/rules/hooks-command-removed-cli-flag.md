@@ -7,7 +7,7 @@ related_issues: [10, 335, 381]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-20T03:06:08Z
+  at: 2026-10-20T04:00:00Z
 ---
 
 # claude/hooks-command-removed-cli-flag

@@ -84,9 +84,19 @@ describe('isClaude', () => {
     expect(isClaude('claudeXexe')).toBe(false)
   })
 
+  it('reads the part after the last separator when a path mixes `/` and `\\`', () => {
+    expect(isClaude('C:/Tools\\claude.exe')).toBe(true)
+    expect(isClaude('C:\\Tools/claude.exe')).toBe(true)
+    expect(isClaude('C:/claude\\node.exe')).toBe(false)
+    expect(isClaude('C:\\claude/node.exe')).toBe(false)
+  })
+
   it('keeps `C:claude.exe` whole, because it has no separator', () => {
     // bash gives `C:claude.exe` for an unquoted `C:\claude.exe`.
     expect(isClaude('C:claude.exe')).toBe(false)
+  })
+
+  it('is false for a directory named claude in a path', () => {
     expect(isClaude('C:\\claude\\node.exe')).toBe(false)
   })
 })

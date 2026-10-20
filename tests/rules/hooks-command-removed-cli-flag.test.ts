@@ -327,7 +327,7 @@ describe(`${name}: the two kinds of removed flag`, () => {
     ])
   })
 
-  it('gives the sandbox advice for a sandbox flag after env and in a Windows path', () => {
+  it('gives the sandbox advice after env, in a Windows path and in shell form, and not when env takes the flag', () => {
     const message = (flag: string) =>
       `Claude Code removed "${flag}" from "claude remote-control" in v2.1.300. With it, the server exits with code 1 and does not start. Remove the flag. To sandbox the sessions of the server, set "sandbox.enabled" to true in a settings file.`
     const messages = (handler: object) =>
