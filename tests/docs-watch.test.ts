@@ -685,6 +685,16 @@ describe('fetchMarkdown', () => {
     vi.stubGlobal('fetch', async () => new Response('# Title\n'))
     await expect(api.fetchMarkdown('https://x.test/a.md')).resolves.toBe('# Title\n')
   })
+
+  it('gives fetch a signal that times out', async () => {
+    let signal: AbortSignal | null | undefined
+    vi.stubGlobal('fetch', async (_url: string, init?: RequestInit) => {
+      signal = init?.signal
+      return new Response('# Title\n')
+    })
+    await api.fetchMarkdown('https://x.test/a.md')
+    expect(signal).toBeInstanceOf(AbortSignal)
+  })
 })
 
 describe('main with no root', () => {
