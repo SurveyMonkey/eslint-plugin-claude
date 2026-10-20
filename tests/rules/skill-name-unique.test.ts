@@ -58,7 +58,8 @@ const SAME: [string, string, string][] = [
   ['dash', 'my\u{fe63}app', 'my-app'],
 ]
 // A refused name, and a second name that it would fold to. The second name can be refused too.
-// Claude Code does not use the refused name, so the rule compares neither file.
+// Claude Code loads no skill or command under a refused folder or file name. It ignores a
+// refused `name` field. So the rule compares neither file.
 const REFUSED: [string, string, string][] = [
   ['no-break space', 'deploy\u{a0}', 'deploy'],
   ['ideographic space', 'dep\u{3000}loy', 'deploy'],
@@ -474,7 +475,7 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
-    // A folder that ends in `.md` keeps its name whole. Only the file name loses `.md`.
+    // A folder that ends in `.md` keeps its name whole.
     {
       code: bare,
       filename: put('edge4/.claude/skills/a.md/SKILL.md', bare),

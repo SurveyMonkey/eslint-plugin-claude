@@ -31,18 +31,10 @@ function fold(text: string): string {
 }
 
 /** The relative path of a file for a message. This function escapes each part
- *  of the path alone, and the file name without `.md`. A space is a fault at the
- *  edge of one name. */
+ *  of the path alone. A space is a fault at the edge of one name. A plugin skill
+ *  folder can hold a refused character. No other part of a listed path can. */
 function shownPath(relative: string): string {
-  const parts = relative.split(path.sep)
-  const last = parts.length - 1
-  return parts
-    .map((part, index) =>
-      index === last && part.endsWith('.md')
-        ? `${escapeName(part.slice(0, -3))}.md`
-        : escapeName(part),
-    )
-    .join('/')
+  return relative.split(path.sep).map(escapeName).join('/')
 }
 
 /** True when Claude Code refuses a part of a skill or command name. Claude Code does not
