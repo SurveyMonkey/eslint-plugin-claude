@@ -122,8 +122,8 @@ rule that lacks the option that its row names.
 
 ## Deprecate and remove a rule
 
-A tool of the Claude Code CLI can start to make the check of a built rule (ADR 001,
-Decision 2). Then a minor release deprecates the rule, and the next major release removes it.
+A Claude Code CLI tool can start to make the check of a built rule (ADR 001, Decision 2).
+Then a minor release deprecates the rule, and the next major release removes it.
 
 ### Deprecate a rule
 
@@ -161,10 +161,11 @@ table. A user keeps its reports until the major release. No test lists the depre
 
 Do this in the major release that `availableUntil` names. Run each step in order.
 
-1. Delete `src/rules/<rule>.ts`, `tests/rules/<rule>.test.ts` and `tests/fixtures/<rule>/`, if
-   it exists. In `src/index.ts`, delete its `import` line, its entry in `modules` and its entry in
-   `recommended`. `pnpm typecheck` finds a miss. Then delete its name from the group in `.eslint-doc-generatorrc.mjs`. Until you do,
-   `pnpm docs:check` stops with "names <rule>, which is not a rule".
+1. Delete `src/rules/<rule>.ts` and `tests/rules/<rule>.test.ts`. Delete `tests/fixtures/<rule>/`
+   if it exists. In `src/index.ts`, delete its `import` line, its entry in `modules` and its
+   entry in `recommended`. `pnpm typecheck` finds a miss. Then delete its name from the group in
+   `.eslint-doc-generatorrc.mjs`. Until you do, `pnpm docs:check` stops with
+   "names <rule>, which is not a rule".
 2. Run `pnpm docs:generate`. It removes the row of the rule from the README list. Delete
    `docs/rules/<rule>.md`, and the line of the rule in `docs/rules/index.md`. `pnpm docs:check`
    does not find a rule doc that stays behind, so delete it by hand.
@@ -181,10 +182,13 @@ Do this in the major release that `availableUntil` names. Run each step in order
 6. Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm knip` and `pnpm docs:check`. `knip`
    finds a helper that only this rule used. `tests/rule-sources.test.ts` fails when step 5 did
    not run.
-7. Commit as `feat(<group>)!: remove <rule>`, with a `BREAKING CHANGE:` footer that names the
-   tool. release-please reads the `!` to pick the version. Do not change the version by hand.
+7. Commit as `feat(<group>)!: remove <rule>`, and use the same title for the pull request.
+   Pull requests are squash-merged, so the title and the body become the commit on `main`. Put a
+   `BREAKING CHANGE:` footer that names the tool in the last paragraph of the body.
+   release-please reads the `!` to pick the version. Do not change the version by hand.
    While the version is 0.x, `bump-minor-pre-major` in `release-please-config.json` makes `!` a
-   minor bump. Add a `Release-As: 1.0.0` footer when `availableUntil` is `1.0.0`.
+   minor bump. When `availableUntil` is `1.0.0`, add a `Release-As: 1.0.0` footer to the same
+   last paragraph.
 
 ## Docs watch
 
