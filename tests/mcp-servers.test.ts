@@ -80,6 +80,12 @@ describe('mcpFileKind', () => {
     put(repo('.claude-plugin', 'marketplace.json'), JSON.stringify(marketplace))
     expect(mcpFileKind(repo('.mcp.json'))).toBe('both')
   })
+  it('is both for the root .mcp.json when .git is a file, as in a worktree', () => {
+    const root = path.join(scratch, 'worktree')
+    put(path.join(root, '.git'), 'gitdir: elsewhere\n')
+    put(path.join(root, '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(path.join(root, '.mcp.json'))).toBe('both')
+  })
   it('is plugin for a plugin root below the repository root', () => {
     put(repo('.claude-plugin', 'plugin.json'))
     put(repo('p', '.claude-plugin', 'plugin.json'))
