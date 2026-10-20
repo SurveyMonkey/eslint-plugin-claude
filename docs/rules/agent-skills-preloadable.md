@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/agents/**/*.md` |
+| no-op | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 ## Rule details
 

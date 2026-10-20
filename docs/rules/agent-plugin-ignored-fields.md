@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/agents/**/*.md` |
+| no-op | `**/*.md`, in the agent files of a plugin |
 
 ## Rule details
 
@@ -33,7 +33,8 @@ each of the four fields, and shows no error. The rule reports each key. The repo
 - `permissionMode`: copy the agent to `.claude/agents/` if it needs the field.
 - `initialPrompt`: remove the field.
 
-The rule checks an agent file in the `agents/` directory of a plugin, at any depth. A plugin root
+The rule checks an agent file in the `agents/` directory of a plugin, at any depth, and a file that
+the manifest key `agents` of a plugin names. A plugin root
 is a directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
 repository lists.
 

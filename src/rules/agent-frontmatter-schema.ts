@@ -2,7 +2,7 @@
 // source is the Frontmatter reference of the Claude Code docs
 // (docs/rules/agent-frontmatter-schema.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { AGENT_ENUMS, AGENT_FIELDS, CACHE_TTL_VALUES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isBooleanValue, isMap, nearMissOf } from '../frontmatter-values.ts'
@@ -115,7 +115,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -177,7 +177,7 @@ const rule: MarkdownRuleDefinition<{
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

@@ -2,7 +2,7 @@
 // (docs/rules/agent-plugin-ignored-fields.md). The rule checks only files in
 // the `agents/` directory of a plugin.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 
@@ -29,7 +29,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'ignored' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename)?.plugin !== true) {
+    if (classifyLinted(context)?.plugin !== true) {
       return {}
     }
     return {
@@ -56,7 +56,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'ignored' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

@@ -2,7 +2,7 @@
 // skips the rest with no error (docs/rules/agent-skills-preload-limit.md). No setting moves that
 // number, so the option `max` has a schema maximum.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { listEntries } from '../frontmatter-list.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -47,7 +47,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     const [{ max }] = context.options
@@ -84,6 +84,6 @@ const rule: MarkdownRuleDefinition<{
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

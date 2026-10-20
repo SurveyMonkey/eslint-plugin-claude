@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| portability | `**/agents/**/*.md`, `**/SKILL.md`, `**/commands/**/*.md`, `**/output-styles/*.md` |
+| portability | `**/*.md`, in agent, skill, command and output style files |
 
 ## Rule details
 
@@ -49,14 +49,14 @@ These are frequent causes:
 
 The rule reads the files that the rules of each kind read:
 
-- An agent file in `.claude/agents/`, or in the `agents/` directory of a plugin.
+- An agent file in `.claude/agents/`, in the `agents/` directory of a plugin, or in a file that
+  the manifest key `agents` of a plugin names.
 - A skill or a command file in `.claude/`, or in a plugin.
 - An output style file in `.claude/output-styles/`, or in the `output-styles/` directory of a
   plugin.
 
 A plugin root is a directory with `.claude-plugin/plugin.json`. A file elsewhere, such as
-`docs/SKILL.md`, gets no report. An agent file that the `agents` key of a plugin manifest names
-outside `agents/` is not in the globs, so the rule does not read it.
+`docs/SKILL.md`, gets no report.
 
 An empty block, a block of comments only, and a file with no frontmatter get no report. A value that
 parses but is not a map, such as a list, is a fault for the rule of each kind:

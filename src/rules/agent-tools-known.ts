@@ -3,7 +3,7 @@
 // Claude Code usually refuses to launch the subagent
 // (docs/rules/agent-tools-known.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { MCP_PREFIX, OTHER_RULE_TOOL_NAMES, TOOL_NAMES } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { COMMA, listEntries } from '../frontmatter-list.ts'
@@ -43,7 +43,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -81,7 +81,7 @@ const rule: MarkdownRuleDefinition<{
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

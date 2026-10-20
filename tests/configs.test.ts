@@ -3313,7 +3313,7 @@ const MCP_RULES: {
   { name: 'lsp-duplicate-server-name', files: ['**/.claude-plugin/plugin.json'] },
   {
     name: 'mcp-plugin-tool-name-scoped',
-    files: ['**/SKILL.md', '**/commands/**/*.md', '**/agents/**/*.md'],
+    files: ['**/*.md'],
     language: 'markdown/gfm',
   },
   { name: 'mcp-approval-names-exist', files: PROJECT_FILES },
@@ -3480,7 +3480,7 @@ const PLUGIN_RULES: {
   {
     name: 'plugin-path-var-braced',
     language: 'markdown/gfm',
-    files: ['**/SKILL.md', '**/commands/**/*.md', '**/agents/**/*.md'],
+    files: ['**/*.md'],
   },
   {
     name: 'plugin-user-config-no-shell-fields',
@@ -3507,7 +3507,7 @@ const PLUGIN_RULES: {
   {
     name: 'plugin-user-config-sensitive-in-content',
     language: 'markdown/gfm',
-    files: ['**/SKILL.md', '**/agents/**/*.md'],
+    files: ['**/*.md'],
   },
   { name: 'plugin-settings-keys', files: ['**/.claude-plugin/plugin.json', '**/settings.json'] },
   // The rules with the option `minVersion` give no report in the config run, which sets no option.
@@ -5513,8 +5513,8 @@ const AGENT_OFF_RULES = [
   'agent-teammate-ignored-fields',
 ]
 
-// The last five of the list above. They take every Markdown file, because the manifest key
-// `agents` of a plugin can name an agent file outside `agents/`. The rule asks where the file sits.
+// The last five of the list above, the rules of the description layer. Most agent files of the
+// tree get their reports, so `DESCRIPTION_TREE` tests them.
 const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(-5)
 
 // The hooks rules of layer 1 of #10, in the order of the `modules` list, with the blocks of each.
@@ -6187,8 +6187,7 @@ describe('configs', () => {
     for (const rule of AGENT_OFF_RULES) {
       expect(hasRuleBlock(plugin.configs.recommended, rule)).toBe(false)
       const blocks = plugin.configs.strict.filter((c) => c.name === `claude/strict/${rule}`)
-      const files = DESCRIPTION_RULES.includes(rule) ? ['**/*.md'] : ['**/agents/**/*.md']
-      expect(blocks.map((c) => [c.language, c.files])).toEqual([['markdown/gfm', files]])
+      expect(blocks.map((c) => [c.language, c.files])).toEqual([['markdown/gfm', ['**/*.md']]])
     }
   })
 
@@ -6645,6 +6644,57 @@ describe('configs', () => {
       'plugins/q/.claude-plugin/plugin.json: claude/plugin-manifest-publish-metadata@1',
     ])
   }, 30_000)
+
+  // Issue #377: the same agent in `agents/` of the plugin `p`, and at `custom/a.md`, which the
+  // manifest of the plugin `q` names. Each file gets the same reports. The other Markdown files
+  // are no agent files, so they get no report.
+  it('strict reports an agent that a manifest names outside agents/ as it reports one in agents/', async () => {
+    const agent = agentFile(
+      'probe',
+      'Reviews code.',
+      'skills:\n  - missing-skill\ntools: Read, Nope\npermissionMode: plan\n',
+      'Run $CLAUDE_PLUGIN_ROOT/run.sh first.\n',
+    )
+    const tree: Record<string, string> = {
+      '.git/HEAD': 'ref: refs/heads/main\n',
+      'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p' }),
+      'plugins/p/agents/b.md': agent,
+      'plugins/q/.claude-plugin/plugin.json': JSON.stringify({
+        name: 'q',
+        agents: ['./custom/a.md'],
+      }),
+      'plugins/q/custom/a.md': agent,
+      'plugins/q/custom/notes.md': agent,
+      'plugins/q/README.md': agent,
+      'docs/guide.md': agent,
+    }
+    const base = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-manifest-agent-'))
+    try {
+      for (const [file, content] of Object.entries(tree)) {
+        mkdirSync(path.dirname(path.join(base, file)), { recursive: true })
+        writeFileSync(path.join(base, file), content)
+      }
+      const found = (await reports(plugin.configs.strict, base)).filter((report) =>
+        /^[^:]+\.md: /.test(report),
+      )
+      const rulesOf = (file: string) =>
+        found.filter((report) => report.startsWith(`${file}: `)).map((r) => r.split(': ')[1])
+      expect(rulesOf('plugins/p/agents/b.md')).toEqual([
+        'claude/agent-description-proactive@1',
+        'claude/agent-plugin-ignored-fields@2',
+        'claude/agent-skills-exist@1',
+        'claude/agent-tools-known@2',
+        'claude/plugin-path-var-braced@2',
+      ])
+      expect(rulesOf('plugins/q/custom/a.md')).toEqual(rulesOf('plugins/p/agents/b.md'))
+      expect(
+        found.filter((report) => !/^plugins\/(?:q\/custom\/a|p\/agents\/b)\.md: /.test(report)),
+      ).toEqual([])
+    } finally {
+      rmSync(base, { recursive: true, force: true })
+    }
+  }, 30_000)
+
   it('reports the max-bytes rule on the files that it reads, on a tree of its own', async () => {
     // The override sets a small `max` and keeps the severity of the preset.
     const withLimit = (preset: Linter.Config[]) =>
@@ -6990,9 +7040,10 @@ describe('files of each rule in recommended and strict', () => {
     }
   })
 
-  // The README example puts `rules` in the block that extends `recommended`. That block must not
-  // lint a Markdown file that only a catch-all glob matches.
-  it('gives a file that only a catch-all glob matches no config from recommended', async () => {
+  // The README example puts `rules` in the block that extends `recommended`. The agent rules of
+  // `recommended` have the glob `**/*.md` (#377), so `recommended` lints each Markdown file with
+  // `markdown/gfm`. A `rules` entry for a rule with that glob then reaches the file.
+  it('gives each Markdown file the config of recommended, with markdown/gfm', async () => {
     const eslint = new ESLint({
       cwd: tmpdir(),
       overrideConfigFile: true,
@@ -7000,11 +7051,13 @@ describe('files of each rule in recommended and strict', () => {
         {
           plugins: { claude: plugin },
           extends: ['claude/recommended'],
-          rules: { 'claude/skill-description-max-length': ['warn', { listingMax: 1000 }] },
+          rules: { 'claude/agent-body-nonempty': 'warn' },
         },
       ]),
     })
-    expect(await eslint.calculateConfigForFile(path.join(tmpdir(), 'docs/note.md'))).toBe(undefined)
+    const config = await eslint.calculateConfigForFile(path.join(tmpdir(), 'docs/note.md'))
+    expect(config?.language).toBe(markdown.languages.gfm)
+    expect(config?.rules?.['claude/agent-body-nonempty']).toEqual([1])
   })
 
   // A JSON file below `.claude/rules/` matches globs of both languages. The rule blocks come after

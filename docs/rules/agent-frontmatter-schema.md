@@ -22,7 +22,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/agents/**/*.md` |
+| no-op | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 ## Rule details
 
@@ -58,8 +58,8 @@ that the skills reference lists: `true`, `false`, `yes`, `no`, `on`, `off`, `1` 
 letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` work. It checks that `model` is a string that is not blank, and no more. The set of valid
 model ids differs by provider and by gateway.
 
-The rule checks local agents in `.claude/agents/` and plugin agents in the `agents/` directory of a
-plugin. A plugin agent ignores four of the fields. [`agent-plugin-ignored-fields`](agent-plugin-ignored-fields.md)
+The rule checks local agents in `.claude/agents/` and plugin agents. A plugin agent is in the
+`agents/` directory of a plugin, or in a file that the manifest key `agents` names. A plugin agent ignores four of the fields. [`agent-plugin-ignored-fields`](agent-plugin-ignored-fields.md)
 reports them. This rule does not check the shape of `hooks` or `mcpServers`.
 [`agent-mcp-servers-schema`](agent-mcp-servers-schema.md) checks `mcpServers` in a local agent.
 

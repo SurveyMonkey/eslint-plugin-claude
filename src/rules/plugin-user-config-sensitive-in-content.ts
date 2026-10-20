@@ -87,7 +87,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'placeholder' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/SKILL.md', '**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

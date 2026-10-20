@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| security | `**/agents/**/*.md` |
+| security | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 ## Rule details
 
@@ -37,7 +37,8 @@ when `tools` is absent or has no value, because the agent then inherits each too
 `tools` is neither a string nor a list of strings. `agent-frontmatter-schema` reports that fault.
 
 Both local agents in `.claude/agents/` and plugin agents take `memory` and `tools`. So the rule
-checks both, in the `agents/` directory of a plugin. A file outside these folders gets no report.
+checks both. A plugin agent is in the `agents/` directory of a plugin, or in a file that the
+manifest key `agents` names. Other files get no report.
 The rule ignores a file whose frontmatter does not parse.
 
 Fail:
