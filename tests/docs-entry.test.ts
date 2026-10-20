@@ -1,8 +1,8 @@
 // Each docs script runs `main` when it is the entry file. The other tests
 // import the script, so they skip that guard. These tests set the process
 // arguments and import the script again, so v8 coverage sees the guard. Each
-// case gives arguments that make `main` fail before it reads a file, runs a
-// command, or reaches the network.
+// case gives arguments that make `main` fail before it runs a command or
+// reaches the network. The docs-classify case fails on a path that is not there.
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'

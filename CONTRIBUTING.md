@@ -12,7 +12,7 @@ ships JavaScript only. The CI test jobs run on 22.13.0, 24 and 26.
 
 ```sh
 pnpm install     # also installs the lefthook git hooks
-pnpm test        # vitest, 100% coverage of src/ and scripts/ required
+pnpm test        # vitest, 100% coverage of src/ and the .ts files in scripts/ required
 pnpm typecheck   # tsc, no emit
 pnpm lint        # biome ci, then eslint on src/rules/
 pnpm knip        # builds, then finds unused files, exports and dependencies
@@ -25,9 +25,10 @@ pnpm docs:check     # builds, then fails when a generated part is out of date
 Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build rewrites it to
 `.js`. Only `dist/`, `README.md`, `LICENSE` and `package.json` are published.
 
-The coverage gate covers `src/` and `scripts/`. It needs 100% of statements, branches, functions
-and lines (`vitest.config.ts`). A test covers a line, or the code changes so that a test can reach
-it. The repository has no coverage exclusion and no ignore comment.
+The coverage gate covers `src/` and the `.ts` files in `scripts/`. It needs 100% of statements,
+branches, functions and lines (`vitest.config.ts`). The two `.mjs` files in `scripts/` are outside
+`coverage.include`. A test covers a line, or the code changes so that a test can reach it. The
+repository has no coverage exclusion and no ignore comment.
 
 `pnpm lint` runs Biome on the source. Then ESLint, with `eslint-plugin-eslint-plugin`, checks the
 rule definitions in `src/rules/` (`eslint.config.mjs`, ADR 001 Decision 7). Each schema option
