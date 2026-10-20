@@ -507,8 +507,8 @@ it('reports the url with a command only in the root file of a plugin repository 
   const code = '{"mcpServers": {"a": {"command": "x", "url": "https://x.test"}}}'
   expect(ids(lintRootPluginFile('mcp-server-schema', code))).toEqual(['urlNoType'])
 })
-// #384: `claude plugin validate` 2.1.302 fails a plugin with no `plugin.json` outright, so it does
-// not check the `.mcp.json` of a listed plugin with no manifest. The rule reports each fault there.
+// #384: `claude plugin validate` 2.1.302 fails a plugin with no `plugin.json` outright. So it does
+// not check the `.mcp.json` of such a plugin, and the rule reports each fault there.
 it('reports each fault case of a plugin .mcp.json that a marketplace lists with no manifest', () => {
   expect(ids(lintListedPluginFile('mcp-server-schema', FAULTS))).toEqual(FAULT_IDS)
   // A plugin file with no `mcpServers` wrapper has its server map at the top level.

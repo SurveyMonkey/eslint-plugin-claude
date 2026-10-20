@@ -54,8 +54,8 @@ The rule reads the `mcpServers` object of a project `.mcp.json` and of a committ
 component, and `claude plugin validate` 2.1.302 does not read the file. Of two members with one
 name, the last one counts, as `JSON.parse` keeps it.
 
-In a plugin with a manifest, the rule reports one fault only: a `url` with no `type`, in an entry
-with a good stdio shape. That entry has a `command` that is not empty, and `args` of strings. `claude plugin
+In a plugin with a manifest, the rule reports one fault only. That fault is a `url` with no `type`,
+in an entry with a good stdio shape. That entry has a `command` that is not empty, and `args` of strings. `claude plugin
 validate` 2.1.302 passes that entry, but Claude Code skips it.[^http] Validate reports each other
 fault that makes Claude Code drop a plugin entry at load. It also reports a remote `url` that is
 not a valid absolute URL.[^validate] [^plugin] The rule reads a plugin `.mcp.json`, and the inline servers of

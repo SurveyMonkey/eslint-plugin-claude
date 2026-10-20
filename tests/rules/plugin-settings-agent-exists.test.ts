@@ -447,8 +447,8 @@ describe(`${RULE} (a listed plugin with no manifest)`, () => {
     expect(listed('{"agent": "p:reviewer"}', {}, files)).toEqual([])
   })
 
-  // The plugin name is the entry name `tools`. The rule uses the folder name `p`, so a name scoped
-  // to `tools` looks like an agent of another plugin to it.
+  // The plugin name is the entry name `tools`. The rule uses the folder name `p`. So to the rule, a
+  // name with the scope `tools` names an agent of another plugin.
   check('makes no false report when the entry name differs from the folder name', () => {
     const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
     expect(listed('{"agent": "tools:reviewer"}', { name: 'tools' }, files)).toEqual([])

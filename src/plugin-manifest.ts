@@ -62,8 +62,9 @@ export function readPluginAt(root: string): Plugin | undefined {
 /** The plugin at the plugin root `root`, as `readPluginAt` gives it. A plugin
  *  root that a `marketplace.json` lists, with no `plugin.json`, also gives a
  *  plugin. Its `fields` are empty, because the entry is the manifest (ADR 001,
- *  Decision 10). `isPluginRoot` cannot see the plugin of an entry with a key
- *  that replaces a default location, so such a plugin gives no result. */
+ *  Decision 10). An entry can have a key that replaces a default location.
+ *  `isPluginRoot` cannot see the plugin of such an entry, so it gives no
+ *  result. */
 export function readListedPluginAt(root: string): Plugin | undefined {
   return pluginAt(root, true)
 }
