@@ -2167,7 +2167,9 @@ describe('main with the defaults', () => {
     vi.stubGlobal('fetch', async (url: string, init: Init) => {
       const page = pages.find((one) => `${one.url}.md` === url)
       if (page === undefined) return jev.fetch(url, init)
-      return new Response(page.text.replace(/^([A-Z][a-z].*)$/gm, '$1 edited'), { status: 200 })
+      return new Response((page.text ?? '').replace(/^([A-Z][a-z].*)$/gm, '$1 edited'), {
+        status: 200,
+      })
     })
     vi.spyOn(process.stdout, 'write').mockReturnValue(true)
     const code = await api.main([], { TYPESAFE_API_KEY: KEY })
