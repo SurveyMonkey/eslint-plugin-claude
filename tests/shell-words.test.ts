@@ -371,10 +371,12 @@ describe('scanCommands', () => {
     expect(commandsOf('echo ${| rm -rf $T; }')).toEqual([['echo', '${'], ['rm', '-rf', '$T'], ['}']])
     expect(commandsOf('echo ${\nrm -rf $T\n}')).toEqual([['echo', '${'], ['rm', '-rf', '$T'], ['}']])
     // A `#` after a blank in it starts a comment.
-    expect(commandsOf(`x="$(echo \${ a # it's\n})"; rm -rf $T`)).toEqual([
-      [`x=$(echo \${ a # it's\n})`],
-      ['rm', '-rf', '$T'],
-    ])
+    for (const blank of [' ', '\n', '\t']) {
+      expect(commandsOf(`x="$(echo \${${blank}a # it's\n})"; rm -rf $T`)).toEqual([
+        [`x=$(echo \${${blank}a # it's\n})`],
+        ['rm', '-rf', '$T'],
+      ])
+    }
   })
 
   it(`ends a \${...} expansion at a new line`, () => {
