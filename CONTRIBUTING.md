@@ -173,9 +173,9 @@ request. It passes at once when the diff does not change `docs/docs-snapshot/` o
 `docs/rule-sources.json`.
 
 Else it compares the head snapshot with the base snapshot, for each page that the head map
-cites. When the page hash and each block hash of the head is the base, it runs `check` on the
-head state with the stored page text in place of the live docs. A change of the snapshot format
-or of the map then passes, when the docs change after `update`. This step reads no live page
+cites. The page hash and each block hash of the head can be the base. Then it runs `check` on
+the head state. The stored page text takes the place of the live docs. A change of the snapshot
+format or of the map then passes, when the docs change after `update`. This step reads no live page
 and needs no key. It fails when the map changed and `update` did not run, or when `check` has
 an error. Run `update` again, and push.
 

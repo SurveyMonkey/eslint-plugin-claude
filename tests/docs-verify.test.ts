@@ -602,8 +602,8 @@ describe('a head whose page hashes and block hashes are the base', () => {
   })
 })
 
-// A head that changes a hash, or that the gate cannot compare with the base,
-// gets the dry run and the compare with the live docs.
+// A head that changes a hash gets the dry run and the compare with the live
+// docs. So does a head that the gate cannot compare with the base.
 describe('a head that the gate does not compare with the base', () => {
   it('fails a new format with a changed hash that no open issue has', async () => {
     const { root, base } = await repoWith(async (dir) => {

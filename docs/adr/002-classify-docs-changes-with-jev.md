@@ -267,9 +267,9 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 1. It copies the base map, inventory, rule docs and snapshot to a temporary root.
 2. It compares the head snapshot with the base snapshot, for each page that the head map cites.
    When the page hash and each block hash of the head is the base, the head stores no docs
-   change. Then the gate runs `check` on the head map and the head snapshot, with the stored
-   page text in place of the live docs, and stops. It reads no live page and needs no key. It
-   fails when the check finds a change or an error.
+   change. Then the gate runs `check` on the head map and the head snapshot, and stops. The
+   stored page text takes the place of the live docs. It reads no live page and needs no key.
+   It fails when the check finds a change or an error.
 3. Else it classifies the live pages against the base state, then runs the issue step in dry run.
    The dry run names each block that it would put in an issue or a group issue comment. The
    gate accepts such a block when the marker of an open issue or group issue comment has its
@@ -285,19 +285,20 @@ changed the snapshot format and no block hash. It failed the check four times, e
 docs change outside its diff. So step 2 does not compare such a head with the live docs. The
 hashes that count are the page `hash`, and the `id` and `hash` of each block, in page order.
 `bodyHash`, `text` and `sources` do not count. `update` makes them from the same page text, and
-a format change or a map change adds them. `check` with the stored text still finds a map hash
-that is not the snapshot hash, or a cited heading that the head does not store. The page text
+a format change or a map change adds them. `check` with the stored text still finds two faults:
+a map hash that is not the snapshot hash, and a cited heading that the head does not store. The page text
 comes from the base file. When the base file has no text, it comes from the head file. The page
 hash is the same, so the two texts are the same. A page with no text in the two files, or with
 no base file, goes to step 3.
 
 This decision declines two options from #419:
 
-- Accept a head snapshot that is older than the live docs when the base is older still, and
-  name the newer blocks without a fail. The dry run still classifies the live docs against the
-  base. So a block that changed after the push still fails the key check.
+- Accept a head snapshot that is older than the live docs when the base is older still. The
+  summary names the newer blocks, and the gate does not fail. But the dry run still classifies
+  the live docs against the base. So a block that changed after the push still fails the key
+  check.
 - Run `update` on a copy, and compare the result with the head. A docs change after the push is
-  then a warning. The dry run has the same fault, so a fail stays.
+  then a warning. The dry run has the same fault, so the failure stays.
 
 The gate matches a block by its key only, because Jev can give a different answer in each run
 (#316). A rule can then cross a threshold for a block that a person already decided. The key
@@ -564,7 +565,7 @@ the old text is not available.
   A pull request from a fork or from Dependabot gets no secret. When it changes the snapshot or
   the map, and a page hash or a block hash changes, the check fails closed. A head whose hashes
   are the base needs no key (Decision 4, step 2). When a hash changes, a docs change during the
-  pull request also fails the check, and the author runs `update` again. Each run of the check
+  pull request also fails the check. The author then runs `update` again. Each run of the check
   that changes the state costs Jev calls.
 - The triage refresh merges with no person review (Decision 4). The project has one developer,
   and the rulesets "Require CI" and "Require CodeQL" have no review rule. A second developer,

@@ -15,9 +15,9 @@
 //   compare reads each page that the head map cites. When the page hash and
 //   each block hash of the head file is the base file, the head stores no docs
 //   change. The base file or the head file must also have the page text. Then
-//   the gate runs the docs watch check on the head map and the head snapshot,
-//   with the page text of the snapshot in place of the live docs. It reads no
-//   live page, needs no key and runs no dry run. It exits 1 when the check
+//   the gate runs the docs watch check on the head map and the head snapshot.
+//   The page text of the snapshot takes the place of the live docs. It reads
+//   no live page, needs no key and runs no dry run. It exits 1 when the check
 //   finds a change or an error: the map changed and `update` did not run.
 //   A head file that the gate cannot read, or a page with no base file, goes
 //   to the steps below.
@@ -334,9 +334,9 @@ const hashesOf = (snapshot: Snapshot): string =>
   JSON.stringify([snapshot.hash, snapshot.blocks.map((block) => [block.id, block.hash])])
 
 // The page text of each page that the head map cites, by the URL that the
-// check reads. It is undefined when a page has no base file, when a hash of
-// the head file is not the hash of the base file, or when neither file has
-// the page text. It is also undefined when a file cannot be read.
+// check reads. It is undefined in these cases: a page has no base file, a
+// hash of the head file is not the base hash, or no file has the page text.
+// It is also undefined when a file cannot be read.
 function baseTexts(root: string, baseRoot: string): Map<string, string> | undefined {
   try {
     const head = loadSnapshots(root)
@@ -451,6 +451,7 @@ export async function main(
     const texts = baseTexts(root, baseRoot)
     const key = env.TYPESAFE_API_KEY
     if (texts !== undefined) {
+      // texts has each page that the head map cites, and the check reads no other page.
       const head = await checkHead(root, async (url) => texts.get(url) as string, 'base')
       lines.push(
         'Each page hash and block hash of the head snapshot is the base. ' +

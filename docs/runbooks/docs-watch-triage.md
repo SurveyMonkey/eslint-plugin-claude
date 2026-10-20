@@ -88,8 +88,8 @@ It writes `Part of #<n>`, not `Closes`, for the issue. The refresh pull request 
 
 The log names each failure. Do the steps for the failure that it names.
 
-When the page hash and each block hash of the head snapshot is the base, the log says that the
-gate compares the head with the base. It does not read the live docs, so a docs change after
+The page hash and each block hash of the head snapshot can be the base. Then the log says that
+the gate compares the head with the base. It does not read the live docs, so a docs change after
 `update` does not fail it. Two failures are possible:
 
 - **The head snapshot is not the base snapshot.** The map changed and `update` did not run.
