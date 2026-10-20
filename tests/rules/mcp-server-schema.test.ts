@@ -43,6 +43,10 @@ const cases = {
   notObject: wrap('"npx -y x"'),
   commandNumber: wrap('{"command": 42}'),
   noCommand: wrap('{"args": ["-y"]}'),
+  emptyCommand: wrap('{"command": ""}'),
+  envType: wrap('{"command": "npx", "env": ["A=1"]}'),
+  headersType: wrap('{"type": "http", "url": "https://x.test/mcp", "headers": "Authorization: x"}'),
+  oauthType: wrap('{"type": "sse", "url": "https://x.test/mcp", "oauth": "x"}'),
 }
 
 jsonTester.run('mcp-server-schema (each fault in a project file)', rule, {
@@ -166,6 +170,58 @@ jsonTester.run('mcp-server-schema (each fault in a project file)', rule, {
         },
       ],
     },
+    {
+      name: 'an empty command, on the command value',
+      code: cases.emptyCommand,
+      filename: project,
+      errors: [
+        {
+          messageId: 'emptyCommand',
+          data: { server: 'a' },
+          column: col(cases.emptyCommand, '""'),
+          endColumn: col(cases.emptyCommand, '}}}'),
+        },
+      ],
+    },
+    {
+      name: 'an env that is not an object, on the env value',
+      code: cases.envType,
+      filename: project,
+      errors: [
+        {
+          messageId: 'envType',
+          data: { server: 'a' },
+          column: col(cases.envType, '["A=1"]'),
+          endColumn: col(cases.envType, '}}}'),
+        },
+      ],
+    },
+    {
+      name: 'a headers value that is not an object, on the headers value',
+      code: cases.headersType,
+      filename: project,
+      errors: [
+        {
+          messageId: 'headersType',
+          data: { server: 'a' },
+          column: col(cases.headersType, '"Authorization'),
+          endColumn: col(cases.headersType, '}}}'),
+        },
+      ],
+    },
+    {
+      name: 'an oauth value that is not an object, on the oauth value',
+      code: cases.oauthType,
+      filename: project,
+      errors: [
+        {
+          messageId: 'oauthType',
+          data: { server: 'a' },
+          column: col(cases.oauthType, '"x"'),
+          endColumn: col(cases.oauthType, '}}}'),
+        },
+      ],
+    },
   ],
 })
 
@@ -256,7 +312,46 @@ jsonTester.run('mcp-server-schema (valid shapes)', rule, {
       code: wrap('{"command": "x", "url": "https://x.test", "url": null}'),
       filename: project,
     },
-    // `mcp-json-servers-key` reads no `managed-mcp.json`, so no rule reports this file.
+    // Claude Code 2.1.304 checks `env` in a stdio entry, and `headers` in a remote entry. It
+    // checks `oauth` in an `http`, `streamable-http` or `sse` entry. It loads these entries.
+    {
+      name: 'a stdio env object',
+      code: wrap('{"command": "x", "env": {}}'),
+      filename: project,
+    },
+    {
+      name: 'remote headers and oauth objects',
+      code: wrap('{"type": "http", "url": "https://x.test", "headers": {}, "oauth": {}}'),
+      filename: project,
+    },
+    {
+      name: 'a stdio entry with headers and oauth that are not objects',
+      code: wrap('{"command": "x", "headers": "x", "oauth": "x"}'),
+      filename: project,
+    },
+    {
+      name: 'a remote entry with an env that is not an object',
+      code: wrap('{"type": "http", "url": "https://x.test", "env": ["A=1"]}'),
+      filename: project,
+    },
+    {
+      name: 'a ws entry with an oauth that is not an object',
+      code: wrap('{"type": "ws", "url": "wss://x.test", "oauth": []}'),
+      filename: project,
+    },
+    {
+      name: 'a sdk entry with an env array',
+      code: wrap('{"type": "sdk", "env": []}'),
+      filename: project,
+    },
+    // `mcp-hidden-whitespace` reports a command of spaces. Claude Code loads it.
+    { name: 'a command of one space', code: wrap('{"command": " "}'), filename: project },
+    {
+      name: 'the last env',
+      code: wrap('{"command": "x", "env": [], "env": {}}'),
+      filename: project,
+    },
+    // `mcp-json-servers-key` reports a `managed-mcp.json` with no wrapper.
     {
       name: 'a managed file with no wrapper',
       code: '{"a": {"url": "x"}}',
@@ -311,6 +406,46 @@ jsonTester.run('mcp-server-schema (null, empty and wrong-type values)', rule, {
     ),
     one('a remote type with a command and no url', '{"type": "http", "command": "x"}', 'noUrl'),
     one('a stdio type with no command', '{"type": "stdio", "args": []}', 'noCommand'),
+    one('a stdio type with an empty command', '{"type": "stdio", "command": ""}', 'emptyCommand'),
+    ...['null', '"A=1"', '1', '[]', 'true'].map((env) =>
+      one(`env ${env}`, `{"command": "x", "env": ${env}}`, 'envType'),
+    ),
+    ...['http', 'streamable-http', 'sse', 'ws'].flatMap((type) =>
+      ['null', '"x"', '1', '[]', 'true'].map((headers) =>
+        one(
+          `${type} headers ${headers}`,
+          `{"type": "${type}", "url": "https://x.test", "headers": ${headers}}`,
+          'headersType',
+        ),
+      ),
+    ),
+    ...['http', 'streamable-http', 'sse'].flatMap((type) =>
+      ['null', '"x"', '1', '[]', 'true'].map((oauth) =>
+        one(
+          `${type} oauth ${oauth}`,
+          `{"type": "${type}", "url": "https://x.test", "oauth": ${oauth}}`,
+          'oauthType',
+        ),
+      ),
+    ),
+    {
+      name: 'an empty remote url, and headers and oauth that are not objects',
+      code: wrap('{"type": "http", "url": "", "headers": [], "oauth": []}'),
+      filename: project,
+      errors: [{ messageId: 'headersType' }, { messageId: 'oauthType' }],
+    },
+    {
+      name: 'no url, and headers that is not an object',
+      code: wrap('{"type": "sse", "headers": []}'),
+      filename: project,
+      errors: [{ messageId: 'noUrl' }, { messageId: 'headersType' }],
+    },
+    {
+      name: 'an empty command, and an env that is not an object',
+      code: wrap('{"command": "", "env": "A=1"}'),
+      filename: project,
+      errors: [{ messageId: 'emptyCommand' }, { messageId: 'envType' }],
+    },
     {
       name: 'a remote url that is not a string, on the url value',
       code: remoteNumber,
@@ -365,6 +500,10 @@ const FAULT_IDS = [
   'notObject',
   'commandType',
   'noCommand',
+  'emptyCommand',
+  'envType',
+  'headersType',
+  'oauthType',
 ]
 
 /** A server map with one server for each fault case. */
@@ -423,8 +562,12 @@ it('reports each fault case of a managed-mcp.json in a directory that it cannot 
 // `type` in a plugin, and Claude Code skips that entry. So the rule reports it in a plugin too.
 // Validate fails each other fault there, and the rule stays silent on them.
 const URL = 'https://x.test/mcp'
-/** The servers of `FAULTS`, and the server `both`, which has a `url` and a `command`. */
-const pluginServers = { ...JSON.parse(FAULTS).mcpServers, both: { command: 'npx', url: URL } }
+/** The servers of `FAULTS`, and the server `both`, which has a `url` and a `command`. Its `env`
+ *  object is a good stdio shape, so the entry still gets the report. */
+const pluginServers = {
+  ...JSON.parse(FAULTS).mcpServers,
+  both: { command: 'npx', env: {}, url: URL },
+}
 /** The column of the `url` value of the server `both`, the last server of `code`. */
 const bothUrl = (code: string) => code.lastIndexOf(`"${URL}"`) + 1
 
@@ -459,13 +602,15 @@ it('reports only a url with a command and no type in a plugin manifest', () => {
   expect(ids(lintManifest('mcp-server-schema', root, rootFile))).toEqual([])
 })
 it('stays silent in a plugin on an entry that validate reports or that has no url', () => {
-  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio.
+  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio. Validate
+  // 2.1.304 reports the `env` entry.
   const entries = [
     { url: URL },
     { command: '', url: URL },
     { command: 1, url: URL },
     { command: 'npx', args: 'x', url: URL },
     { command: 'npx', args: [1], url: URL },
+    { command: 'npx', env: ['A=1'], url: URL },
     { command: 'npx', url: null },
     { type: 'stdio', command: 'npx', url: URL },
     { type: 'bad', command: 'npx', url: URL },

@@ -1,10 +1,12 @@
-// Claude Code reads the servers of a project `.mcp.json` from the top-level `mcpServers`
-// object. A plugin `.mcp.json` may omit the wrapper. The files glob is in tests/configs.test.ts.
+// Claude Code reads the servers of a project `.mcp.json` and a `managed-mcp.json` from the
+// top-level `mcpServers` object. A plugin `.mcp.json` may omit the wrapper. The files glob is in
+// tests/configs.test.ts.
 import path from 'node:path'
 import { expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import { ids, lintRootListedFile, lintRootPluginFile } from '../mcp-server-rule.test-support.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('mcp-json-servers-key')
 
@@ -165,4 +167,59 @@ it('reports a root file of a plugin repository with no wrapper', () => {
 it('stays silent for a root file of a plugin repository with the wrapper', () => {
   const code = `{"mcpServers": {"db": ${server}}}`
   expect(ids(lintRootPluginFile('mcp-json-servers-key', code))).toEqual([])
+})
+
+// A `managed-mcp.json` uses the format of a project `.mcp.json`, so it needs the wrapper too.
+const managed = 'managed-mcp.json'
+const github = '{"type": "http", "url": "https://api.githubcopilot.com/mcp/"}'
+
+jsonTester.run('mcp-json-servers-key (managed-mcp.json)', rule, {
+  valid: [
+    { name: 'managed, wrapper', code: `{"mcpServers": {"github": ${github}}}`, filename: managed },
+    // The docs turn MCP off with an empty server map.
+    { name: 'managed, empty map', code: '{"mcpServers": {}}', filename: managed },
+    {
+      name: 'managed, in a subdirectory',
+      code: `{"mcpServers": {"github": ${github}}}`,
+      filename: 'deploy/macos/managed-mcp.json',
+    },
+  ],
+  invalid: [
+    {
+      name: 'managed, no wrapper',
+      code: `{"github": ${github}}`,
+      filename: managed,
+      errors: [{ messageId: 'unwrapped', line: 1, column: 2, endColumn: 10 }],
+    },
+    {
+      name: 'managed, vscode key',
+      code: `{"servers": {"github": ${github}}}`,
+      filename: managed,
+      errors: [{ messageId: 'vscodeServers' }],
+    },
+    { name: 'managed, empty', code: '{}', filename: managed, errors: [{ messageId: 'missing' }] },
+    {
+      name: 'managed, wrapper not an object',
+      code: '{"mcpServers": []}',
+      filename: managed,
+      errors: [{ messageId: 'notObject' }],
+    },
+  ],
+})
+
+it('reports a managed-mcp.json with no wrapper at a plugin root', () => {
+  // A plugin has no `managed-mcp.json` component, so the plugin skip does not cover the file.
+  const root = repo({ '.claude-plugin/plugin.json': '{}' })
+  const code = `{"github": ${github}}`
+  expect(ids(lintJson('mcp-json-servers-key', code, path.join(root, managed)))).toEqual([
+    'unwrapped',
+  ])
+  const plugin = repo({ 'p/.claude-plugin/plugin.json': '{}' })
+  expect(ids(lintJson('mcp-json-servers-key', code, path.join(plugin, 'p', managed)))).toEqual([
+    'unwrapped',
+  ])
+  // The control: a plugin `.mcp.json` in the same directory may omit the wrapper.
+  expect(ids(lintJson('mcp-json-servers-key', code, path.join(plugin, 'p', '.mcp.json')))).toEqual(
+    [],
+  )
 })

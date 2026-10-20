@@ -3,11 +3,12 @@
 // object, and names the two usual causes: VS Code's `servers` key, and server entries
 // at the top level. A plugin `.mcp.json` may omit the wrapper, so the rule skips it. A `both`
 // file, the root `.mcp.json` of a repository that is a plugin, is a project file too, so the rule
-// reads it.
+// reads it. A committed `managed-mcp.json` uses the format of a project `.mcp.json`, so the rule
+// reads it too.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type MemberNode } from '../marketplace-json.ts'
-import { lastMembers, mcpFileKind } from '../mcp-servers.ts'
+import { lastMembers, mcpConfigKind } from '../mcp-servers.ts'
 
 const name = 'mcp-json-servers-key' as const
 
@@ -40,8 +41,9 @@ const rule: JSONRuleDefinition<{
     },
   },
   create(context) {
-    // A `both` file is a project file too, so it needs the wrapper.
-    const kind = mcpFileKind(context.filename)
+    // A `both` file is a project file too, so it needs the wrapper. A plugin has no
+    // `managed-mcp.json` component, so the rule reads that file in all directories.
+    const kind = mcpConfigKind(context.filename)
     if (kind === null || kind === 'plugin') {
       return {}
     }
@@ -76,7 +78,7 @@ const rule: JSONRuleDefinition<{
 export const target = {
   name,
   language: 'json' as const,
-  files: ['**/.mcp.json'],
+  files: ['**/.mcp.json', '**/managed-mcp.json'],
 }
 
 export default rule

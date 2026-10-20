@@ -3,9 +3,10 @@
 // tests/configs.test.ts.
 import path from 'node:path'
 import { expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import { ids, lintRootListedFile, lintRootPluginFile } from '../mcp-server-rule.test-support.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('mcp-remote-url-empty')
 
@@ -120,4 +121,36 @@ it('stays silent in the root file of a plugin repository', () => {
   const code = wrap('{"type": "http", "url": ""}')
   expect(ids(lintRootPluginFile('mcp-remote-url-empty', code))).toEqual([])
   expect(ids(lintRootListedFile('mcp-remote-url-empty', code))).toEqual([])
+})
+
+// A `managed-mcp.json` uses the format of a project `.mcp.json`. A plugin has no such component,
+// so no placeholder is there.
+const managed = 'managed-mcp.json'
+
+jsonTester.run('mcp-remote-url-empty (managed-mcp.json)', rule, {
+  valid: [
+    {
+      name: 'managed, a url',
+      code: wrap('{"type": "http", "url": "https://mcp.example.com/mcp"}'),
+      filename: managed,
+    },
+    // `mcp-json-servers-key` reports a managed file with no wrapper.
+    { name: 'managed, no wrapper', code: '{"a": {"type": "http", "url": ""}}', filename: managed },
+  ],
+  invalid: [
+    {
+      name: 'managed, an empty url',
+      code: wrap('{"type": "http", "url": ""}'),
+      filename: managed,
+      errors: [{ messageId: 'empty', data: { server: 'a' }, line: 1, column: 46, endColumn: 48 }],
+    },
+  ],
+})
+
+it('reports an empty url in a managed-mcp.json at a plugin root', () => {
+  const code = wrap('{"type": "http", "url": ""}')
+  const root = repo({ '.claude-plugin/plugin.json': '{}' })
+  expect(ids(lintJson('mcp-remote-url-empty', code, path.join(root, managed)))).toEqual(['empty'])
+  // The control: the `.mcp.json` in the same directory is a `both` file, which can hold one.
+  expect(ids(lintJson('mcp-remote-url-empty', code, path.join(root, '.mcp.json')))).toEqual([])
 })
