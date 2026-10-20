@@ -564,7 +564,8 @@ the old text is not available.
   A pull request from a fork or from Dependabot gets no secret. When it changes the snapshot or
   the map, and a page hash or a block hash changes, the check fails closed. A head whose hashes
   are the base needs no key (Decision 4, step 2). When a hash changes, a docs change during the
-  pull request also fails the check, and the author runs `update` again. Each run of the check that changes the state costs Jev calls.
+  pull request also fails the check, and the author runs `update` again. Each run of the check
+  that changes the state costs Jev calls.
 - The triage refresh merges with no person review (Decision 4). The project has one developer,
   and the rulesets "Require CI" and "Require CodeQL" have no review rule. A second developer,
   or a review rule, reopens this part of the decision. A refresh whose check fails stays open,
