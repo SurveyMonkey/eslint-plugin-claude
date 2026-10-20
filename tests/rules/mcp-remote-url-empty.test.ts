@@ -115,11 +115,9 @@ jsonTester.run('mcp-remote-url-empty (message text)', rule, {
   ],
 })
 
-// The root file of a repository that is a plugin is the project file too.
-it('reports in the root file of a plugin repository, in the mcpServers object only', () => {
+// The root file of a repository that is a plugin is a plugin file too, so it can hold a placeholder.
+it('stays silent in the root file of a plugin repository', () => {
   const code = wrap('{"type": "http", "url": ""}')
-  expect(ids(lintRootPluginFile('mcp-remote-url-empty', code))).toEqual(['empty'])
-  expect(ids(lintRootListedFile('mcp-remote-url-empty', code))).toEqual(['empty'])
-  const unwrapped = '{"a": {"type": "http", "url": ""}}'
-  expect(ids(lintRootPluginFile('mcp-remote-url-empty', unwrapped))).toEqual([])
+  expect(ids(lintRootPluginFile('mcp-remote-url-empty', code))).toEqual([])
+  expect(ids(lintRootListedFile('mcp-remote-url-empty', code))).toEqual([])
 })
