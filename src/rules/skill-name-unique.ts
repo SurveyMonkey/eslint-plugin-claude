@@ -5,7 +5,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
-import { escapeName } from '../skill-names.ts'
+import { escapeName, firstFault } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
@@ -45,6 +45,13 @@ function shownPath(relative: string): string {
     .join('/')
 }
 
+/** True when Claude Code refuses a part of a command name. Claude Code loads no such
+ *  name, and `skill-name-characters` reports it. So the rule compares no such name.
+ *  The check is for each part alone: a space at the edge of one part is a fault. */
+function refused(parts: string[]): boolean {
+  return parts.some((part) => firstFault(part) !== null)
+}
+
 /** The name from the field `name`, or the folder when the field is not a
  *  non-empty string. */
 function skillName(fields: Record<string, unknown> | null, folder: string): string {
@@ -70,25 +77,27 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
 
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
- *  entry. */
+ *  entry. A file with a refused name has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
   const skills = skillFiles(skillsDir, bound).flatMap((file) => {
     const fields = frontmatterOfFile(file)
-    return fields === UNREADABLE
-      ? []
-      : [{ file, name: skillName(fields, path.basename(path.dirname(file))) }]
+    if (fields === UNREADABLE) {
+      return []
+    }
+    const given = skillName(fields, path.basename(path.dirname(file)))
+    return refused([given]) ? [] : [{ file, name: given }]
   })
   const commandsDir = path.join(root, 'commands')
   // A `commands/` folder that the scan cannot read gives fewer entries. That can only hide a
   // duplicate, never add one, so the rule ignores `unreadable` here.
   const commands = (
     setsCommands(root, plugin, bound) ? [] : markdownFiles(commandsDir, bound).files
-  ).map((file) => ({
-    file,
-    name: path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep).join(':'),
-  }))
+  ).flatMap((file) => {
+    const parts = path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep)
+    return refused(parts) ? [] : [{ file, name: parts.join(':') }]
+  })
   return [...skills, ...commands]
 }
 
@@ -142,9 +151,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const own =
           file.kind === 'skill' ? skillName(given, file.names[0] as string) : file.names.join(':')
-        // Escape each name alone. A space is a fault at the edge of one name.
-        const shownOwn =
-          file.kind === 'skill' ? escapeName(own) : file.names.map(escapeName).join(':')
+        // Claude Code loads no refused name, so this file has no name to share.
+        if (refused(file.kind === 'skill' ? [own] : file.names)) {
+          return
+        }
         const others = scopeEntries(root, file.plugin, bound).filter(
           (entry) => entry.file !== self && fold(entry.name) === fold(own),
         )
@@ -153,7 +163,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             loc,
             messageId: 'duplicate',
             data: {
-              name: shownOwn,
+              name: own,
               others: others
                 .map((entry) => `\`${shownPath(path.relative(root, entry.file))}\``)
                 .join(', '),

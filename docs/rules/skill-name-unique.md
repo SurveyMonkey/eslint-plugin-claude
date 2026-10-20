@@ -48,6 +48,11 @@ skill:[^fold]
 - compatibility forms, such as fullwidth letters
 - dash variants, such as a Unicode hyphen, an en dash or a minus sign
 
+The rule does not compare a name that Claude Code refuses. Claude Code loads no file
+under such a name, and [`skill-name-characters`](skill-name-characters.md) reports it. A refused
+name and a loaded name give no report, in either file. This holds for a command name that has a
+refused part, and for a skill `name` or folder name that is refused.
+
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
 
@@ -57,8 +62,8 @@ rule uses it for the names in one scope, because the docs give no other rule.
 The rule reports on each file of a collision, not only on the second file. A rule that lints
 one file cannot know the order of the files. The report is on the `name` value, or on line 1
 when the name comes from the path or the folder. The message lists the other files of the scope.
-The message shows each character that `skill-name-characters` refuses as `<U+XXXX>`, in the name
-and in the paths.
+The message shows each character that `skill-name-characters` refuses as `<U+XXXX>` in a path.
+A skill folder can hold such a character and have a loaded `name`.
 
 A plugin that sets `commands` does not load `commands/`, so the rule skips that folder. The rule
 reads the other files from the disk, and reads no file out of the repository. The repository is

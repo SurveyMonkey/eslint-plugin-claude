@@ -34,22 +34,15 @@ const put = (file: string, text: string) => {
   return path.join(scratch, file)
 }
 
-// Two names that the rule treats as one, and two that it keeps apart.
+// Two names that the rule treats as one, and two that it keeps apart. A name that Claude Code
+// refuses is in `REFUSED`, not here.
 const SAME: [string, string, string][] = [
   ['case', 'Deploy', 'deploy'],
   ['case', 'DEPLOY', 'dEpLoY'],
   ['spacing', 'my deploy', 'mydeploy'],
-  ['spacing', 'deploy\u{a0}', 'deploy'],
-  ['spacing', 'dep\u{3000}loy', 'deploy'],
-  ['spacing', 'dep\tloy', 'deploy'],
-  ['spacing', 'dep\u{2028}loy', 'deploy'],
-  ['spacing', 'dep\u{2029}loy', 'deploy'],
   ['spacing, twice', 'a b c', 'abc'],
-  ['invisible, twice', 'd\u{200b}e\u{200b}ploy', 'deploy'],
   ['dash, twice', 'a\u{2010}b\u{2010}c', 'a-b-c'],
-  ['invisible', 'dep\u{200b}loy', 'deploy'],
   ['invisible', '\u{ad}deploy', 'deploy'],
-  ['invisible', '\u{feff}deploy', 'deploy'],
   ['invisible', 'dep\u{200d}loy', 'deploy'],
   ['fullwidth', '\u{ff44}\u{ff45}\u{ff50}\u{ff4c}\u{ff4f}\u{ff59}', 'deploy'],
   ['fullwidth', '\u{ff24}\u{ff25}\u{ff30}\u{ff2c}\u{ff2f}\u{ff39}', 'deploy'],
@@ -64,6 +57,22 @@ const SAME: [string, string, string][] = [
   ['dash', 'my\u{ff0d}app', 'my-app'],
   ['dash', 'my\u{fe63}app', 'my-app'],
 ]
+// A name that Claude Code refuses, and the loaded name that it would fold to. Claude Code loads
+// neither entry as that name, so the rule compares neither. Each row is a literal table.
+const REFUSED: [string, string, string][] = [
+  ['no-break space', 'deploy\u{a0}', 'deploy'],
+  ['ideographic space', 'dep\u{3000}loy', 'deploy'],
+  ['tab', 'dep\tloy', 'deploy'],
+  ['line separator', 'dep\u{2028}loy', 'deploy'],
+  ['paragraph separator', 'dep\u{2029}loy', 'deploy'],
+  ['zero-width space, twice', 'd\u{200b}e\u{200b}ploy', 'deploy'],
+  ['zero-width space', 'dep\u{200b}loy', 'deploy'],
+  ['byte order mark', '\u{feff}deploy', 'deploy'],
+  ['two spaces', 'dep  loy', 'deploy'],
+  ['space at the end', 'deploy ', 'deploy'],
+  ['direction control', 'dep\u{202e}loy', 'deploy'],
+  ['both refused', 'dep\u{200b}loy', 'dep\tloy'],
+]
 const DIFFERENT: [string, string][] = [
   ['d\u{435}ploy', 'deploy'], // a Cyrillic letter looks like a Latin letter
   ['my_app', 'my-app'],
@@ -71,11 +80,12 @@ const DIFFERENT: [string, string][] = [
   ['deploy', 'deploys'],
 ]
 put('three/.claude/commands/t.md', bare)
-put('escaped/.claude/commands/de\u202eploy.md', bare)
-put('edge/.claude/skills/ deploy/SKILL.md', bare)
-put('edge/.claude/skills/deploy /SKILL.md', bare)
-put('edge2/.claude/commands/a .md', bare)
-put('edge3/.claude/commands/ops/x.md', bare)
+// A folder name that Claude Code refuses, with a `name` that it takes. The name is loaded, so the
+// rule compares it, and the message prints the folder with the refused character as a code point.
+put('escaped/.claude/skills/de\u200bploy/SKILL.md', named('deploy'))
+put('escaped/.claude/skills/x\u202ey/SKILL.md', named('deploy'))
+put('edge/.claude/skills/ deploy/SKILL.md', named('deploy'))
+put('edge/.claude/skills/deploy /SKILL.md', named('deploy'))
 put('edge4/.claude/skills/a .md/SKILL.md', bare)
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
@@ -112,20 +122,6 @@ const pair = (index: number, first: string, second: string) => {
   }
 }
 
-// The names of `SAME` that hold a refused character, as the message prints them. The other
-// names print unchanged. A soft hyphen and a joiner are not refused.
-const PRINTED: Record<string, string> = {
-  'deploy\u{a0}': 'deploy<U+00A0>',
-  'dep\u{3000}loy': 'dep<U+3000>loy',
-  'dep\tloy': 'dep<U+0009>loy',
-  'dep\u{2028}loy': 'dep<U+2028>loy',
-  'dep\u{2029}loy': 'dep<U+2029>loy',
-  'd\u{200b}e\u{200b}ploy': 'd<U+200B>e<U+200B>ploy',
-  'dep\u{200b}loy': 'dep<U+200B>loy',
-  '\u{feff}deploy': '<U+FEFF>deploy',
-}
-const shown = (name: string) => PRINTED[name] ?? name
-
 const sameCases = SAME.map(([, first, second], index) => {
   const { code, filename } = pair(index, first, second)
   return {
@@ -134,11 +130,20 @@ const sameCases = SAME.map(([, first, second], index) => {
     errors: [
       {
         messageId: 'duplicate' as const,
-        data: { name: shown(first), others: '`skills/b/SKILL.md`' },
+        data: { name: first, others: '`skills/b/SKILL.md`' },
         line: 2,
       },
     ],
   }
+})
+// Both files of each pair give no report: Claude Code loads the refused one under no name, and
+// the other one has no name to share.
+const refusedCases = REFUSED.flatMap(([, first, second], index) => {
+  const { code, filename, other } = pair(300 + index, first, second)
+  return [
+    { code, filename },
+    { code: named(quote(second)), filename: other },
+  ]
 })
 const differentCases = DIFFERENT.map(([first, second], index) => {
   const { code, filename } = pair(100 + index, first, second)
@@ -151,6 +156,17 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // A name that no other file has.
     { code: bare, filename: skillAt('single', 'only') },
     ...differentCases,
+    ...refusedCases,
+    // A zero-width space in a folder name and a double space in a command name (#327). Each
+    // folds to `ab`. `skill-name-characters` reports each one, and Claude Code loads neither.
+    { code: bare, filename: put('refused/.claude/skills/a​b/SKILL.md', bare) },
+    { code: bare, filename: put('refused/.claude/commands/a  b.md', bare) },
+    { code: bare, filename: put('refused/.claude/skills/ab/SKILL.md', bare) },
+    // A refused command folder or file name is not compared, in the path or in the name.
+    { code: bare, filename: put('refused/.claude/commands/ops /x.md', bare) },
+    { code: bare, filename: put('refused/.claude/commands/ops/x.md', bare) },
+    { code: bare, filename: put('edge2/.claude/commands/a.md', bare) },
+    { code: bare, filename: put('edge2/.claude/commands/a .md', bare) },
     // Two scopes may share a name: nested `.claude/` directories, two plugins, a plugin and the project.
     { code: bare, filename: skillAt('scopes', 'deploy') },
     { code: bare, filename: skillAt('scopes', 'deploy', 'packages', 'web') },
@@ -381,27 +397,12 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
           messageId: 'duplicate',
           data: {
             name: 'deploy',
-            others: '`skills/de<U+200B>ploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
+            others: '`skills/de<U+200B>ploy/SKILL.md`, `skills/x<U+202E>y/SKILL.md`',
           },
         },
       ],
     },
-    {
-      code: named(quote('de\u200bploy')),
-      filename: put('escaped/.claude/skills/de\u200bploy/SKILL.md', named(quote('de\u200bploy'))),
-      errors: [
-        {
-          messageId: 'duplicate',
-          data: {
-            name: 'de<U+200B>ploy',
-            others: '`skills/deploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
-          },
-          line: 2,
-        },
-      ],
-    },
-    // A space at the edge of one folder or file name is a fault.
-    // This holds in the middle of a path too.
+    // A space at the edge of one folder name is a fault.
     {
       code: bare,
       filename: put('edge/.claude/skills/deploy/SKILL.md', bare),
@@ -412,26 +413,6 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
             name: 'deploy',
             others: '`skills/<U+0020>deploy/SKILL.md`, `skills/deploy<U+0020>/SKILL.md`',
           },
-        },
-      ],
-    },
-    {
-      code: bare,
-      filename: put('edge2/.claude/commands/a.md', bare),
-      errors: [
-        {
-          messageId: 'duplicate',
-          data: { name: 'a', others: '`commands/a<U+0020>.md`' },
-        },
-      ],
-    },
-    {
-      code: bare,
-      filename: put('edge3/.claude/commands/ops /x.md', bare),
-      errors: [
-        {
-          messageId: 'duplicate',
-          data: { name: 'ops<U+0020>:x', others: '`commands/ops/x.md`' },
         },
       ],
     },
