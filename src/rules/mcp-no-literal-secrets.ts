@@ -101,8 +101,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'secret' }> = {
     },
   },
   create(context) {
-    // `validate` warns about a header value in a plugin file with a manifest, and in a `both` file
-    // with a manifest. A manifest holds plugin servers. `validate` fails a plugin with no
+    // `validate` warns about a header value in a plugin file with a manifest. A `both` file with a
+    // manifest is such a file. A manifest holds plugin servers. `validate` fails a plugin with no
     // `plugin.json` (v2.1.302), so the rule reads its headers.
     const plugin =
       path.basename(context.filename) === 'plugin.json' ||

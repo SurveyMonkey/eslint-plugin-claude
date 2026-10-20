@@ -37,7 +37,8 @@ export const SERVER_NAME_PATTERN = /^[A-Za-z0-9_-]+$/
 /** Where a `.mcp.json` sits: in a project, at the root of a plugin, or at the root of a
  *  repository that is a plugin. Claude Code reads a `both` file as the project config in the
  *  repository, and as the plugin config after install. The project rules and the plugin rules
- *  both read it. A rule that defers to `claude plugin validate` can skip it. */
+ *  both read it. A rule that defers to `claude plugin validate` can skip it when the plugin has
+ *  a manifest. */
 export type McpFileKind = 'project' | 'plugin' | 'both'
 
 // The paths under `.claude/` that people try. The ends of the paths are listed here.
@@ -58,8 +59,9 @@ export function isUnreadMcpPath(filename: string): boolean {
 /** The kind of the `.mcp.json` at `filename`. The result is null when no report can rest on
  *  the file. This is true for a path that Claude Code never reads. It is also true for a
  *  directory that the plugin-root check cannot read (ADR 001, Decision 14). A plugin root that
- *  holds `.git` is the repository root, so its file is `both`. A plugin root with no `.git`,
- *  such as an installed copy, is not a repository, so its file is `plugin` only. */
+ *  holds `.git` is the repository root, so its file is `both`. A plugin root with no `.git` is
+ *  not the repository root, so its file is `plugin` only. An example is a plugin in a
+ *  subdirectory of a repository. */
 export function mcpFileKind(filename: string): McpFileKind | null {
   if (isUnreadMcpPath(filename)) {
     return null
@@ -84,9 +86,9 @@ export function isPluginMcpFile(filename: string): boolean {
 
 /** The members of the server map of a file whose top-level value is `body`: the members of the
  *  `mcpServers` object. A plugin file with no `mcpServers` member has no wrapper, so its map is
- *  the top-level object. A `both` file is read the same way, as the plugin loads that map after
- *  install. A check of the project kind passes `project`, because the project reads the wrapper
- *  only. The result is empty when there is no map to read.
+ *  the top-level object. The function reads a `both` file the same way, as the plugin loads that
+ *  map after install. A check of the project kind passes `project`, because the project reads
+ *  the wrapper only. The result is empty when there is no map to read.
  *  Of two members with one name, only the last stays, as `JSON.parse` keeps the last. */
 export function serverMembers(body: ValueNode, kind: McpFileKind): MemberNode[] {
   if (body.type !== 'Object') {

@@ -97,9 +97,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
         },
       }
     }
-    // `claude plugin validate` warns for the config of a plugin with a manifest, and for a `both`
-    // file with a manifest. `mcpFileKind` also gives `project` to a file that is not `.mcp.json`,
-    // so the rule checks the file name.
+    // `claude plugin validate` warns for the config of a plugin with a manifest. A `both` file with
+    // a manifest is such a config. `mcpFileKind` also gives `project` to a file that is not
+    // `.mcp.json`, so the rule checks the file name.
     const kind = mcpFileKind(context.filename)
     if (
       kind === null ||
