@@ -494,7 +494,7 @@ it('stays silent on a plugin .mcp.json in a directory that it cannot read', () =
   expect(ids(found)).toEqual([])
 })
 // `claude plugin validate` reads the root file of a repository that is a plugin with a manifest. It
-// reads no `.mcp.json` of a plugin with no manifest, so the project check runs there.
+// does not read that root file when the plugin has no manifest, so the project check runs there.
 it('reports each fault in the root file of a plugin repository with no manifest', () => {
   const code = '{"mcpServers": {"a": {"command": 5}}}'
   expect(ids(lintRootListedFile('mcp-server-schema', code))).toEqual(['commandType'])

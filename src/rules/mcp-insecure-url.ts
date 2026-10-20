@@ -2,8 +2,9 @@
 // a host that is not on the machine goes in clear text. `claude plugin validate` warns about this
 // URL in the MCP configs of a plugin with a manifest (v2.1.281 or later). It fails a plugin with
 // no `plugin.json` (v2.1.302). So the rule reads the project `.mcp.json`, and the `.mcp.json` of
-// such a plugin. Validate reads a `both` file with a manifest, so the rule skips it. A loopback host is on the machine, so it is silent. A host with a `${`
-// reference is not known, so it is silent too.
+// such a plugin. Validate reads a `both` file with a manifest, so the rule skips it. A loopback
+// host is on the machine, so it is silent. A host with a `${` reference is not known, so it is
+// silent too.
 // The rule also reads each string in the `mcpServers` of `.claude-plugin/plugin.json`: the path or
 // URL of an MCP bundle. Validate passes an `http://` bundle URL (v2.1.302), so the rule reports it.
 // The docs ask for "a path inside the plugin or an `https://` URL". A loopback host and a `${` host

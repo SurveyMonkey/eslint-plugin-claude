@@ -4,7 +4,8 @@
 // with `./` or `../` depends on a directory that the plugin does not control. The rule is a
 // heuristic. It does not look for the target of the path. An absolute path, a bare program name
 // and a path that starts with a variable are silent. `mcp-stdio-relative-path` owns a project `.mcp.json`.
-// The root `.mcp.json` of a repository that is a plugin (a `both` file) gets the two rules.
+// The root `.mcp.json` of a repository that is a plugin (a `both` file) gets this rule and
+// `mcp-stdio-relative-path`.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'

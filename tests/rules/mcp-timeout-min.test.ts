@@ -217,8 +217,8 @@ describe('mcp-timeout-min option schema', () => {
   })
 })
 
-// The root file of a repository that is a plugin is a project file and a plugin file. A rule of
-// both kinds reads its wrapper, or its top-level object when it has no wrapper.
+// The root file of a repository that is a plugin is a project file and a plugin file. A rule that
+// reads each kind reads its wrapper, or its top-level object when it has no wrapper.
 it('reads the root file of a plugin repository, with or without the wrapper', () => {
   expect(ids(lintRootPluginFile('mcp-timeout-min', wrap('{"timeout": 60}')))).toEqual(['tooSmall'])
   expect(ids(lintRootListedFile('mcp-timeout-min', '{"a": {"timeout": 60}}'))).toEqual(['tooSmall'])

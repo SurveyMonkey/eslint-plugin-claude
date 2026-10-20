@@ -149,8 +149,9 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     if (kind === null) {
       return {}
     }
-    // Validate reads a `both` file with a manifest. It reads no `.mcp.json` of a plugin with no
-    // manifest, so a `both` file with no manifest gets the faults of a project file.
+    // Validate reads a `both` file with a manifest, so that file gets the plugin faults. Validate
+    // does not read a `both` file with no manifest, so that file gets each fault. A `plugin` file
+    // gets the plugin faults, with or without a manifest.
     const validated =
       kind === 'plugin' ||
       (kind === 'both' && hasManifest(path.dirname(path.resolve(context.filename))) === true)

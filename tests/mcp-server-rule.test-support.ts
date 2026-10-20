@@ -1,5 +1,6 @@
 // Where an MCP server rule runs: a project `.mcp.json`, a plugin `.mcp.json`, the root `.mcp.json`
-// of a repository that is a plugin, and the manifest of a plugin. The files are on disk, so the helpers use `Linter` and a repository with `.git`.
+// of a repository that is a plugin, and the manifest of a plugin. The files are on disk, so the
+// helpers use `Linter` and a repository with `.git`.
 import path from 'node:path'
 import { repo } from './agent-settings.test-support.ts'
 import { lintJson } from './rule-tester.test-support.ts'

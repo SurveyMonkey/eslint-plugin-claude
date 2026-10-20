@@ -1,10 +1,10 @@
 // The reader that the `.mcp.json` rules share. A rule asks where the file is, and gets
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
 // may omit that wrapper, so its map is the top-level object. The root `.mcp.json` of a
-// repository that is a plugin is a project file and a plugin file. The module also holds the reader of
-// the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
-// reader of the allow and deny lists. It also holds the reader of a URL that holds a reference in
-// its port.
+// repository that is a plugin is a project file and a plugin file. The module also holds the
+// reader of the servers that a plugin declares, the reader of a JSON file as an AST, and the
+// policy key reader of the allow and deny lists. It also holds the reader of a URL that holds a
+// reference in its port.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
 import { existsSync } from 'node:fs'
 import path from 'node:path'
@@ -36,8 +36,8 @@ export const SERVER_NAME_PATTERN = /^[A-Za-z0-9_-]+$/
 
 /** Where a `.mcp.json` sits: in a project, at the root of a plugin, or at the root of a
  *  repository that is a plugin. Claude Code reads a `both` file as the project config in the
- *  repository, and as the plugin config after install. A rule applies the checks of the two
- *  kinds to it. */
+ *  repository, and as the plugin config after install. The project rules and the plugin rules
+ *  both read it. A rule that defers to `claude plugin validate` can skip it. */
 export type McpFileKind = 'project' | 'plugin' | 'both'
 
 // The paths under `.claude/` that people try. The ends of the paths are listed here.
