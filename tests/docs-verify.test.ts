@@ -704,7 +704,8 @@ describe('a head that the gate does not compare with the base', () => {
 
   // The check compares no block when the page hash is the same. So the base
   // compare must send a block that changed by hand to the live path. The
-  // live path has the same limit: with a key, it can pass such a head.
+  // live path does not compare the blocks either, so with a key it can pass
+  // such a head.
   it.each([
     ['key', (block: { id: string }) => Object.assign(block, { id: `${block.id}-x` })],
     ['hash', (block: { hash: string }) => Object.assign(block, { hash: 'f'.repeat(64) })],
