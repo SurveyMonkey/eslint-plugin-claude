@@ -5517,6 +5517,48 @@ const AGENT_OFF_RULES = [
 // tree get their reports, so `DESCRIPTION_TREE` tests them.
 const DESCRIPTION_RULES = AGENT_OFF_RULES.slice(-5)
 
+// The 36 rules that had the glob `**/agents/**/*.md` before #377. A plugin manifest can name an
+// agent file at any path in the plugin, so each rule has the glob `**/*.md` and finds its files
+// in code.
+const MANIFEST_AGENT_RULES = [
+  'agent-disallowed-tools-scope',
+  'agent-field-min-version',
+  'agent-frontmatter-schema',
+  'agent-frontmatter-valid',
+  'agent-initial-prompt-main-only',
+  'agent-mcp-servers-inline-trust',
+  'agent-mcp-servers-ref-exists',
+  'agent-mcp-servers-schema',
+  'agent-memory-auto-memory-off',
+  'agent-memory-grants-write',
+  'agent-memory-scope-project',
+  'agent-model-forced',
+  'agent-model-value',
+  'agent-name-shadowing',
+  'agent-name-shadows-builtin',
+  'agent-name-unique',
+  'agent-no-bom',
+  'agent-omit-claude-md-main',
+  'agent-permission-mode-auto-unavailable',
+  'agent-permission-mode-bypass',
+  'agent-permission-mode-manual',
+  'agent-plugin-ignored-fields',
+  'agent-plugin-scoped-name-unique',
+  'agent-skills-exist',
+  'agent-skills-preload-limit',
+  'agent-skills-preloadable',
+  'agent-tools-agent-type-list',
+  'agent-tools-conditional',
+  'agent-tools-known',
+  'agent-tools-skill-for-preload',
+  'agent-tools-task-alias',
+  'agent-tools-unavailable',
+  'frontmatter-yaml-portable',
+  'mcp-plugin-tool-name-scoped',
+  'plugin-path-var-braced',
+  'plugin-user-config-sensitive-in-content',
+]
+
 // The hooks rules of layer 1 of #10, in the order of the `modules` list, with the blocks of each.
 // A rule of the hooks config has one JSON block and one Markdown block. Each is an error.
 const HOOKS_JSON = [...PROJECT_FILES, ...MANAGED_FILES, '**/hooks/hooks.json']
@@ -6191,6 +6233,20 @@ describe('configs', () => {
     }
   })
 
+  it('gives each rule that reads a manifest agent the glob **/*.md in each config', () => {
+    for (const config of ['recommended', 'strict'] as const) {
+      const on = MANIFEST_AGENT_RULES.filter((rule) => hasRuleBlock(plugin.configs[config], rule))
+      expect(on).toHaveLength(config === 'strict' ? 36 : 30)
+      for (const rule of on) {
+        const blocks = plugin.configs[config].filter((c) => c.name === `claude/${config}/${rule}`)
+        expect(
+          blocks.map((c) => [c.language, c.files]),
+          rule,
+        ).toEqual([['markdown/gfm', ['**/*.md']]])
+      }
+    }
+  })
+
   it('turns each off MCP rule on in strict only, on the files that it reads', () => {
     for (const { name, files, markdown } of MCP_OFF_RULES) {
       expect(hasRuleBlock(plugin.configs.recommended, name)).toBe(false)
@@ -6646,9 +6702,9 @@ describe('configs', () => {
   }, 30_000)
 
   // Issue #377: the same agent in `agents/` of the plugin `p`, and at `custom/a.md`, which the
-  // manifest of the plugin `q` names. Each file gets the same reports. The other Markdown files
-  // are no agent files, so they get no report.
-  it('strict reports an agent that a manifest names outside agents/ as it reports one in agents/', async () => {
+  // manifest of the plugin `q` names. Each file gets the same reports, in each config. The other
+  // Markdown files are no agent files, so they get no report.
+  it('each config reports an agent that a manifest names outside agents/ as it reports one in agents/', async () => {
     const agent = agentFile(
       'probe',
       'Reviews code.',
@@ -6674,22 +6730,32 @@ describe('configs', () => {
         mkdirSync(path.dirname(path.join(base, file)), { recursive: true })
         writeFileSync(path.join(base, file), content)
       }
-      const found = (await reports(plugin.configs.strict, base)).filter((report) =>
-        /^[^:]+\.md: /.test(report),
-      )
-      const rulesOf = (file: string) =>
-        found.filter((report) => report.startsWith(`${file}: `)).map((r) => r.split(': ')[1])
-      expect(rulesOf('plugins/p/agents/b.md')).toEqual([
-        'claude/agent-description-proactive@1',
-        'claude/agent-plugin-ignored-fields@2',
-        'claude/agent-skills-exist@1',
-        'claude/agent-tools-known@2',
-        'claude/plugin-path-var-braced@2',
-      ])
-      expect(rulesOf('plugins/q/custom/a.md')).toEqual(rulesOf('plugins/p/agents/b.md'))
-      expect(
-        found.filter((report) => !/^plugins\/(?:q\/custom\/a|p\/agents\/b)\.md: /.test(report)),
-      ).toEqual([])
+      const expected = {
+        strict: [
+          'claude/agent-description-proactive@1',
+          'claude/agent-plugin-ignored-fields@2',
+          'claude/agent-skills-exist@1',
+          'claude/agent-tools-known@2',
+          'claude/plugin-path-var-braced@2',
+        ],
+        recommended: [
+          'claude/agent-plugin-ignored-fields@2',
+          'claude/agent-tools-known@2',
+          'claude/plugin-path-var-braced@2',
+        ],
+      }
+      for (const config of ['strict', 'recommended'] as const) {
+        const found = (await reports(plugin.configs[config], base)).filter((report) =>
+          /^[^:]+\.md: /.test(report),
+        )
+        const rulesOf = (file: string) =>
+          found.filter((report) => report.startsWith(`${file}: `)).map((r) => r.split(': ')[1])
+        expect(rulesOf('plugins/p/agents/b.md')).toEqual(expected[config])
+        expect(rulesOf('plugins/q/custom/a.md')).toEqual(expected[config])
+        expect(
+          found.filter((report) => !/^plugins\/(?:q\/custom\/a|p\/agents\/b)\.md: /.test(report)),
+        ).toEqual([])
+      }
     } finally {
       rmSync(base, { recursive: true, force: true })
     }
@@ -7057,6 +7123,7 @@ describe('files of each rule in recommended and strict', () => {
     })
     const config = await eslint.calculateConfigForFile(path.join(tmpdir(), 'docs/note.md'))
     expect(config?.language).toBe(markdown.languages.gfm)
+    expect(config?.languageOptions?.frontmatter).toBe('yaml')
     expect(config?.rules?.['claude/agent-body-nonempty']).toEqual([1])
   })
 
