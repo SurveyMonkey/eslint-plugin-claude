@@ -33,7 +33,8 @@ The rule does not report `--remote-control`, `--rc` or the `claude remote-contro
 flags and commands.
 
 - **Exec form** (the handler sets `args`). The executable is `claude`, a path that ends in `claude`, or
-  `claude.exe`. A `/` or a `\` ends each directory of the path. The rule reports an item of `args` that is the flag, at the item.
+  `claude.exe`. A `/` or a `\` ends each directory of the path. The rule reports an item of `args` that is
+  the flag, at the item.
 - **Shell form** (no `args`). The rule splits the line into simple commands and reads quotes and backslashes.
   It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`.
   It reports at the string. The command word must be `claude`, or a path that ends in it. A later word must be

@@ -53,8 +53,8 @@ The rule does not know which global flags take a value. It finds the subcommand 
 the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault. The rule does not
 skip an option of `env`, such as `-i`. In shell form, bash removes a backslash out of quotes, unless a backslash
 comes before it. So the shell line `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`, and the rule gives no report.
-The rule reads no hidden file in
-`managed-settings.d/`, and no plugin agent, because Claude Code ignores the `hooks` field there.
+The rule reads no hidden file in `managed-settings.d/`, and no plugin agent, because Claude Code ignores the
+`hooks` field there.
 
 Fail, in `.claude/settings.json`:
 
