@@ -114,7 +114,7 @@ describe('mcpFileKind', () => {
 })
 
 describe('mcpConfigKind', () => {
-  it('is project for a managed-mcp.json, also at a plugin root and in an unread path', () => {
+  it('is project for a managed-mcp.json, also at a plugin root and in .claude', () => {
     put(repo('.claude-plugin', 'plugin.json'))
     put(repo('p', '.claude-plugin', 'plugin.json'))
     expect(mcpConfigKind(repo('managed-mcp.json'))).toBe('project')
