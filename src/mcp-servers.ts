@@ -38,7 +38,7 @@ export const SERVER_NAME_PATTERN = /^[A-Za-z0-9_-]+$/
  *  repository that is a plugin. Claude Code reads a `both` file as the project config in the
  *  repository, and as the plugin config after install. The project rules and the plugin rules
  *  both read it. A rule that defers to `claude plugin validate` can skip it when the plugin has
- *  a manifest. */
+ *  a manifest. `mcpConfigKind` gives a `managed-mcp.json` the `project` kind. */
 export type McpFileKind = 'project' | 'plugin' | 'both'
 
 // The paths under `.claude/` that people try. The ends of the paths are listed here.
@@ -85,8 +85,8 @@ export function mcpConfigKind(filename: string): McpFileKind | null {
   return path.basename(filename) === 'managed-mcp.json' ? 'project' : mcpFileKind(filename)
 }
 
-/** True when Claude Code reads the MCP config at `filename` as the config of a plugin: a
- *  `plugin` file or a `both` file. A `managed-mcp.json` is never one. */
+/** True when Claude Code reads the MCP config at `filename` as plugin config. That is a `plugin`
+ *  file or a `both` file. A `managed-mcp.json` is never one. */
 export function isPluginMcpFile(filename: string): boolean {
   const kind = mcpConfigKind(filename)
   return kind === 'plugin' || kind === 'both'

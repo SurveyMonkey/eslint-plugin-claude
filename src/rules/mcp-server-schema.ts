@@ -5,8 +5,8 @@
 // reports that fault only (rulings 14 and 20 of #355). Validate fails a plugin with no manifest,
 // so the rule reports each fault there (#384). An entry with no `type` is a stdio server. Claude
 // Code skips a `sdk` entry with its own message, and #355 leaves that entry to it. Claude Code
-// 2.1.304 skips an empty `command`, and an `env`, `headers` or `oauth` that is not an object, in
-// the entry types that read them (#383).
+// 2.1.304 skips an empty `command` (#383). It also skips an `env`, `headers` or `oauth` that is
+// not an object, in the entry types that it checks.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
