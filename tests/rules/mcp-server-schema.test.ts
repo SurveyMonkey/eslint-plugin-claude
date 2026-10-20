@@ -602,8 +602,8 @@ it('reports only a url with a command and no type in a plugin manifest', () => {
   expect(ids(lintManifest('mcp-server-schema', root, rootFile))).toEqual([])
 })
 it('stays silent in a plugin on an entry that validate reports or that has no url', () => {
-  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio. The `env`
-  // entry was checked on validate 2.1.304.
+  // Validate 2.1.302 reports each of these entries, or Claude Code reads it as stdio. Validate
+  // 2.1.304 reports the `env` entry.
   const entries = [
     { url: URL },
     { command: '', url: URL },

@@ -5,8 +5,8 @@
 // reports that fault only (rulings 14 and 20 of #355). Validate fails a plugin with no manifest,
 // so the rule reports each fault there (#384). An entry with no `type` is a stdio server. Claude
 // Code skips a `sdk` entry with its own message, and #355 leaves that entry to it. Claude Code
-// 2.1.304 skips an empty `command`, and an `env`, `headers` or `oauth` that is not an object
-// (#383).
+// 2.1.304 skips an empty `command`, and an `env`, `headers` or `oauth` that is not an object, in
+// the entry types that read them (#383).
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -70,8 +70,8 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 
 /** The `url` fault of the remote entry `entry`, whose `type` value is `type`. The `url` is there,
  *  and is a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports
- *  in a project `.mcp.json`. A `${` reference can expand to any text, so the rule does not parse
- *  a URL that holds one. */
+ *  in a project `.mcp.json` and a `managed-mcp.json`. A `${` reference can expand to any text, so
+ *  the rule does not parse a URL that holds one. */
 function urlFaults(
   entry: ValueNode,
   type: ValueNode,
@@ -90,8 +90,8 @@ function urlFaults(
 }
 
 /** The faults of the remote entry `entry`, whose `type` value is the string `type`. They are the
- *  `url` fault, and a `headers` that is not an object. Claude Code 2.1.304 also skips an `oauth`
- *  that is not an object, in each remote type but `ws`. */
+ *  `url` fault, a `headers` that is not an object, and an `oauth` that is not an object. Claude
+ *  Code 2.1.304 does not check `oauth` in a `ws` entry, so the rule does not either. */
 function remoteFaults(
   entry: ValueNode,
   type: Extract<ValueNode, { type: 'String' }>,
@@ -130,8 +130,8 @@ function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 
 /** The faults of the plugin server entry `entry`. Validate 2.1.302 passes an entry with a `url`
  *  and no `type` when the entry has a good stdio shape. That shape is a `command` that is not
- *  empty, and `args` of strings. Validate 2.1.304 also needs an `env` object. It reports each
- *  other fault, so the result is `urlNoType` or nothing. */
+ *  empty, and `args` of strings. Validate 2.1.304 also needs an `env`, when present, to be an
+ *  object. It reports each other fault, so the result is `urlNoType` or nothing. */
 function pluginFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
   if (stdioFaults(entry).length > 0) {
     return []

@@ -50,8 +50,8 @@ The rule also reads a committed `managed-mcp.json`. That file uses the same form
 object. A plugin has no `managed-mcp.json` component. So the rule reads that file in all
 directories, also at a plugin root.
 
-The rule does not check the entries inside the object. It also skips the paths under `.claude/`,
-which `mcp-json-location` reports.
+The rule does not check the entries inside the object. It also skips the `.mcp.json` paths under
+`.claude/`, which `mcp-json-location` reports.
 
 Fail:
 

@@ -45,7 +45,7 @@ The rule leaves these cases alone:
 
 - A server with no `type`, or with `type: "stdio"`. The `url` of such a server is not a remote URL.
 - A `url` that is only whitespace. The rule `mcp-hidden-whitespace` reports the edges of a value.
-- A path under `.claude/`, which `mcp-json-location` reports.
+- A `.mcp.json` path under `.claude/`, which `mcp-json-location` reports.
 
 Fail:
 

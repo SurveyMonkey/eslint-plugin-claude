@@ -51,10 +51,10 @@ The rule reports these faults of a server entry:
 - The `oauth` of an `http`, `streamable-http` or `sse` entry is not an object. The report is on
   the `oauth` value.
 
-For the last four faults, a `null` value is a fault too. Claude Code 2.1.304 skips each of these
-entries in a project `.mcp.json`, and names the field in `claude mcp list`.[^quickstart] It does
-not check `env` in a remote entry, or `headers` and `oauth` in a stdio entry. It does not check
-`oauth` in a `ws` entry. So the rule does not check them there.
+For the `env`, `headers` and `oauth` faults, a `null` value is a fault too. Claude Code 2.1.304
+skips each of these entries in a project `.mcp.json`, and names the field in
+`claude mcp list`.[^quickstart] It does not check `env` in a remote entry, or `headers` and `oauth`
+in a stdio entry. It does not check `oauth` in a `ws` entry. So the rule does not check them there.
 
 A stdio entry has the `type` `stdio`, or no `type`. A remote entry has the `type` `http`,
 `streamable-http`, `sse` or `ws`. An entry with no `type` and a `url` gets one report only.
@@ -68,7 +68,7 @@ name, the last one counts, as `JSON.parse` keeps it.
 In a plugin with a manifest, the rule reports one fault only. That fault is a `url` with no `type`,
 in an entry with a good stdio shape. That entry has a `command` that is not empty, `args` of
 strings, and no `env` fault. `claude plugin validate` 2.1.302 passes that entry, but Claude Code
-skips it.[^http]
+skips it.[^http] Validate 2.1.304 passes that entry with an `env` object.
 Validate reports each other fault that makes Claude Code drop a plugin entry at load. It also
 reports a remote `url` that is not a valid absolute URL.[^validate] [^plugin] The rule reads a
 plugin `.mcp.json`, and the inline servers of `plugin.json`. It also reads the servers of each
@@ -96,7 +96,8 @@ The rule leaves these cases alone:
 - Each other fault in the `.mcp.json` of a plugin with a manifest, and in the servers of
   `plugin.json`. Validate reports it. The `.mcp.json` of a plugin with no manifest is not in this
   case.
-- A path under `.claude/`, which Claude Code never reads. The rule `mcp-json-location` reports it.
+- A `.mcp.json` path under `.claude/`, which Claude Code never reads. The rule
+  `mcp-json-location` reports it.
 
 Fail:
 
