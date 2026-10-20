@@ -51,7 +51,8 @@ skill:[^fold]
 The rule does not compare a name that Claude Code refuses. Claude Code loads no file
 under such a name, and [`skill-name-characters`](skill-name-characters.md) reports it. A refused
 name and a loaded name give no report, in either file. This holds for a command name that has a
-refused part, and for a skill `name` or folder name that is refused.
+refused part, and for a skill name that is refused. A skill name is the `name` field, or the folder
+name when the field gives way. A refused folder name with a loaded `name` is still compared.
 
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
