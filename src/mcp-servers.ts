@@ -85,10 +85,10 @@ export function mcpConfigKind(filename: string): McpFileKind | null {
   return path.basename(filename) === 'managed-mcp.json' ? 'project' : mcpFileKind(filename)
 }
 
-/** True when Claude Code reads the `.mcp.json` at `filename` as the config of a plugin: a
- *  `plugin` file or a `both` file. */
+/** True when Claude Code reads the MCP config at `filename` as the config of a plugin: a
+ *  `plugin` file or a `both` file. A `managed-mcp.json` is never one. */
 export function isPluginMcpFile(filename: string): boolean {
-  const kind = mcpFileKind(filename)
+  const kind = mcpConfigKind(filename)
   return kind === 'plugin' || kind === 'both'
 }
 
@@ -369,7 +369,8 @@ export interface LintedServer {
  *  members of its map. A `plugin.json` gives the servers that it declares, inline or in a `.json`
  *  file. It leaves out the `.mcp.json` at the plugin root. That file has its own lint run, so no
  *  server gets two reports. A `.mcp.json` path that Claude Code never reads gives an empty result.
- *  A source that the rule cannot read gives none too (ADR 001, Decision 14). */
+ *  A source that the rule cannot read gives none too (ADR 001, Decision 14). A `managed-mcp.json`
+ *  gives the members of its `mcpServers` object. */
 export function lintedServers(filename: string, body: ValueNode): LintedServer[] {
   if (path.basename(filename) === 'plugin.json') {
     const root = path.dirname(path.dirname(path.resolve(filename)))
@@ -381,7 +382,7 @@ export function lintedServers(filename: string, body: ValueNode): LintedServer[]
         pinned: node === member.name ? undefined : node,
       }))
   }
-  const kind = mcpFileKind(filename)
+  const kind = mcpConfigKind(filename)
   return kind === null
     ? []
     : serverMembers(body, kind).map((member) => ({ name: keyOf(member.name), member }))

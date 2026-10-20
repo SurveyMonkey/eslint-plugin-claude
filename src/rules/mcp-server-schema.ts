@@ -10,16 +10,8 @@
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import {
-  type LintedServer,
-  lintedServers,
-  type McpFileKind,
-  mcpFileKind,
-  parseUrl,
-  REMOTE_SERVER_TYPES,
-  serverMembers,
-} from '../mcp-servers.ts'
+import { lastMember, type ValueNode } from '../marketplace-json.ts'
+import { lintedServers, mcpConfigKind, parseUrl, REMOTE_SERVER_TYPES } from '../mcp-servers.ts'
 import { hasManifest } from '../plugin-root.ts'
 
 const name = 'mcp-server-schema' as const
@@ -174,15 +166,11 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
   },
   create(context) {
     const base = path.basename(context.filename)
-    // A plugin has no `managed-mcp.json` component, and `claude plugin validate` 2.1.302 does not
-    // read the file. So the rule reads it in all directories. Its map is the `mcpServers` object.
-    const managed = base === 'managed-mcp.json'
     // A manifest holds plugin servers. A `.mcp.json` gets no report when Claude Code never reads
-    // its path, or when the rule cannot read its directory.
-    let kind: McpFileKind | null = 'project'
-    if (!managed) {
-      kind = base === 'plugin.json' ? 'plugin' : mcpFileKind(context.filename)
-    }
+    // its path, or when the rule cannot read its directory. A plugin has no `managed-mcp.json`
+    // component, and `claude plugin validate` 2.1.302 does not read the file. So `mcpConfigKind`
+    // gives it the `project` kind in all directories.
+    const kind = base === 'plugin.json' ? 'plugin' : mcpConfigKind(context.filename)
     if (kind === null) {
       return {}
     }
@@ -195,13 +183,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
     const faultsOf = validated ? pluginFaults : entryFaults
     return {
       Document(node) {
-        const servers: LintedServer[] = managed
-          ? serverMembers(node.body, 'project').map((member) => ({
-              name: keyOf(member.name),
-              member,
-            }))
-          : lintedServers(context.filename, node.body)
-        for (const server of servers) {
+        for (const server of lintedServers(context.filename, node.body)) {
           for (const { node: at, messageId } of faultsOf(server.member.value)) {
             // A server of a declared file takes its report on its path in the manifest.
             context.report({

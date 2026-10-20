@@ -10,6 +10,7 @@ import { keyOf } from '../src/marketplace-json.ts'
 import {
   declaredMcpStrings,
   expandedStrings,
+  isPluginMcpFile,
   isUnreadMcpPath,
   jsonBodyState,
   MANAGED_SERVER_TYPES,
@@ -119,6 +120,9 @@ describe('mcpConfigKind', () => {
     expect(mcpConfigKind(repo('managed-mcp.json'))).toBe('project')
     expect(mcpConfigKind(repo('p', 'managed-mcp.json'))).toBe('project')
     expect(mcpConfigKind(repo('.claude', 'managed-mcp.json'))).toBe('project')
+    // `isPluginMcpFile` reads the same kind. The `.mcp.json` beside it is a plugin file.
+    expect(isPluginMcpFile(repo('p', 'managed-mcp.json'))).toBe(false)
+    expect(isPluginMcpFile(repo('p', '.mcp.json'))).toBe(true)
   })
   it('is the kind of mcpFileKind for a .mcp.json', () => {
     put(repo('.claude-plugin', 'plugin.json'))
