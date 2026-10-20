@@ -4,7 +4,9 @@
 // entry but one: a `url` with a `command` and no `type`. So in a plugin with a manifest, the rule
 // reports that fault only (rulings 14 and 20 of #355). Validate fails a plugin with no manifest,
 // so the rule reports each fault there (#384). An entry with no `type` is a stdio server. Claude
-// Code skips a `sdk` entry with its own message, and #355 leaves that entry to it.
+// Code skips a `sdk` entry with its own message, and #355 leaves that entry to it. Claude Code
+// 2.1.304 skips an empty `command`, and an `env`, `headers` or `oauth` that is not an object
+// (#383).
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -32,11 +34,26 @@ type MessageIds =
   | 'argType'
   | 'noUrl'
   | 'invalidUrl'
+  | 'emptyCommand'
+  | 'envType'
+  | 'headersType'
+  | 'oauthType'
 
 const SKIP = 'Claude Code skips this entry.'
 
-/** The faults of the stdio entry `entry`: `command` is a string, and `args`, when present, is an
- *  array of strings. */
+/** The fault of the member `key` of `entry` when it is there and is not an object. A `null`
+ *  value is a fault too. */
+function objectFault(
+  entry: ValueNode,
+  key: 'env' | 'headers' | 'oauth',
+  messageId: MessageIds,
+): { node: ValueNode; messageId: MessageIds }[] {
+  const value = lastMember(entry, key)?.value
+  return value !== undefined && value.type !== 'Object' ? [{ node: value, messageId }] : []
+}
+
+/** The faults of the stdio entry `entry`: `command` is a string that is not empty, `args`, when
+ *  present, is an array of strings, and `env`, when present, is an object. */
 function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
   const faults: { node: ValueNode; messageId: MessageIds }[] = []
   const command = lastMember(entry, 'command')?.value
@@ -44,6 +61,8 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
     faults.push({ node: entry, messageId: 'noCommand' })
   } else if (command.type !== 'String') {
     faults.push({ node: command, messageId: 'commandType' })
+  } else if (command.value === '') {
+    faults.push({ node: command, messageId: 'emptyCommand' })
   }
   const args = lastMember(entry, 'args')?.value
   if (args !== undefined && args.type !== 'Array') {
@@ -54,14 +73,14 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
       faults.push({ node: value, messageId: 'argType' })
     }
   }
-  return faults
+  return [...faults, ...objectFault(entry, 'env', 'envType')]
 }
 
-/** The faults of the remote entry `entry`, whose `type` value is `type`: `url` is there and is
- *  a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports in
- *  a project `.mcp.json`. A `${` reference can expand to any text, so the rule does not parse a
- *  URL that holds one. */
-function remoteFaults(
+/** The `url` fault of the remote entry `entry`, whose `type` value is `type`: `url` is there and
+ *  is a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports
+ *  in a project `.mcp.json`. A `${` reference can expand to any text, so the rule does not parse
+ *  a URL that holds one. */
+function urlFaults(
   entry: ValueNode,
   type: ValueNode,
 ): { node: ValueNode; messageId: MessageIds }[] {
@@ -76,6 +95,20 @@ function remoteFaults(
     return []
   }
   return [{ node: url, messageId: 'invalidUrl' }]
+}
+
+/** The faults of the remote entry `entry`, whose `type` value is the string `type`: the `url`
+ *  fault, and `headers` that is not an object. Claude Code 2.1.304 also skips an `oauth` that is
+ *  not an object, in each remote type but `ws`. */
+function remoteFaults(
+  entry: ValueNode,
+  type: Extract<ValueNode, { type: 'String' }>,
+): { node: ValueNode; messageId: MessageIds }[] {
+  return [
+    ...urlFaults(entry, type),
+    ...objectFault(entry, 'headers', 'headersType'),
+    ...(type.value === 'ws' ? [] : objectFault(entry, 'oauth', 'oauthType')),
+  ]
 }
 
 /** The faults of the server entry `entry`. */
@@ -104,11 +137,11 @@ function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 }
 
 /** The faults of the plugin server entry `entry`. Validate 2.1.302 passes an entry with a `url`
- *  and no `type` when the entry has a good stdio shape: a `command` that is not empty, and `args`
- *  of strings. It reports each other fault, so the result is `urlNoType` or nothing. */
+ *  and no `type` when the entry has a good stdio shape: a `command` that is not empty, `args` of
+ *  strings, and an `env` object (2.1.304). It reports each other fault, so the result is
+ *  `urlNoType` or nothing. */
 function pluginFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
-  const command = lastMember(entry, 'command')?.value
-  if (command?.type !== 'String' || command.value === '' || stdioFaults(entry).length > 0) {
+  if (stdioFaults(entry).length > 0) {
     return []
   }
   return entryFaults(entry).filter(({ messageId }) => messageId === 'urlNoType')
@@ -133,6 +166,10 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
       noUrl: `The remote server "{{server}}" has no \`url\`. ${SKIP} Set \`url\` to the endpoint.`,
       invalidUrl:
         'The `url` of the server "{{server}}" is not a valid absolute URL. Write a URL such as `https://host/path`.',
+      emptyCommand: `The \`command\` of the server "{{server}}" is empty. ${SKIP} Set \`command\` to the program to run.`,
+      envType: `The \`env\` of the server "{{server}}" is not an object. ${SKIP} Write \`env\` as an object of variable names and values.`,
+      headersType: `The \`headers\` of the server "{{server}}" is not an object. ${SKIP} Write \`headers\` as an object of header names and values.`,
+      oauthType: `The \`oauth\` of the server "{{server}}" is not an object. ${SKIP} Write \`oauth\` as an object.`,
     },
   },
   create(context) {
