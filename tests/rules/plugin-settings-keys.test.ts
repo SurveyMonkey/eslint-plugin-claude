@@ -211,6 +211,13 @@ describe(`${RULE} (silent)`, () => {
     expect(lintPluginFile(RULE, GLOBS, file, '[]')).toEqual([])
   })
 
+  // An editor can lint a buffer that differs from the file on disk. A manifest that is not an
+  // object is a fault for validate, not for this rule.
+  check('stays silent for a manifest text that is not an object', () => {
+    const { dir } = pluginTree({ name: 'p' })
+    expect(lintPlugin(RULE, dir, '[]')).toEqual([])
+  })
+
   check('stays silent for a manifest with no settings key', () => {
     expect(inManifest({ name: 'p', model: 'x' })).toEqual([])
   })
