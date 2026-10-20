@@ -321,18 +321,20 @@ describe('scanCommands', () => {
       ['rm', '-rf', '$T'],
       ['}', 'a'],
     ])
-    // The `)` or the backtick that ends the substitution gives back the open expansion.
-    expect(commandsOf(`echo \${x:-$(a) #y}; rm -rf $T`)).toEqual([
+    // The `)` of a `case` pattern does not end the substitution. bash runs `rm`.
+    expect(commandsOf(`echo \${x:-$(case a in a) rm -rf $T;; esac)}`)).toEqual([
       ['echo', `\${x:-$`],
-      ['a'],
-      [' #y}'],
+      ['case', 'a', 'in', 'a'],
       ['rm', '-rf', '$T'],
+      ['esac'],
+      ['}'],
     ])
-    expect(commandsOf(`echo \${x:-\`a\` #y}; rm -rf $T`)).toEqual([
+    expect(commandsOf(`echo \${x:-\`case a in a) rm -rf $T;; esac\`}`)).toEqual([
       ['echo', `\${x:-`],
-      ['a'],
-      [' #y}'],
+      ['case', 'a', 'in', 'a'],
       ['rm', '-rf', '$T'],
+      ['esac'],
+      ['}'],
     ])
     // A `)` with no `(` before it leaves no expansion open.
     expect(commandsOf(`a) \${x} #y; b`)).toEqual([['a'], [`\${x}`]])
@@ -363,6 +365,28 @@ describe('scanCommands', () => {
     ])
   })
 
+  it('reads the commands of a bash 5.3 substitution in braces', () => {
+    // bash 5.3 runs the commands after `${` and a blank or a `|`.
+    expect(commandsOf('echo ${ rm -rf $T; }')).toEqual([['echo', '${', 'rm', '-rf', '$T'], ['}']])
+    expect(commandsOf('echo ${| rm -rf $T; }')).toEqual([['echo', '${'], ['rm', '-rf', '$T'], ['}']])
+    expect(commandsOf('echo ${\nrm -rf $T\n}')).toEqual([['echo', '${'], ['rm', '-rf', '$T'], ['}']])
+    // A `#` after a blank in it starts a comment.
+    expect(commandsOf(`x="$(echo \${ a # it's\n})"; rm -rf $T`)).toEqual([
+      [`x=$(echo \${ a # it's\n})`],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it(`ends a \${...} expansion at a new line`, () => {
+    // bash reads the body of a quoted here-document as text, then runs `rm`.
+    expect(commandsOf("cat <<'E'\n${x\nE\nrm -rf $T")).toEqual([
+      ['cat', '<<E'],
+      ['${x'],
+      ['E'],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
   it(`reads no comment in a nested \${...} expansion in a substitution`, () => {
     expect(commandsOf(`x="$(echo \${@:-\${@} #*})" && rm -rf $T`)).toEqual([
       [`x=$(echo \${@:-\${@} #*})`],
@@ -378,6 +402,10 @@ describe('scanCommands', () => {
     expect(commandsOf('echo a\\ #b; rm -rf $T')).toEqual([
       ['echo', 'a #b'],
       ['rm', '-rf', '$T'],
+    ])
+    // After a blank too. bash opens a quote at the `'`, which takes the rest of the line.
+    expect(commandsOf('echo "$(echo a \\ #b \')\n)"; rm -rf $T')).toEqual([
+      ['echo', '$(echo a \\ #b \')\n)"; rm -rf $T'],
     ])
   })
 
@@ -421,7 +449,7 @@ describe('scanCommands', () => {
   })
 
   it('joins a # after an escaped character and line continuations to the word', () => {
-    // bash prints `a #b`: the escaped space stays in the word.
+    // bash prints `a #b`, `a;#b` or `a>#b`: the escaped character stays in the word.
     for (const escaped of [' ', ';', '>']) {
       expect(commandsOf(`echo "$(echo a\\${escaped}\\\n#b)"\nrm -rf $T`)).toEqual([
         ['echo', `$(echo a\\${escaped}\\\n#b)`],

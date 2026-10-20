@@ -13,6 +13,10 @@ export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 /** How deep a quote and a substitution may nest before the reader gives up and takes the rest of the line. */
 const MAX_NESTING = 100
 
+/** True when the `$` at `at` in `line` opens a `${...}` expansion. A blank or a `|` after the `{`
+ *  opens a bash 5.3 substitution of commands. */
+const opensExpansion = (line: string, at: number) => /^\{[^\s|]/.test(line.slice(at + 1, at + 3))
+
 /** The index of the `)` that closes the `(` at `open` in `line`, or the last index. A quote, a backslash, a
  *  backtick and a nested substitution inside keep their own level. A comment inside ends at the next
  *  new line. A `#` in a `${...}` expansion starts no comment. */
@@ -24,7 +28,7 @@ function closingParen(line: string, open: number, nesting = 0): number {
   // The open `${` expansions.
   let braces = 0
   // True when the next character starts a word. The shell removes each backslash and new line
-  // pair first, so a pair keeps the value. A backslash in a comment joins no lines.
+  // pair first, so a pair does not change `boundary`. A backslash in a comment joins no lines.
   let boundary = true
   for (let i = open; i < line.length; i++) {
     const char = line.charAt(i)
@@ -43,7 +47,7 @@ function closingParen(line: string, open: number, nesting = 0): number {
     } else if (char === '\\') {
       i++
       boundary = before && line.charAt(i) === '\n'
-    } else if (char === '$' && (line.charAt(i + 1) === '{' || line.charAt(i + 1) === '$')) {
+    } else if (char === '$' && (opensExpansion(line, i) || line.charAt(i + 1) === '$')) {
       // `$$` is a parameter, so a `{` after it opens no expansion.
       braces += line.charAt(i + 1) === '{' ? 1 : 0
       i++
@@ -114,7 +118,7 @@ export interface Command {
  *  backslash in a comment joins no lines. A quote or a backslash joins characters into one word. A
  *  quote is not part of the word. A command substitution in double quotes is part of the word, and
  *  holds quotes of its own. A `${...}` expansion is part of the word, with its spaces, operators and
- *  parentheses. A command substitution in it gives its own commands. */
+ *  parentheses. A command substitution in it gives its own commands, and ends the expansion. */
 export function scanCommands(line: string): Command[] {
   const commands: Command[] = []
   let words: string[] = []
@@ -128,19 +132,11 @@ export function scanCommands(line: string): Command[] {
   let ticks = false
   // True when the character before is the end of a command substitution. The word goes on after it.
   let closed = false
-  // True when the character before is a redirect operator, `<` or `>`.
+  // True when the character before is a redirect operator, `<` or `>`, out of a `${...}` expansion.
   let redirect = false
-  // The open `${` expansions. A command substitution or a backtick pair starts with none. The
-  // stack keeps the count of the level outside each one.
+  // The open `${` expansions. A command substitution, a backtick or a new line ends each one. The
+  // reader cannot tell the `)` of a `case` pattern from the `)` that ends a substitution.
   let braces = 0
-  const outerBraces: number[] = []
-  const enter = () => {
-    outerBraces.push(braces)
-    braces = 0
-  }
-  const leave = () => {
-    braces = outerBraces.pop() ?? 0
-  }
   const endWord = () => {
     if (open) {
       words.push(word)
@@ -197,7 +193,7 @@ export function scanCommands(line: string): Command[] {
     } else if (char === "'" || char === '"') {
       quote = char
       open = true
-    } else if (char === '$' && (line.charAt(i + 1) === '{' || line.charAt(i + 1) === '$')) {
+    } else if (char === '$' && (opensExpansion(line, i) || line.charAt(i + 1) === '$')) {
       // `$$` is a parameter, so a `{` after it opens no expansion.
       braces += line.charAt(i + 1) === '{' ? 1 : 0
       word += line.slice(i, i + 2)
@@ -205,7 +201,7 @@ export function scanCommands(line: string): Command[] {
       i++
     } else if (
       braces > 0 &&
-      (char === '}' || /[\s;|&)]/.test(char) || (char === '(' && line.charAt(i - 1) !== '$'))
+      (char === '}' || /[^\S\n]|[;|&)]/.test(char) || (char === '(' && line.charAt(i - 1) !== '$'))
     ) {
       // A parenthesis in the expansion is plain text, unless it starts a command substitution.
       braces -= char === '}' ? 1 : 0
@@ -220,21 +216,16 @@ export function scanCommands(line: string): Command[] {
       endCommand()
       levels.push(line.charAt(i - 1) === '$')
       substitutions += levels[levels.length - 1] ? 1 : 0
-      enter()
+      braces = 0
     } else if (char === ')') {
       endCommand()
       closed = levels.pop() === true
       substitutions -= closed ? 1 : 0
-      leave()
     } else if (char === '`') {
       endCommand()
       ticks = !ticks
       closed = !ticks
-      if (ticks) {
-        enter()
-      } else {
-        leave()
-      }
+      braces = 0
     } else if (char === '|') {
       // `||` is a list operator, and `|` or `|&` is a pipe. The second `|` of `||` ends no command.
       endCommand(line.charAt(i + 1) !== '|')
@@ -242,6 +233,7 @@ export function scanCommands(line: string): Command[] {
       endCommand(false, line.charAt(i - 1) !== '&' && line.charAt(i + 1) !== '&')
     } else if (/[;\n]/.test(char)) {
       endCommand()
+      braces = 0
     } else if (/\s/.test(char)) {
       endWord()
     } else {

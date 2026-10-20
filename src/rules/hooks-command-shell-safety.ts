@@ -57,7 +57,7 @@ function closingParen(text: string, open: number): number {
   let braces = 0
   let tick = false
   // True when the next character starts a word. The shell removes each backslash and new line
-  // pair first, so a pair keeps the value. A backslash in a comment joins no lines.
+  // pair first, so a pair does not change `boundary`. A backslash in a comment joins no lines.
   let boundary = true
   for (let i = open; i < text.length; i++) {
     const char = text.charAt(i)
@@ -68,8 +68,12 @@ function closingParen(text: string, open: number): number {
     } else if (char === '\\') {
       i++
       boundary = before && text.charAt(i) === '\n'
-    } else if (char === '$' && (text.charAt(i + 1) === '{' || text.charAt(i + 1) === '$')) {
-      // `$$` is a parameter, so a `{` after it opens no expansion.
+    } else if (
+      char === '$' &&
+      (/^\{[^\s|]/.test(text.slice(i + 1, i + 3)) || text.charAt(i + 1) === '$')
+    ) {
+      // `$$` is a parameter, so a `{` after it opens no expansion. A blank or a `|` after `${`
+      // opens a bash 5.3 substitution of commands, not an expansion.
       braces += text.charAt(i + 1) === '{' ? 1 : 0
       i++
     } else if (char === '}' && braces > 0) {
@@ -91,7 +95,7 @@ function closingParen(text: string, open: number): number {
     } else if (char === ')' && --depth === 0) {
       return i
     } else {
-      // A `#` after a `)` stays in the word, as in `src/shell-words.ts`.
+      // A `#` after a `)` starts no comment, as in `src/shell-words.ts`.
       boundary = /[\s;|&<>]/.test(char)
     }
   }
