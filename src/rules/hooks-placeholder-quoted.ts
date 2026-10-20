@@ -36,8 +36,9 @@ function unquotedReference(line: string): string | undefined {
     const mark = found.length - 1
     return `${mark} ${mark}`
   })
-  // The shell splits the value of an unquoted `${...}` expansion at a space too. A backslash
-  // before the `{` stops the reader from joining the expansion into one word.
+  // Out of quotes, the shell splits the value of a `${...}` expansion at a space. A backslash
+  // before the `{` makes the reader split the expansion into words. The reader then also reads a
+  // `#` or a `;` in the expansion as out of it.
   const words = commandsOf(marked.replaceAll('${', '$\\{')).flat()
   return found.find((_, mark) => words.every((word) => !word.includes(`${mark} ${mark}`)))
 }
