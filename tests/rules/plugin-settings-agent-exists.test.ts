@@ -86,6 +86,14 @@ describe(RULE, () => {
     expect(inManifest({ agent: 'p:ghost' }, { 'agents/reviewer.md': REVIEWER })).toHaveLength(1)
   })
 
+  // The skip of a scoped name is for a plugin with no `plugin.json` only. A root `settings.json` of
+  // a plugin with a manifest still gets the report.
+  check('reports the scoped name of the plugin in the root settings.json', () => {
+    const files = { 'agents/reviewer.md': REVIEWER }
+    expect(inFile('{"agent": "p:ghost"}', files)).toHaveLength(1)
+    expect(inFile('{"agent": "p:reviewer"}', files)).toEqual([])
+  })
+
   check('reports a name that lacks the subfolder of the agent', () => {
     const files = { 'agents/review/security.md': '---\nname: security\n---\n' }
     expect(inManifest({ agent: 'p:security' }, files)).toHaveLength(1)
