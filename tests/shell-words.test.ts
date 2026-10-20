@@ -68,7 +68,17 @@ describe('isClaude', () => {
     expect(isClaude('/usr/local/bin/claude')).toBe(true)
     expect(isClaude('C:\\Tools\\claude.exe')).toBe(true)
     expect(isClaude('C:\\Tools\\claude')).toBe(true)
+  })
+
+  it('is false for a path that ends in a separator, which names a directory', () => {
+    expect(isClaude('/usr/bin/claude/')).toBe(false)
+    expect(isClaude('C:\\Tools\\claude\\')).toBe(false)
+  })
+
+  it('reads the name in lower case only, and the .exe in any case', () => {
+    expect(isClaude('C:/Tools/claude.EXE')).toBe(true)
     expect(isClaude('C:/Tools/Claude.EXE')).toBe(false)
+    expect(isClaude('claudeXexe')).toBe(false)
   })
 
   it('takes no drive letter off a word that has no separator', () => {

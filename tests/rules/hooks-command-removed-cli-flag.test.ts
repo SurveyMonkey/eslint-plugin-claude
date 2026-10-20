@@ -99,6 +99,11 @@ describe(`${name}: shell form`, () => {
     expect(shell('C:\\claude.exe --enable-auto-mode')).toEqual([])
   })
 
+  it('reads a Windows path out of quotes when a backslash comes before each backslash', () => {
+    // bash runs `C:\Tools\claude.exe` for the shell line `C:\\Tools\\claude.exe`.
+    expect(shell('C:\\\\Tools\\\\claude.exe --enable-auto-mode')).toEqual(['removed'])
+  })
+
   it('reads a backslash, a quote that is not closed, and an assignment alone', () => {
     expect(shell('claude \\--enable-auto-mode')).toEqual(['removed'])
     expect(shell('claude --enable-auto-mode "unclosed')).toEqual(['removed'])
@@ -139,8 +144,9 @@ describe(`${name}: exec form`, () => {
     expect(exec('claude', ['-p', 5, null, ['--enable-auto-mode']])).toEqual([])
   })
 
-  it('reads past env and its assignments to the executable that env runs', () => {
+  it('reads past a wrapper and the assignments to the executable that the wrapper runs', () => {
     expect(exec('env', ['FOO=1', 'claude', '--enable-auto-mode'])).toEqual(['removed'])
+    expect(exec('nohup', ['claude', '--enable-auto-mode'])).toEqual(['removed'])
     expect(exec('env', ['claude', '-p', '--enable-auto-mode'])).toEqual(['removed'])
     expect(exec('env', ['A=1', 'B=2', '/usr/bin/claude', '--enable-auto-mode'])).toEqual([
       'removed',
