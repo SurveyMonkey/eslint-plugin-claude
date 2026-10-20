@@ -60,9 +60,10 @@ strings. `claude plugin validate` 2.1.302 passes that entry, but Claude Code ski
 Validate reports each other fault that makes Claude Code drop a plugin entry at load. It also
 reports a remote `url` that is not a valid absolute URL.[^validate] [^plugin] The rule reads a
 plugin `.mcp.json`, and the inline servers of `plugin.json`. It also reads the servers of each
-`.json` file that `mcpServers` names, and puts the report on that path in `plugin.json`. A directory counts as a plugin root when it holds
-`.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository lists it. The rule
-makes no report for a `.mcp.json` when it cannot read that directory.
+`.json` file that `mcpServers` names, and puts the report on that path in `plugin.json`. A
+directory counts as a plugin root when it holds `.claude-plugin/plugin.json`, or when a
+`marketplace.json` of the repository lists it. The rule makes no report for a `.mcp.json` when it
+cannot read that directory.
 
 A plugin root that a `marketplace.json` lists can have no manifest. `claude plugin validate`
 2.1.302 fails such a plugin, and does not check its servers. So the rule reports each fault in the

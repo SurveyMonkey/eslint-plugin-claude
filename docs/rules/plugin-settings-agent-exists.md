@@ -47,8 +47,8 @@ The rule reads two places and reports on the value:
 
 A plugin root has a `.claude-plugin/plugin.json`, or a `marketplace.json` of the repository lists
 it. The manifest is optional, so the rule also reads the root `settings.json` of a listed plugin
-with no `plugin.json`. The name of such a plugin is the entry name. The rule does not read it, so
-it checks a bare name only.
+with no `plugin.json`. The name of such a plugin is the entry name. The rule does not read the
+entry name, so it checks a bare name and skips a scoped name.
 
 The rule lists the agents with the reader of `skill-agent-exists`, and skips the same built-in
 agents. The docs do not list the built-in agents for this key, so the rule uses the list of
@@ -65,9 +65,9 @@ The rule makes no report in these cases:
   name, so it cannot tell the plugin of the name.
 - The manifest sets the `agents` key. The key replaces the scan of `agents/`, and the rule does
   not read it.[^agents-key]
-- The entry of the plugin in the `marketplace.json` that encloses it sets `agents`. Claude Code
-  adds the agents of the entry to the plugin, and the rule does not read them.[^strict] The rule
-  reads that marketplace file only.
+- The plugin has a `plugin.json`, and its entry in the `marketplace.json` that encloses it sets
+  `agents`. Claude Code adds the agents of the entry to the plugin, and the rule does not read
+  them.[^strict] The rule reads that marketplace file only.
 - The marketplace entry of a plugin with no `plugin.json` sets a key that replaces a default
   location, such as `agents`. The plugin-root check cannot model that plugin, so the rule cannot
   see it.
