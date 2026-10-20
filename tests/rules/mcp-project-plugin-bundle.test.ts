@@ -44,6 +44,7 @@ jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
     // `claude plugin validate` 2.1.304 checks the end of the whole string. A query or fragment
     // after the extension makes the string no bundle.
     { name: 'a path with a query', code: plugin('./a.mcpb?x=1'), filename: manifest },
+    { name: 'a path with a trailing space', code: plugin('./a.mcpb '), filename: manifest },
     {
       name: 'a bundle URL with a query after the extension',
       code: plugin('https://x.test/db.mcpb?x=1'),
@@ -121,6 +122,12 @@ jsonTester.run('mcp-project-plugin-bundle (invalid)', rule, {
       code: plugin('https://x.test/dl?f=db.mcpb'),
       filename: manifest,
       errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/dl?f=db.mcpb' } }],
+    },
+    {
+      name: 'a bundle URL with a trailing space',
+      code: plugin('https://x.test/db.mcpb '),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/db.mcpb ' } }],
     },
     {
       name: 'a dxt extension at the end of the query',

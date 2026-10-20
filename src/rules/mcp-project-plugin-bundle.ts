@@ -50,7 +50,9 @@ const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }
         const bound = repositoryRoot(root)
         for (const declared of declaredMcpStrings(node.body)) {
           const text = declared.value
-          if (BUNDLE_EXTENSIONS.some((extension) => text.endsWith(extension))) {
+          // Validate reads a URL without its trailing spaces: `db.mcpb ` at a URL is a bundle.
+          const end = URL_SCHEME.test(text) ? text.trimEnd() : text
+          if (BUNDLE_EXTENSIONS.some((extension) => end.endsWith(extension))) {
             context.report({ node: declared, messageId: 'skipped', data: { bundle: text } })
             continue
           }
