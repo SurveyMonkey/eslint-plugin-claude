@@ -45,7 +45,7 @@ The rule reports these cases:
   value, and the value does not invoke the skill. Edit the `name` field.
 
 The message gives the first character that Claude Code refuses, by its code point. The name in
-the message shows each refused character as `<U+XXXX>`, so a direction control or a zero-width
+the message shows each refused character as `<U+XXXX>`. So a direction control or a zero-width
 space cannot hide in the text.
 
 The rule does not report a folder in the `skills/` directory of a plugin. Claude Code changes the

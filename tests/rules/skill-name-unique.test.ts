@@ -72,6 +72,10 @@ const DIFFERENT: [string, string][] = [
 ]
 put('three/.claude/commands/t.md', bare)
 put('escaped/.claude/commands/de\u202eploy.md', bare)
+put('edge/.claude/skills/ deploy/SKILL.md', bare)
+put('edge/.claude/skills/deploy /SKILL.md', bare)
+put('edge2/.claude/commands/a .md', bare)
+put('edge3/.claude/commands/ops/x.md', bare)
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
 put('ckey/commands/review.md', bare)
@@ -107,13 +111,19 @@ const pair = (index: number, first: string, second: string) => {
   }
 }
 
-// The name as the message prints it. A zero-width space, a control character and a blank that is
-// not a plain space show as `<U+XXXX>`. A soft hyphen and a joiner are not in the refused classes.
-const shown = (name: string) =>
-  name.replace(/(?! )[\u{200b}\u{feff}\p{Cc}\p{Z}]/gu, (char) => {
-    const hex = (char.codePointAt(0) as number).toString(16).toUpperCase()
-    return `<U+${hex.padStart(4, '0')}>`
-  })
+// The names of `SAME` that hold a refused character, as the message prints them. The other
+// names print unchanged. A soft hyphen and a joiner are not refused.
+const PRINTED: Record<string, string> = {
+  'deploy\u{a0}': 'deploy<U+00A0>',
+  'dep\u{3000}loy': 'dep<U+3000>loy',
+  'dep\tloy': 'dep<U+0009>loy',
+  'dep\u{2028}loy': 'dep<U+2028>loy',
+  'dep\u{2029}loy': 'dep<U+2029>loy',
+  'd\u{200b}e\u{200b}ploy': 'd<U+200B>e<U+200B>ploy',
+  'dep\u{200b}loy': 'dep<U+200B>loy',
+  '\u{feff}deploy': '<U+FEFF>deploy',
+}
+const shown = (name: string) => PRINTED[name] ?? name
 
 const sameCases = SAME.map(([, first, second], index) => {
   const { code, filename } = pair(index, first, second)
@@ -386,6 +396,40 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
             others: '`skills/deploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
           },
           line: 2,
+        },
+      ],
+    },
+    // A space at the edge of one folder or one name is a fault, also in the middle of a path.
+    {
+      code: bare,
+      filename: put('edge/.claude/skills/deploy/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: {
+            name: 'deploy',
+            others: '`skills/<U+0020>deploy/SKILL.md`, `skills/deploy<U+0020>/SKILL.md`',
+          },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('edge2/.claude/commands/a.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a', others: '`commands/a<U+0020>.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('edge3/.claude/commands/ops /x.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'ops<U+0020>:x', others: '`commands/ops/x.md`' },
         },
       ],
     },

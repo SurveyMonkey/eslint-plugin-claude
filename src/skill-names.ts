@@ -1,8 +1,8 @@
-// The faults that Claude Code finds in a skill or command name, and the text that
-// prints a name in a message. The skill rules share this module.
+// Faults that Claude Code finds in a skill or command name. Text that shows a name
+// in a message. The skill rules share this module.
 
 /** Each class of characters in the docs, with the text of the message.
- *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so the rule counts it
+ *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so this module counts it
  *  as a zero-width space. `kindAt` checks a plain space before it reads the classes. */
 const CLASSES: [RegExp, string][] = [
   [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
@@ -46,8 +46,8 @@ export function firstFault(text: string): { code: string; kind: string } | null 
   return null
 }
 
-/** `text` for a message. Each character that `firstFault` refuses prints as
- *  `<U+XXXX>`, so a direction control or a zero-width space cannot hide in the
+/** `text` for a message. Each character that Claude Code refuses prints as
+ *  `<U+XXXX>`. So a direction control or a zero-width space cannot hide in the
  *  message. */
 export function escapeName(text: string): string {
   const chars = [...text]

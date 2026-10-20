@@ -102,7 +102,8 @@ const tooLong = (length: number) => ({ length: String(length), limit: String(LIM
 
 const at = (code: string, kind: string) => ({ code, kind })
 // The name as the message prints it: the refused character is its code point in angle brackets.
-// Each name in `BAD` holds one refused character, so the first match is the one.
+// Each name in `BAD` holds one refused character. The first match of the character with that
+// code is the refused one.
 const shown = (name: string, code: string) =>
   name.replace(String.fromCodePoint(Number.parseInt(code.slice(2), 16)), `<${code}>`)
 
@@ -312,8 +313,8 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
         { messageId: 'name', data: { name: 'my<U+200B>skill', ...at('U+200B', ZERO_WIDTH) } },
       ],
     },
-    // Each refused character gets its own code, a plain space does not, and a code point outside
-    // the BMP has more than four digits.
+    // Each refused character gets its own code. A plain space does not. A code point above U+FFFF
+    // has more than four digits.
     {
       ...named('a b\u202E\u200Bc\u{F0000}'),
       errors: [

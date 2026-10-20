@@ -56,8 +56,9 @@ rule uses it for the names in one scope, because the docs give no other rule.
 
 The rule reports on each file of a collision, not only on the second file. A rule that lints
 one file cannot know the order of the files. The report is on the `name` value, or on line 1
-when the name comes from the path or the folder. The message lists the other files of the scope. The message shows each character that
-`skill-name-characters` refuses as `<U+XXXX>`, in the name and in the paths.
+when the name comes from the path or the folder. The message lists the other files of the scope.
+The message shows each character that `skill-name-characters` refuses as `<U+XXXX>`, in the name
+and in the paths.
 
 A plugin that sets `commands` does not load `commands/`, so the rule skips that folder. The rule
 reads the other files from the disk, and reads no file out of the repository. The repository is
