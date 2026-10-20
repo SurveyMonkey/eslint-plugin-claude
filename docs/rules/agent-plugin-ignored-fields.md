@@ -38,9 +38,9 @@ manifest has the key `agents`, the files that it names replace that directory. A
 directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
 repository lists.
 
-A local agent can set each of the four fields, so the rule is silent there. A file outside the agent
-folders gets no report, such as `docs/agents/a.md`. The rule ignores a file with no frontmatter, and
-a file whose frontmatter does not parse.
+A local agent can set each of the four fields, so the rule is silent there. A file that is not an
+agent file gets no report, such as `docs/agents/a.md`. The rule ignores a file with no frontmatter,
+and a file whose frontmatter does not parse.
 
 Fail:
 
