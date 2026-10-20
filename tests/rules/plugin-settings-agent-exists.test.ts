@@ -444,13 +444,13 @@ describe(`${RULE} (a listed plugin with no manifest)`, () => {
   check('stays silent for an agent that a file in agents/ defines', () => {
     const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
     expect(listed('{"agent": "reviewer"}', {}, files)).toEqual([])
-    expect(listed('{"agent": "p:reviewer"}', {}, files)).toEqual([])
   })
 
-  // The plugin name is the entry name `tools`, and the rule does not read it. So the rule skips a
-  // scoped name, with the scope `tools` or the folder name `p`. It still reports a bare name.
-  check('skips a scoped name when the entry name is not the folder name', () => {
+  // The plugin name is the entry name, and the rule does not read it. So the rule skips each
+  // scoped name, also a missing agent with the entry name `p`. It still reports a bare name.
+  check('skips a scoped name in a plugin with no manifest', () => {
     const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
+    expect(listed('{"agent": "p:ghost"}', {}, files)).toEqual([])
     expect(listed('{"agent": "tools:reviewer"}', { name: 'tools' }, files)).toEqual([])
     expect(listed('{"agent": "p:ghost"}', { name: 'tools' }, files)).toEqual([])
     const ghost = listed('{"agent": "ghost"}', { name: 'tools' }, files)
