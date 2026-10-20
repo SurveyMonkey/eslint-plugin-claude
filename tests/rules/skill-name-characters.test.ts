@@ -101,6 +101,10 @@ const long = (length: number) => 'a'.repeat(length)
 const tooLong = (length: number) => ({ length: String(length), limit: String(LIMIT) })
 
 const at = (code: string, kind: string) => ({ code, kind })
+// The name as the message prints it: the refused character is its code point in angle brackets.
+// Each name in `BAD` holds one refused character, so the first match is the one.
+const shown = (name: string, code: string) =>
+  name.replace(String.fromCodePoint(Number.parseInt(code.slice(2), 16)), `<${code}>`)
 
 markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
   valid: [
@@ -142,24 +146,42 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       code: '# S\n',
       filename: skillIn(name),
       errors: [
-        { messageId: 'folder' as const, data: { name, ...at(code, kind) }, line: 1, column: 1 },
+        {
+          messageId: 'folder' as const,
+          data: { name: shown(name, code), ...at(code, kind) },
+          line: 1,
+          column: 1,
+        },
       ],
     })),
     ...BAD.map(([name, code, kind]) => ({
       code: '# C\n',
       filename: commandAt(`${name}.md`),
       errors: [
-        { messageId: 'command' as const, data: { name, ...at(code, kind) }, line: 1, column: 1 },
+        {
+          messageId: 'command' as const,
+          data: { name: shown(name, code), ...at(code, kind) },
+          line: 1,
+          column: 1,
+        },
       ],
     })),
     ...BAD.map(([name, code, kind]) => ({
       code: '# C\n',
       filename: commandAt(`ops/${name}/x.md`),
-      errors: [{ messageId: 'command' as const, data: { name, ...at(code, kind) } }],
+      errors: [
+        { messageId: 'command' as const, data: { name: shown(name, code), ...at(code, kind) } },
+      ],
     })),
     ...BAD.map(([name, code, kind]) => ({
       ...named(name),
-      errors: [{ messageId: 'name' as const, data: { name, ...at(code, kind) }, line: 2 }],
+      errors: [
+        {
+          messageId: 'name' as const,
+          data: { name: shown(name, code), ...at(code, kind) },
+          line: 2,
+        },
+      ],
     })),
     // The report on a `name` is on its value.
     {
@@ -171,7 +193,9 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     {
       code: '# S\n',
       filename: skillIn('a<​b'),
-      errors: [{ messageId: 'folder', data: { name: 'a<​b', ...at('U+003C', ANGLE) } }],
+      errors: [
+        { messageId: 'folder', data: { name: 'a<U+003C><U+200B>b', ...at('U+003C', ANGLE) } },
+      ],
     },
     // The folder and the `name` each get a report.
     {
@@ -183,8 +207,8 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       code: '# C\n',
       filename: commandAt('a<b/c​d.md'),
       errors: [
-        { messageId: 'command', data: { name: 'a<b', ...at('U+003C', ANGLE) } },
-        { messageId: 'command', data: { name: 'c​d', ...at('U+200B', ZERO_WIDTH) } },
+        { messageId: 'command', data: { name: 'a<U+003C>b', ...at('U+003C', ANGLE) } },
+        { messageId: 'command', data: { name: 'c<U+200B>d', ...at('U+200B', ZERO_WIDTH) } },
       ],
     },
     // A name of 257 characters is over the limit.
@@ -227,7 +251,7 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     {
       ...named(`<${long(LIMIT)}`),
       errors: [
-        { messageId: 'name', data: { name: `<${long(LIMIT)}`, ...at('U+003C', ANGLE) } },
+        { messageId: 'name', data: { name: `<U+003C>${long(LIMIT)}`, ...at('U+003C', ANGLE) } },
         { messageId: 'nameLength', data: tooLong(LIMIT + 1) },
       ],
     },
@@ -235,16 +259,69 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     {
       code: '# C\n',
       filename: path.join(plugin, 'commands', 'a  b.md'),
-      errors: [{ messageId: 'command', data: { name: 'a  b', ...at('U+0020', SPACE) } }],
+      errors: [{ messageId: 'command', data: { name: 'a<U+0020> b', ...at('U+0020', SPACE) } }],
     },
     {
       ...named('a<b', path.join(plugin, 'skills', 's', 'SKILL.md')),
-      errors: [{ messageId: 'name', data: { name: 'a<b', ...at('U+003C', ANGLE) } }],
+      errors: [{ messageId: 'name', data: { name: 'a<U+003C>b', ...at('U+003C', ANGLE) } }],
     },
     // The plugin-root skill has no folder name, but its `name` counts.
     {
       ...named('a​b', path.join(plugin, 'SKILL.md')),
-      errors: [{ messageId: 'name', data: { name: 'a​b', ...at('U+200B', ZERO_WIDTH) } }],
+      errors: [{ messageId: 'name', data: { name: 'a<U+200B>b', ...at('U+200B', ZERO_WIDTH) } }],
+    },
+    // The message prints a refused character as its code point, in the three messages. A plain
+    // name has no change, and a plain space between words stays a space.
+    {
+      code: '# S\n',
+      filename: skillIn('my\u202Eskill'),
+      errors: [
+        { messageId: 'folder', data: { name: 'my<U+202E>skill', ...at('U+202E', DIRECTION) } },
+      ],
+    },
+    {
+      code: '# C\n',
+      filename: commandAt('my\u202Eskill.md'),
+      errors: [
+        { messageId: 'command', data: { name: 'my<U+202E>skill', ...at('U+202E', DIRECTION) } },
+      ],
+    },
+    {
+      ...named('my\u202Eskill'),
+      errors: [
+        { messageId: 'name', data: { name: 'my<U+202E>skill', ...at('U+202E', DIRECTION) } },
+      ],
+    },
+    {
+      code: '# S\n',
+      filename: skillIn('my\u200Bskill'),
+      errors: [
+        { messageId: 'folder', data: { name: 'my<U+200B>skill', ...at('U+200B', ZERO_WIDTH) } },
+      ],
+    },
+    {
+      code: '# C\n',
+      filename: commandAt('my\u200Bskill.md'),
+      errors: [
+        { messageId: 'command', data: { name: 'my<U+200B>skill', ...at('U+200B', ZERO_WIDTH) } },
+      ],
+    },
+    {
+      ...named('my\u200Bskill'),
+      errors: [
+        { messageId: 'name', data: { name: 'my<U+200B>skill', ...at('U+200B', ZERO_WIDTH) } },
+      ],
+    },
+    // Each refused character gets its own code, a plain space does not, and a code point outside
+    // the BMP has more than four digits.
+    {
+      ...named('a b\u202E\u200Bc\u{F0000}'),
+      errors: [
+        {
+          messageId: 'name',
+          data: { name: 'a b<U+202E><U+200B>c<U+F0000>', ...at('U+202E', DIRECTION) },
+        },
+      ],
     },
   ],
 })

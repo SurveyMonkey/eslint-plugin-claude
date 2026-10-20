@@ -44,7 +44,9 @@ The rule reports these cases:
 - The frontmatter `name` of a skill. The skill loads. But the `/` menu does not show the `name`
   value, and the value does not invoke the skill. Edit the `name` field.
 
-The message gives the first character that Claude Code refuses, by its code point.
+The message gives the first character that Claude Code refuses, by its code point. The name in
+the message shows each refused character as `<U+XXXX>`, so a direction control or a zero-width
+space cannot hide in the text.
 
 The rule does not report a folder in the `skills/` directory of a plugin. Claude Code changes the
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It

@@ -5,6 +5,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
@@ -134,9 +135,12 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             loc,
             messageId: 'duplicate',
             data: {
-              name: own,
+              name: escapeName(own),
               others: others
-                .map((entry) => `\`${path.relative(root, entry.file).split(path.sep).join('/')}\``)
+                .map((entry) => {
+                  const shown = path.relative(root, entry.file).split(path.sep).join('/')
+                  return `\`${escapeName(shown)}\``
+                })
                 .join(', '),
             },
           })

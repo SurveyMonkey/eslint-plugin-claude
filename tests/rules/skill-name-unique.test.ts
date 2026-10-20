@@ -71,6 +71,7 @@ const DIFFERENT: [string, string][] = [
   ['deploy', 'deploys'],
 ]
 put('three/.claude/commands/t.md', bare)
+put('escaped/.claude/commands/de\u202eploy.md', bare)
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
 put('ckey/commands/review.md', bare)
@@ -106,6 +107,14 @@ const pair = (index: number, first: string, second: string) => {
   }
 }
 
+// The name as the message prints it. A zero-width space, a control character and a blank that is
+// not a plain space show as `<U+XXXX>`. A soft hyphen and a joiner are not in the refused classes.
+const shown = (name: string) =>
+  name.replace(/(?! )[\u{200b}\u{feff}\p{Cc}\p{Z}]/gu, (char) => {
+    const hex = (char.codePointAt(0) as number).toString(16).toUpperCase()
+    return `<U+${hex.padStart(4, '0')}>`
+  })
+
 const sameCases = SAME.map(([, first, second], index) => {
   const { code, filename } = pair(index, first, second)
   return {
@@ -114,7 +123,7 @@ const sameCases = SAME.map(([, first, second], index) => {
     errors: [
       {
         messageId: 'duplicate' as const,
-        data: { name: first, others: '`skills/b/SKILL.md`' },
+        data: { name: shown(first), others: '`skills/b/SKILL.md`' },
         line: 2,
       },
     ],
@@ -352,6 +361,34 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     },
     // Each folding of the names.
     ...sameCases,
+    // The files that the message names print each refused character as its code point.
+    {
+      code: bare,
+      filename: put('escaped/.claude/skills/deploy/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: {
+            name: 'deploy',
+            others: '`skills/de<U+200B>ploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
+          },
+        },
+      ],
+    },
+    {
+      code: named(quote('de\u200bploy')),
+      filename: put('escaped/.claude/skills/de\u200bploy/SKILL.md', named(quote('de\u200bploy'))),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: {
+            name: 'de<U+200B>ploy',
+            others: '`skills/deploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
+          },
+          line: 2,
+        },
+      ],
+    },
     // Three files share a name. The report names the other two.
     {
       code: bare,
