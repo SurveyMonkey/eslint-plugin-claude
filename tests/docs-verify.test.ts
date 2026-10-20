@@ -62,6 +62,7 @@ const REMEDY =
 const dirs: string[] = []
 afterEach(() => {
   vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
   for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true })
 })
 
@@ -175,7 +176,7 @@ function fakeGh({
   issues = [],
   groups = {},
 }: {
-  issues?: { number: number; body: string }[]
+  issues?: { number: number; body: string | null }[]
   groups?: Record<number, { state: string; comments: string[] }>
 } = {}) {
   const calls: string[][] = []
@@ -813,6 +814,26 @@ describe('a block whose key an open issue or a group issue comment has', () => {
     expect(code).toBe(0)
   })
 
+  it('reads an open issue with no body as an issue with no marker', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const key = `${URL_}#hooks:${headHash(root, 'hooks')}`
+    const gh = fakeGh({
+      issues: [
+        { number: 281, body: null },
+        { number: 282, body: `<!-- docs-watch:rule-update:${key} rules=a-rule -->\n` },
+      ],
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: gh.run,
+    })
+    // Issue #282 has the key, so the dry run opens no issue for the block.
+    expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
+    expect(text).toContain('docs-snapshot: pass')
+    expect(code).toBe(0)
+  })
+
   it('names only the rules that the open issue does not name', async () => {
     const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)), serve(PAGE), whole)
     const key = `${URL_}#hooks:${headHash(root, 'hooks')}`
@@ -1245,6 +1266,40 @@ describe('the command line', () => {
     await expect(api.main([...argv, root].slice(0, 3), {})).rejects.toThrow(
       'usage: docs-verify.ts <base> [root] [--repo owner/name]',
     )
+  })
+
+  it('reads this repository when it gets no root', async () => {
+    const chunks: string[] = []
+    const code = await api.main(['HEAD'], {}, { out: { write: (text) => chunks.push(text) } })
+    expect(code).toBe(0)
+    expect(chunks.join('')).toContain('the diff changes no file in docs/docs-snapshot/')
+  })
+
+  it('runs gh from the PATH and reads the docs with the global fetch, when it gets no function', async () => {
+    const { root, base } = await repoWith(refresh(serve(EDIT_HOOKS)))
+    const key = `${URL_}#hooks:${headHash(root, 'hooks')}`
+    // A gh that gives one open issue with the marker of the block, for each call.
+    const bin = mkdtempSync(path.join(tmpdir(), 'docs-verify-bin-'))
+    dirs.push(bin)
+    const issue = { number: 282, body: `<!-- docs-watch:rule-update:${key} rules=a-rule -->\n` }
+    writeFileSync(path.join(bin, 'gh'), `#!/bin/sh\nprintf '%s\\n' '${JSON.stringify(issue)}'\n`, {
+      mode: 0o755,
+    })
+    vi.stubEnv('PATH', `${bin}${path.delimiter}${process.env.PATH}`)
+    const jev = fakeJev({ alters: 0.84 })
+    vi.stubGlobal('fetch', async (url: string, init: Parameters<JevFetch>[1]) =>
+      url.endsWith('.md') ? new Response(EDIT_HOOKS) : jev.fetch(url, init),
+    )
+    const chunks: string[] = []
+    const code = await api.main(
+      [base, root, '--repo', REPO],
+      { TYPESAFE_API_KEY: KEY },
+      { out: { write: (text) => chunks.push(text) } },
+    )
+    // Issue #282 has the key, so the dry run opens no issue for the block.
+    expect(chunks.join('')).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
+    expect(code).toBe(0)
+    expect(jev.calls).toHaveLength(1)
   })
 
   it('refuses --repo with no value', async () => {
