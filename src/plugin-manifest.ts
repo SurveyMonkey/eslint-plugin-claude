@@ -1,6 +1,7 @@
 // The plugin that holds a `plugin.json`, for a rule that lints the manifest
 // and reads the files around it. `readPlugin` finds the plugin root once. A
 // rule checks the plugin root in code (ADR 001, Decision 10).
+// `readListedPluginAt` also reads a listed plugin with no `plugin.json`.
 import { Stats } from 'node:fs'
 import path from 'node:path'
 import type { ValueNode } from './marketplace-json.ts'
@@ -18,8 +19,9 @@ import {
 /** The plugin of a manifest. `root` is the plugin root as the linted path gives
  *  it, `realRoot` is its real path, and `bound` is the real path of the
  *  repository (ADR 001, Decision 14). `fields` are the keys of the manifest on
- *  disk. They are always an object: a manifest that is absent or not an object
- *  gives no plugin. */
+ *  disk. They are always an object: a manifest that is not an object gives no
+ *  plugin. An absent manifest gives no plugin, except in `readListedPluginAt`.
+ *  There, the `fields` are empty. */
 export interface Plugin {
   readonly bound: string
   readonly fields: Readonly<Record<string, unknown>>
@@ -54,11 +56,28 @@ export function skillsPlugin(file: string): Plugin | undefined {
  *  plugin other than the manifest. The result is undefined in the cases of
  *  `readPlugin`. */
 export function readPluginAt(root: string): Plugin | undefined {
+  return pluginAt(root, false)
+}
+
+/** The plugin at the plugin root `root`, as `readPluginAt` gives it. A plugin
+ *  root that a `marketplace.json` lists, with no `plugin.json`, also gives a
+ *  plugin. Its `fields` are empty, because the entry is the manifest (ADR 001,
+ *  Decision 10). `isPluginRoot` cannot see the plugin of an entry with a key
+ *  that replaces a default location, so such a plugin gives no result. */
+export function readListedPluginAt(root: string): Plugin | undefined {
+  return pluginAt(root, true)
+}
+
+/** The plugin at `root`. With `listed`, a plugin root with no `plugin.json`
+ *  gives a plugin with empty `fields`. */
+function pluginAt(root: string, listed: boolean): Plugin | undefined {
   if (isPluginRoot(root) !== true) {
     return undefined
   }
   const bound = repositoryRoot(root)
-  const fields = readManifest(root, bound)
+  // `readManifest` gives null only when no `plugin.json` is there.
+  const read = readManifest(root, bound)
+  const fields = read === null && listed ? {} : read
   if (fields === UNREADABLE || fields === null) {
     return undefined
   }

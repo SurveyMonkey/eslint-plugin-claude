@@ -10,7 +10,7 @@ import { PLUGIN_SETTINGS_KEYS } from '../data/plugin-layout.ts'
 import { docsUrl } from '../docs-url.ts'
 import { enclosingMarketplace, entriesIn } from '../marketplace-file.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { lookup, type Plugin, readPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { lookup, type Plugin, readListedPluginAt, readPlugin } from '../plugin-manifest.ts'
 import { readJson, UNREADABLE } from '../skill-tree.ts'
 import { pluginAgents } from './skill-agent-exists.ts'
 
@@ -67,7 +67,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
     if (!manifest && path.basename(path.dirname(file)) === '.claude') {
       return {}
     }
-    const plugin = manifest ? readPlugin(file) : readPluginAt(path.dirname(file))
+    const plugin = manifest ? readPlugin(file) : readListedPluginAt(path.dirname(file))
     return {
       Document(node) {
         const settings = manifest ? lastMember(node.body, 'settings')?.value : node.body

@@ -414,3 +414,49 @@ describe(`${RULE} (paths that the rule cannot read)`, () => {
     })
   })
 })
+
+// A marketplace lists `plugins/p`, which has no `plugin.json`. The manifest is optional, and the
+// entry is then the manifest (manifest reference, "Manifest file"; ADR 001 Decision 10, #384).
+describe(`${RULE} (a listed plugin with no manifest)`, () => {
+  /** The messages for `text` as `plugins/p/settings.json`, with the marketplace entry `entry`. */
+  const listed = (
+    text: string,
+    entry: Record<string, unknown> = {},
+    files: Record<string, string> = {},
+  ) => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([
+        { name: 'p', source: './plugins/p', ...entry },
+      ]),
+      'plugins/p/settings.json': text,
+      ...files,
+    })
+    return lintPluginFile(RULE, GLOBS, path.join(top, 'plugins', 'p', 'settings.json'), text)
+  }
+
+  check('reports an agent that no file in agents/ defines', () => {
+    const found = listed('{"agent": "ghost"}', {}, { 'plugins/p/agents/reviewer.md': REVIEWER })
+    expect(found.map((m) => [m.messageId, m.message, m.column])).toEqual([
+      ['missing', message('ghost'), 11],
+    ])
+  })
+
+  check('stays silent for an agent that a file in agents/ defines', () => {
+    const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
+    expect(listed('{"agent": "reviewer"}', {}, files)).toEqual([])
+    expect(listed('{"agent": "p:reviewer"}', {}, files)).toEqual([])
+  })
+
+  // The plugin name is the entry name `tools`. The rule uses the folder name `p`, so a name scoped
+  // to `tools` looks like an agent of another plugin to it.
+  check('makes no false report when the entry name differs from the folder name', () => {
+    const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
+    expect(listed('{"agent": "tools:reviewer"}', { name: 'tools' }, files)).toEqual([])
+    const ghost = listed('{"agent": "ghost"}', { name: 'tools' }, files)
+    expect(ghost.map((m) => m.messageId)).toEqual(['missing'])
+  })
+
+  check('stays silent when the entry sets agents, which replaces the scan of agents/', () => {
+    expect(listed('{"agent": "ghost"}', { agents: ['./x/ghost.md'] })).toEqual([])
+  })
+})

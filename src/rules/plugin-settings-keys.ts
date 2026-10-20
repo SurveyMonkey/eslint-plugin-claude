@@ -7,7 +7,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { PLUGIN_SETTINGS_KEYS } from '../data/plugin-layout.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
-import { readPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { readListedPluginAt, readPlugin } from '../plugin-manifest.ts'
 
 const name = 'plugin-settings-keys' as const
 
@@ -30,7 +30,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' }> = {
     if (!manifest && path.basename(path.dirname(file)) === '.claude') {
       return {}
     }
-    const plugin = manifest ? readPlugin(file) : readPluginAt(path.dirname(file))
+    const plugin = manifest ? readPlugin(file) : readListedPluginAt(path.dirname(file))
     return {
       Document(node) {
         const settings = manifest ? lastMember(node.body, 'settings')?.value : node.body

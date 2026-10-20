@@ -45,6 +45,11 @@ The rule reads two places and reports on the value:
   the root `settings.json` sets a supported key, so the rule skips it then.[^settings]
   `plugin-settings-single-source` reports that conflict.
 
+A plugin root has a `.claude-plugin/plugin.json`, or a `marketplace.json` of the repository lists
+it. The manifest is optional, so the rule also reads the root `settings.json` of a listed plugin
+with no `plugin.json`. The name of such a plugin is the entry name. The rule uses the folder name
+for the scoped name. When the two differ, the rule can miss a fault, but it makes no false report.
+
 The rule lists the agents with the reader of `skill-agent-exists`, and skips the same built-in
 agents. The docs do not list the built-in agents for this key, so the rule uses the list of
 `skill-agent-exists`. The rule reads the agents of the plugin only. A name that only a user or

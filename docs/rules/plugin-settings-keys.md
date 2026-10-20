@@ -35,6 +35,10 @@ places:
 - The `settings.json` at the plugin root.
 - The `settings` object in `plugin.json`.
 
+A plugin root has a `.claude-plugin/plugin.json`, or a `marketplace.json` of the repository lists
+it. The manifest is optional, so the rule also reads the root `settings.json` of a listed plugin
+with no `plugin.json`.
+
 The report is on the key, one report for each key. A key that appears two times gets one report,
 on the last one, as `JSON.parse` keeps it. The rule does not read the keys inside the value of a
 key. The rule reports a key that differs from `agent` in case, such as `Agent`.
@@ -48,7 +52,9 @@ The rule makes no report in these cases:
   fails it with `expected record`.
 - The root `settings.json` is not an object.
 - The `settings.json` is not at a plugin root, or the folder is no plugin.
-- The plugin has no `.claude-plugin/plugin.json`. The rule finds a plugin root by that file.
+- The marketplace entry of a plugin with no `plugin.json` sets a key that replaces a default
+  location, such as `agents`. The plugin-root check cannot model that plugin, so the rule cannot
+  see it.
 - The `settings.json` is in a `.claude` folder, also when that folder is a plugin root. Claude
   Code reads that file as project settings, where each settings key can take effect. The
   settings rules read it.
