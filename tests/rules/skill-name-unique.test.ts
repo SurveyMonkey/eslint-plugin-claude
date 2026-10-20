@@ -76,6 +76,7 @@ put('edge/.claude/skills/ deploy/SKILL.md', bare)
 put('edge/.claude/skills/deploy /SKILL.md', bare)
 put('edge2/.claude/commands/a .md', bare)
 put('edge3/.claude/commands/ops/x.md', bare)
+put('edge4/.claude/skills/a .md/SKILL.md', bare)
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
 put('ckey/commands/review.md', bare)
@@ -430,6 +431,17 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         {
           messageId: 'duplicate',
           data: { name: 'ops<U+0020>:x', others: '`commands/ops/x.md`' },
+        },
+      ],
+    },
+    // A folder that ends in `.md` keeps its name whole. Only the file name loses `.md`.
+    {
+      code: bare,
+      filename: put('edge4/.claude/skills/a.md/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a.md', others: '`skills/a .md/SKILL.md`' },
         },
       ],
     },
