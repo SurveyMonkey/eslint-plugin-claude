@@ -43,11 +43,11 @@ ignore letter case, and the host ignores a trailing dot.
 
 The rule makes no report in these cases:
 
-- The host is on the machine: `localhost`, a name under `.localhost`, an address from
-  `127.0.0.0/8`, `[::1]`, or an IPv4-mapped address from `127.0.0.0/8`, such as
-  `[::ffff:127.0.0.1]`.[^localhost][^mapped] The host `0.0.0.0` is not on this list. It is not a
-  valid destination address.[^unspecified] A name such as `localhost.example.com` is not on it
-  either.
+- The host is on the machine. These hosts count: `localhost`, a name under `.localhost`, an
+  address from `127.0.0.0/8`, and `[::1]`.[^localhost] An IPv4-mapped address from `127.0.0.0/8`
+  counts too, such as `[::ffff:127.0.0.1]`.[^mapped] The host `0.0.0.0` is not on this list. It is
+  not a valid destination address.[^unspecified] A name such as `localhost.example.com` is not on
+  it either.
 - The `url` does not parse, or a `${` reference hides the scheme or the host. The rule does not
   know the host. A `${` in the port does not hide the host, so a report stays.
 - The server has no `type`. Claude Code reads it as a stdio server. It skips a server that has a

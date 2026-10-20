@@ -16,8 +16,9 @@ import { pathFault } from './marketplace-relative-source-format.ts'
 
 const name = 'mcp-project-plugin-bundle' as const
 
-// `claude plugin validate` 2.1.304 checks the end of the whole string, so a query or a fragment
-// after the extension makes the string no bundle, and one that ends in it makes a bundle.
+// `claude plugin validate` 2.1.304 checks the end of the whole string. A query or fragment after
+// the extension makes the string no bundle. A string that ends in the extension is a bundle, also
+// when the extension is in the query or fragment.
 const BUNDLE_EXTENSIONS = ['.mcpb', '.dxt']
 
 // A URL has a scheme and two slashes. A drive letter has one letter, and `pathFault` reads it first.

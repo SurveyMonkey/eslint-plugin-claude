@@ -48,6 +48,10 @@ it('reports a host that only looks like loopback', () => {
     'http://[::]/mcp',
     'http://[::ffff:128.0.0.1]/mcp',
     'http://[::ffff:10.0.0.1]/mcp',
+    'http://[::ffff:126.0.0.1]/mcp',
+    'http://[::7f00:1]/mcp',
+    'http://foo.localhost.evil.test/mcp',
+    'http://localhost@evil.test/mcp',
   ]) {
     expect(ids(lintProject(NAME, at(url)))).toEqual(['insecure'])
   }
@@ -98,6 +102,7 @@ it('stays silent for https://, wss:// and loopback hosts', () => {
     'http://[::ffff:127.0.0.1]/mcp',
     'http://[::ffff:7f00:1]:8080/mcp',
     'http://[::ffff:127.1.2.3]/mcp',
+    'http://[::ffff:127.255.255.254]/mcp',
   ]) {
     expect(ids(lintProject(NAME, at(url)))).toEqual([])
   }

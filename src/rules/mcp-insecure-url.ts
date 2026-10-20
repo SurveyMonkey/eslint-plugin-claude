@@ -29,11 +29,11 @@ const name = 'mcp-insecure-url' as const
 /** The schemes that send the traffic in clear text. */
 const CLEAR_SCHEMES: readonly string[] = ['http:', 'ws:']
 
-/** True when `host`, as `URL` gives it, is on the machine: `localhost`, a name under `.localhost`
- *  (RFC 6761 section 6.3), an address of `127.0.0.0/8`, `[::1]`, or an IPv4-mapped address of
- *  `127.0.0.0/8` (RFC 4291 section 2.5.5.2). `URL` gives `[::ffff:127.0.0.1]` as
- *  `[::ffff:7f00:1]`. `0.0.0.0` is not on the machine: RFC 1122 section 3.2.1.3 does not permit
- *  it as a destination. */
+/** True when `host`, as `URL` gives it, is on the machine. These hosts count: `localhost`, a name
+ *  under `.localhost` (RFC 6761 section 6.3), an address of `127.0.0.0/8`, and `[::1]`. An
+ *  IPv4-mapped address of `127.0.0.0/8` counts too (RFC 4291 section 2.5.5.2). `URL` gives
+ *  `[::ffff:127.0.0.1]` as `[::ffff:7f00:1]`. `0.0.0.0` does not count. RFC 1122 section 3.2.1.3
+ *  does not permit it as a destination. */
 const isLoopback = (host: string) =>
   host === 'localhost' ||
   host.endsWith('.localhost') ||
