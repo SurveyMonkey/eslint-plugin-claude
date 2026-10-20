@@ -4,9 +4,9 @@
 // reference, "CLI flags"). v2.1.300 removed `--sandbox` and `--no-sandbox` from
 // `claude remote-control` (the error reference). To sandbox the sessions, set `sandbox.enabled` to
 // true in a settings file (the sandboxing page, "What the sandbox restricts"). A command in exec
-// form (with `args`) is an executable and its arguments. A command in shell form is a shell line,
-// so the rule splits it into the simple commands and their words, and checks each command that
-// runs `claude`.
+// form (with `args`) is an executable and its arguments. A command in shell form is a shell line.
+// The rule splits it into the simple commands and their words. In each form, the rule skips the
+// wrappers and the assignments, and checks each command that runs `claude`.
 import type { Rule } from 'eslint'
 import { REMOVED_FLAGS, type RemovedFlag } from '../data/removed-cli-flags.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -60,7 +60,8 @@ const rule: Rule.RuleModule = {
         const args = memberOf(handler, 'args')?.value
         if (args?.kind === 'array') {
           // Exec form: `command` is the executable, and each item of `args` is one argument. The
-          // rule steps past `env` and its assignments to the executable that `env` runs.
+          // rule skips the wrappers and the `NAME=value` items, as in shell form, to find the
+          // executable. An item that is not a string stops the skip.
           const values = args.items.map((item) => (item.kind === 'string' ? item.value : undefined))
           const words = [command.value, ...values.map((value) => value ?? '')]
           const start = commandWordAt(words)

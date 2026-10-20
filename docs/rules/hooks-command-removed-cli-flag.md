@@ -39,9 +39,10 @@ A hook can start Claude Code, for example to run a headless check. The rule repo
 The executable is `claude`, a path that ends in `claude`, or `claude.exe`. A `/` or a `\` ends each directory of
 the path, as in `C:\Tools\claude.exe`. The rule reads two forms of a command.
 
-- **Exec form** (the handler sets `args`). `command` is the executable.[^exec] The rule skips the wrappers and the
-  `NAME=value` items, as in shell form. So `env` with the args `FOO=1`, `claude` runs `claude`. It reports an item
-  of `args` after `claude` that is a removed flag. It reports at the item.
+- **Exec form** (the handler sets `args`). `command` is the executable.[^exec] The rule skips the wrappers `exec`,
+  `env`, `command` and `nohup`, and the `NAME=value` items, as in shell form. So the `command` `env` with the
+  `args` `["FOO=1", "claude"]` runs `claude`. It reports an item of `args` after `claude` that is a removed flag. It
+  reports at the item.
 - **Shell form** (no `args`). `command` is a shell line. The rule splits the line into simple commands at `;`, `&`,
   `|`, parentheses, backticks and new lines. It reads quotes and backslashes. It skips leading `NAME=value` words
   and the wrappers `exec`, `env`, `command` and `nohup`. It reports at the string when the command word is `claude`
@@ -50,8 +51,9 @@ the path, as in `C:\Tools\claude.exe`. The rule reads two forms of a command.
 
 The rule does not know which global flags take a value. It finds the subcommand as a word `remote-control` before
 the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault. The rule does not
-skip an option of `env`, such as `-i`. In shell form, a backslash path counts only in quotes. Out of quotes, bash
-removes each backslash, so `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`. The rule reads no hidden file in
+skip an option of `env`, such as `-i`. In shell form, bash removes a backslash out of quotes, unless a backslash
+comes before it. So the shell line `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`, and the rule gives no report.
+The rule reads no hidden file in
 `managed-settings.d/`, and no plugin agent, because Claude Code ignores the `hooks` field there.
 
 Fail, in `.claude/settings.json`:

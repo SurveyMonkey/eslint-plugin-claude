@@ -1,7 +1,8 @@
 // A hook command that runs `claude` with a flag that Claude Code deprecated
 // (docs/rules/hooks-command-deprecated-cli-flag.md). The CLI reference, "CLI flags", calls `--remote`
-// a deprecated alias for `--cloud`. The rule reads a command like `hooks-command-removed-cli-flag` does.
-// It reads exec form (`args`) and shell form, and it splits a shell line with `claudeArguments`.
+// a deprecated alias for `--cloud`. The rule reads exec form (`args`) and shell form, and it splits a
+// shell line with `claudeArguments`. In exec form, the rule does not skip a wrapper such as `env`.
+// `hooks-command-removed-cli-flag` skips it.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import { HOOKS_TARGET, handlersOf, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
