@@ -45,7 +45,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' | 'notObject' }> = {
           context.report({ node: node.body, messageId: 'notObject' })
           return
         }
-        // `claude plugin validate` 2.1.302 fails a manifest `settings` that is not an object.
+        // A manifest with no `settings` object sets no key. `claude plugin validate` 2.1.302 fails a
+        // `settings` that is not an object.
         if (settings?.type !== 'Object') {
           return
         }
