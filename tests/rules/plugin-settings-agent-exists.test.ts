@@ -237,6 +237,17 @@ describe(`${RULE} (silent)`, () => {
     expect(lintPluginFile(RULE, GLOBS, file, '{"agent": "ghost"}')).toEqual([])
   })
 
+  // Claude Code reads `.claude/settings.json` as project settings. `settings-agent-exists` reads
+  // the `agent` key there, so this rule leaves it to that rule (#380).
+  check('stays silent for the settings.json of a .claude folder that is also a plugin root', () => {
+    const top = tree({
+      '.claude/.claude-plugin/plugin.json': '{"name": "p"}',
+      '.claude/settings.json': '{"agent": "ghost"}',
+    })
+    const file = path.join(top, '.claude', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '{"agent": "ghost"}')).toEqual([])
+  })
+
   check('stays silent for a manifest that does not parse', () => {
     const { dir } = pluginTree('{')
     expect(lintPlugin(RULE, dir, JSON.stringify(manifestOf({ agent: 'ghost' })))).toEqual([])

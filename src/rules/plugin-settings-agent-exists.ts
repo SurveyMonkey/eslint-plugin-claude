@@ -62,6 +62,11 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
   create(context) {
     const file = path.resolve(context.filename)
     const manifest = path.basename(file) === 'plugin.json'
+    // Claude Code reads `.claude/settings.json` as project settings, so `settings-agent-exists`
+    // owns its `agent` key (#380).
+    if (!manifest && path.basename(path.dirname(file)) === '.claude') {
+      return {}
+    }
     const plugin = manifest ? readPlugin(file) : readPluginAt(path.dirname(file))
     return {
       Document(node) {

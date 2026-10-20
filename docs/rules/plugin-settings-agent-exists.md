@@ -67,6 +67,8 @@ The rule makes no report in these cases:
 - The root `settings.json` of a manifest agent cannot be read. It can be a link with no target, a
   link out of the repository, or a file that does not parse to an object.
 - The `settings.json` is not at the plugin root, or the folder is no plugin.
+- The `settings.json` is in a `.claude` folder, also when that folder is a plugin root. Claude
+  Code reads that file as project settings. `settings-agent-exists` reads its `agent` key.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin
   root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can
   fail to parse.
