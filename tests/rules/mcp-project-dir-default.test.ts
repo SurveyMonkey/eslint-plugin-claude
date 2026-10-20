@@ -1,6 +1,8 @@
 // `${CLAUDE_PROJECT_DIR}` needs a default in the `command` and `args` of a project `.mcp.json`.
 // A plugin config substitutes it directly. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
+import { expect, it } from 'vitest'
+import { ids, lintRootListedFile, lintRootPluginFile } from '../mcp-server-rule.test-support.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -120,4 +122,13 @@ jsonTester.run('mcp-project-dir-default (invalid)', rule, {
       errors: [{ messageId: 'noDefault', data: { field: 'command', server: 'a' } }],
     },
   ],
+})
+
+// The root file of a repository that is a plugin is the project file too.
+it('reports in the root file of a plugin repository, in the mcpServers object only', () => {
+  const code = servers({ a: { command: `${bare}/s.sh` } })
+  expect(ids(lintRootPluginFile('mcp-project-dir-default', code))).toEqual(['noDefault'])
+  expect(ids(lintRootListedFile('mcp-project-dir-default', code))).toEqual(['noDefault'])
+  const unwrapped = JSON.stringify({ a: { command: `${bare}/s.sh` } })
+  expect(ids(lintRootPluginFile('mcp-project-dir-default', unwrapped))).toEqual([])
 })

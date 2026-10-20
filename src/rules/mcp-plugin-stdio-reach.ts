@@ -8,7 +8,7 @@ import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { lintedServers, mcpFileKind } from '../mcp-servers.ts'
+import { isPluginMcpFile, lintedServers } from '../mcp-servers.ts'
 
 const name = 'mcp-plugin-stdio-reach' as const
 
@@ -45,11 +45,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'stdio' }> = 
     if (!targets.includes('claude-ai')) {
       return {}
     }
-    // A project `.mcp.json` is not a plugin config.
-    if (
-      path.basename(context.filename) !== 'plugin.json' &&
-      mcpFileKind(context.filename) !== 'plugin'
-    ) {
+    // A project `.mcp.json` is not a plugin config. A `both` file is a plugin config too.
+    if (path.basename(context.filename) !== 'plugin.json' && !isPluginMcpFile(context.filename)) {
       return {}
     }
     return {

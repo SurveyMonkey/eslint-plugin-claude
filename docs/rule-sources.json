@@ -56,7 +56,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Permission modes",
-      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
+      "hash": "bc553f15e57e48a1e1fede76660bea821f079e3c608c03981fbae512ccc9d34f"
     }
   ],
   "agent-frontmatter-schema": [
@@ -83,7 +83,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "agent-frontmatter-valid": [
@@ -297,7 +297,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Permission modes",
-      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
+      "hash": "bc553f15e57e48a1e1fede76660bea821f079e3c608c03981fbae512ccc9d34f"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -314,14 +314,14 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Permission modes",
-      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
+      "hash": "bc553f15e57e48a1e1fede76660bea821f079e3c608c03981fbae512ccc9d34f"
     }
   ],
   "agent-permission-mode-manual": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Permission modes",
-      "hash": "d90a360f9dd394bf1d01a3aac3176e9bc7421388fd7f74607fa2cb10b0131129"
+      "hash": "bc553f15e57e48a1e1fede76660bea821f079e3c608c03981fbae512ccc9d34f"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -377,7 +377,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "e3bc7a735f4a3c83ec74458e4f73999386701062454bb86a7a4b7a33dc84ed71"
+      "hash": "6771492fed495df2959433f1557a89d0d03ddfb5b0c28e6cbc4539f5e7b35fbe"
     }
   ],
   "agent-skills-preload-limit": [
@@ -401,7 +401,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "agent-teammate-ignored-fields": [
@@ -617,7 +617,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "claude-md-guardrail-to-hook": [
@@ -753,7 +753,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "428fdf2654fa01dcbbece1f6d010e350f646ecbdbec229e7df097f452f06c2b7"
+      "hash": "1ac8eb3ec96177a5b960a381dcbf7e14ff5dacd45fa888e647e55bf4acd6f645"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -785,7 +785,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
@@ -950,7 +950,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook handler fields",
-      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca"
+      "hash": "ee6e6310f197f2061d72bc7dc47c6bc3703249beed5629c04edf97bd7a98392e"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1061,7 +1061,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook handler fields",
-      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca"
+      "hash": "ee6e6310f197f2061d72bc7dc47c6bc3703249beed5629c04edf97bd7a98392e"
     }
   ],
   "hooks-env-var-unavailable": [
@@ -1172,7 +1172,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook handler fields",
-      "hash": "4b2a7bf3f7ccb3d68a212f9ac22a464bb58e74970bd0f036b8fa98a57c9ac7ca"
+      "hash": "ee6e6310f197f2061d72bc7dc47c6bc3703249beed5629c04edf97bd7a98392e"
     }
   ],
   "hooks-handler-type-event-support": [
@@ -2508,7 +2508,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -2554,7 +2554,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -2663,6 +2663,11 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "MCP servers",
       "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Deploy managed-mcp.json",
+      "hash": "69d9fe59b8186fd22ef47148b8aa7a7c85c99d25d779c7fe9d7d6ccff77009cf"
     }
   ],
   "mcp-managed-servers-entry": [
@@ -2878,6 +2883,11 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Server status detail",
       "hash": "4034ec1f2c966c8fa55364ddfd83fa2e9b886049ba3680f253dc55661c4d2213"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Deploy managed-mcp.json",
+      "hash": "69d9fe59b8186fd22ef47148b8aa7a7c85c99d25d779c7fe9d7d6ccff77009cf"
     }
   ],
   "mcp-server-name-anthropic-skills": [
@@ -3164,7 +3174,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "output-style-frontmatter-valid": [
@@ -3309,7 +3319,7 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "How auto mode evaluates actions",
-      "hash": "4083605ad4a55ac924081bf8d2bf808c799a833f09afbe5b3f7b07e91f7c67e1"
+      "hash": "0208046999b9aacb263da3ac18435da4a36e2bdb3634d7b1de453f22eef70164"
     },
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
@@ -3549,7 +3559,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+      "hash": "b5635aeac203164c9a3b10520be50f4c3a57372b8e9dc56879127836a09b5fe1"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -3564,7 +3574,7 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Available modes",
-      "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1"
+      "hash": "5447fa58dd576211f302e78b0f6bfc14aa4dd05d83c61a067ebd76112fb9bd5e"
     }
   ],
   "permissions-cd-allowlist": [
@@ -3600,7 +3610,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+      "hash": "b5635aeac203164c9a3b10520be50f4c3a57372b8e9dc56879127836a09b5fe1"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -3612,12 +3622,12 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+      "hash": "b5635aeac203164c9a3b10520be50f4c3a57372b8e9dc56879127836a09b5fe1"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Available modes",
-      "hash": "5f6ff7e24a5746ec3a556929f3031e6b2fcf3747e207a2365f6f414f151714a1"
+      "hash": "5447fa58dd576211f302e78b0f6bfc14aa4dd05d83c61a067ebd76112fb9bd5e"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -3629,7 +3639,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+      "hash": "b5635aeac203164c9a3b10520be50f4c3a57372b8e9dc56879127836a09b5fe1"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -3646,12 +3656,12 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+      "hash": "b5635aeac203164c9a3b10520be50f4c3a57372b8e9dc56879127836a09b5fe1"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Allow only pre-approved tools with dontAsk mode",
-      "hash": "3ce526be3e005f95b4640366bed731198fccebbe55e9d573d97387c8d87dfe38"
+      "hash": "ab3a60d7a1d3aeb3f448532409e3f094a18b02a049d5ae336ece9eeb7a33ac8d"
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
@@ -3668,7 +3678,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.defaultMode",
-      "hash": "65157385613de4b38440fd97d7d905fa486c4045df3f90fc4e0878339d5336b9"
+      "hash": "b5635aeac203164c9a3b10520be50f4c3a57372b8e9dc56879127836a09b5fe1"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -3876,7 +3886,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "permissions-param-rule-intent": [
@@ -3922,7 +3932,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "permissions-protected-path-allow": [
@@ -3988,7 +3998,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "permissions-sandbox-bash-ask": [
@@ -4071,7 +4081,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "permissions-tool-name-glob": [
@@ -4093,7 +4103,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "permissions-unknown-tool": [
@@ -4130,7 +4140,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "permissions-webfetch-apex": [
@@ -4320,7 +4330,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "plugin-evals-case-yaml": [
@@ -5695,7 +5705,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-deprecated-key": [
@@ -5827,7 +5837,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-env-credential": [
@@ -5844,7 +5854,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -5856,7 +5866,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -5883,19 +5893,19 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-env-ignored-var": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Variables Claude Code ignores in env",
-      "hash": "7f1b3b4daa06d8a8fd6aa519e93d8be57d2abbbc895189ab4a46fd154960e4bf"
+      "hash": "b4d67d3ade3d97cb421dc4e91666e9950d2a35c375d190c041f6efff16ceab07"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/chrome",
@@ -5907,7 +5917,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-env-prompt-caching-off": [
@@ -5924,7 +5934,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-env-routing": [
@@ -5946,7 +5956,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
@@ -5963,7 +5973,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-env-shadowed": [
@@ -6012,7 +6022,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -6471,7 +6481,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     }
   ],
   "settings-model-list": [
@@ -6863,7 +6873,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "appendPlugins",
-      "hash": "68a42d4f3c2783690f816e20b473cb093f440c54fbdabf81e564a468a099bb5b"
+      "hash": "3273578a9cbc938e1e71dc3e9f857740f8b684df55cd377c7d6822ab63a3b05b"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -6929,7 +6939,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "e3bc7a735f4a3c83ec74458e4f73999386701062454bb86a7a4b7a33dc84ed71"
+      "hash": "6771492fed495df2959433f1557a89d0d03ddfb5b0c28e6cbc4539f5e7b35fbe"
     }
   ],
   "settings-strict-known-marketplaces-skills-dir": [
@@ -7033,7 +7043,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Run skills in a subagent",
-      "hash": "8029df09e92a6a75c23b6ef4e507b1342eea6cf0c699127cb2cae0a0b6b29b64"
+      "hash": "d46f9311890f785f54fa3e556421c3f19b4859014f01e2cd6f3a330b759b5e43"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -7087,7 +7097,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -7116,21 +7126,21 @@
     {
       "url": "https://code.claude.com/docs/en/context-window",
       "heading": "What survives compaction",
-      "hash": "304887efe5f264cf003440c869a2c72f203a1226383721d7aa0331d5fcf6efc3"
+      "hash": "9f73e47fd17d417c9cd77162019572e09ad5132986fb597995bf0db14bafa21c"
     }
   ],
   "skill-boolean-literal": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "skill-description-max-length": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -7142,7 +7152,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -7176,19 +7186,19 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Run skills in a subagent",
-      "hash": "8029df09e92a6a75c23b6ef4e507b1342eea6cf0c699127cb2cae0a0b6b29b64"
+      "hash": "d46f9311890f785f54fa3e556421c3f19b4859014f01e2cd6f3a330b759b5e43"
     }
   ],
   "skill-frontmatter-position": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/glossary",
@@ -7200,7 +7210,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -7276,7 +7286,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "skill-invocation-unreachable": [
@@ -7293,7 +7303,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "skill-listing-budget": [
@@ -7305,7 +7315,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "3a7c1cc88141f6f6b5c908f6032adc97cb802e27801832699c2e1861d1a60a8e"
+      "hash": "b6da6ca324e5b327b7e754d37b3cdb94ac943eae39e958752322ae967ba137f3"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
@@ -7329,7 +7339,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "skill-max-lines": [
@@ -7343,14 +7353,14 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "skill-model-override": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -7384,7 +7394,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "e3bc7a735f4a3c83ec74458e4f73999386701062454bb86a7a4b7a33dc84ed71"
+      "hash": "6771492fed495df2959433f1557a89d0d03ddfb5b0c28e6cbc4539f5e7b35fbe"
     }
   ],
   "skill-name-unique": [
@@ -7408,14 +7418,14 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     }
   ],
   "skill-paths-glob-valid": [
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -7523,7 +7533,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Frontmatter reference",
-      "hash": "6047c2df974fdb3794b48065fb94f1111845db4c653dd203d4ecd4f07101eb24"
+      "hash": "753bc3cebbc4f829982d5df3c875a0b4827e1a6b931812693ed2c236b7ae4ba5"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",

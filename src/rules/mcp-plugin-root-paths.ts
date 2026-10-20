@@ -4,10 +4,12 @@
 // with `./` or `../` depends on a directory that the plugin does not control. The rule is a
 // heuristic. It does not look for the target of the path. An absolute path, a bare program name
 // and a path that starts with a variable are silent. `mcp-stdio-relative-path` owns a project `.mcp.json`.
+// The root `.mcp.json` of a repository that is a plugin (a `both` file) gets this rule and
+// `mcp-stdio-relative-path`.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { expandedStrings, lintedServers, mcpFileKind } from '../mcp-servers.ts'
+import { expandedStrings, isPluginMcpFile, lintedServers } from '../mcp-servers.ts'
 
 const name = 'mcp-plugin-root-paths' as const
 
@@ -26,11 +28,8 @@ const rule: JSONRuleDefinition<{ MessageIds: 'relative' }> = {
     },
   },
   create(context) {
-    // A project `.mcp.json` is not a plugin config.
-    if (
-      path.basename(context.filename) !== 'plugin.json' &&
-      mcpFileKind(context.filename) !== 'plugin'
-    ) {
+    // A project `.mcp.json` is not a plugin config. A `both` file is a plugin config too.
+    if (path.basename(context.filename) !== 'plugin.json' && !isPluginMcpFile(context.filename)) {
       return {}
     }
     return {
