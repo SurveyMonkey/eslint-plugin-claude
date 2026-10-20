@@ -271,8 +271,7 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       ...named('a​b', path.join(plugin, 'SKILL.md')),
       errors: [{ messageId: 'name', data: { name: 'a<U+200B>b', ...at('U+200B', ZERO_WIDTH) } }],
     },
-    // The message prints a refused character as its code point, in the three messages. A plain
-    // name has no change, and a plain space between words stays a space.
+    // The message prints a refused character as its code point, in the three messages.
     {
       code: '# S\n',
       filename: skillIn('my\u202Eskill'),
@@ -313,8 +312,8 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
         { messageId: 'name', data: { name: 'my<U+200B>skill', ...at('U+200B', ZERO_WIDTH) } },
       ],
     },
-    // Each refused character gets its own code. A plain space does not. A code point above U+FFFF
-    // has more than four digits.
+    // Each refused character gets its own code. A plain space between words stays a space.
+    // A code point above U+FFFF has more than four digits.
     {
       ...named('a b\u202E\u200Bc\u{F0000}'),
       errors: [

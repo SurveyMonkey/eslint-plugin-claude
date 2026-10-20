@@ -400,7 +400,8 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
-    // A space at the edge of one folder or one name is a fault, also in the middle of a path.
+    // A space at the edge of one folder or file name is a fault.
+    // This holds in the middle of a path too.
     {
       code: bare,
       filename: put('edge/.claude/skills/deploy/SKILL.md', bare),

@@ -1,5 +1,5 @@
-// Faults that Claude Code finds in a skill or command name. Text that shows a name
-// in a message. The skill rules share this module.
+// This module holds the name checks of the skill rules. It also holds the text that
+// shows a name in a message.
 
 /** Each class of characters in the docs, with the text of the message.
  *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so this module counts it
@@ -46,9 +46,9 @@ export function firstFault(text: string): { code: string; kind: string } | null 
   return null
 }
 
-/** `text` for a message. Each character that Claude Code refuses prints as
- *  `<U+XXXX>`. So a direction control or a zero-width space cannot hide in the
- *  message. */
+/** `text` for a message. Each character that `CLASSES` and `kindAt` refuse
+ *  prints as `<U+XXXX>`. So a direction control or a zero-width space cannot hide
+ *  in the message. */
 export function escapeName(text: string): string {
   const chars = [...text]
   return chars

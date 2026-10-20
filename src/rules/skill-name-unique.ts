@@ -30,9 +30,9 @@ function fold(text: string): string {
     .replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, '')
 }
 
-/** The relative path of a file for a message. Each folder, and the file name
- *  without `.md`, is escaped alone, because a space is a fault at the edge of
- *  one name. */
+/** The relative path of a file for a message. This function escapes each part
+ *  of the path alone, and the file name without `.md`. A space is a fault at the
+ *  edge of one name. */
 function shownPath(relative: string): string {
   const parts = relative.split(path.sep)
   const last = parts.length - 1
@@ -142,7 +142,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const own =
           file.kind === 'skill' ? skillName(given, file.names[0] as string) : file.names.join(':')
-        // Each name is escaped alone, because a space is a fault at the edge of one name.
+        // Escape each name alone. A space is a fault at the edge of one name.
         const shownOwn =
           file.kind === 'skill' ? escapeName(own) : file.names.map(escapeName).join(':')
         const others = scopeEntries(root, file.plugin, bound).filter(

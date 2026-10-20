@@ -15,6 +15,7 @@ describe('escapeName', () => {
     ['a ', 'a<U+0020>'],
     ['a  b', 'a<U+0020> b'],
     ['a   b', 'a<U+0020><U+0020> b'],
+    // A literal `<U+200B>` stays distinct from an escaped U+200B, because `<` is escaped too.
     ['<U+200B>', '<U+003C>U+200B<U+003E>'],
   ])('prints %j as %j', (text, shown) => {
     expect(escapeName(text)).toBe(shown)
