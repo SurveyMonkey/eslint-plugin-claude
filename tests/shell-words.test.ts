@@ -367,9 +367,17 @@ describe('scanCommands', () => {
 
   it('reads the commands of a bash 5.3 substitution in braces', () => {
     // bash 5.3 runs the commands after `${` and a blank or a `|`.
-    expect(commandsOf('echo ${ rm -rf $T; }')).toEqual([['echo', '${', 'rm', '-rf', '$T'], ['}']])
-    expect(commandsOf('echo ${| rm -rf $T; }')).toEqual([['echo', '${'], ['rm', '-rf', '$T'], ['}']])
-    expect(commandsOf('echo ${\nrm -rf $T\n}')).toEqual([['echo', '${'], ['rm', '-rf', '$T'], ['}']])
+    expect(commandsOf(`echo \${ rm -rf $T; }`)).toEqual([['echo', '${', 'rm', '-rf', '$T'], ['}']])
+    expect(commandsOf(`echo \${| rm -rf $T; }`)).toEqual([
+      ['echo', '${'],
+      ['rm', '-rf', '$T'],
+      ['}'],
+    ])
+    expect(commandsOf(`echo \${\nrm -rf $T\n}`)).toEqual([
+      ['echo', '${'],
+      ['rm', '-rf', '$T'],
+      ['}'],
+    ])
     // A `#` after a blank in it starts a comment.
     for (const blank of [' ', '\n', '\t']) {
       expect(commandsOf(`x="$(echo \${${blank}a # it's\n})"; rm -rf $T`)).toEqual([

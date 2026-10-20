@@ -232,11 +232,11 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it('reads a bash 5.3 substitution in braces as commands', () => {
     // A `#` after a blank in it starts a comment, so the `)` on the next line ends the outer one.
     expect(line(`echo "$(echo \${ a # it')\n})" $F`)).toEqual(['unquoted'])
-    expect(line('F=$(jq -r .x); echo ${| rm -rf $F; }')).toEqual(['destructive'])
+    expect(line(`F=$(jq -r .x); echo \${| rm -rf $F; }`)).toEqual(['destructive'])
   })
 
   it('reads the commands after a case pattern in a substitution in an expansion', () => {
-    expect(line('D=$(jq -r .x); echo ${y:-$(case $z in a) rm -rf $D;; esac)}')).toEqual([
+    expect(line(`D=$(jq -r .x); echo \${y:-$(case $z in a) rm -rf $D;; esac)}`)).toEqual([
       'destructive',
     ])
   })
