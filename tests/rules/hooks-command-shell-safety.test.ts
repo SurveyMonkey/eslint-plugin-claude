@@ -204,6 +204,30 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(script('x="$(date # it\'\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
   })
 
+  it('joins a # after line continuations to the word before them', () => {
+    // The shell removes each backslash and new line pair first, so the `#` is in the word `a#b`.
+    // The quote after it then opens a quote that hides the `)` and the variable.
+    expect(line('x="$(echo a\\\n\\\n#b \')\n)" && cat $FILE')).toEqual([])
+  })
+
+  it('reads a comment after line continuations that follow white space or a new line', () => {
+    expect(line('x="$(echo a \\\n\\\n#b \')\n)" && cat $FILE')).toEqual(['unquoted'])
+    // An escaped backslash before a new line is no continuation, so the `#` starts a word.
+    expect(line('x="$(echo a\\\\\n\\\n#b \')\n)" && cat $FILE')).toEqual(['unquoted'])
+  })
+
+  it('reads a comment after a redirect, as after a space', () => {
+    // bash reads `#x ')` as a comment, so the `)` on the next line ends the substitution.
+    for (const text of [
+      'echo "$(echo >#x \')\n)" $F',
+      'echo "$(cat <#x \')\n)" $F',
+      'echo "$(echo >\\\n#x \')\n)" $F',
+      'echo "$(echo > #x \')\n)" $F',
+    ]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+  })
+
   it('ends a comment in a backtick substitution at the backtick that ends it', () => {
     expect(line('x="$(echo `id -u # uid`)"; rm -rf $TARGET')).toEqual(['destructive'])
     // The second backtick ends the substitution, so a backtick in a later comment is plain text.

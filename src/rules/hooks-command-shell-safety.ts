@@ -49,18 +49,36 @@ function quoteEnd(text: string, start: number): number {
   return text.length
 }
 
+/** True when the backslash at `at` in `text` escapes the next character: an odd count of
+ *  backslashes ends at `at`. */
+function escapes(text: string, at: number): boolean {
+  let count = 0
+  while (text.charAt(at - count) === '\\') {
+    count++
+  }
+  return count % 2 === 1
+}
+
 /** True when the `#` at `at` in `text` starts a word. `escaped` is true when a backslash escapes
  *  the character before it. `tick` is true when a backtick substitution is open. */
 function startsWord(text: string, at: number, escaped: boolean, tick: boolean): boolean {
   const before = text.charAt(at - 1)
   if (escaped) {
-    // The shell removes a backslash and a new line, so the character before the backslash
+    // The shell removes each backslash and new line pair, so the character before the pairs
     // decides. Another escaped character, such as a space, stays in the word.
-    return before === '\n' && /[\s(;|&]/.test(text.charAt(at - 3))
+    if (before !== '\n') {
+      return false
+    }
+    let end = at - 3
+    while (text.charAt(end) === '\n' && escapes(text, end - 1)) {
+      end -= 2
+    }
+    return /[\s(;|&<>]/.test(text.charAt(end))
   }
-  // A `#` after `)` or after a backtick that ends a substitution stays in the word, as in
-  // `src/shell-words.ts`. After a backtick that starts a substitution, it starts a word.
-  return /[\s(;|&]/.test(before) || (before === '`' && tick)
+  // A redirect operator ends a word. A `#` after `)` or after a backtick that ends a
+  // substitution stays in the word, as in `src/shell-words.ts`. After a backtick that starts a
+  // substitution, it starts a word.
+  return /[\s(;|&<>]/.test(before) || (before === '`' && tick)
 }
 
 /** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A

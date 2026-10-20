@@ -289,6 +289,130 @@ describe('scanCommands', () => {
     ])
   })
 
+  it(`reads no comment in a \${...} expansion`, () => {
+    // In a command substitution in double quotes.
+    expect(commandsOf(`x="$(echo \${1% #*})" && rm -rf $TARGET`)).toEqual([
+      [`x=$(echo \${1% #*})`],
+      ['rm', '-rf', '$TARGET'],
+    ])
+    // Out of quotes, the expansion is one word, with its spaces and operators.
+    expect(commandsOf(`echo \${1% #*}; rm -rf $T`)).toEqual([
+      ['echo', `\${1% #*}`],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf(`echo \${@:-\${@} #*} \${x:-a;b|c&d}; rm -rf $T`)).toEqual([
+      ['echo', `\${@:-\${@} #*}`, `\${x:-a;b|c&d}`],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf(`echo \${x/>#/y}; rm -rf $T`)).toEqual([
+      ['echo', `\${x/>#/y}`],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it(`reads the commands of a substitution in a \${...} expansion`, () => {
+    expect(commandsOf(`echo \${x:-$(rm -rf $T)} a`)).toEqual([
+      ['echo', `\${x:-$`],
+      ['rm', '-rf', '$T'],
+      ['}', 'a'],
+    ])
+    expect(commandsOf(`echo \${x:-\`rm -rf $T\`} a`)).toEqual([
+      ['echo', `\${x:-`],
+      ['rm', '-rf', '$T'],
+      ['}', 'a'],
+    ])
+    // A `)` with no `(` before it leaves no expansion open.
+    expect(commandsOf('a) b c')).toEqual([['a'], ['b', 'c']])
+  })
+
+  it('reads no comment after an escaped character', () => {
+    expect(commandsOf('echo "$(echo a\\ #b)"; rm -rf $T')).toEqual([
+      ['echo', '$(echo a\\ #b)'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf('echo a\\ #b; rm -rf $T')).toEqual([
+      ['echo', 'a #b'],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it('joins a # after line continuations to the word before them', () => {
+    expect(commandsOf('echo "$(echo a\\\n#b)"; rm -rf $T')).toEqual([
+      ['echo', '$(echo a\\\n#b)'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf('echo "$(echo a\\\n\\\n#b)"; rm -rf $T')).toEqual([
+      ['echo', '$(echo a\\\n\\\n#b)'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf('echo a\\\n\\\n#b; rm -rf $T')).toEqual([
+      ['echo', 'a#b'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf('echo $(date)\\\n#x; rm -rf y')).toEqual([
+      ['echo', '$'],
+      ['date'],
+      ['#x'],
+      ['rm', '-rf', 'y'],
+    ])
+  })
+
+  it('reads a comment after line continuations that follow white space or a new line', () => {
+    expect(commandsOf('echo "$(echo a \\\n\\\n#b \')\n)"; rm -rf $T')).toEqual([
+      ['echo', "$(echo a \\\n\\\n#b ')\n)"],
+      ['rm', '-rf', '$T'],
+    ])
+    // An escaped backslash before a new line is no continuation, so the `#` starts a word.
+    expect(commandsOf('echo "$(echo a\\\\\n\\\n#b \')\n)"; rm -rf $T')).toEqual([
+      ['echo', "$(echo a\\\\\n\\\n#b ')\n)"],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf('echo a \\\n\\\n#b; rm -rf $T\nc')).toEqual([['echo', 'a'], ['c']])
+  })
+
+  it('reads a comment after a backtick that starts a substitution', () => {
+    expect(commandsOf('echo "$(echo `#b \'`)"; rm -rf $T')).toEqual([
+      ['echo', "$(echo `#b '`)"],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf("echo `#b '`; rm -rf $T")).toEqual([['echo'], ['rm', '-rf', '$T']])
+  })
+
+  it('reads a comment after a group in braces in a substitution', () => {
+    expect(commandsOf('echo "$({ a; } # \')\n)"; rm -rf $T')).toEqual([
+      ['echo', "$({ a; } # ')\n)"],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it('reads a comment after a redirect operator', () => {
+    // bash reads `#x; rm -rf $T` as a comment, and refuses the redirect with no target.
+    expect(commandsOf('echo hi >#x; rm -rf $T')).toEqual([['echo', 'hi', '>']])
+    expect(commandsOf('cat <#x; rm -rf $T')).toEqual([['cat', '<']])
+    expect(commandsOf('echo hi >\\\n#x; rm -rf $T')).toEqual([['echo', 'hi', '>']])
+    for (const op of ['>', '<']) {
+      expect(commandsOf(`echo "$(echo ${op}#x ')\n)"; rm -rf $T`)).toEqual([
+        ['echo', `$(echo ${op}#x ')\n)`],
+        ['rm', '-rf', '$T'],
+      ])
+    }
+    expect(commandsOf('echo "$(echo >\\\n#x \')\n)"; rm -rf $T')).toEqual([
+      ['echo', "$(echo >\\\n#x ')\n)"],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it('keeps a # after an escaped or a quoted redirect operator in the word', () => {
+    expect(commandsOf('echo \\>#x ">"#y; rm -rf $T')).toEqual([
+      ['echo', '>#x', '>#y'],
+      ['rm', '-rf', '$T'],
+    ])
+    expect(commandsOf('echo "$(echo \\>#x)"; rm -rf $T')).toEqual([
+      ['echo', '$(echo \\>#x)'],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
   it('stops at a depth, and does not throw or hang on a line of unclosed groups', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'"$('.repeat(20_000)}`)).toHaveLength(1)
