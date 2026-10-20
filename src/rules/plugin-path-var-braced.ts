@@ -3,7 +3,7 @@
 // (docs/rules/plugin-path-var-braced.md). The rule reports each bare variable in
 // the body. It makes no report when it cannot see the plugin.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readPluginAt } from '../plugin-manifest.ts'
 import { classifySkillFile } from '../skill-files.ts'
@@ -14,14 +14,16 @@ const name = 'plugin-path-var-braced' as const
 // The lookahead keeps a longer name, such as `$CLAUDE_PLUGIN_ROOT_DIR`, out.
 const BARE = /\$(CLAUDE_PLUGIN_(?:ROOT|DATA))(?![A-Za-z0-9_])/g
 
-/** The plugin root of a skill, command or agent file, or undefined when `file`
- *  is none of them, is not in a plugin, or sits in a plugin that is unseen. */
-function pluginRootOf(file: string): string | undefined {
+/** The plugin root of a skill, command or agent file, or undefined when the file
+ *  of `context` is none of them, is not in a plugin, or sits in a plugin that is
+ *  unseen. */
+function pluginRootOf(context: { filename: string; sourceCode: object }): string | undefined {
+  const file = context.filename
   const skill = classifySkillFile(file)
   if (skill !== null) {
     return skill.plugin ? scopeRoot(file, skill) : undefined
   }
-  const agent = classifyAgentFile(file)
+  const agent = classifyLinted(context)
   return agent?.plugin === true ? agent.root : undefined
 }
 
@@ -38,7 +40,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bare' }> = {
     },
   },
   create(context) {
-    const root = pluginRootOf(context.filename)
+    const root = pluginRootOf(context)
     if (root === undefined || readPluginAt(root) === undefined) {
       return {}
     }
