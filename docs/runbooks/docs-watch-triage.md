@@ -7,7 +7,7 @@ stale_after: 2027-03-29
 related_issues: [25, 149, 151, 152, 293, 307, 312]
 generated:
   by: claude-code
-  at: 2026-10-14T00:00:00Z
+  at: 2026-10-19T00:00:00Z
 ---
 
 # Triage the docs watch issues
@@ -88,6 +88,17 @@ It writes `Part of #<n>`, not `Closes`, for the issue. The refresh pull request 
 
 The log names each failure. Do the steps for the failure that it names.
 
+When the page hash and each block hash of the head snapshot is the base, the log says that the
+gate compares the head with the base. It does not read the live docs, so a docs change after
+`update` does not fail it. Two failures are possible:
+
+- **The head snapshot is not the base snapshot.** The map changed and `update` did not run.
+  Run `node scripts/docs-watch.ts update` again, and push. If the docs changed, a hash can then
+  change, and the gate does the checks below.
+- **The check of the head has an error.** Do the steps of the same item below.
+
+When a hash changes, the gate does these checks:
+
 - **The dry run would open an issue or post a comment for a block with no key match.** No open
   issue or group issue comment has its key: its page, block and hash. The log names the kind,
   the page, the block and the hash of each block. The docs changed after the last job run, or a
@@ -112,7 +123,8 @@ The log names each failure. Do the steps for the failure that it names.
   page shows more than one time. Correct it in the map and the footnote. `update` gives the same
   error until then. For a failed fetch, run the check again.
 - **No `TYPESAFE_API_KEY`.** A pull request from a fork or from Dependabot gets no secret. A
-  maintainer pushes the snapshot change from a branch of this repository.
+  maintainer pushes the snapshot change from a branch of this repository. A head whose hashes
+  are the base needs no key.
 - **The dry run failed, or the check of the head failed.** A step threw, or gave an output that
   the gate cannot read. The gate fails closed. Read the error, and run the check again when the
   cause is gone.

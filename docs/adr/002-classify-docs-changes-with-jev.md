@@ -4,7 +4,7 @@ description: The docs watch classifies each changed Claude Code docs block with 
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [25, 35, 36, 38, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316]
+related_issues: [25, 35, 36, 38, 112, 137, 149, 150, 151, 152, 218, 219, 293, 307, 316, 419]
 ---
 
 # ADR 002: Classify docs changes with Jev and open issues
@@ -265,15 +265,39 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
 `docs/rule-sources.json`. Else it does these steps:
 
 1. It copies the base map, inventory, rule docs and snapshot to a temporary root.
-2. It classifies the live pages against that base state, then runs the issue step in dry run.
+2. It compares the head snapshot with the base snapshot, for each page that the head map cites.
+   When the page hash and each block hash of the head is the base, the head stores no docs
+   change. Then the gate runs `check` on the head map and the head snapshot, with the stored
+   page text in place of the live docs, and stops. It reads no live page and needs no key. It
+   fails when the check finds a change or an error.
+3. Else it classifies the live pages against the base state, then runs the issue step in dry run.
    The dry run names each block that it would put in an issue or a group issue comment. The
    gate accepts such a block when the marker of an open issue or group issue comment has its
    key. It does not compare the rules. It fails when another block has no key match, and names
    each such block. An issue that the pull request closes is open until the merge, so it still
    counts.
-3. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
+4. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
    check has an error. The two steps read each page once. So the check compares the stored
    hashes with the text that the dry run read.
+
+**The base compare (#419).** On 2026-10-19 the docs changed three times in one day. PR #388
+changed the snapshot format and no block hash. It failed the check four times, each time for a
+docs change outside its diff. So step 2 does not compare such a head with the live docs. The
+hashes that count are the page `hash`, and the `id` and `hash` of each block, in page order.
+`bodyHash`, `text` and `sources` do not count. `update` makes them from the same page text, and
+a format change or a map change adds them. `check` with the stored text still finds a map hash
+that is not the snapshot hash, or a cited heading that the head does not store. The page text
+comes from the base file. When the base file has no text, it comes from the head file. The page
+hash is the same, so the two texts are the same. A page with no text in the two files, or with
+no base file, goes to step 3.
+
+This decision declines two options from #419:
+
+- Accept a head snapshot that is older than the live docs when the base is older still, and
+  name the newer blocks without a fail. The dry run still classifies the live docs against the
+  base. So a block that changed after the push still fails the key check.
+- Run `update` on a copy, and compare the result with the head. A docs change after the push is
+  then a warning. The dry run has the same fault, so a fail stays.
 
 The gate matches a block by its key only, because Jev can give a different answer in each run
 (#316). A rule can then cross a threshold for a block that a person already decided. The key
@@ -538,8 +562,9 @@ the old text is not available.
 - A new Jev version needs a new run of the spike before the pin moves.
 - The `docs-snapshot` check (Decision 4) needs `TYPESAFE_API_KEY` in a `pull_request` run of CI.
   A pull request from a fork or from Dependabot gets no secret. When it changes the snapshot or
-  the map, the check fails closed. A docs change during a pull request also fails the check, and
-  the author runs `update` again. Each run of the check that changes the state costs Jev calls.
+  the map, and a page hash or a block hash changes, the check fails closed. A head whose hashes
+  are the base needs no key (Decision 4, step 2). When a hash changes, a docs change during the
+  pull request also fails the check, and the author runs `update` again. Each run of the check that changes the state costs Jev calls.
 - The triage refresh merges with no person review (Decision 4). The project has one developer,
   and the rulesets "Require CI" and "Require CodeQL" have no review rule. A second developer,
   or a review rule, reopens this part of the decision. A refresh whose check fails stays open,
