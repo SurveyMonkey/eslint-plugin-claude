@@ -2160,4 +2160,18 @@ describe('main with the defaults', () => {
     const output = JSON.parse(String(write.mock.calls[0]?.[0])) as Output
     expect([output.findings, output.tracked, output.results]).toEqual([[], [], []])
   })
+
+  it('asks Jev through the global fetch for a block that changed', async () => {
+    const pages = [...watch.loadSnapshots(ROOT).values()]
+    const jev = fakeJev(() => 0)
+    vi.stubGlobal('fetch', async (url: string, init: Init) => {
+      const page = pages.find((one) => `${one.url}.md` === url)
+      if (page === undefined) return jev.fetch(url, init)
+      return new Response(page.text.replace(/^([A-Z][a-z].*)$/gm, '$1 edited'), { status: 200 })
+    })
+    vi.spyOn(process.stdout, 'write').mockReturnValue(true)
+    const code = await api.main([], { TYPESAFE_API_KEY: KEY })
+    expect(code).toBe(0)
+    expect(jev.calls.length).toBeGreaterThan(0)
+  })
 })
