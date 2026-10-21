@@ -170,8 +170,19 @@ command makes read-only network calls.
 
 The `docs-snapshot` job in `ci.yml` runs `node scripts/docs-verify.ts <base>` on each pull
 request. It passes at once when the diff does not change `docs/docs-snapshot/` or
-`docs/rule-sources.json`. Else it runs the classifier on the base state, and the issue step in
-dry run, against the live docs. Then it runs `check` on the head state. It fails in these cases:
+`docs/rule-sources.json`.
+
+Else it compares the head snapshot with the base snapshot. Each base file that the head keeps
+must have the same hashes in the head. These are the page hash, and the key and hash of each
+block. Each page that the head map cites must have a base file and a head file. One of the two
+must have the page text. When each condition holds, it runs `check` on the head state. The
+stored page text takes the place of the live docs. So a change of the snapshot format passes,
+also when the docs change after `update`. So does a map change that cites no new page. This
+step reads no live page and needs no key. It fails when `check` finds a change or an error.
+Usually the map changed and `update` did not run. Run `update` again, and push.
+
+When one condition fails, it runs the classifier on the base state, and the issue step in dry
+run, against the live docs. Then it runs `check` on the head state. It fails in these cases:
 
 - The dry run would open an issue or post a group issue comment for a block. No open issue or
   group issue comment has the key of that block. The rules do not count. The log names the

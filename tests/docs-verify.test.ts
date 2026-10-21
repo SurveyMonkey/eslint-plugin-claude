@@ -112,12 +112,14 @@ const servePages =
 const refresh = (live: FetchText) => (root: string) => watch.updateState({ root, fetchText: live })
 
 // Makes a repository with the docs state of `live` and the map in a base
-// commit. Then `change` edits the tree, and a head commit stores the edit.
-// Returns the root and the SHA of the base commit.
+// commit. `before` edits the base tree before the commit. Then `change` edits
+// the tree, and a head commit stores the edit. Returns the root and the SHA of
+// the base commit.
 async function repoWith(
   change: (root: string) => unknown,
   live: FetchText = serve(PAGE),
   map: SourceMap = cited,
+  before: (root: string) => unknown = () => {},
 ) {
   const root = mkdtempSync(path.join(tmpdir(), 'docs-verify-'))
   dirs.push(root)
@@ -130,6 +132,7 @@ async function repoWith(
   writeFileSync(path.join(root, 'docs/rules-inventory.md'), INVENTORY)
   writeFileSync(path.join(root, 'docs/rule-sources.json'), `${JSON.stringify(map)}\n`)
   await watch.updateState({ root, fetchText: live })
+  await before(root)
   git(root, 'init', '-q', '-b', 'main')
   git(root, 'add', '-A')
   git(root, 'commit', '-q', '-m', 'base')
@@ -469,6 +472,314 @@ describe('a diff that changes the snapshot', () => {
     expect(code).toBe(0)
     expect(jev.calls).toEqual([])
     expect(text).toContain('The head snapshot is the live docs.')
+  })
+})
+
+// Rewrites the snapshot file in another format: no body hash, and another indent.
+const reformat = (dir: string) => {
+  const file = path.join(dir, SNAPSHOT)
+  const snapshot = JSON.parse(readFileSync(file, 'utf8')) as watch.Snapshot
+  snapshot.blocks = snapshot.blocks.map(({ id, hash }) => ({ id, hash }))
+  writeFileSync(file, `${JSON.stringify(snapshot, null, 4)}\n`)
+}
+
+// Removes the page text from the snapshot file, as before ADR 002 Decision 9.
+const dropText = (dir: string) => {
+  const file = path.join(dir, SNAPSHOT)
+  const { text: _, ...rest } = JSON.parse(readFileSync(file, 'utf8')) as { text: string }
+  writeFileSync(file, `${JSON.stringify(rest, null, 2)}\n`)
+}
+
+// A docs fetch that counts its reads, and serves the live docs, which changed.
+const counted = () => {
+  const reads: string[] = []
+  const fetchText: FetchText = async (url) => {
+    reads.push(url)
+    return EDIT_HOOKS
+  }
+  return { reads, fetchText }
+}
+
+// Edits the snapshot file by hand, and keeps the page hash.
+const editSnapshot = (dir: string, edit: (snapshot: watch.Snapshot) => void) => {
+  const file = path.join(dir, SNAPSHOT)
+  const snapshot = JSON.parse(readFileSync(file, 'utf8')) as watch.Snapshot
+  edit(snapshot)
+  writeFileSync(file, `${JSON.stringify(snapshot, null, 2)}\n`)
+}
+
+const changed = (root: string, base: string) =>
+  git(root, 'diff', '--name-only', base, 'HEAD').split('\n')
+
+// A head whose page hashes and block hashes are the base stores no docs
+// change. So the gate compares it with the base, not with the live docs (#419).
+describe('a head whose page hashes and block hashes are the base', () => {
+  // b-rule cites a second heading of the page. The map hashes come from `update`.
+  const twoRules: SourceMap = { ...cited, 'b-rule': [{ url: URL_, heading: 'commands' }] }
+
+  it('passes a new format and a map change after the live docs change, with no key', async () => {
+    const { root, base } = await repoWith(async (dir) => {
+      writeFileSync(path.join(dir, 'docs/rule-sources.json'), `${JSON.stringify(twoRules)}\n`)
+      await refresh(serve(PAGE))(dir)
+      reformat(dir)
+    })
+    expect(changed(root, base)).toEqual([SNAPSHOT, 'docs/rule-sources.json'])
+    const live = counted()
+    const jev = fakeJev()
+    const gh = fakeGh()
+    const { code, text } = await verify(
+      root,
+      base,
+      { fetchText: live.fetchText, fetch: jev.fetch, run: gh.run },
+      {},
+    )
+    expect(text).toContain(
+      'Each page hash and block hash of the head snapshot is the base. ' +
+        'The gate compares the head with the base, not with the live docs.',
+    )
+    expect(text).toContain('The head snapshot is the base snapshot.')
+    expect(text).not.toContain('TYPESAFE_API_KEY')
+    expect(text).not.toContain('The dry run')
+    expect(text).toContain('docs-snapshot: pass')
+    expect(code).toBe(0)
+    expect(live.reads).toEqual([])
+    expect(jev.calls).toEqual([])
+    expect(gh.calls).toEqual([])
+  })
+
+  it('compares a new format with the base when the key is set, as in CI', async () => {
+    const { root, base } = await repoWith(reformat)
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const live = counted()
+    const jev = fakeJev()
+    const gh = fakeGh()
+    const { code, text } = await verify(root, base, {
+      fetchText: live.fetchText,
+      fetch: jev.fetch,
+      run: gh.run,
+    })
+    expect(text).toContain('The gate compares the head with the base, not with the live docs.')
+    expect(text).toContain('The head snapshot is the base snapshot.')
+    expect(text).not.toContain('The dry run')
+    expect(code).toBe(0)
+    expect(live.reads).toEqual([])
+    expect(jev.calls).toEqual([])
+    expect(gh.calls).toEqual([])
+  })
+
+  it('fails a head text that is not the page hash, and keeps each hash', async () => {
+    const { root, base } = await repoWith((dir) =>
+      editSnapshot(dir, (snapshot) => {
+        snapshot.text = `${snapshot.text}\nA line that the docs do not have.\n`
+      }),
+    )
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).toContain('The gate compares the head with the base')
+    expect(text).toContain('1 page(s) of the head snapshot are not the base snapshot.')
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
+  })
+
+  it('passes a head that adds the page text to a base with none, as in #388', async () => {
+    const { root, base } = await repoWith(refresh(serve(PAGE)), serve(PAGE), cited, dropText)
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const live = counted()
+    const { code, text } = await verify(root, base, { fetchText: live.fetchText }, {})
+    expect(text).toContain('The head snapshot is the base snapshot.')
+    expect(code).toBe(0)
+    expect(live.reads).toEqual([])
+  })
+
+  it('passes a head that stops a citation of a page, and keeps the other hashes', async () => {
+    const pages = { [`${URL_}.md`]: PAGE, [`${SKILLS_URL}.md`]: SKILLS }
+    const both: SourceMap = {
+      ...cited,
+      'b-rule': [{ url: SKILLS_URL, heading: 'Choose where skills load' }],
+    }
+    const { root, base } = await repoWith(
+      async (dir) => {
+        writeFileSync(path.join(dir, 'docs/rule-sources.json'), `${JSON.stringify(cited)}\n`)
+        await refresh(servePages(pages))(dir)
+      },
+      servePages(pages),
+      both,
+    )
+    expect(changed(root, base)).toEqual([
+      'docs/docs-snapshot/skills.json',
+      'docs/rule-sources.json',
+    ])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).toContain('The head snapshot is the base snapshot.')
+    expect(code).toBe(0)
+  })
+
+  it('fails a map change with no `update`, and says to run update again', async () => {
+    const { root, base } = await repoWith((dir) => {
+      writeFileSync(path.join(dir, 'docs/rule-sources.json'), `${JSON.stringify(twoRules)}\n`)
+    })
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).toContain(
+      '1 page(s) of the head snapshot are not the base snapshot. ' +
+        'Usually the map changed and `update` did not run. ' +
+        'Run `node scripts/docs-watch.ts update` again, and push.',
+    )
+    expect(text).not.toContain('The head snapshot is the base snapshot.')
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
+  })
+
+  it('fails a head map hash that is not the snapshot hash', async () => {
+    const { root, base } = await repoWith(async (dir) => {
+      reformat(dir)
+      const map = JSON.parse(readFileSync(path.join(dir, 'docs/rule-sources.json'), 'utf8'))
+      map['a-rule'][0].hash = 'f'.repeat(64)
+      writeFileSync(path.join(dir, 'docs/rule-sources.json'), `${JSON.stringify(map)}\n`)
+    })
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).toContain('The gate compares the head with the base')
+    expect(text).toContain('The check of the head has 1 error(s):')
+    expect(text).toContain(`- ${URL_}: the map hash of "hooks" for a-rule is not the snapshot hash`)
+    expect(code).toBe(1)
+  })
+})
+
+// A head that changes a hash gets the dry run and the compare with the live
+// docs. So does a head that the gate cannot compare with the base.
+describe('a head that the gate does not compare with the base', () => {
+  it('fails a new format with a changed hash that no open issue has', async () => {
+    const { root, base } = await repoWith(async (dir) => {
+      await refresh(serve(EDIT_HOOKS))(dir)
+      const file = path.join(dir, SNAPSHOT)
+      writeFileSync(file, `${JSON.stringify(JSON.parse(readFileSync(file, 'utf8')), null, 4)}\n`)
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: fakeGh().run,
+    })
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain(`- rule-update: ${URL_} block hooks, hash ${headHash(root, 'hooks')}`)
+    expect(text).toContain('docs-snapshot: fail')
+    expect(code).toBe(1)
+  })
+
+  it('passes a new format with a changed hash that an open issue has', async () => {
+    const { root, base } = await repoWith(async (dir) => {
+      await refresh(serve(EDIT_HOOKS))(dir)
+      const file = path.join(dir, SNAPSHOT)
+      writeFileSync(file, `${JSON.stringify(JSON.parse(readFileSync(file, 'utf8')), null, 4)}\n`)
+    })
+    const key = `${URL_}#hooks:${headHash(root, 'hooks')}`
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(EDIT_HOOKS),
+      fetch: fakeJev({ alters: 0.84 }).fetch,
+      run: fakeGh({
+        issues: [{ number: 282, body: `<!-- docs-watch:rule-update:${key} rules=a-rule -->\n` }],
+      }).run,
+    })
+    expect(text).not.toContain('The gate compares the head with the base')
+    // The issue step skips a block that an open issue has.
+    expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
+    expect(text).not.toContain('- rule-update:')
+    expect(text).toContain('The head snapshot is the live docs.')
+    expect(code).toBe(0)
+  })
+
+  it('compares a head with the live docs when only the page hash changed', async () => {
+    // The blocks drop the blank lines at the end of the page, so each block hash stays.
+    const tail = `${PAGE}\n\n\n`
+    const { root, base } = await repoWith(refresh(serve(tail)))
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(tail),
+      fetch: fakeJev().fetch,
+      run: fakeGh().run,
+    })
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('The dry run would open 0 issue(s) and post 0 comment(s).')
+    expect(text).toContain('The head snapshot is the live docs.')
+    expect(code).toBe(0)
+  })
+
+  // The check compares no block when the page hash is the same. So the base
+  // compare must send a block that changed by hand to the live path. The
+  // live path does not compare the blocks either, so with a key it can pass
+  // such a head.
+  it.each([
+    ['key', (block: { id: string }) => Object.assign(block, { id: `${block.id}-x` })],
+    ['hash', (block: { hash: string }) => Object.assign(block, { hash: 'f'.repeat(64) })],
+  ])('compares a head with the live docs when only a block %s changed', async (_, edit) => {
+    const { root, base } = await repoWith((dir) =>
+      editSnapshot(dir, (snapshot) => {
+        edit(snapshot.blocks.find((block) => block.id === 'hooks') as watch.Snapshot['blocks'][0])
+      }),
+    )
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('TYPESAFE_API_KEY is not set')
+    expect(code).toBe(1)
+  })
+
+  // `update` deletes the file of a page that the map does not cite. A head
+  // that keeps the file with other hashes stores a docs change.
+  it('compares a head with the live docs when an uncited page has new hashes', async () => {
+    const both: SourceMap = {
+      ...cited,
+      'b-rule': [{ url: SKILLS_URL, heading: 'Choose where skills load' }],
+    }
+    const edited = SKILLS.replace('decides which sessions', 'sets which sessions')
+    expect(edited).not.toBe(SKILLS)
+    const { root, base } = await repoWith(
+      async (dir) => {
+        await refresh(servePages({ [`${URL_}.md`]: PAGE, [`${SKILLS_URL}.md`]: edited }))(dir)
+        writeFileSync(path.join(dir, 'docs/rule-sources.json'), `${JSON.stringify(cited)}\n`)
+      },
+      servePages({ [`${URL_}.md`]: PAGE, [`${SKILLS_URL}.md`]: SKILLS }),
+      both,
+    )
+    expect(changed(root, base)).toEqual([
+      'docs/docs-snapshot/skills.json',
+      'docs/rule-sources.json',
+    ])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('TYPESAFE_API_KEY is not set')
+    expect(code).toBe(1)
+  })
+
+  it('compares a head with the live docs when no snapshot file has the page text', async () => {
+    const { root, base } = await repoWith(
+      async (dir) => {
+        await refresh(serve(PAGE))(dir)
+        reformat(dir)
+        dropText(dir)
+      },
+      serve(PAGE),
+      cited,
+      dropText,
+    )
+    expect(changed(root, base)).toEqual([SNAPSHOT])
+    const { code, text } = await verify(root, base, { fetchText: failFetch }, {})
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('TYPESAFE_API_KEY is not set')
+    expect(code).toBe(1)
+  })
+
+  it('compares a head with the live docs when a head snapshot file cannot be read', async () => {
+    const { root, base } = await repoWith((dir) => {
+      writeFileSync(path.join(dir, SNAPSHOT), '{ not json')
+    })
+    const { code, text } = await verify(root, base, {
+      fetchText: serve(PAGE),
+      fetch: fakeJev().fetch,
+      run: fakeGh().run,
+    })
+    expect(text).not.toContain('The gate compares the head with the base')
+    expect(text).toContain('The check of the head failed:')
+    expect(text).toContain('plugins__manifest-reference.json')
+    expect(code).toBe(1)
   })
 })
 
