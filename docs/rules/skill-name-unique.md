@@ -48,6 +48,21 @@ skill:[^fold]
 - compatibility forms, such as fullwidth letters
 - dash variants, such as a Unicode hyphen, an en dash or a minus sign
 
+The rule does not compare a folder or command name that Claude Code refuses. Claude Code does
+not load such a skill or command, and [`skill-name-characters`](skill-name-characters.md) reports
+it. A command `deploy<U+00A0>.md` and a command `deploy.md` give no report, in either file. The
+same is true for a command name that has a refused part. It is also true for a skill that has a
+refused folder name, with or without a loaded `name`.
+
+A skill name is the `name` field, or the folder name when the field is not a loaded name. The docs
+say that Claude Code ignores a refused `name`. The rule reads this as: the skill goes by its
+folder name. So the rule compares that folder name.
+
+A folder in the `skills/` directory of a plugin is an exception. Claude Code loads it, with hyphens
+in place of the refused characters, and `skill-name-characters` does not report it. A plugin skill
+with a loaded `name` has that name. The rule does not compare the name of such a folder that has
+no loaded `name`.
+
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
 
@@ -57,8 +72,8 @@ rule uses it for the names in one scope, because the docs give no other rule.
 The rule reports on each file of a collision, not only on the second file. A rule that lints
 one file cannot know the order of the files. The report is on the `name` value, or on line 1
 when the name comes from the path or the folder. The message lists the other files of the scope.
-The message shows each character that `skill-name-characters` refuses as `<U+XXXX>`, in the name
-and in the paths.
+The message shows each character that `skill-name-characters` refuses as `<U+XXXX>` in a path.
+A plugin skill folder can hold a refused character, so a path in the message can show one.
 
 A plugin that sets `commands` does not load `commands/`, so the rule skips that folder. The rule
 reads the other files from the disk, and reads no file out of the repository. The repository is
