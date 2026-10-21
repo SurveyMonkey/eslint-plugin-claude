@@ -5,6 +5,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
@@ -27,6 +28,21 @@ function fold(text: string): string {
     .toLowerCase()
     .replace(/[\u{2010}-\u{2015}\u{2212}]/gu, '-')
     .replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, '')
+}
+
+/** The relative path of a file for a message. This function escapes each part
+ *  of the path alone, and the file name without `.md`. A space is a fault at the
+ *  edge of one name. */
+function shownPath(relative: string): string {
+  const parts = relative.split(path.sep)
+  const last = parts.length - 1
+  return parts
+    .map((part, index) =>
+      index === last && part.endsWith('.md')
+        ? `${escapeName(part.slice(0, -3))}.md`
+        : escapeName(part),
+    )
+    .join('/')
 }
 
 /** The name from the field `name`, or the folder when the field is not a
@@ -126,6 +142,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const own =
           file.kind === 'skill' ? skillName(given, file.names[0] as string) : file.names.join(':')
+        // Escape each name alone. A space is a fault at the edge of one name.
+        const shownOwn =
+          file.kind === 'skill' ? escapeName(own) : file.names.map(escapeName).join(':')
         const others = scopeEntries(root, file.plugin, bound).filter(
           (entry) => entry.file !== self && fold(entry.name) === fold(own),
         )
@@ -134,9 +153,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             loc,
             messageId: 'duplicate',
             data: {
-              name: own,
+              name: shownOwn,
               others: others
-                .map((entry) => `\`${path.relative(root, entry.file).split(path.sep).join('/')}\``)
+                .map((entry) => `\`${shownPath(path.relative(root, entry.file))}\``)
                 .join(', '),
             },
           })

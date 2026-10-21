@@ -71,6 +71,12 @@ const DIFFERENT: [string, string][] = [
   ['deploy', 'deploys'],
 ]
 put('three/.claude/commands/t.md', bare)
+put('escaped/.claude/commands/de\u202eploy.md', bare)
+put('edge/.claude/skills/ deploy/SKILL.md', bare)
+put('edge/.claude/skills/deploy /SKILL.md', bare)
+put('edge2/.claude/commands/a .md', bare)
+put('edge3/.claude/commands/ops/x.md', bare)
+put('edge4/.claude/skills/a .md/SKILL.md', bare)
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
 put('ckey/commands/review.md', bare)
@@ -106,6 +112,20 @@ const pair = (index: number, first: string, second: string) => {
   }
 }
 
+// The names of `SAME` that hold a refused character, as the message prints them. The other
+// names print unchanged. A soft hyphen and a joiner are not refused.
+const PRINTED: Record<string, string> = {
+  'deploy\u{a0}': 'deploy<U+00A0>',
+  'dep\u{3000}loy': 'dep<U+3000>loy',
+  'dep\tloy': 'dep<U+0009>loy',
+  'dep\u{2028}loy': 'dep<U+2028>loy',
+  'dep\u{2029}loy': 'dep<U+2029>loy',
+  'd\u{200b}e\u{200b}ploy': 'd<U+200B>e<U+200B>ploy',
+  'dep\u{200b}loy': 'dep<U+200B>loy',
+  '\u{feff}deploy': '<U+FEFF>deploy',
+}
+const shown = (name: string) => PRINTED[name] ?? name
+
 const sameCases = SAME.map(([, first, second], index) => {
   const { code, filename } = pair(index, first, second)
   return {
@@ -114,7 +134,7 @@ const sameCases = SAME.map(([, first, second], index) => {
     errors: [
       {
         messageId: 'duplicate' as const,
-        data: { name: first, others: '`skills/b/SKILL.md`' },
+        data: { name: shown(first), others: '`skills/b/SKILL.md`' },
         line: 2,
       },
     ],
@@ -352,6 +372,80 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     },
     // Each folding of the names.
     ...sameCases,
+    // The files that the message names print each refused character as its code point.
+    {
+      code: bare,
+      filename: put('escaped/.claude/skills/deploy/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: {
+            name: 'deploy',
+            others: '`skills/de<U+200B>ploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
+          },
+        },
+      ],
+    },
+    {
+      code: named(quote('de\u200bploy')),
+      filename: put('escaped/.claude/skills/de\u200bploy/SKILL.md', named(quote('de\u200bploy'))),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: {
+            name: 'de<U+200B>ploy',
+            others: '`skills/deploy/SKILL.md`, `commands/de<U+202E>ploy.md`',
+          },
+          line: 2,
+        },
+      ],
+    },
+    // A space at the edge of one folder or file name is a fault.
+    // This holds in the middle of a path too.
+    {
+      code: bare,
+      filename: put('edge/.claude/skills/deploy/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: {
+            name: 'deploy',
+            others: '`skills/<U+0020>deploy/SKILL.md`, `skills/deploy<U+0020>/SKILL.md`',
+          },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('edge2/.claude/commands/a.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a', others: '`commands/a<U+0020>.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('edge3/.claude/commands/ops /x.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'ops<U+0020>:x', others: '`commands/ops/x.md`' },
+        },
+      ],
+    },
+    // A folder that ends in `.md` keeps its name whole. Only the file name loses `.md`.
+    {
+      code: bare,
+      filename: put('edge4/.claude/skills/a.md/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a.md', others: '`skills/a .md/SKILL.md`' },
+        },
+      ],
+    },
     // Three files share a name. The report names the other two.
     {
       code: bare,
