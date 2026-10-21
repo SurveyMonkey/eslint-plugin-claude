@@ -13,17 +13,25 @@ import {
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { main } from '../scripts/seed-rule-sources.ts'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const SCRIPT = path.join(ROOT, 'scripts/seed-rule-sources.ts')
-// Node 22.13 needs the flag to run a .ts file. Node 24 accepts it.
+// Runs the script as `pnpm docs:seed` does. v8 coverage cannot see this
+// process, so only the tests of the command line use it. Node 22.13 needs the
+// flag to run a .ts file. Node 24 accepts it.
 const run = (...args: string[]) =>
   execFileSync(process.execPath, ['--experimental-strip-types', SCRIPT, ...args], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   })
-const seed = (...args: string[]) => run('--stdout', ...args)
+// Calls the script in this process, with --stdout. With no root, it reads this repository.
+const seed = (root?: string) => {
+  let text = ''
+  main(['--stdout', ...(root === undefined ? [] : [root])], { write: (chunk) => (text += chunk) })
+  return text
+}
 const DOCS_PREFIX = 'https://code.claude.com/docs/'
 const HASH = /^[0-9a-f]{64}$/
 
@@ -294,14 +302,61 @@ describe('seed script', () => {
     expect(out).toBe(readFileSync(path.join(ROOT, 'docs/rule-sources.json'), 'utf8'))
   })
 
+  it('exits with a non-zero code from the command line, for a footnote that it cannot read', () => {
+    const root = makeRoot({ 'a-rule': footnotes('[^a]: Hooks reference.') })
+    expect(() => run('--stdout', root)).toThrow(/cannot read the footnote/)
+  })
+
   it('writes the map file without --stdout, and does not write it with --stdout', () => {
     const doc = footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)')
     const root = makeRoot({ 'a-rule': doc })
     const file = path.join(root, 'docs/rule-sources.json')
     const out = seed(root)
     expect(existsSync(file)).toBe(false)
-    expect(run(root)).toBe('')
+    let written = ''
+    main([root], { write: (chunk) => (written += chunk) })
+    expect(written).toBe('')
     expect(readFileSync(file, 'utf8')).toBe(out)
+  })
+
+  it('writes the map file from the command line, and prints nothing', () => {
+    const doc = footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)')
+    const root = makeRoot({ 'a-rule': doc })
+    expect(run(root)).toBe('')
+    expect(readFileSync(path.join(root, 'docs/rule-sources.json'), 'utf8')).toBe(seed(root))
+  })
+
+  describe('as the entry file', () => {
+    const argv = process.argv
+    afterEach(() => {
+      process.argv = argv
+      vi.restoreAllMocks()
+    })
+
+    it('runs main with the arguments after the file name', async () => {
+      const root = makeRoot({
+        'a-rule': footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)'),
+      })
+      const write = vi.spyOn(process.stdout, 'write').mockReturnValue(true)
+      process.argv = [process.execPath, SCRIPT, '--stdout', root]
+      // The query makes a new module, so the entry check runs again.
+      await import(`${SCRIPT}?entry`)
+      expect(write).toHaveBeenCalledWith(seed(root))
+    })
+
+    it('does nothing when it is not the entry file', async () => {
+      const write = vi.spyOn(process.stdout, 'write').mockReturnValue(true)
+      process.argv = [process.execPath, path.join(ROOT, 'scripts/docs-watch.ts'), '--stdout']
+      await import(`${SCRIPT}?not-entry`)
+      expect(write).not.toHaveBeenCalled()
+    })
+
+    it('does nothing when the process has no script path', async () => {
+      const write = vi.spyOn(process.stdout, 'write').mockReturnValue(true)
+      process.argv = [process.execPath]
+      await import(`${SCRIPT}?no-argv`)
+      expect(write).not.toHaveBeenCalled()
+    })
   })
 
   it('gives the same output on a second run', () => {
