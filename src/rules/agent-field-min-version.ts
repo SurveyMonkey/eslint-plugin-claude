@@ -3,7 +3,7 @@
 // version in `minVersion` does not support. It is inactive until the option is set, because
 // the file does not show which versions its users run.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { isBelow, MIN_VERSION_SCHEMA, type MinVersionOptions } from '../agent-min-version.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
@@ -61,7 +61,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    const agent = classifyAgentFile(context.filename)
+    const agent = classifyLinted(context)
     const [{ minVersion }] = context.options
     if (agent === null || minVersion === undefined) {
       return {}
@@ -117,7 +117,7 @@ const rule: MarkdownRuleDefinition<{
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

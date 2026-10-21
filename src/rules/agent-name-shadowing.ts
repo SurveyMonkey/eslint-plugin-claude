@@ -4,7 +4,7 @@
 // the project folder. It reports in the nearer file, the one that wins.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { foldersAbove } from '../folders-above.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -26,7 +26,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadows' }> = {
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null || scope.plugin) {
       return {}
     }
@@ -67,6 +67,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'shadows' }> = {
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

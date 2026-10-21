@@ -47,7 +47,9 @@ The rule does not report these cases:
 - A flag, a package name such as `@scope/pkg`, and a value with the path inside it, such as
   `--config=./c.json`.
 - The fields `url`, `headers` and `headersHelper`. `mcp-headershelper-path` reads `headersHelper`.
-- A project `.mcp.json`. `mcp-stdio-relative-path` reports a relative path there.
+- A project `.mcp.json`. `mcp-stdio-relative-path` reports a relative path there. When a plugin
+  root is also the repository root, its `.mcp.json` is a plugin file too. So the two rules can
+  report the same string, and their fixes conflict.
 
 The rule reads a plugin `.mcp.json`, and the servers that a plugin manifest declares, inline or in a
 `.json` file. The `.mcp.json` at the plugin root has its own lint run, so no server gets two

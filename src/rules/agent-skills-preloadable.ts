@@ -2,7 +2,7 @@
 // (docs/rules/agent-skills-preloadable.md).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { type AgentFile, classifyAgentFile } from '../agent-files.ts'
+import { type AgentFile, classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -60,7 +60,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageIds }> = {
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null) {
       return {}
     }
@@ -93,6 +93,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: MessageIds }> = {
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

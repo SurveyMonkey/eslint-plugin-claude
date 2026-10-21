@@ -1,17 +1,18 @@
 // A plugin sets default settings in a root `settings.json` or in the manifest key `settings`. Two
 // keys take effect, and Claude Code drops every other key (docs/rules/plugin-settings-keys.md).
-// The rule reports each top-level key that Claude Code drops. It finds the plugin as
-// `plugin-settings-agent-exists` does, and makes no report when it cannot see the plugin.
+// The rule reports each top-level key that Claude Code drops, and a root `settings.json` that is
+// not an object. It finds the plugin as `plugin-settings-agent-exists` does, and makes no report
+// when it cannot see the plugin.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { PLUGIN_SETTINGS_KEYS } from '../data/plugin-layout.ts'
 import { docsUrl } from '../docs-url.ts'
 import { keyOf, lastMember } from '../marketplace-json.ts'
-import { readPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { readListedPluginAt, readPlugin } from '../plugin-manifest.ts'
 
 const name = 'plugin-settings-keys' as const
 
-const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' }> = {
+const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' | 'notObject' }> = {
   meta: {
     type: 'problem',
     docs: {
@@ -21,6 +22,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' }> = {
     schema: [],
     messages: {
       unsupported: `Claude Code drops \`{{key}}\` from the default settings of a plugin. Only ${PLUGIN_SETTINGS_KEYS.map((key) => `\`${key}\``).join(' and ')} take effect.`,
+      notObject: `The default settings of a plugin are not an object, so Claude Code takes no key from this file. Write an object with ${PLUGIN_SETTINGS_KEYS.map((key) => `\`${key}\``).join(' or ')}.`,
     },
   },
   create(context) {
@@ -30,12 +32,22 @@ const rule: JSONRuleDefinition<{ MessageIds: 'unsupported' }> = {
     if (!manifest && path.basename(path.dirname(file)) === '.claude') {
       return {}
     }
-    const plugin = manifest ? readPlugin(file) : readPluginAt(path.dirname(file))
+    const plugin = manifest ? readPlugin(file) : readListedPluginAt(path.dirname(file))
     return {
       Document(node) {
         const settings = manifest ? lastMember(node.body, 'settings')?.value : node.body
-        // A value that is not an object sets no key. `claude plugin validate` fails it in a manifest.
-        if (plugin === undefined || settings?.type !== 'Object') {
+        if (plugin === undefined) {
+          return
+        }
+        // A value that is not an object sets no key. Validate 2.1.304 passes a root `settings.json`
+        // that is not an object.
+        if (!manifest && node.body.type !== 'Object') {
+          context.report({ node: node.body, messageId: 'notObject' })
+          return
+        }
+        // A manifest with no `settings` object sets no key. `claude plugin validate` 2.1.302 fails a
+        // `settings` that is not an object.
+        if (settings?.type !== 'Object') {
           return
         }
         // A map keeps the last member of each key, as `JSON.parse` does.

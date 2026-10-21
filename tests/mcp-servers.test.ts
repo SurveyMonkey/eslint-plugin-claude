@@ -10,10 +10,12 @@ import { keyOf } from '../src/marketplace-json.ts'
 import {
   declaredMcpStrings,
   expandedStrings,
+  isPluginMcpFile,
   isUnreadMcpPath,
   jsonBodyState,
   MANAGED_SERVER_TYPES,
   type McpFileKind,
+  mcpConfigKind,
   mcpFileKind,
   parseUrl,
   pluginMcpDeclarations,
@@ -71,6 +73,30 @@ describe('mcpFileKind', () => {
     put(repo('p', '.claude-plugin', 'plugin.json'))
     expect(mcpFileKind(repo('p', '.mcp.json'))).toBe('plugin')
   })
+  it('is both for the root .mcp.json of a repository that is a plugin with a manifest', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(repo('.mcp.json'))).toBe('both')
+  })
+  it('is both for the root .mcp.json when a marketplace lists the root as "./"', () => {
+    const marketplace = { name: 'm', owner: { name: 'o' }, plugins: [{ name: 'p', source: './' }] }
+    put(repo('.claude-plugin', 'marketplace.json'), JSON.stringify(marketplace))
+    expect(mcpFileKind(repo('.mcp.json'))).toBe('both')
+  })
+  it('is both for the root .mcp.json when .git is a file, as in a worktree', () => {
+    const root = path.join(scratch, 'worktree')
+    put(path.join(root, '.git'), 'gitdir: elsewhere\n')
+    put(path.join(root, '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(path.join(root, '.mcp.json'))).toBe('both')
+  })
+  it('is plugin for a plugin root below the repository root', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    put(repo('p', '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(repo('p', '.mcp.json'))).toBe('plugin')
+  })
+  it('is plugin for a plugin root with no .git, such as an installed copy', () => {
+    put(path.join(scratch, 'outside', '.claude-plugin', 'plugin.json'))
+    expect(mcpFileKind(path.join(scratch, 'outside', '.mcp.json'))).toBe('plugin')
+  })
   it('is null for a path under .claude/, even in a plugin', () => {
     put(repo('p', '.claude-plugin', 'plugin.json'))
     expect(mcpFileKind(repo('.claude', '.mcp.json'))).toBeNull()
@@ -85,6 +111,26 @@ describe('mcpFileKind', () => {
       expect(mcpFileKind(repo('p', '.mcp.json'))).toBeNull()
     },
   )
+})
+
+describe('mcpConfigKind', () => {
+  it('is project for a managed-mcp.json, also at a plugin root and in .claude', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    put(repo('p', '.claude-plugin', 'plugin.json'))
+    expect(mcpConfigKind(repo('managed-mcp.json'))).toBe('project')
+    expect(mcpConfigKind(repo('p', 'managed-mcp.json'))).toBe('project')
+    expect(mcpConfigKind(repo('.claude', 'managed-mcp.json'))).toBe('project')
+    // `isPluginMcpFile` reads the same kind. The `.mcp.json` beside it is a plugin file.
+    expect(isPluginMcpFile(repo('p', 'managed-mcp.json'))).toBe(false)
+    expect(isPluginMcpFile(repo('p', '.mcp.json'))).toBe(true)
+  })
+  it('is the kind of mcpFileKind for a .mcp.json', () => {
+    put(repo('.claude-plugin', 'plugin.json'))
+    put(repo('p', '.claude-plugin', 'plugin.json'))
+    expect(mcpConfigKind(repo('.mcp.json'))).toBe('both')
+    expect(mcpConfigKind(repo('p', '.mcp.json'))).toBe('plugin')
+    expect(mcpConfigKind(repo('.claude', '.mcp.json'))).toBeNull()
+  })
 })
 
 describe('serverMembers', () => {
@@ -134,6 +180,10 @@ describe('serverMembers', () => {
   it('reads the top-level object of a plugin file with no wrapper only', () => {
     expect(namesOf('{"a": {}, "b": {}}', 'plugin')).toEqual(['a', 'b'])
     expect(namesOf('{"a": {}, "b": {}}', 'project')).toEqual([])
+  })
+  it('reads the wrapper of a file of both kinds, or the top-level object with no wrapper', () => {
+    expect(namesOf('{"mcpServers": {"a": {}}, "b": {}}', 'both')).toEqual(['a'])
+    expect(namesOf('{"a": {}, "b": {}}', 'both')).toEqual(['a', 'b'])
   })
   it('gives nothing for a wrapper or a body that is not an object', () => {
     expect(namesOf('{"mcpServers": []}', 'plugin')).toEqual([])

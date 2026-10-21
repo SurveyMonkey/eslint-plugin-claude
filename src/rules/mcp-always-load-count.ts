@@ -12,10 +12,10 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
 import {
+  isPluginMcpFile,
   jsonBodyState,
   type LintedServer,
   lintedServers,
-  mcpFileKind,
   pluginMcpSources,
 } from '../mcp-servers.ts'
 import { repositoryRoot, UNREADABLE } from '../skill-tree.ts'
@@ -38,11 +38,13 @@ type Source = LintedServer & { own: boolean }
 
 /** The servers that load with the linted file `filename`, in load order, and whether the rule
  *  read every source that it would count. A project file stands alone. A plugin file adds the
- *  other sources of its plugin. The linted `.mcp.json` is read from its text, and not from disk. */
+ *  other sources of its plugin. A `both` file gets the plugin count only. That count can be lower
+ *  than the project count, when a later source replaces a server by its name. The linted
+ *  `.mcp.json` is read from its text, and not from disk. */
 function serversOf(filename: string, body: ValueNode): { servers: Source[]; complete: boolean } {
   const own = lintedServers(filename, body).map((server) => ({ ...server, own: true }))
   const manifestFile = path.basename(filename) === 'plugin.json'
-  if (!manifestFile && mcpFileKind(filename) !== 'plugin') {
+  if (!manifestFile && !isPluginMcpFile(filename)) {
     return { servers: own, complete: true }
   }
   const root = manifestFile

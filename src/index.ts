@@ -1676,8 +1676,9 @@ const CATCH_ALL = /^\*\*\/\*\.[A-Za-z0-9]+$/
  *  no block of its own, so this block gives its files a config. A user then
  *  turns the rule on with an entry in `rules`. The globs come from the
  *  modules, so a new rule adds no entry to a central list. A catch-all glob
- *  is not in the block. Else a `rules` entry would reach every file of the
- *  language, and a user's own config for those files would change. */
+ *  is not in the block. Else each `rules` entry would reach every file of the
+ *  language. A rule block with a catch-all glob, such as the Markdown glob of
+ *  an agent rule, still gives its config to every file of the language. */
 function fileBlocksFor(config: string): Linter.Config[] {
   const globs = new Map<Language, Set<string>>()
   for (const { target } of modules as Module[]) {

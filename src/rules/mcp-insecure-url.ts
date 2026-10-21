@@ -2,8 +2,9 @@
 // a host that is not on the machine goes in clear text. `claude plugin validate` warns about this
 // URL in the MCP configs of a plugin with a manifest (v2.1.281 or later). It fails a plugin with
 // no `plugin.json` (v2.1.302). So the rule reads the project `.mcp.json`, and the `.mcp.json` of
-// such a plugin. A loopback host is on the machine, so it is silent. A host with a `${`
-// reference is not known, so it is silent too.
+// such a plugin. Validate reads a `both` file with a manifest, so the rule skips it. A loopback
+// host is on the machine, so it is silent. A host with a `${` reference is not known, so it is
+// silent too.
 // The rule also reads each string in the `mcpServers` of `.claude-plugin/plugin.json`: the path or
 // URL of an MCP bundle. Validate passes an `http://` bundle URL (v2.1.302), so the rule reports it.
 // The docs ask for "a path inside the plugin or an `https://` URL". A loopback host and a `${` host
@@ -28,10 +29,17 @@ const name = 'mcp-insecure-url' as const
 /** The schemes that send the traffic in clear text. */
 const CLEAR_SCHEMES: readonly string[] = ['http:', 'ws:']
 
-/** True when `host`, as `URL` gives it, is on the machine: `localhost`, an address of `127.0.0.0/8`,
- *  or `[::1]`. */
+/** True when `host`, as `URL` gives it without a trailing dot, is on the machine. These hosts count: `localhost`, a name
+ *  under `.localhost` (RFC 6761 section 6.3), an address of `127.0.0.0/8`, and `[::1]`. An
+ *  IPv4-mapped address of `127.0.0.0/8` counts too (RFC 4291 section 2.5.5.2). `URL` gives
+ *  `[::ffff:127.0.0.1]` as `[::ffff:7f00:1]`. `0.0.0.0` does not count. RFC 1122 section 3.2.1.3
+ *  does not permit it as a destination. */
 const isLoopback = (host: string) =>
-  host === 'localhost' || host === '[::1]' || /^127(?:\.\d{1,3}){3}$/.test(host)
+  host === 'localhost' ||
+  host.endsWith('.localhost') ||
+  host === '[::1]' ||
+  /^127(?:\.\d{1,3}){3}$/.test(host) ||
+  /^\[::ffff:7f[0-9a-f]{2}:[0-9a-f]{1,4}\]$/.test(host)
 
 /** A bundle string that `claude plugin validate` reads as an `http://` URL. Validate 2.1.302 reads
  *  `HTTP://` as a URL. It reads `http:`, `http:/` and `http:\\` as a path, and fails them. It
@@ -96,12 +104,13 @@ const rule: JSONRuleDefinition<{ MessageIds: 'insecure' | 'insecureBundle' }> = 
         },
       }
     }
-    // `claude plugin validate` warns for the config of a plugin with a manifest. `mcpFileKind`
-    // also gives `project` to a file that is not `.mcp.json`, so the rule checks the file name.
+    // `claude plugin validate` warns for the config of a plugin with a manifest. A `both` file with
+    // a manifest is such a config. `mcpFileKind` also gives `project` to a file that is not
+    // `.mcp.json`, so the rule checks the file name.
     const kind = mcpFileKind(context.filename)
     if (
       kind === null ||
-      (kind === 'plugin' && hasManifest(path.dirname(path.resolve(context.filename))) === true) ||
+      (kind !== 'project' && hasManifest(path.dirname(path.resolve(context.filename))) === true) ||
       path.basename(context.filename) !== '.mcp.json'
     ) {
       return {}
