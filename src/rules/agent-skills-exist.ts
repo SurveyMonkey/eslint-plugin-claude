@@ -4,7 +4,7 @@
 // cannot preload.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { type AgentFile, classifyAgentFile } from '../agent-files.ts'
+import { type AgentFile, classifyLinted } from '../agent-files.ts'
 import { BUNDLED_SKILLS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { foldersAbove } from '../folders-above.ts'
@@ -142,7 +142,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null) {
       return {}
     }
@@ -180,6 +180,6 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'missing'
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

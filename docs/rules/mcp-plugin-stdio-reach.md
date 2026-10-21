@@ -40,6 +40,8 @@ server name. For a server in a `.json` file that `plugin.json` names, it is on t
 `plugin.json`. A server is stdio when its `type` is `stdio`, or when it has no `type` and has a `command`.
 The rule reads the `.mcp.json` at a plugin root, and the servers that `plugin.json` declares
 inline or in a `.json` file. A project `.mcp.json` is not a plugin config, so it gets no report.
+When a plugin root is also the repository root, its `.mcp.json` is a plugin config too. So the rule
+reads it.
 The rule makes no report for a remote server, or for a bundle (`.mcpb`, `.dxt`).
 
 Of two servers with one name, or two keys with one name, the last one counts, as `JSON.parse`

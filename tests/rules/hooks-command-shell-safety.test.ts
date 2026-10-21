@@ -189,6 +189,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       // The inner expansion ends, and the `#` is still in the outer one.
       `echo \${@:-\${@} #*}`,
       'ls a\\ #b',
+      'ls a \\ #b',
       // The shell removes the backslash and the new line, so the `#` is in the word `a#b`.
       'ls a\\\n#b',
     ]) {
@@ -200,8 +201,62 @@ describe(`${name}: an unquoted variable in the command`, () => {
     // The shell removes the backslash and the new line, so the `#` starts a word.
     expect(script('x="$(date \\\n# it\'s\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
     expect(script('x="$(echo `#it\'s`)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+    expect(script('x="$(echo `\\\n#it\'s`)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
     // A quote at the end of the comment is plain text too.
     expect(script('x="$(date # it\'\n)"\nrm -rf $TARGET\n')).toEqual(['destructive'])
+  })
+
+  it('joins a # after line continuations to the word before them', () => {
+    // The shell removes each backslash and new line pair first, so the `#` is in the word `a#b`.
+    // The quote after it then opens a quote that hides the `)` and the variable.
+    expect(line('x="$(echo a\\\n\\\n#b \')\n)" && cat $FILE')).toEqual([])
+    expect(line('x="$(echo a\\\n\\\n\\\n#b \')\n)" && cat $FILE')).toEqual([])
+    // An escaped space or redirect operator before the pairs stays in the word too.
+    expect(line('x="$(echo a\\ \\\n#b \')\n)" && cat $FILE')).toEqual([])
+    expect(line('x="$(echo a\\>\\\n#b \')\n)" && cat $FILE')).toEqual([])
+  })
+
+  it('reads a comment after line continuations that follow white space or a new line', () => {
+    expect(line('x="$(echo a \\\n\\\n#b \')\n)" && cat $FILE')).toEqual(['unquoted'])
+    // An escaped backslash before a new line is no continuation, so the `#` starts a word.
+    expect(line('x="$(echo a\\\\\n\\\n#b \')\n)" && cat $FILE')).toEqual(['unquoted'])
+    // A backslash at the end of a comment joins no lines, so the next `#` follows a new line.
+    expect(line('x="$(echo a #c\\\n\\\n#d \')\n)" && cat $FILE')).toEqual(['unquoted'])
+  })
+
+  it('opens no expansion at a { after $$', () => {
+    // bash reads `$$` as the process id, so the `#` starts a comment.
+    expect(line(`x="$(echo $\${a # ')\n)" && cat $FILE`)).toEqual(['unquoted'])
+  })
+
+  it('reads a bash 5.3 substitution in braces as commands', () => {
+    // A `#` after a blank in it starts a comment, so the `)` on the next line ends the outer one.
+    expect(line(`echo "$(echo \${ a # it')\n})" $F`)).toEqual(['unquoted'])
+    expect(line(`F=$(jq -r .x); echo \${| rm -rf $F; }`)).toEqual(['destructive'])
+    // A `|`, a tab and a new line after `${` also open a substitution of commands.
+    for (const blank of ['| ', '\t', '\n']) {
+      expect(line(`echo "$(echo \${${blank}a # it')\n})" $F`), JSON.stringify(blank)).toEqual([
+        'unquoted',
+      ])
+    }
+  })
+
+  it('reads the commands after a case pattern in a substitution in an expansion', () => {
+    expect(line(`D=$(jq -r .x); echo \${y:-$(case $z in a) rm -rf $D;; esac)}`)).toEqual([
+      'destructive',
+    ])
+  })
+
+  it('reads a comment after a redirect, as after a space', () => {
+    // bash reads `#x ')` as a comment, so the `)` on the next line ends the substitution.
+    for (const text of [
+      'echo "$(echo >#x \')\n)" $F',
+      'echo "$(cat <#x \')\n)" $F',
+      'echo "$(echo >\\\n#x \')\n)" $F',
+      'echo "$(echo > #x \')\n)" $F',
+    ]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
   })
 
   it('ends a comment in a backtick substitution at the backtick that ends it', () => {

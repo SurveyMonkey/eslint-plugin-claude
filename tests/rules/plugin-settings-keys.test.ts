@@ -4,7 +4,7 @@
 // because the rule finds the plugin root. The files glob is in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { link, noLinks, tree } from '../marketplace-tree.test-support.ts'
+import { link, marketplaceOf, noLinks, tree } from '../marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from '../plugin-tree.test-support.ts'
 
 const RULE = 'plugin-settings-keys'
@@ -108,10 +108,75 @@ describe(RULE, () => {
     expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toHaveLength(1)
   })
 
+  // `claude plugin validate` 2.1.304 passes a root `settings.json` that is an array (#383).
+  check.each([
+    ['null', 'null'],
+    ['a string', '"theme"'],
+    ['an array', '[{"theme": "dark"}]'],
+    ['a number', '3'],
+  ])('reports a root settings.json that is %s, on the value', (_title, text) => {
+    const found = inFile(text)
+    expect(found).toHaveLength(1)
+    expect(found[0]).toMatchObject({
+      messageId: 'notObject',
+      message:
+        'The default settings of a plugin are not an object, so Claude Code takes no key from this file. Write an object with `agent` or `subagentStatusLine`.',
+      line: 1,
+      column: 1,
+      endColumn: text.length + 1,
+    })
+  })
+
+  check('reports a root settings.json that is not an object in a plugin with no manifest', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([{ name: 'p', source: './plugins/p' }]),
+      'plugins/p/settings.json': '[]',
+    })
+    const file = path.join(top, 'plugins', 'p', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '[]').map((m) => m.messageId)).toEqual(['notObject'])
+  })
+
   check('reports the manifest settings when the root settings.json sets a supported key', () => {
     const files = { 'settings.json': '{"agent": "a"}' }
     const found = inManifest({ name: 'p', settings: { agent: 'b', model: 'x' } }, files)
     expect(keys(found)).toEqual([['unsupported', 'model']])
+  })
+})
+
+// A marketplace lists `plugins/p`, which has no `plugin.json`. The manifest is optional, and the
+// entry is then the manifest (manifest reference, "Manifest file"; ADR 001 Decision 10, #384).
+describe(`${RULE} (a listed plugin with no manifest)`, () => {
+  /** The messages for `text` as `plugins/p/settings.json`, with the marketplace entry `entry`. */
+  const listed = (text: string, entry: Record<string, unknown> = {}) => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([
+        { name: 'p', source: './plugins/p', ...entry },
+      ]),
+      'plugins/p/settings.json': text,
+    })
+    return lintPluginFile(RULE, GLOBS, path.join(top, 'plugins', 'p', 'settings.json'), text)
+  }
+
+  check('reports a dropped key in the root settings.json', () => {
+    const found = listed('{"agent": "a", "theme": "dark"}')
+    expect(found.map((m) => [m.messageId, m.message, m.column])).toEqual([
+      ['unsupported', message('theme'), 16],
+    ])
+  })
+
+  check('stays silent when the entry sets a key that replaces a default location', () => {
+    // The plugin-root check cannot model such a plugin, so no report rests on it (ADR 001
+    // Decision 10).
+    expect(listed('{"theme": "dark"}', { agents: ['./x.md'] })).toEqual([])
+  })
+
+  check('stays silent for the settings.json of a folder that no marketplace lists', () => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([{ name: 'p', source: './plugins/p' }]),
+      'plugins/q/settings.json': '{"theme": "dark"}',
+    })
+    const file = path.join(top, 'plugins', 'q', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
   })
 })
 
@@ -137,13 +202,20 @@ describe(`${RULE} (silent)`, () => {
     expect(inManifest({ name: 'p', settings })).toEqual([])
   })
 
-  check.each([
-    ['null', 'null'],
-    ['a string', '"theme"'],
-    ['an array', '[{"theme": "dark"}]'],
-    ['a number', '3'],
-  ])('stays silent for a root settings.json that is %s', (_title, text) => {
-    expect(inFile(text)).toEqual([])
+  // `plugin-manifest-location` reports a `settings.json` inside `.claude-plugin/`. Claude Code
+  // does not read it as the default settings, so this rule leaves it alone.
+  check('stays silent for a settings.json inside .claude-plugin/', () => {
+    const { dir } = pluginTree({ name: 'p' }, { '.claude-plugin/settings.json': '[]' })
+    const file = path.join(dir, '.claude-plugin', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
+    expect(lintPluginFile(RULE, GLOBS, file, '[]')).toEqual([])
+  })
+
+  // An editor can lint a buffer that differs from the file on disk. A manifest that is not an
+  // object is a fault for validate, not for this rule.
+  check('stays silent for a manifest text that is not an object', () => {
+    const { dir } = pluginTree({ name: 'p' })
+    expect(lintPlugin(RULE, dir, '[]')).toEqual([])
   })
 
   check('stays silent for a manifest with no settings key', () => {
@@ -174,13 +246,17 @@ describe(`${RULE} (silent)`, () => {
   check('stays silent for a settings.json that is not at the plugin root', () => {
     const { dir } = pluginTree({ name: 'p' }, { 'sub/settings.json': '{"theme": "dark"}' })
     const file = path.join(dir, 'sub', 'settings.json')
-    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
+    for (const text of ['{"theme": "dark"}', '[]', 'null']) {
+      expect(lintPluginFile(RULE, GLOBS, file, text)).toEqual([])
+    }
   })
 
   check('stays silent for a settings.json in a folder that is no plugin', () => {
     const top = tree({ 'settings.json': '{"theme": "dark"}' })
     const file = path.join(top, 'settings.json')
-    expect(lintPluginFile(RULE, GLOBS, file, '{"theme": "dark"}')).toEqual([])
+    for (const text of ['{"theme": "dark"}', '[]', 'null']) {
+      expect(lintPluginFile(RULE, GLOBS, file, text)).toEqual([])
+    }
   })
 
   check('stays silent for a manifest that does not parse', () => {

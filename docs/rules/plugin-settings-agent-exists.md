@@ -45,6 +45,11 @@ The rule reads two places and reports on the value:
   the root `settings.json` sets a supported key, so the rule skips it then.[^settings]
   `plugin-settings-single-source` reports that conflict.
 
+A plugin root has a `.claude-plugin/plugin.json`, or a `marketplace.json` of the repository lists
+it. The manifest is optional, so the rule also reads the root `settings.json` of a listed plugin
+with no `plugin.json`. The name of such a plugin is the entry name. The rule does not read the
+entry name, so it checks a bare name and skips a scoped name.
+
 The rule lists the agents with the reader of `skill-agent-exists`, and skips the same built-in
 agents. The docs do not list the built-in agents for this key, so the rule uses the list of
 `skill-agent-exists`. The rule reads the agents of the plugin only. A name that only a user or
@@ -56,17 +61,24 @@ The rule makes no report in these cases:
 - The value is empty or is not a string.
 - The name has a colon, and its first part is not the name of the plugin. It names an agent of
   another plugin.
+- The name has a colon, and the plugin has no `plugin.json`. The rule does not read the entry
+  name, so it cannot tell the plugin of the name.
 - The manifest sets the `agents` key. The key replaces the scan of `agents/`, and the rule does
   not read it.[^agents-key]
-- The entry of the plugin in the `marketplace.json` that encloses it sets `agents`. Claude Code
-  adds the agents of the entry to the plugin, and the rule does not read them.[^strict] The rule
-  reads that marketplace file only.
+- The plugin has a `plugin.json`, and its entry in the `marketplace.json` that encloses it sets
+  `agents`. Claude Code adds the agents of the entry to the plugin, and the rule does not read
+  them.[^strict] The rule reads that marketplace file only.
+- The marketplace entry of a plugin with no `plugin.json` sets a key that replaces a default
+  location, such as `agents`. The plugin-root check cannot model that plugin, so the rule cannot
+  see it.
 - The rule cannot see the agents. The `agents/` folder can be a link with no target, or have a
   real path out of the repository. A folder or an agent file can fail to read. A link with no
   target at any depth in `agents/` can hold any agent, so it also gives no report.
 - The root `settings.json` of a manifest agent cannot be read. It can be a link with no target, a
   link out of the repository, or a file that does not parse to an object.
 - The `settings.json` is not at the plugin root, or the folder is no plugin.
+- The `settings.json` is in a `.claude` folder, also when that folder is a plugin root. Claude
+  Code reads that file as project settings. `settings-agent-exists` reads its `agent` key.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of the plugin
   root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can
   fail to parse.

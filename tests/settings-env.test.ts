@@ -60,6 +60,7 @@ describe('the variables that settings cannot set, against the settings reference
       'CLAUDE_CODE_DISABLE_DANGEROUS_RM_TIMEOUT',
       'CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT',
       'CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT',
+      'CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT',
     ]
     for (const name of everyFile) {
       expect(IGNORED).toContain(`\`${name}\``)

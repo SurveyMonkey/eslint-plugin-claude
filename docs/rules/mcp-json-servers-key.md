@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/mcp-json-servers-key, which reports a project .mcp.json with no top-level mcpServers object, such as a file that uses the servers key of VS Code or that holds server entries at the top level.
+description: The ESLint rule claude/mcp-json-servers-key, which reports a project .mcp.json or a committed managed-mcp.json with no top-level mcpServers object, such as a file that uses the servers key of VS Code or that holds server entries at the top level.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [16]
@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| load | `**/.mcp.json` |
+| load | `**/.mcp.json`, `**/managed-mcp.json` |
 
 ## Rule details
 
@@ -41,11 +41,17 @@ cause:
 The rule skips the `.mcp.json` at the root of a plugin. The docs say that such a file can omit the
 `mcpServers` wrapper. Then the servers are at the top level.[^plugin] A directory counts as a plugin
 root when it holds `.claude-plugin/plugin.json`, or when a `marketplace.json` of the repository
-lists it. The rule makes no report when it cannot read that
-directory.
+lists it. The rule makes no report when it cannot read that directory. When a plugin root is also
+the repository root, its `.mcp.json` is the project file too. So it needs the wrapper, and the rule
+reads it.
 
-The rule does not check the entries inside the object. It also skips the paths under `.claude/`,
-which `mcp-json-location` reports.
+The rule also reads a committed `managed-mcp.json`. That file uses the same format as a project
+`.mcp.json`, with the servers in `mcpServers`.[^managed] The rule accepts an empty `mcpServers`
+object. A plugin has no `managed-mcp.json` component. So the rule reads that file in all
+directories, also at a plugin root.
+
+The rule does not check the entries inside the object. It also skips the `.mcp.json` paths under
+`.claude/`, which `mcp-json-location` reports.
 
 Fail:
 
@@ -81,3 +87,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^causes]: [Debug your configuration: Check common causes](https://code.claude.com/docs/en/debug-your-config#check-common-causes)
 [^project]: [Connect Claude Code to tools via MCP: Project scope](https://code.claude.com/docs/en/mcp#project-scope)
 [^plugin]: [Add components to a plugin: MCP servers](https://code.claude.com/docs/en/plugins/components#mcp-servers)
+[^managed]: [Control MCP server access for your organization: Deploy managed-mcp.json](https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcpjson)

@@ -22,7 +22,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| practice | `**/agents/**/*.md` |
+| practice | `**/*.md`, in `.claude/agents/` |
 
 ## Rule details
 

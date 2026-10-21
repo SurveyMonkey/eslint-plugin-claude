@@ -5,7 +5,7 @@
 // rest. A file that the manifest key `agents` lists loses its subfolders.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
@@ -72,7 +72,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null || !scope.plugin) {
       return {}
     }
@@ -140,6 +140,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

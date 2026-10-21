@@ -3,7 +3,7 @@
 // (docs/rules/agent-mcp-servers-schema.md). Claude Code ignores the field in a
 // plugin agent, so the rule checks only files in `.claude/agents/`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { MCP_SERVER_TYPES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isMap } from '../frontmatter-values.ts'
@@ -54,7 +54,7 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename)?.plugin !== false) {
+    if (classifyLinted(context)?.plugin !== false) {
       return {}
     }
     return {
@@ -85,7 +85,7 @@ const rule: MarkdownRuleDefinition<{
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

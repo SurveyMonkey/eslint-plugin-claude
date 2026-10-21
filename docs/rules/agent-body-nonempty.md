@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| practice | `**/*.md`, in the agent folders |
+| practice | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 The rule is `off` in `recommended`. The rule is a heuristic.
 
@@ -51,7 +51,7 @@ The rule is silent in these cases:
 - The body has text. A heading, a comment or a code block is text.
 - The file has no frontmatter, or the frontmatter does not parse or is not a map. No rule reports a
   file with no frontmatter. The rule [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md)
-  reports frontmatter that does not parse, in a file below `agents/`.
+  reports frontmatter that does not parse, in an agent file.
 - The file is not an agent file, such as `docs/agents/a.md`.
 
 Fail:
@@ -76,24 +76,11 @@ You review code. List each defect with the file and the line.
 
 ## Usage
 
-The glob of the rule matches each Markdown file, so the `recommended` config does not configure it.
-A `rules` entry in the block that extends `claude/recommended` would not reach the files. Give the
-rule its files, the plugin and the language in a block of its own. See
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
 [Usage](../../README.md#usage) in the README.
 
 ```js
-import markdown from '@eslint/markdown'
-
-export default defineConfig([
-  { plugins: { claude }, extends: ['claude/recommended'] },
-  {
-    files: ['**/*.md'],
-    plugins: { claude, markdown },
-    language: 'markdown/gfm',
-    languageOptions: { frontmatter: 'yaml' },
-    rules: { 'claude/agent-body-nonempty': 'warn' },
-  },
-])
+'claude/agent-body-nonempty': 'warn'
 ```
 
 ## Sources

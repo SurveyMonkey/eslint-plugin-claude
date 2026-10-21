@@ -12,7 +12,7 @@ ships JavaScript only. The CI test jobs run on 22.13.0, 24 and 26.
 
 ```sh
 pnpm install     # also installs the lefthook git hooks
-pnpm test        # vitest, 100% coverage required
+pnpm test        # vitest, 100% coverage of src/ and the .ts files in scripts/ required
 pnpm typecheck   # tsc, no emit
 pnpm lint        # biome ci, then eslint on src/rules/
 pnpm knip        # builds, then finds unused files, exports and dependencies
@@ -24,6 +24,11 @@ pnpm docs:check     # builds, then fails when a generated part is out of date
 
 Source is TypeScript in `src/`. Imports name the `.ts` extension, and the build rewrites it to
 `.js`. Only `dist/`, `README.md`, `LICENSE` and `package.json` are published.
+
+The coverage gate covers `src/` and the `.ts` files in `scripts/`. It needs 100% of statements,
+branches, functions and lines (`vitest.config.ts`). The two `.mjs` files in `scripts/` are outside
+`coverage.include`. A test covers a line, or the code changes so that a test can reach it. The
+repository has no coverage exclusion and no ignore comment.
 
 `pnpm lint` runs Biome on the source. Then ESLint, with `eslint-plugin-eslint-plugin`, checks the
 rule definitions in `src/rules/` (`eslint.config.mjs`, ADR 001 Decision 7). Each schema option
@@ -170,8 +175,19 @@ command makes read-only network calls.
 
 The `docs-snapshot` job in `ci.yml` runs `node scripts/docs-verify.ts <base>` on each pull
 request. It passes at once when the diff does not change `docs/docs-snapshot/` or
-`docs/rule-sources.json`. Else it runs the classifier on the base state, and the issue step in
-dry run, against the live docs. Then it runs `check` on the head state. It fails in these cases:
+`docs/rule-sources.json`.
+
+Else it compares the head snapshot with the base snapshot. Each base file that the head keeps
+must have the same hashes in the head. These are the page hash, and the key and hash of each
+block. Each page that the head map cites must have a base file and a head file. One of the two
+must have the page text. When each condition holds, it runs `check` on the head state. The
+stored page text takes the place of the live docs. So a change of the snapshot format passes,
+also when the docs change after `update`. So does a map change that cites no new page. This
+step reads no live page and needs no key. It fails when `check` finds a change or an error.
+Usually the map changed and `update` did not run. Run `update` again, and push.
+
+When one condition fails, it runs the classifier on the base state, and the issue step in dry
+run, against the live docs. Then it runs `check` on the head state. It fails in these cases:
 
 - The dry run would open an issue or post a group issue comment for a block. No open issue or
   group issue comment has the key of that block. The rules do not count. The log names the

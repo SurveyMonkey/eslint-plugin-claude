@@ -10,6 +10,8 @@ import {
   lintManifest,
   lintPluginFile,
   lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
   mapOf,
 } from '../mcp-server-rule.test-support.ts'
 
@@ -40,6 +42,20 @@ it('reports a host that only looks like loopback', () => {
     'http://localhost.evil.test/mcp',
     'http://128.0.0.1/mcp',
     'http://[::2]/mcp',
+    'http://localhost.example.com/mcp',
+    'http://notlocalhost/mcp',
+    'http://0.0.0.0/mcp',
+    'http://[::]/mcp',
+    'http://[::ffff:128.0.0.1]/mcp',
+    'http://[::ffff:10.0.0.1]/mcp',
+    'http://[::ffff:126.0.0.1]/mcp',
+    'http://[::7f00:1]/mcp',
+    'http://foo.localhost.evil.test/mcp',
+    'http://localhost@evil.test/mcp',
+    'http://126.0.0.1/mcp',
+    'http://10.0.0.5/mcp',
+    'http://[::ffff:255.0.0.1]/mcp',
+    'http://[::ffff:63.0.0.1]/mcp',
   ]) {
     expect(ids(lintProject(NAME, at(url)))).toEqual(['insecure'])
   }
@@ -84,6 +100,13 @@ it('stays silent for https://, wss:// and loopback hosts', () => {
     'http://127.1.2.3/mcp',
     'http://[::1]:8080/mcp',
     'ws://localhost:9000',
+    'http://foo.localhost/mcp',
+    'http://a.b.LOCALHOST./mcp',
+    'http://127.255.255.254/mcp',
+    'http://[::ffff:127.0.0.1]/mcp',
+    'http://[::ffff:7f00:1]:8080/mcp',
+    'http://[::ffff:127.1.2.3]/mcp',
+    'http://[::ffff:127.255.255.254]/mcp',
   ]) {
     expect(ids(lintProject(NAME, at(url)))).toEqual([])
   }
@@ -203,9 +226,16 @@ it('stays silent for a loopback bundle host and a bundle host with a variable', 
     'http://localhost/db.mcpb',
     'http://127.0.0.1:8080/db.mcpb',
     'http://[::1]/db.mcpb',
+    'http://foo.localhost/db.mcpb',
+    'http://[::ffff:127.0.0.1]/db.mcpb',
     `http://\${HOST}/db.mcpb`,
   ]) {
     expect(ids(lintManifest(NAME, bundle(declared)))).toEqual([])
+  }
+})
+it('reports a bundle host that only looks like loopback, and 0.0.0.0', () => {
+  for (const declared of ['http://localhost.example.com/db.mcpb', 'http://0.0.0.0/db.mcpb']) {
+    expect(ids(lintManifest(NAME, bundle(declared)))).toEqual(['insecureBundle'])
   }
 })
 it('stays silent for an empty, null, empty array or inline mcpServers in a manifest', () => {
@@ -249,4 +279,10 @@ it('stays silent for a plugin directly under .claude/skills/', () => {
   expect(ids(lintProject(NAME, bundle('http://example.com/db.mcpb'), other))).toEqual([
     'insecureBundle',
   ])
+})
+it('reports in the root file of a plugin repository with no manifest, which validate does not read', () => {
+  expect(ids(lintRootListedFile(NAME, at('http://example.com/mcp')))).toEqual(['insecure'])
+})
+it('stays silent in the root file of a plugin repository with a manifest, which validate reads', () => {
+  expect(ids(lintRootPluginFile(NAME, at('http://example.com/mcp')))).toEqual([])
 })

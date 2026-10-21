@@ -2,15 +2,20 @@
 // `${VAR}` in `env`, `args`, `url` and `headers`, and `managed-mcp.json` says not to store
 // credentials in `env` blocks. `claude plugin validate` warns about a header value that looks like a
 // literal credential in the MCP config of a plugin with a manifest. The rule reads the other cases.
+import path from 'node:path'
 import { expect, it } from 'vitest'
+import { repo } from '../agent-settings.test-support.ts'
 import {
   ids,
   lintListedPluginFile,
   lintManifest,
   lintPluginFile,
   lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
   mapOf,
 } from '../mcp-server-rule.test-support.ts'
+import { lintJson } from '../rule-tester.test-support.ts'
 
 const NAME = 'mcp-no-literal-secrets'
 const at = (entry: object) => mapOf({ a: entry })
@@ -75,6 +80,14 @@ it('reports in a managed-mcp.json file', () => {
   expect(
     ids(lintProject(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } }), 'managed-mcp.json')),
   ).toEqual(['secret'])
+})
+it('reads a managed-mcp.json at a plugin root as a project file', () => {
+  // A plugin has no `managed-mcp.json` component. So the rule reads the headers, and only the
+  // servers in `mcpServers`.
+  const file = path.join(repo({ 'p/.claude-plugin/plugin.json': '{}' }), 'p', 'managed-mcp.json')
+  expect(ids(lintJson(NAME, remote({ Authorization: 'Bearer abc123' }), file))).toEqual(['secret'])
+  const unwrapped = JSON.stringify({ a: { command: 'x', env: { API_KEY: 'abc123' } } })
+  expect(ids(lintJson(NAME, unwrapped, file))).toEqual([])
 })
 it('reports env, args and url in a plugin file, and not the headers', () => {
   expect(ids(lintPluginFile(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } })))).toEqual([
@@ -254,4 +267,14 @@ it('reports a password that holds a dollar sign, and stays silent for a scheme w
 it('stays silent for a flag whose next item is not a string', () => {
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', 5] })))).toEqual([])
   expect(ids(lintProject(NAME, at({ command: 'x', args: ['--token', null] })))).toEqual([])
+})
+it('reads headers in the root file of a plugin repository with no manifest', () => {
+  const code = remote({ Authorization: 'Bearer abc123' })
+  expect(ids(lintRootListedFile(NAME, code))).toEqual(['secret'])
+})
+it('reads env, and not headers, in the root file of a plugin repository with a manifest', () => {
+  expect(ids(lintRootPluginFile(NAME, remote({ Authorization: 'Bearer abc123' })))).toEqual([])
+  expect(ids(lintRootPluginFile(NAME, at({ command: 'x', env: { API_KEY: 'abc123' } })))).toEqual([
+    'secret',
+  ])
 })

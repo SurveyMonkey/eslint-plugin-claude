@@ -34,6 +34,8 @@ So the rule makes no report for the `.mcp.json` of a plugin with a manifest. It 
 servers of a `plugin.json` either. Validate 2.1.302 fails a plugin with no `plugin.json` ("No
 manifest found in directory"). On the marketplace, it does not read the `.mcp.json` of the plugin.
 So the rule reads the project `.mcp.json`, and the `.mcp.json` of a plugin with no manifest.
+When a plugin root with a manifest is also the repository root, validate reads its `.mcp.json`.
+So the rule skips that file, though it is the project file too.
 
 The rule reports a server whose `type` is `http`, `streamable-http`, `sse` or `ws`, and whose
 `url` has the scheme `http` or `ws`. The report is on the `url`. The scheme and the host match
@@ -41,7 +43,11 @@ ignore letter case, and the host ignores a trailing dot.
 
 The rule makes no report in these cases:
 
-- The host is on the machine: `localhost`, an address from `127.0.0.0/8`, or `[::1]`.
+- The host is on the machine. These hosts count: `localhost`, a name under `.localhost`, an
+  address from `127.0.0.0/8`, and `[::1]`.[^localhost] An IPv4-mapped address from `127.0.0.0/8`
+  counts too, such as `[::ffff:127.0.0.1]`.[^mapped] The host `0.0.0.0` is not on this list. It is
+  not a valid destination address.[^unspecified] A name such as `localhost.example.com` is not on
+  it either.
 - The `url` does not parse, or a `${` reference hides the scheme or the host. The rule does not
   know the host. A `${` in the port does not hide the host, so a report stays.
 - The server has no `type`. Claude Code reads it as a stdio server. It skips a server that has a
@@ -126,4 +132,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^validate]: [Plugin manifest reference: Validate the manifest](https://code.claude.com/docs/en/plugins/manifest-reference#validate-the-manifest)
 [^mcpservers]: [Plugin manifest reference: mcpServers](https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers)
 [^mcpb]: [Add components to a plugin: Include a packaged MCPB server](https://code.claude.com/docs/en/plugins/components#include-a-packaged-mcpb-server)
+[^localhost]: [RFC 6761, section 6.3: Domain Name Reservations, "localhost."](https://www.rfc-editor.org/rfc/rfc6761#section-6.3)
+[^mapped]: [RFC 4291, section 2.5.5.2: IPv4-Mapped IPv6 Address](https://www.rfc-editor.org/rfc/rfc4291#section-2.5.5.2)
+[^unspecified]: [RFC 1122, section 3.2.1.3: Addressing](https://www.rfc-editor.org/rfc/rfc1122#section-3.2.1.3)
 [^loading]: [Plugin loading reference: Plugins shared through a repository](https://code.claude.com/docs/en/plugins/loading#plugins-shared-through-a-repository)

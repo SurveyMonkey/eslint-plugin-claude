@@ -81,24 +81,11 @@ Pass: the same agent when no settings file turns agent teams on.
 
 ## Usage
 
-The glob of the rule matches each Markdown file, so the `recommended` config does not configure it.
-A `rules` entry in the block that extends `claude/recommended` would not reach the files. Give the
-rule its files, the plugin and the language in a block of its own. See
+Put the rule in `rules`, in the config block that extends `claude/recommended`. See
 [Usage](../../README.md#usage) in the README.
 
 ```js
-import markdown from '@eslint/markdown'
-
-export default defineConfig([
-  { plugins: { claude }, extends: ['claude/recommended'] },
-  {
-    files: ['**/*.md'],
-    plugins: { claude, markdown },
-    language: 'markdown/gfm',
-    languageOptions: { frontmatter: 'yaml' },
-    rules: { 'claude/agent-teammate-ignored-fields': 'warn' },
-  },
-])
+'claude/agent-teammate-ignored-fields': 'warn'
 ```
 
 ## Sources

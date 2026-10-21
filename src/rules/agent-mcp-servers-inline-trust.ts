@@ -4,7 +4,7 @@
 // `mcpServers` in a plugin agent, so the rule checks only files in
 // `.claude/agents/`.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isMap } from '../frontmatter-values.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -39,7 +39,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'trust' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename)?.plugin !== false) {
+    if (classifyLinted(context)?.plugin !== false) {
       return {}
     }
     return {
@@ -65,7 +65,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'trust' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

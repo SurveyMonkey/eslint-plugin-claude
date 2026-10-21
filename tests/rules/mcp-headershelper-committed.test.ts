@@ -1,7 +1,14 @@
 // A `headersHelper` is an arbitrary shell command. In a committed project `.mcp.json` it runs once
 // a user trusts the folder. The rule reads the project file only.
 import { expect, it } from 'vitest'
-import { ids, lintPluginFile, lintProject, mapOf } from '../mcp-server-rule.test-support.ts'
+import {
+  ids,
+  lintPluginFile,
+  lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
+  mapOf,
+} from '../mcp-server-rule.test-support.ts'
 
 const NAME = 'mcp-headershelper-committed'
 const entry = (headersHelper: unknown) =>
@@ -46,4 +53,12 @@ it('stays silent in a plugin file', () => {
 })
 it('does not read a path under .claude/', () => {
   expect(ids(lintProject(NAME, entry('/opt/h.sh'), '.claude/.mcp.json'))).toEqual([])
+})
+it('reports in the root file of a repository that is a plugin, which is a project file too', () => {
+  expect(ids(lintRootPluginFile(NAME, entry('/opt/h.sh')))).toEqual(['committed'])
+  expect(ids(lintRootListedFile(NAME, entry('/opt/h.sh')))).toEqual(['committed'])
+})
+it('stays silent for a root file of a plugin repository with no wrapper, which the project does not read', () => {
+  const code = JSON.stringify({ a: { headersHelper: 'x' } })
+  expect(ids(lintRootPluginFile(NAME, code))).toEqual([])
 })

@@ -734,6 +734,14 @@ describe('openIssues', () => {
     expect([merged.probability, merged.confidence]).toEqual([0.9, 0.8])
   })
 
+  it('ranks a finding with no probability below one with a probability, in either order', () => {
+    const none = { ...update, probability: null, confidence: null, reason: 'n' }
+    const some = { ...update, probability: 0.4, confidence: 0.2, reason: 's' }
+    expect(api.merge([none, some]).probability).toBe(0.4)
+    expect(api.merge([some, none]).probability).toBe(0.4)
+    expect(api.merge([none, none]).probability).toBeNull()
+  })
+
   it('keeps each part of a reason once, and every rule once', () => {
     const a = { ...update, rules: ['a', 'b'], reason: 'x; y' }
     const merged = api.merge([a, { ...a, rules: ['b', 'c'], reason: 'y; z' }, { ...a }])
@@ -798,6 +806,8 @@ describe('openIssues', () => {
       }),
     ).rejects.toThrow('a finding has an unknown kind: no-change')
     expect(gh.posts()).toEqual([])
+    expect(() => api.validate(null)).toThrow('a finding has an unknown kind: undefined')
+    expect(() => api.validate(undefined)).toThrow('a finding has an unknown kind: undefined')
     expect(() => api.validate({ ...update, heading: '' })).toThrow('has no heading')
     expect(() => api.validate({ ...update, rules: 'a' })).toThrow('has no rules list')
     expect(() => api.validate({ ...update, oldHash: null, newHash: null })).toThrow('has no hash')
@@ -1258,6 +1268,19 @@ describe('the group comment path for tracked blocks', () => {
       log: quiet,
     })
     expect(result.opened).toHaveLength(1)
+  })
+
+  it('names a hash that the block does not have as "none"', () => {
+    const added = api.commentOf(
+      [{ tracked: { ...common, change: 'added', oldHash: null, oldText: null }, rules: ['a'] }],
+      'Hooks',
+    )
+    expect(added).toContain(`- Hashes: old \`none\`, new \`${'d'.repeat(64)}\``)
+    const gone = api.commentOf(
+      [{ tracked: { ...common, change: 'removed', newHash: null, newText: null }, rules: ['a'] }],
+      'Hooks',
+    )
+    expect(gone).toContain(`- Hashes: old \`${'c'.repeat(64)}\`, new \`none\``)
   })
 
   it('shows a diff, a gone block, or no text, and makes docs text inert', () => {
@@ -2519,6 +2542,34 @@ describe('the digest issue for the uncited blocks of a page (#151)', () => {
       expect((await live(again, tracked, findings)).skipped).toBe(5)
       expect(again.posts()).toEqual([])
     })
+  })
+})
+
+describe('trackedMarkersIn', () => {
+  it('gives the key of each tracked marker in a body, and none for other text', () => {
+    const body = [
+      'text',
+      '<!-- docs-watch-tracked:page#a:changed:h1 -->',
+      `<!-- docs-watch:rule-update:${'x'} -->`,
+      '<!-- docs-watch-tracked:page#b:gone:h2 -->',
+    ].join('\n')
+    expect(api.trackedMarkersIn(body)).toEqual(['page#a:changed:h1', 'page#b:gone:h2'])
+    expect(api.trackedMarkersIn('no marker')).toEqual([])
+  })
+})
+
+describe('execRunner', () => {
+  const echo =
+    'process.stdout.write(process.argv.slice(1).join("|") + require("fs").readFileSync(0, "utf8"))'
+
+  it('runs the command with the arguments and the input, and returns its stdout as text', () => {
+    const run = api.execRunner(process.execPath)
+    expect(run(['-e', echo, 'x', 'y'], '<input>')).toBe('x|y<input>')
+  })
+
+  it('throws when the command fails', () => {
+    const run = api.execRunner(process.execPath)
+    expect(() => run(['-e', 'process.exit(3)'])).toThrow(/Command failed/)
   })
 })
 
