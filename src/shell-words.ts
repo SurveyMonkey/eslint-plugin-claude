@@ -262,9 +262,13 @@ export function commandWordAt(words: string[]): number {
   return at
 }
 
-/** True when `word` runs Claude Code: `claude`, or a path that ends in it, with an optional `.exe`. */
-export const isClaude = (word: string) =>
-  path.posix.basename(word).replace(/\.exe$/i, '') === 'claude'
+/** True when `word` runs Claude Code: `claude`, or a path that ends in it, with an optional `.exe`. A `/`
+ *  or a `\` separates the directories of the path, as in `C:\Tools\claude.exe`. The name must be lower case. The
+ *  `.exe` can be in upper or lower case. */
+export function isClaude(word: string): boolean {
+  const name = word.slice(Math.max(word.lastIndexOf('/'), word.lastIndexOf('\\')) + 1)
+  return name.replace(/\.exe$/i, '') === 'claude'
+}
 
 /** The arguments of each simple command of `line` that runs `claude`, as lists of words. */
 export function claudeArguments(line: string): string[][] {
