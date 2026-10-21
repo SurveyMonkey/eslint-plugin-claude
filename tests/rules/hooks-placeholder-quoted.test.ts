@@ -72,6 +72,15 @@ describe(`${name}: an unquoted placeholder`, () => {
     ).toEqual(['unquoted', 'unquoted'])
   })
 
+  it(`reports a placeholder in the value of an unquoted \${...} expansion`, () => {
+    // bash splits the value at a space: `${X:-$P}/run.sh` gives two words when `X` is unset and
+    // `$P` is `/a b`.
+    expect(run(`bash \${HOOK_DIR:-${P}}/run.sh`)).toEqual(['unquoted'])
+    expect(run(`bash \${A:-x} \${HOOK_DIR:-${P}}/run.sh`)).toEqual(['unquoted'])
+    expect(run(`bash \${HOOK_DIR:-$CLAUDE_PROJECT_DIR}/run.sh`)).toEqual(['unquoted'])
+    expect(run(`bash "\${HOOK_DIR:-${P}}/run.sh"`)).toEqual([])
+  })
+
   it('reports with an explicit bash shell', () => {
     expect(run(`${P}/a.sh`, { shell: 'bash' })).toEqual(['unquoted'])
   })
