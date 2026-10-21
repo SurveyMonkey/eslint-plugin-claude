@@ -41,17 +41,47 @@ jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
     { name: 'dxt without a dot', code: plugin('./dxt'), filename: manifest },
     { name: 'an extension in the middle', code: plugin('./a.mcpb.json'), filename: manifest },
     { name: 'an upper case extension', code: plugin('./a.MCPB'), filename: manifest },
-    {
-      name: 'a bundle extension in the query',
-      code: plugin('https://x.test/a.json?f=a.mcpb'),
-      filename: manifest,
-    },
-    {
-      name: 'a bundle extension in the fragment',
-      code: plugin('https://x.test/a.json#a.dxt'),
-      filename: manifest,
-    },
+    // `claude plugin validate` 2.1.304 checks the end of the whole string. A query or fragment
+    // after the extension makes the string no bundle.
     { name: 'a path with a query', code: plugin('./a.mcpb?x=1'), filename: manifest },
+    { name: 'a path with a trailing space', code: plugin('./a.mcpb '), filename: manifest },
+    {
+      name: 'a bundle URL with a query after the extension',
+      code: plugin('https://x.test/db.mcpb?x=1'),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a fragment after the extension',
+      code: plugin('https://x.test/db.dxt#top'),
+      filename: manifest,
+    },
+    {
+      name: 'a json extension in the query',
+      code: plugin('https://x.test/dl?f=db.json'),
+      filename: manifest,
+    },
+    // Validate 2.1.304 fails a URL that ends in a tab, a line break or a no-break space.
+    // It drops only spaces.
+    {
+      name: 'a bundle URL with a trailing tab',
+      code: plugin('https://x.test/db.mcpb\t'),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a trailing line break',
+      code: plugin('https://x.test/db.mcpb\n'),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a trailing no-break space',
+      code: plugin('https://x.test/db.mcpb '),
+      filename: manifest,
+    },
+    {
+      name: 'a bundle URL with a leading space and a trailing space',
+      code: plugin(' https://x.test/db.mcpb '),
+      filename: manifest,
+    },
     // A path that leaves the plugin directory fails `claude plugin validate`.
     {
       name: 'a path out of the plugin',
@@ -110,10 +140,46 @@ jsonTester.run('mcp-project-plugin-bundle (invalid)', rule, {
       errors: [{ messageId: 'skipped', data: { bundle: 'https://example.com/server.mcpb' } }],
     },
     {
-      name: 'a bundle URL with a query',
-      code: plugin('https://example.com/server.dxt?v=2#top'),
+      name: 'a bundle extension at the end of the query',
+      code: plugin('https://x.test/dl?f=db.mcpb'),
       filename: manifest,
-      errors: [{ messageId: 'skipped' }],
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/dl?f=db.mcpb' } }],
+    },
+    {
+      name: 'a bundle URL with a trailing space',
+      code: plugin('https://x.test/db.mcpb '),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/db.mcpb ' } }],
+    },
+    {
+      name: 'a bundle URL with two trailing spaces',
+      code: plugin('https://x.test/db.mcpb  '),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/db.mcpb  ' } }],
+    },
+    {
+      name: 'a dxt bundle URL with a scheme other than http, and a trailing space',
+      code: plugin('ftp://x.test/db.dxt '),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'ftp://x.test/db.dxt ' } }],
+    },
+    {
+      name: 'a bundle extension at the end of the query of a path',
+      code: plugin('./dl?f=a.mcpb'),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: './dl?f=a.mcpb' } }],
+    },
+    {
+      name: 'a dxt extension at the end of the query',
+      code: plugin('https://x.test/dl?f=db.dxt'),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/dl?f=db.dxt' } }],
+    },
+    {
+      name: 'a bundle extension at the end of the fragment',
+      code: plugin('https://x.test/dl#db.mcpb'),
+      filename: manifest,
+      errors: [{ messageId: 'skipped', data: { bundle: 'https://x.test/dl#db.mcpb' } }],
     },
     {
       name: 'a bundle in an array, with a file and a map',

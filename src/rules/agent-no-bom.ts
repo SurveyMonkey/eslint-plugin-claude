@@ -5,7 +5,7 @@
 // 14). The rule is inactive until the option `minVersion` is set.
 import { closeSync, openSync, readSync } from 'node:fs'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { isBelow, MIN_VERSION_SCHEMA, type MinVersionOptions } from '../agent-min-version.ts'
 import { docsUrl } from '../docs-url.ts'
 
@@ -52,7 +52,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: MinVersionOptions; MessageIds:
     if (
       minVersion === undefined ||
       !isBelow(minVersion, FIXED_IN) ||
-      classifyAgentFile(context.filename) === null
+      classifyLinted(context) === null
     ) {
       return {}
     }
@@ -73,7 +73,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: MinVersionOptions; MessageIds:
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

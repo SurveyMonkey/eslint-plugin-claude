@@ -8,6 +8,8 @@ import {
   lintManifest,
   lintPluginFile,
   lintProject,
+  lintRootListedFile,
+  lintRootPluginFile,
   mapOf,
 } from '../mcp-server-rule.test-support.ts'
 
@@ -97,4 +99,10 @@ it('stays silent for a manifest with no mcpServers, and a declared file that is 
   expect(ids(lintManifest(NAME, JSON.stringify({ name: 'p' })))).toEqual([])
   const declared = JSON.stringify({ name: 'p', mcpServers: './missing.json' })
   expect(ids(lintManifest(NAME, declared))).toEqual([])
+})
+it('reports in the root file of a plugin repository, with or without the wrapper', () => {
+  expect(ids(lintRootPluginFile(NAME, at({ command: './server.js' })))).toEqual(['relative'])
+  expect(ids(lintRootListedFile(NAME, at({ command: './server.js' })))).toEqual(['relative'])
+  const unwrapped = JSON.stringify({ a: { command: './server.js' } })
+  expect(ids(lintRootPluginFile(NAME, unwrapped))).toEqual(['relative'])
 })

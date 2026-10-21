@@ -6,6 +6,7 @@ import json from '@eslint/json'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import plugin from '../../src/index.ts'
+import { ids, lintRootListedFile, lintRootPluginFile } from '../mcp-server-rule.test-support.ts'
 import { pluginCommand } from '../plugin-fixture.test-support.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
 
@@ -214,4 +215,11 @@ describe('mcp-timeout-min option schema', () => {
     expect(() => lint([{ min: 1000.5 }])).toThrow()
     expect(() => lint([{ max: 1000 }])).toThrow()
   })
+})
+
+// The root file of a repository that is a plugin is a project file and a plugin file. A rule that
+// reads each kind reads its wrapper, or its top-level object when it has no wrapper.
+it('reads the root file of a plugin repository, with or without the wrapper', () => {
+  expect(ids(lintRootPluginFile('mcp-timeout-min', wrap('{"timeout": 60}')))).toEqual(['tooSmall'])
+  expect(ids(lintRootListedFile('mcp-timeout-min', '{"a": {"timeout": 60}}'))).toEqual(['tooSmall'])
 })

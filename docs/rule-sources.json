@@ -2668,6 +2668,11 @@
       "url": "https://code.claude.com/docs/en/plugins/components",
       "heading": "MCP servers",
       "hash": "3d1225e18103758dc1107cd4d8928a5d2c77f753ac7129f1e7be1bc987fbfdc2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Deploy managed-mcp.json",
+      "hash": "69d9fe59b8186fd22ef47148b8aa7a7c85c99d25d779c7fe9d7d6ccff77009cf"
     }
   ],
   "mcp-managed-servers-entry": [
@@ -2883,6 +2888,11 @@
       "url": "https://code.claude.com/docs/en/mcp",
       "heading": "Server status detail",
       "hash": "4034ec1f2c966c8fa55364ddfd83fa2e9b886049ba3680f253dc55661c4d2213"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-mcp",
+      "heading": "Deploy managed-mcp.json",
+      "hash": "69d9fe59b8186fd22ef47148b8aa7a7c85c99d25d779c7fe9d7d6ccff77009cf"
     }
   ],
   "mcp-server-name-anthropic-skills": [

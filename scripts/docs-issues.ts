@@ -172,7 +172,7 @@ const TRACKED_MARKER = /<!-- docs-watch-tracked:(\S+?) -->/g
 
 // The key in each tracked marker of a comment body.
 export const trackedMarkersIn = (body: string): string[] =>
-  [...body.matchAll(TRACKED_MARKER)].map((m) => m[1] ?? '')
+  [...body.matchAll(TRACKED_MARKER)].map((m) => m[1] as string)
 
 export const markerOf = (f: Finding): string =>
   `<!-- docs-watch:${f.kind}:${keyOf(f)}${f.rules.length > 0 ? ` rules=${f.rules.join(',')}` : ''} -->`
@@ -182,7 +182,7 @@ const MARKER =
   /<!-- docs-watch:(?:rule-update|rule-removal|new-rule|needs-triage|moved):(\S+?)(?: rules=([a-z0-9,-]+))? -->/g
 export const markersIn = (body: string): { key: string; rules: string[] }[] =>
   [...body.matchAll(MARKER)].map((m) => ({
-    key: m[1] ?? '',
+    key: m[1] as string,
     rules: m[2] === undefined ? [] : m[2].split(','),
   }))
 
@@ -308,8 +308,8 @@ export function diffLines(oldText: string, newText: string): string {
     new Array<number>(b.length + 1).fill(0),
   )
   // The length of the longest common subsequence from line i of a and line j
-  // of b. A cell outside the table is 0.
-  const at = (i: number, j: number) => table[i]?.[j] ?? 0
+  // of b. Each cell that the code reads is in the table.
+  const at = (i: number, j: number) => (table[i] as number[])[j] as number
   for (let i = a.length - 1; i >= 0; i--) {
     const row = table[i] as number[]
     for (let j = b.length - 1; j >= 0; j--) {
@@ -875,7 +875,7 @@ export function readGroup(
   for (const line of out.split('\n')) {
     if (line.trim() === '') continue
     const { body } = JSON.parse(line) as { body: string | null }
-    for (const m of String(body ?? '').matchAll(TRACKED_MARKER)) keys.add(m[1] ?? '')
+    for (const m of String(body ?? '').matchAll(TRACKED_MARKER)) keys.add(m[1] as string)
   }
   return { open: true, keys }
 }
@@ -942,9 +942,13 @@ function packed(
   return blocks.slice(0, count)
 }
 
-// Runs gh and returns its stdout. Tests pass a fake runner instead.
-export const ghRunner: Run = (args, input) =>
-  execFileSync('gh', args, { input, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'] })
+// Runs a command and returns its stdout. Tests pass a fake runner instead.
+export const execRunner =
+  (command: string): Run =>
+  (args, input) =>
+    execFileSync(command, args, { input, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'] })
+
+export const ghRunner: Run = execRunner('gh')
 
 // The bodies of the open issues (not pull requests), one JSON object a line.
 export function openBodies(repo: string, run: Run): OpenIssue[] {

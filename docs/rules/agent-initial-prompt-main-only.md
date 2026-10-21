@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/agents/**/*.md`, in `.claude/agents/` |
+| no-op | `**/*.md`, in `.claude/agents/` |
 
 The rule is `off` in `recommended`.
 

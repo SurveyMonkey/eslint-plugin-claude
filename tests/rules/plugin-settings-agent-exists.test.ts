@@ -86,6 +86,14 @@ describe(RULE, () => {
     expect(inManifest({ agent: 'p:ghost' }, { 'agents/reviewer.md': REVIEWER })).toHaveLength(1)
   })
 
+  // The skip of a scoped name is for a plugin with no `plugin.json` only. A root `settings.json` of
+  // a plugin with a manifest still gets the report.
+  check('reports the scoped name of the plugin in the root settings.json', () => {
+    const files = { 'agents/reviewer.md': REVIEWER }
+    expect(inFile('{"agent": "p:ghost"}', files)).toHaveLength(1)
+    expect(inFile('{"agent": "p:reviewer"}', files)).toEqual([])
+  })
+
   check('reports a name that lacks the subfolder of the agent', () => {
     const files = { 'agents/review/security.md': '---\nname: security\n---\n' }
     expect(inManifest({ agent: 'p:security' }, files)).toHaveLength(1)
@@ -233,6 +241,17 @@ describe(`${RULE} (silent)`, () => {
 
   check('stays silent for the settings.json of a project .claude folder', () => {
     const top = tree({ '.claude/settings.json': '{"agent": "ghost"}' })
+    const file = path.join(top, '.claude', 'settings.json')
+    expect(lintPluginFile(RULE, GLOBS, file, '{"agent": "ghost"}')).toEqual([])
+  })
+
+  // Claude Code reads `.claude/settings.json` as project settings. `settings-agent-exists` reads
+  // the `agent` key there, so this rule leaves it to that rule (#380).
+  check('stays silent for the settings.json of a .claude folder that is also a plugin root', () => {
+    const top = tree({
+      '.claude/.claude-plugin/plugin.json': '{"name": "p"}',
+      '.claude/settings.json': '{"agent": "ghost"}',
+    })
     const file = path.join(top, '.claude', 'settings.json')
     expect(lintPluginFile(RULE, GLOBS, file, '{"agent": "ghost"}')).toEqual([])
   })
@@ -401,5 +420,52 @@ describe(`${RULE} (paths that the rule cannot read)`, () => {
         expect(lintPlugin(RULE, dir, code)).toEqual([])
       })
     })
+  })
+})
+
+// A marketplace lists `plugins/p`, which has no `plugin.json`. The manifest is optional, and the
+// entry is then the manifest (manifest reference, "Manifest file"; ADR 001 Decision 10, #384).
+describe(`${RULE} (a listed plugin with no manifest)`, () => {
+  /** The messages for `text` as `plugins/p/settings.json`, with the marketplace entry `entry`. */
+  const listed = (
+    text: string,
+    entry: Record<string, unknown> = {},
+    files: Record<string, string> = {},
+  ) => {
+    const top = tree({
+      '.claude-plugin/marketplace.json': marketplaceOf([
+        { name: 'p', source: './plugins/p', ...entry },
+      ]),
+      'plugins/p/settings.json': text,
+      ...files,
+    })
+    return lintPluginFile(RULE, GLOBS, path.join(top, 'plugins', 'p', 'settings.json'), text)
+  }
+
+  check('reports an agent that no file in agents/ defines', () => {
+    const found = listed('{"agent": "ghost"}', {}, { 'plugins/p/agents/reviewer.md': REVIEWER })
+    expect(found.map((m) => [m.messageId, m.message, m.column])).toEqual([
+      ['missing', message('ghost'), 11],
+    ])
+  })
+
+  check('stays silent for an agent that a file in agents/ defines', () => {
+    const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
+    expect(listed('{"agent": "reviewer"}', {}, files)).toEqual([])
+  })
+
+  // The plugin name is the entry name, and the rule does not read it. So the rule skips each
+  // scoped name, also a missing agent with the entry name `p`. It still reports a bare name.
+  check('skips a scoped name in a plugin with no manifest', () => {
+    const files = { 'plugins/p/agents/reviewer.md': REVIEWER }
+    expect(listed('{"agent": "p:ghost"}', {}, files)).toEqual([])
+    expect(listed('{"agent": "tools:reviewer"}', { name: 'tools' }, files)).toEqual([])
+    expect(listed('{"agent": "p:ghost"}', { name: 'tools' }, files)).toEqual([])
+    const ghost = listed('{"agent": "ghost"}', { name: 'tools' }, files)
+    expect(ghost.map((m) => m.messageId)).toEqual(['missing'])
+  })
+
+  check('stays silent when the entry sets agents, which replaces the scan of agents/', () => {
+    expect(listed('{"agent": "ghost"}', { agents: ['./x/ghost.md'] })).toEqual([])
   })
 })

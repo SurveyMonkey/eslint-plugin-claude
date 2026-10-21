@@ -1,7 +1,7 @@
 // `Skill` in the `tools` of a subagent lets the subagent call the Skill tool. It does not preload
 // a skill. The `skills` field preloads skills (docs/rules/agent-tools-skill-for-preload.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { COMMA, listEntries } from '../frontmatter-list.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
@@ -23,7 +23,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'skillTool' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -53,6 +53,6 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'skillTool' }> = {
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

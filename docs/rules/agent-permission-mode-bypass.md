@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| security | `**/agents/**/*.md` |
+| security | `**/*.md`, in `.claude/agents/` |
 
 ## Rule details
 

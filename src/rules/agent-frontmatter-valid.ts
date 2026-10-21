@@ -4,7 +4,7 @@
 // files in `.claude/agents/`. Claude Code also skips a file whose `name` has
 // more than 256 characters. The option `nameMax` sets a lower limit.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { AGENT_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { classifyFrontmatter } from '../frontmatter.ts'
@@ -75,7 +75,7 @@ const rule: MarkdownRuleDefinition<{
   },
   create(context) {
     // A plugin agent still loads, and a file outside the agent folders is no agent.
-    if (classifyAgentFile(context.filename)?.plugin !== false) {
+    if (classifyLinted(context)?.plugin !== false) {
       return {}
     }
     const { sourceCode } = context
@@ -146,7 +146,7 @@ const rule: MarkdownRuleDefinition<{
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

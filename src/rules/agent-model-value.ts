@@ -2,7 +2,7 @@
 // (docs/rules/agent-model-value.md). The aliases and the ID forms are in `src/data/models.ts`.
 // `agent-frontmatter-schema` reports a `model` that is not a string, or is empty.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { hasProviderForm, isModelAlias, isModelId } from '../data/models.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -42,7 +42,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown'
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     const [{ allow }] = context.options
@@ -82,6 +82,6 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'unknown'
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

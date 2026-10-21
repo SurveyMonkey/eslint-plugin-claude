@@ -2,7 +2,7 @@
 // built-in tools outside a small set from a background subagent. A `tools`
 // entry for such a tool has no effect (docs/rules/agent-tools-unavailable.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import {
   BACKGROUND_TOOL_NAMES,
   SUBAGENT_PLAN_MODE_TOOL,
@@ -33,7 +33,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'removed' | 'planMode' | 'backg
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -68,7 +68,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'removed' | 'planMode' | 'backg
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule
