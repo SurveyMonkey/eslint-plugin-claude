@@ -1,7 +1,7 @@
 // `memory` in a subagent file turns on the Read, Write and Edit tools, even
 // when `tools` leaves them out (docs/rules/agent-memory-grants-write.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { MEMORY_SCOPES } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -36,7 +36,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'grantsWrite' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -67,7 +67,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'grantsWrite' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

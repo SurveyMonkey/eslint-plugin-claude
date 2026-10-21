@@ -2,7 +2,7 @@
 // in a subagent file still work as aliases
 // (docs/rules/agent-tools-task-alias.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { COMMA, listEntries } from '../frontmatter-list.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
@@ -24,7 +24,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'alias' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -49,7 +49,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'alias' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

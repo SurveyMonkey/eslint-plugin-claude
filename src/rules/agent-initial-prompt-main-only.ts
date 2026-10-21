@@ -3,7 +3,7 @@
 // (docs/rules/agent-initial-prompt-main-only.md). Claude Code ignores the field in a plugin agent,
 // and `agent-plugin-ignored-fields` reports that case.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { mainAgentNames } from '../agent-project.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -42,7 +42,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'ignored'
     },
   },
   create(context) {
-    const scope = classifyAgentFile(context.filename)
+    const scope = classifyLinted(context)
     if (scope === null || scope.plugin) {
       return {}
     }
@@ -80,6 +80,6 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'ignored'
   },
 }
 
-export const target = { name, language: 'markdown' as const, files: ['**/agents/**/*.md'] }
+export const target = { name, language: 'markdown' as const, files: ['**/*.md'] }
 
 export default rule

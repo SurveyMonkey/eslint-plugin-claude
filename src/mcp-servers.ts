@@ -1,10 +1,12 @@
 // The reader that the `.mcp.json` rules share. A rule asks where the file is, and gets
 // the server entries of its map. The map is the `mcpServers` object. A plugin `.mcp.json`
-// may omit that wrapper, so its map is the top-level object. The module also holds the reader of
-// the servers that a plugin declares, the reader of a JSON file as an AST, and the policy key
-// reader of the allow and deny lists. It also holds the reader of a URL that holds a reference in
-// its port.
+// may omit that wrapper, so its map is the top-level object. The root `.mcp.json` of a
+// repository that is a plugin is a project file and a plugin file. A `managed-mcp.json` is a
+// project file in all directories. The module also holds the reader of the servers that a
+// plugin declares, the reader of a JSON file as an AST, and the policy key reader of the allow
+// and deny lists. It also holds the reader of a URL that holds a reference in its port.
 // (https://code.claude.com/docs/en/plugins/components#mcp-servers)
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import json from '@eslint/json'
 import { keyOf, lastMember, type MemberNode, type ValueNode } from './marketplace-json.ts'
@@ -32,8 +34,12 @@ export const MANAGED_SERVER_TYPES: readonly string[] = ['http', 'streamable-http
  *  (https://code.claude.com/docs/en/managed-mcp#how-servername-entries-match) */
 export const SERVER_NAME_PATTERN = /^[A-Za-z0-9_-]+$/
 
-/** Where a `.mcp.json` sits: in a project, or at the root of a plugin. */
-export type McpFileKind = 'project' | 'plugin'
+/** Where a `.mcp.json` sits: in a project, at the root of a plugin, or at the root of a
+ *  repository that is a plugin. Claude Code reads a `both` file as the project config in the
+ *  repository, and as the plugin config after install. The project rules and the plugin rules
+ *  both read it. A rule that defers to `claude plugin validate` can skip it when the plugin has
+ *  a manifest. `mcpConfigKind` gives a `managed-mcp.json` the `project` kind. */
+export type McpFileKind = 'project' | 'plugin' | 'both'
 
 // The paths under `.claude/` that people try. The ends of the paths are listed here.
 // Claude Code reads none of them. It reads `<project>/.mcp.json` and `~/.claude.json`.
@@ -52,21 +58,45 @@ export function isUnreadMcpPath(filename: string): boolean {
 
 /** The kind of the `.mcp.json` at `filename`. The result is null when no report can rest on
  *  the file. This is true for a path that Claude Code never reads. It is also true for a
- *  directory that the plugin-root check cannot read (ADR 001, Decision 14). */
+ *  directory that the plugin-root check cannot read (ADR 001, Decision 14). A plugin root that
+ *  holds `.git` is the repository root, so its file is `both`. A plugin root with no `.git` is
+ *  not the repository root, so its file is `plugin` only. An example is a plugin in a
+ *  subdirectory of a repository. */
 export function mcpFileKind(filename: string): McpFileKind | null {
   if (isUnreadMcpPath(filename)) {
     return null
   }
-  const plugin = isPluginRoot(path.dirname(path.resolve(filename)))
+  const dir = path.dirname(path.resolve(filename))
+  const plugin = isPluginRoot(dir)
   if (plugin === UNREADABLE) {
     return null
   }
-  return plugin ? 'plugin' : 'project'
+  if (!plugin) {
+    return 'project'
+  }
+  return existsSync(path.join(dir, '.git')) ? 'both' : 'plugin'
+}
+
+/** The kind of the MCP config at `filename`, as `mcpFileKind` gives it. A `managed-mcp.json` is
+ *  `project` in all directories. It uses the format of a project `.mcp.json`, and a plugin has
+ *  no such component.
+ *  (https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcpjson) */
+export function mcpConfigKind(filename: string): McpFileKind | null {
+  return path.basename(filename) === 'managed-mcp.json' ? 'project' : mcpFileKind(filename)
+}
+
+/** True when Claude Code reads the MCP config at `filename` as plugin config. That is a `plugin`
+ *  file or a `both` file. A `managed-mcp.json` is never one. */
+export function isPluginMcpFile(filename: string): boolean {
+  const kind = mcpConfigKind(filename)
+  return kind === 'plugin' || kind === 'both'
 }
 
 /** The members of the server map of a file whose top-level value is `body`: the members of the
  *  `mcpServers` object. A plugin file with no `mcpServers` member has no wrapper, so its map is
- *  the top-level object. The result is empty when there is no map to read.
+ *  the top-level object. The function reads a `both` file the same way, as the plugin loads that
+ *  map after install. A check of the project kind passes `project`, because the project reads
+ *  the wrapper only. The result is empty when there is no map to read.
  *  Of two members with one name, only the last stays, as `JSON.parse` keeps the last. */
 export function serverMembers(body: ValueNode, kind: McpFileKind): MemberNode[] {
   if (body.type !== 'Object') {
@@ -75,7 +105,7 @@ export function serverMembers(body: ValueNode, kind: McpFileKind): MemberNode[] 
   const wrapper = lastMember(body, 'mcpServers')
   let members: MemberNode[] = []
   if (wrapper === undefined) {
-    members = kind === 'plugin' ? body.members : []
+    members = kind === 'project' ? [] : body.members
   } else if (wrapper.value.type === 'Object') {
     members = wrapper.value.members
   }
@@ -339,7 +369,8 @@ export interface LintedServer {
  *  members of its map. A `plugin.json` gives the servers that it declares, inline or in a `.json`
  *  file. It leaves out the `.mcp.json` at the plugin root. That file has its own lint run, so no
  *  server gets two reports. A `.mcp.json` path that Claude Code never reads gives an empty result.
- *  A source that the rule cannot read gives none too (ADR 001, Decision 14). */
+ *  A source that the rule cannot read gives none too (ADR 001, Decision 14). A `managed-mcp.json`
+ *  gives the members of its `mcpServers` object. */
 export function lintedServers(filename: string, body: ValueNode): LintedServer[] {
   if (path.basename(filename) === 'plugin.json') {
     const root = path.dirname(path.dirname(path.resolve(filename)))
@@ -351,7 +382,7 @@ export function lintedServers(filename: string, body: ValueNode): LintedServer[]
         pinned: node === member.name ? undefined : node,
       }))
   }
-  const kind = mcpFileKind(filename)
+  const kind = mcpConfigKind(filename)
   return kind === null
     ? []
     : serverMembers(body, kind).map((member) => ({ name: keyOf(member.name), member }))
