@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/SKILL.md`, `**/agents/**/*.md` |
+| no-op | `**/*.md`, in the skill and agent files of a plugin |
 
 ## Rule details
 
@@ -38,7 +38,8 @@ To fix the file, pass the value through one of these.
 The rule reads these files:
 
 - `SKILL.md` in `skills/<name>/` of a plugin, and `SKILL.md` at the plugin root.
-- Each `.md` file in `agents/` of a plugin, at any depth.
+- Each `.md` file in `agents/` of a plugin, at any depth. When the manifest has the key `agents`,
+  the files that it names replace that directory.
 
 The docs name skill and agent content only. The rule does not read a command file in `commands/`.
 It reads the body and not the frontmatter, as `plugin-path-var-braced` does.

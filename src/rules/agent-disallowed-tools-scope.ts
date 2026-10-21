@@ -2,7 +2,7 @@
 // (docs/rules/agent-disallowed-tools-scope.md). An entry with a specifier
 // does not block only the matching calls, and a tool in both lists is removed.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { COMMA, listEntries } from '../frontmatter-list.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
@@ -36,7 +36,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'specifier' | 'both' }> = {
     },
   },
   create(context) {
-    if (classifyAgentFile(context.filename) === null) {
+    if (classifyLinted(context) === null) {
       return {}
     }
     return {
@@ -64,7 +64,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'specifier' | 'both' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

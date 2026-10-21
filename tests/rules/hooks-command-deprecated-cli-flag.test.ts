@@ -107,6 +107,9 @@ describe(`${name}: exec form`, () => {
     expect(exec('claude', ['--remote', 'x', '--remote'])).toEqual(['remote', 'remote'])
     expect(exec('claude.EXE', ['--remote'])).toEqual(['remote'])
     expect(exec('claude_exe', ['--remote'])).toEqual([])
+    // Exec form does not skip a wrapper or an assignment (the rule doc says so).
+    expect(exec('env', ['FOO=1', 'claude', '--remote'])).toEqual([])
+    expect(exec('env', ['claude', '--remote'])).toEqual([])
     // An array `args` selects exec form, so the shell words of `command` are not read.
     expect(ids(command({ command: 'claude --remote x', args: [] }))).toEqual([])
   })

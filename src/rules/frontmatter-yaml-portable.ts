@@ -1,8 +1,7 @@
 // Frontmatter that the strict `yaml` parser cannot read, in a subagent, skill, command or output
-// style file. The rule finds each kind with the classifier of the rules of that kind. A plugin
-// agent that the manifest names outside `agents/` is not in the globs. Claude Code can load some
-// of these files (issue #288), so the message claims nothing about Claude Code. It says that
-// other tools cannot read the YAML (docs/rules/frontmatter-yaml-portable.md).
+// style file. The rule finds each kind with the classifier of the rules of that kind. Claude Code
+// can load some of these files (issue #288), so the message claims nothing about Claude Code. It
+// says that other tools cannot read the YAML (docs/rules/frontmatter-yaml-portable.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted, classifyOutputStyle } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -56,7 +55,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'notPortable' | 'notPortableNoL
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md', '**/SKILL.md', '**/commands/**/*.md', '**/output-styles/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

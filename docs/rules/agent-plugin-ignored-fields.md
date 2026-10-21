@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/agents/**/*.md` |
+| no-op | `**/*.md`, in the agent files of a plugin |
 
 ## Rule details
 
@@ -33,13 +33,14 @@ each of the four fields, and shows no error. The rule reports each key. The repo
 - `permissionMode`: copy the agent to `.claude/agents/` if it needs the field.
 - `initialPrompt`: remove the field.
 
-The rule checks an agent file in the `agents/` directory of a plugin, at any depth. A plugin root
-is a directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
+The rule checks an agent file in the `agents/` directory of a plugin, at any depth. When the
+manifest has the key `agents`, the files that it names replace that directory. A plugin root is a
+directory with `.claude-plugin/plugin.json`, or a directory that a `marketplace.json` of the
 repository lists.
 
-A local agent can set each of the four fields, so the rule is silent there. A file outside the agent
-folders gets no report, such as `docs/agents/a.md`. The rule ignores a file with no frontmatter, and
-a file whose frontmatter does not parse.
+A local agent can set each of the four fields, so the rule is silent there. A file that is not an
+agent file gets no report, such as `docs/agents/a.md`. The rule ignores a file with no frontmatter,
+and a file whose frontmatter does not parse.
 
 Fail:
 

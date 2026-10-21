@@ -7,7 +7,7 @@
 // are not read. A file or source that the rule cannot read adds nothing (ADR 001, Decision 14).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { MCP_PREFIX, MCP_SEPARATOR } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { COMMA, listEntries, SPACE_OR_COMMA } from '../frontmatter-list.ts'
@@ -41,7 +41,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bare' }> = {
   },
   create(context) {
     const skill = classifySkillFile(context.filename)
-    const agent = skill === null ? classifyAgentFile(context.filename) : null
+    const agent = skill === null ? classifyLinted(context) : null
     // The plugin root, and the fields of the file that hold tool names.
     const scope =
       skill?.plugin === true
@@ -112,7 +112,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bare' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/SKILL.md', '**/commands/**/*.md', '**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

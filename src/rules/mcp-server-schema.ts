@@ -1,22 +1,18 @@
 // A server entry of `.mcp.json` with a bad shape (docs/rules/mcp-server-schema.md). Claude Code
 // skips such an entry and loads the others. The rule reads each fault in a project `.mcp.json` and
 // a committed `managed-mcp.json`. `claude plugin validate` 2.1.302 reports each fault of a plugin
-// entry but one: a `url` with a `command` and no `type`. So in a plugin, the rule reports that
-// fault only (rulings 14 and 20 of #355). An entry with no `type` is a stdio server. Claude Code
-// skips a `sdk` entry with its own message, and #355 leaves that entry to it.
+// entry but one: a `url` with a `command` and no `type`. So in a plugin with a manifest, the rule
+// reports that fault only (rulings 14 and 20 of #355). Validate fails a plugin with no manifest,
+// so the rule reports each fault there (#384). An entry with no `type` is a stdio server. Claude
+// Code skips a `sdk` entry with its own message, and #355 leaves that entry to it. Claude Code
+// 2.1.304 skips an empty `command` (#383). It also skips an `env`, `headers` or `oauth` that is
+// not an object, in the entry types that it checks.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { keyOf, lastMember, type ValueNode } from '../marketplace-json.ts'
-import {
-  type LintedServer,
-  lintedServers,
-  type McpFileKind,
-  mcpFileKind,
-  parseUrl,
-  REMOTE_SERVER_TYPES,
-  serverMembers,
-} from '../mcp-servers.ts'
+import { lastMember, type ValueNode } from '../marketplace-json.ts'
+import { lintedServers, mcpConfigKind, parseUrl, REMOTE_SERVER_TYPES } from '../mcp-servers.ts'
+import { hasManifest } from '../plugin-root.ts'
 
 const name = 'mcp-server-schema' as const
 
@@ -30,11 +26,26 @@ type MessageIds =
   | 'argType'
   | 'noUrl'
   | 'invalidUrl'
+  | 'emptyCommand'
+  | 'envType'
+  | 'headersType'
+  | 'oauthType'
 
 const SKIP = 'Claude Code skips this entry.'
 
-/** The faults of the stdio entry `entry`: `command` is a string, and `args`, when present, is an
- *  array of strings. */
+/** The fault of the member `key` of `entry` when it is there and is not an object. A `null`
+ *  value is a fault too. */
+function objectFault(
+  entry: ValueNode,
+  key: 'env' | 'headers' | 'oauth',
+  messageId: MessageIds,
+): { node: ValueNode; messageId: MessageIds }[] {
+  const value = lastMember(entry, key)?.value
+  return value !== undefined && value.type !== 'Object' ? [{ node: value, messageId }] : []
+}
+
+/** The faults of the stdio entry `entry`. `command` is a string that is not empty. When present,
+ *  `args` is an array of strings, and `env` is an object. */
 function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
   const faults: { node: ValueNode; messageId: MessageIds }[] = []
   const command = lastMember(entry, 'command')?.value
@@ -42,6 +53,8 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
     faults.push({ node: entry, messageId: 'noCommand' })
   } else if (command.type !== 'String') {
     faults.push({ node: command, messageId: 'commandType' })
+  } else if (command.value === '') {
+    faults.push({ node: command, messageId: 'emptyCommand' })
   }
   const args = lastMember(entry, 'args')?.value
   if (args !== undefined && args.type !== 'Array') {
@@ -52,14 +65,14 @@ function stdioFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
       faults.push({ node: value, messageId: 'argType' })
     }
   }
-  return faults
+  return [...faults, ...objectFault(entry, 'env', 'envType')]
 }
 
-/** The faults of the remote entry `entry`, whose `type` value is `type`: `url` is there and is
- *  a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports in
- *  a project `.mcp.json`. A `${` reference can expand to any text, so the rule does not parse a
- *  URL that holds one. */
-function remoteFaults(
+/** The `url` fault of the remote entry `entry`, whose `type` value is `type`. The `url` is there,
+ *  and is a valid absolute URL. An empty `url` is a placeholder, which `mcp-remote-url-empty` reports
+ *  in a project `.mcp.json` and a `managed-mcp.json`. A `${` reference can expand to any text, so
+ *  the rule does not parse a URL that holds one. */
+function urlFaults(
   entry: ValueNode,
   type: ValueNode,
 ): { node: ValueNode; messageId: MessageIds }[] {
@@ -74,6 +87,20 @@ function remoteFaults(
     return []
   }
   return [{ node: url, messageId: 'invalidUrl' }]
+}
+
+/** The faults of the remote entry `entry`, whose `type` value is the string `type`. They are the
+ *  `url` fault, a `headers` that is not an object, and an `oauth` that is not an object. Claude
+ *  Code 2.1.304 does not check `oauth` in a `ws` entry, so the rule does not either. */
+function remoteFaults(
+  entry: ValueNode,
+  type: Extract<ValueNode, { type: 'String' }>,
+): { node: ValueNode; messageId: MessageIds }[] {
+  return [
+    ...urlFaults(entry, type),
+    ...objectFault(entry, 'headers', 'headersType'),
+    ...(type.value === 'ws' ? [] : objectFault(entry, 'oauth', 'oauthType')),
+  ]
 }
 
 /** The faults of the server entry `entry`. */
@@ -102,11 +129,11 @@ function entryFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds
 }
 
 /** The faults of the plugin server entry `entry`. Validate 2.1.302 passes an entry with a `url`
- *  and no `type` when the entry has a good stdio shape: a `command` that is not empty, and `args`
- *  of strings. It reports each other fault, so the result is `urlNoType` or nothing. */
+ *  and no `type` when the entry has a good stdio shape. That shape is a `command` that is not
+ *  empty, and `args` of strings. Validate 2.1.304 also needs an `env`, when present, to be an
+ *  object. It reports each other fault, so the result is `urlNoType` or nothing. */
 function pluginFaults(entry: ValueNode): { node: ValueNode; messageId: MessageIds }[] {
-  const command = lastMember(entry, 'command')?.value
-  if (command?.type !== 'String' || command.value === '' || stdioFaults(entry).length > 0) {
+  if (stdioFaults(entry).length > 0) {
     return []
   }
   return entryFaults(entry).filter(({ messageId }) => messageId === 'urlNoType')
@@ -131,32 +158,32 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
       noUrl: `The remote server "{{server}}" has no \`url\`. ${SKIP} Set \`url\` to the endpoint.`,
       invalidUrl:
         'The `url` of the server "{{server}}" is not a valid absolute URL. Write a URL such as `https://host/path`.',
+      emptyCommand: `The \`command\` of the server "{{server}}" is empty. ${SKIP} Set \`command\` to the program to run.`,
+      envType: `The \`env\` of the server "{{server}}" is not an object. ${SKIP} Write \`env\` as an object of variable names and values.`,
+      headersType: `The \`headers\` of the server "{{server}}" is not an object. ${SKIP} Write \`headers\` as an object of header names and values.`,
+      oauthType: `The \`oauth\` of the server "{{server}}" is not an object. ${SKIP} Write \`oauth\` as an object.`,
     },
   },
   create(context) {
     const base = path.basename(context.filename)
-    // A plugin has no `managed-mcp.json` component, and `claude plugin validate` 2.1.302 does not
-    // read the file. So the rule reads it in all directories. Its map is the `mcpServers` object.
-    const managed = base === 'managed-mcp.json'
     // A manifest holds plugin servers. A `.mcp.json` gets no report when Claude Code never reads
-    // its path, or when the rule cannot read its directory.
-    let kind: McpFileKind | null = 'project'
-    if (!managed) {
-      kind = base === 'plugin.json' ? 'plugin' : mcpFileKind(context.filename)
-    }
+    // its path, or when the rule cannot read its directory. A plugin has no `managed-mcp.json`
+    // component, and `claude plugin validate` 2.1.302 does not read the file. So `mcpConfigKind`
+    // gives it the `project` kind in all directories.
+    const kind = base === 'plugin.json' ? 'plugin' : mcpConfigKind(context.filename)
     if (kind === null) {
       return {}
     }
-    const faultsOf = kind === 'plugin' ? pluginFaults : entryFaults
+    // Validate reads the manifest, so `plugin.json` gets the plugin faults. When the plugin has a
+    // manifest, validate also reads its `plugin` or `both` file, so that file gets them too.
+    // Validate fails a plugin with no manifest, so its file gets each fault.
+    const validated =
+      base === 'plugin.json' ||
+      (kind !== 'project' && hasManifest(path.dirname(path.resolve(context.filename))) === true)
+    const faultsOf = validated ? pluginFaults : entryFaults
     return {
       Document(node) {
-        const servers: LintedServer[] = managed
-          ? serverMembers(node.body, 'project').map((member) => ({
-              name: keyOf(member.name),
-              member,
-            }))
-          : lintedServers(context.filename, node.body)
-        for (const server of servers) {
+        for (const server of lintedServers(context.filename, node.body)) {
           for (const { node: at, messageId } of faultsOf(server.member.value)) {
             // A server of a declared file takes its report on its path in the manifest.
             context.report({

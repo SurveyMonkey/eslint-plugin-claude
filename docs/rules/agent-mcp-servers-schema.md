@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| load | `**/agents/**/*.md` |
+| load | `**/*.md`, in `.claude/agents/` |
 
 ## Rule details
 

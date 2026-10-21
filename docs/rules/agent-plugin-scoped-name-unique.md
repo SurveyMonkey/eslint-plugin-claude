@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| consistency | `**/agents/**/*.md` |
+| consistency | `**/*.md`, in the agent files of a plugin |
 
 ## Rule details
 

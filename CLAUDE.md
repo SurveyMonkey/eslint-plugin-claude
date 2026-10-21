@@ -21,7 +21,8 @@ check that the tool covers in part is a rule, for the cases that it misses.
   reviewed pull request changes them. The triage refresh is the one exception (ADR 002 Decision 4). The
   `docs-snapshot` check (`scripts/docs-verify.ts`) runs the docs watch on the base state in dry
   run. It fails a pull request that stores a change that no open issue or group issue comment
-  names. It also fails a snapshot that is not the live docs.
+  names. It also fails a snapshot that is not the live docs. A head with the hashes of the base
+  gets a compare with the base, not the live docs (#419).
 - `docs/runbooks/docs-watch-triage.md` tells how to resolve a docs watch issue.
 
 ## Code
