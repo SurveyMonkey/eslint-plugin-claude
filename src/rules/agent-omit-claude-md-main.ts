@@ -2,6 +2,7 @@
 // ignores `omitClaudeMd` for that agent. The field applies only when the agent
 // runs as a subagent (docs/rules/agent-omit-claude-md-main.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
+import { classifyLinted } from '../agent-files.ts'
 import { localAgentSettings } from '../agent-settings.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -24,6 +25,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'omitted' }> = {
     },
   },
   create(context) {
+    // The settings apply to a local agent only.
+    if (classifyLinted(context)?.plugin !== false) {
+      return {}
+    }
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
@@ -50,7 +55,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'omitted' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

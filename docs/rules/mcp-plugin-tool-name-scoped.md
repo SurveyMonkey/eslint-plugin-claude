@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/SKILL.md`, `**/commands/**/*.md`, `**/agents/**/*.md` |
+| no-op | `**/*.md`, in the skill, command and agent files of a plugin |
 
 ## Rule details
 

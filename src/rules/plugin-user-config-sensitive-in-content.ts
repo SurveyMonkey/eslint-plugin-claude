@@ -2,7 +2,7 @@
 // option is `sensitive`, and not the value (docs/rules/plugin-user-config-sensitive-in-content.md).
 // The rule reports each such reference in the body. It makes no report when it cannot see the plugin.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readPluginAt } from '../plugin-manifest.ts'
 import { classifySkillFile } from '../skill-files.ts'
@@ -13,15 +13,16 @@ const name = 'plugin-user-config-sensitive-in-content' as const
 // A key is made of letters, digits and underscores (manifest reference, "User configuration").
 const REFERENCE = /\$\{user_config\.([A-Za-z0-9_]+)\}/g
 
-/** The plugin root of a skill or agent file, or undefined when `file` is neither, is not in a
- *  plugin, or sits in a plugin that is unseen. The docs name skill and agent content, so a
- *  command file gives undefined. */
-function pluginRootOf(file: string): string | undefined {
+/** The plugin root of a skill or agent file, or undefined when the file of `context` is
+ *  neither, is not in a plugin, or sits in a plugin that is unseen. The docs name skill and agent
+ *  content, so a command file gives undefined. */
+function pluginRootOf(context: { filename: string; sourceCode: object }): string | undefined {
+  const file = context.filename
   const skill = classifySkillFile(file)
   if (skill !== null) {
     return skill.plugin && skill.kind === 'skill' ? scopeRoot(file, skill) : undefined
   }
-  const agent = classifyAgentFile(file)
+  const agent = classifyLinted(context)
   return agent?.plugin === true ? agent.root : undefined
 }
 
@@ -53,7 +54,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'placeholder' }> = {
     },
   },
   create(context) {
-    const root = pluginRootOf(context.filename)
+    const root = pluginRootOf(context)
     const plugin = root === undefined ? undefined : readPluginAt(root)
     if (plugin === undefined) {
       return {}
@@ -87,7 +88,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'placeholder' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/SKILL.md', '**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

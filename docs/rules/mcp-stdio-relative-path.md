@@ -39,7 +39,11 @@ The rule leaves these cases alone:
   rule does not check what a `${...}` start expands to. Claude Code does not set the variable in
   its own environment, so the default `.` can apply.
 - A path inside a longer item, such as `--config=./x.json`.
-- A plugin `.mcp.json`. A plugin has `${CLAUDE_PLUGIN_ROOT}` for its own files.
+- A plugin `.mcp.json`. A plugin has `${CLAUDE_PLUGIN_ROOT}` for its own files. When a plugin
+  root is also the repository root, its `.mcp.json` is the project file too. So the rule reads its
+  `mcpServers` object. `mcp-plugin-root-paths` can report the same string there. The two fixes
+  conflict. The project does not set `${CLAUDE_PLUGIN_ROOT}`. After install, the project directory
+  is not the plugin directory.
 - A value that is not a string, and an `args` value that is not a list.
 - A path under `.claude/`, which `mcp-json-location` reports.
 

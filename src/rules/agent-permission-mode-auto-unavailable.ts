@@ -3,7 +3,7 @@
 // (docs/rules/agent-permission-mode-auto-unavailable.md).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { classifyLinted } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { AUTO_MODE_LOCKS, at } from '../permission-source.ts'
 import { readSiblingSettings } from '../settings-files.ts'
@@ -39,16 +39,16 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'unavailable' }> = {
     },
   },
   create(context) {
+    // Claude Code ignores `permissionMode` in a plugin agent.
+    const agent = classifyLinted(context)
+    if (agent === null || agent.plugin) {
+      return {}
+    }
     return {
       yaml(node) {
         const fm = readFrontmatter(context.sourceCode, node)
         const field = fm?.fields.get('permissionMode')
         if (fm === null || field === undefined || fm.data.permissionMode !== 'auto') {
-          return
-        }
-        // Claude Code ignores `permissionMode` in a plugin agent.
-        const agent = classifyAgentFile(context.filename)
-        if (agent === null || agent.plugin) {
           return
         }
         const files = settingsFiles(agent.root)
@@ -71,7 +71,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'unavailable' }> = {
 export const target = {
   name,
   language: 'markdown' as const,
-  files: ['**/agents/**/*.md'],
+  files: ['**/*.md'],
 }
 
 export default rule

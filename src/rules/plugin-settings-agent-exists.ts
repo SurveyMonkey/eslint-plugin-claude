@@ -10,7 +10,8 @@ import { PLUGIN_SETTINGS_KEYS } from '../data/plugin-layout.ts'
 import { docsUrl } from '../docs-url.ts'
 import { enclosingMarketplace, entriesIn } from '../marketplace-file.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { lookup, type Plugin, readPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { lookup, type Plugin, readListedPluginAt, readPlugin } from '../plugin-manifest.ts'
+import { hasManifest } from '../plugin-root.ts'
 import { readJson, UNREADABLE } from '../skill-tree.ts'
 import { pluginAgents } from './skill-agent-exists.ts'
 
@@ -62,7 +63,12 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
   create(context) {
     const file = path.resolve(context.filename)
     const manifest = path.basename(file) === 'plugin.json'
-    const plugin = manifest ? readPlugin(file) : readPluginAt(path.dirname(file))
+    // Claude Code reads `.claude/settings.json` as project settings, so `settings-agent-exists`
+    // owns its `agent` key (#380).
+    if (!manifest && path.basename(path.dirname(file)) === '.claude') {
+      return {}
+    }
+    const plugin = manifest ? readPlugin(file) : readListedPluginAt(path.dirname(file))
     return {
       Document(node) {
         const settings = manifest ? lastMember(node.body, 'settings')?.value : node.body
@@ -77,15 +83,20 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' }> = {
         ) {
           return
         }
-        // The name of the plugin is the `name` of the manifest. With none, the docs give the entry name
-        // or the folder name. The rule guesses the folder name.
+        // The name of the plugin is the `name` of the manifest. With no `name`, the rule guesses the
+        // folder name. With no `plugin.json`, the name is the entry name, and the skip below applies.
         const pluginName =
           typeof plugin.fields.name === 'string' ? plugin.fields.name : path.basename(plugin.root)
         // The docs do not say if Claude Code compares names with case.
         const wanted = agent.value.toLowerCase()
         const same = (other: string) => other.toLowerCase() === wanted
         // A scoped name holds `:`. One that does not start with this plugin names another plugin.
-        if (wanted.includes(':') && !wanted.startsWith(`${pluginName.toLowerCase()}:`)) {
+        // With no `plugin.json`, the entry name is the plugin name, and the rule does not read it.
+        // So the rule cannot tell which plugin a scoped name names.
+        if (
+          wanted.includes(':') &&
+          (!wanted.startsWith(`${pluginName.toLowerCase()}:`) || hasManifest(plugin.root) !== true)
+        ) {
           return
         }
         if (BUILT_IN_AGENTS.some(same)) {

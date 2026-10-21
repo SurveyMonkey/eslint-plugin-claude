@@ -182,8 +182,9 @@ export function classifyOutputStyle(file: string): ClaudeFile | null {
 }
 
 // The result for each parse of a file. A rule asks for it once for each file that it lints.
-// The five rules with the glob `**/*.md` ask for the same file, so one walk serves all five. The
-// key is the parse of the file, which is new for each lint run, so a change to a manifest shows.
+// Many rules with the glob `**/*.md` ask for the same file, so one walk serves each rule that
+// calls `classifyLinted`. The key is the parse of the file, which is new for each lint run, so a
+// change to a manifest shows.
 const classified = new WeakMap<object, AgentFile | null>()
 
 /** `classifyAgentFile` for the file of a lint run, with the result kept for the other rules that

@@ -203,3 +203,7 @@ it('counts a server of one name once across the sources of a plugin, as the last
   const reload = manifest({ mcpServers: { a: { command: 'x', alwaysLoad: true }, ...load(['c']) } })
   expect(ids(lint(reload, PLUGIN, { ...files, [PLUGIN]: reload }))).toEqual(['tooMany'])
 })
+it('counts the sources of the plugin for the root file of a plugin repository', () => {
+  const files = { '.claude-plugin/plugin.json': manifest({ mcpServers: load(['a', 'b']) }) }
+  expect(ids(lint(mapOf(load(['c'])), '.mcp.json', files))).toEqual(['tooMany'])
+})
