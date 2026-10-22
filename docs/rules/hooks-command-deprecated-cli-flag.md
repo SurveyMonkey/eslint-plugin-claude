@@ -26,19 +26,23 @@ generated:
 
 A hook can start Claude Code, for example to start a cloud session. The CLI reference calls `--remote` a
 deprecated alias for `--cloud`.[^flags] The rule reports a `command` hook that runs `claude` with `--remote`
-or `--remote=value`. It reads exec form and shell form. In exec form, it does not skip a wrapper such as
-`env`, or a `NAME=value` item. [`hooks-command-removed-cli-flag`](hooks-command-removed-cli-flag.md) skips both.
+or `--remote=value`. It reads exec form and shell form.
 
 The rule does not report `--remote-control`, `--rc` or the `claude remote-control` command. These are other
 flags and commands.
 
-- **Exec form** (the handler sets `args`). The executable is `claude`, a path that ends in `claude`, or
-  `claude.exe`. A `/` or a `\` separates the directories of the path. The rule reports an item of `args` that is
-  the flag, at the item.
+- **Exec form** (the handler sets `args`). The rule skips the wrappers `exec`, `env`, `command` and `nohup`,
+  and the `NAME=value` items, to find the executable. An item that is not a string stops the skip. The
+  executable must be `claude`, a path that ends in `claude`, or `claude.exe`. A `/` or a `\` separates the
+  directories of the path. The rule reports an item of `args` after `claude` that is the flag, at the item.
 - **Shell form** (no `args`). The rule splits the line into simple commands and reads quotes and backslashes.
   It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`.
   It reports at the string. The command word must be `claude`, or a path that ends in it. A later word must be
   the flag.
+
+In each form, the rule also skips an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`.
+The path can end in `.exe`. A relative path, or a path that starts with `~` or a variable, is a script of the hook.
+The rule does not skip it. The rule does not skip an option of `env`, such as `-i`.
 
 The rule does not check `--system-prompt`, `--append-system-prompt` or their `-file` forms. The CLI reference
 lists no system prompt flag as deprecated. A check for self-hosted runners would need a runtime condition, which the files

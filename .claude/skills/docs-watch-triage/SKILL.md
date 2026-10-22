@@ -100,7 +100,9 @@ Each close in this list obeys the snapshot condition of Phase 5.
 - **Rule update.** The rule: a built rule must report a new value, field or file. Make or
   keep a work item of type Bug with a `fix(<group>):` title.
 - **New rule candidate.** The rule: the block states a requirement that no row checks. Also,
-  `claude plugin validate` does not cover it fully (CLAUDE.md). Make a work item of type Feature
+  no official Claude Code CLI tool, such as `claude plugin validate`, makes the check. A tool
+  that covers it in part leaves a rule for the cases that it misses
+  ([README Scope](../../../README.md#scope)). Make a work item of type Feature
   with a `feat(<group>):` title. Name the rule, its preset, severity and category. Put the
   inventory row in Scope. When one docs change spans several blocks, one issue carries it. Close
   the others as duplicates.

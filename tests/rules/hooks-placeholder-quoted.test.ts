@@ -81,6 +81,34 @@ describe(`${name}: an unquoted placeholder`, () => {
     expect(run(`bash "\${HOOK_DIR:-${P}}/run.sh"`)).toEqual([])
   })
 
+  it(`reads a # in a \${...} expansion as bash does`, () => {
+    // bash 5.3 prints `a`, `#b`, then `/a` and `b` (or `b/c`) when `$P` is `/a b`.
+    expect(run(`echo \${x:-a #b} $CLAUDE_PROJECT_DIR`)).toEqual(['unquoted'])
+    expect(run(`echo \${x:-a #b} ${P}/c`)).toEqual(['unquoted'])
+    // bash 5.3 prints `a`, `#b`, `/a` and `b`: the placeholder is in the expansion.
+    expect(run(`echo \${x:-a #b ${P}}`)).toEqual(['unquoted'])
+    // bash 5.3 prints `a`, `#b`, then `/a b`. The `#` starts no comment, so the quoted
+    // placeholder is one word.
+    expect(run(`echo \${x:-a #b} "$CLAUDE_PROJECT_DIR"`)).toEqual([])
+    expect(run(`echo \${x:-a #b} "${P}/c"`)).toEqual([])
+    // bash 5.3 prints `a #b /a b`: a quote in the expansion holds the placeholder.
+    expect(run(`echo \${x:-"a #b ${P}"}`)).toEqual([])
+  })
+
+  it('is silent for a placeholder in a comment, which bash does not run', () => {
+    // bash 5.3 prints `hi`, and an empty line.
+    expect(run(`echo hi # ${P}`)).toEqual([])
+    expect(run(`echo \${x} #y ${P}`)).toEqual([])
+  })
+
+  it('reports a placeholder after a process substitution and a #', () => {
+    // bash 5.3 prints `[/dev/fd/63#/a][b]`: the `#` starts no comment, and bash splits the path.
+    expect(run(`printf "[%s]" <(true)#$CLAUDE_PROJECT_DIR`)).toEqual(['unquoted'])
+    expect(run(`printf "[%s]" >(true)#${P}`)).toEqual(['unquoted'])
+    // bash 5.3 prints `[/dev/fd/63]`: the `#` after a blank starts a comment.
+    expect(run(`printf "[%s]" <(true) #${P}`)).toEqual([])
+  })
+
   it('reports with an explicit bash shell', () => {
     expect(run(`${P}/a.sh`, { shell: 'bash' })).toEqual(['unquoted'])
   })
