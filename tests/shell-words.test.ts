@@ -50,11 +50,13 @@ describe('commandWordAt', () => {
     expect(commandWordAt(['A=1', 'exec', 'env', 'B=2', 'command', 'nohup', 'claude', 'x'])).toBe(6)
   })
 
-  it('reads past a wrapper given by a path, and keeps the plain words', () => {
+  it('reads past an absolute path to a wrapper, and keeps the plain words', () => {
     expect(commandWordAt(['/usr/bin/env', 'claude'])).toBe(1)
     expect(commandWordAt(['/bin/env', 'FOO=1', 'claude'])).toBe(2)
-    expect(commandWordAt(['C:\\Windows\\System32\\env', 'claude'])).toBe(1)
-    expect(commandWordAt(['./exec', '/usr/bin/nohup', 'claude'])).toBe(2)
+    expect(commandWordAt(['/usr/bin/nohup', '/usr/bin/command', 'claude'])).toBe(2)
+    // Git for Windows installs `env.exe` and `nohup.exe` in `usr\bin`.
+    expect(commandWordAt(['C:\\Program Files\\Git\\usr\\bin\\env.exe', 'claude'])).toBe(1)
+    expect(commandWordAt(['c:/Program Files/Git/usr/bin/nohup.EXE', 'claude'])).toBe(1)
     expect(commandWordAt(['/usr/bin/env'])).toBe(1)
     expect(commandWordAt(['env', 'claude'])).toBe(1)
   })
@@ -65,7 +67,18 @@ describe('commandWordAt', () => {
     expect(commandWordAt(['/usr/bin/env/', 'claude'])).toBe(0)
     expect(commandWordAt(['C:\\bin\\env\\', 'claude'])).toBe(0)
     expect(commandWordAt(['/usr/bin/', 'claude'])).toBe(0)
-    expect(commandWordAt(['/usr/bin/env.exe', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/env.exe.sh', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/ENV', 'claude'])).toBe(0)
+  })
+
+  it('does not read a script of the hook that has the name of a wrapper', () => {
+    // bash runs the file at a relative path, and never the wrapper. No `exec` program exists.
+    for (const word of ['./exec', './scripts/env', 'scripts/nohup', '~/bin/env', '/bin/exec']) {
+      expect(commandWordAt([word, 'claude']), word).toBe(0)
+    }
+    expect(commandWordAt(['$CLAUDE_PLUGIN_ROOT/hooks/env', 'claude'])).toBe(0)
+    expect(commandWordAt(['$HOME/bin/command', 'claude'])).toBe(0)
+    expect(commandWordAt(['C:env', 'claude'])).toBe(0)
   })
 
   it('gives the length when only assignments and wrappers are left', () => {

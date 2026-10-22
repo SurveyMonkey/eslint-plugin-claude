@@ -78,6 +78,7 @@ describe(`${name}: AGENTS.md`, () => {
       'less AGENTS.md',
       'more AGENTS.md',
       'exec cat AGENTS.md',
+      '/usr/bin/env cat AGENTS.md',
       'cd "$CLAUDE_PROJECT_DIR" && cat AGENTS.md',
     ]) {
       expect(inline(line), line).toEqual(['agentsFile'])

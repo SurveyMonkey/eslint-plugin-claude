@@ -177,9 +177,10 @@ describe(`${name}: exec form`, () => {
       'removedFromSubcommand',
     ])
     expect(shell('/usr/bin/env FOO=1 claude --enable-auto-mode')).toEqual(['removed'])
-    expect(exec('C:\\Windows\\System32\\env', ['claude', '--enable-auto-mode'])).toEqual([
-      'removed',
-    ])
+    expect(
+      exec('C:\\Program Files\\Git\\usr\\bin\\env.exe', ['claude', '--enable-auto-mode']),
+    ).toEqual(['removed'])
+    expect(shell('./scripts/env claude --enable-auto-mode')).toEqual([])
     expect(shell('/usr/bin/envx claude --enable-auto-mode')).toEqual([])
     expect(exec('/usr/bin/envx', ['claude', '--enable-auto-mode'])).toEqual([])
     expect(exec('/usr/bin/env', ['FOO=1'])).toEqual([])

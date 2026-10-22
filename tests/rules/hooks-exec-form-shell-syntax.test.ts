@@ -113,6 +113,12 @@ describe(`${name}: the variables`, () => {
     expect(ids({ type: 'command', command: 'bash', args: ['-ce', 'echo $HOME'] })).toEqual([])
     expect(ids({ type: 'command', command: 'env', args: ['bash', '-c', 'echo $HOME'] })).toEqual([])
     expect(
+      ids({ type: 'command', command: '/usr/bin/env', args: ['bash', '-c', 'echo $HOME'] }),
+    ).toEqual([])
+    expect(
+      ids({ type: 'command', command: './scripts/env', args: ['bash', '-c', 'echo $HOME'] }),
+    ).toEqual(['variable'])
+    expect(
       ids({ type: 'command', command: 'env', args: ['find', '.', '-exec', 'rm', '{}', ';'] }),
     ).toEqual([])
   })

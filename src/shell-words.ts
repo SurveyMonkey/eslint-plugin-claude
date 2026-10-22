@@ -253,14 +253,24 @@ export const commandsOf = (line: string): string[][] => scanCommands(line).map((
 const baseName = (word: string) =>
   word.slice(Math.max(word.lastIndexOf('/'), word.lastIndexOf('\\')) + 1)
 
+/** The wrappers that are also programs on disk. `exec` is a shell builtin only, so no path names it. */
+const PROGRAM_WRAPPERS = ['env', 'command', 'nohup']
+
+/** True when `word` is a wrapper: its name, or an absolute path to a program wrapper, as in
+ *  `/usr/bin/env` or `C:\Program Files\Git\usr\bin\env.exe`. A relative path, or a path that starts
+ *  with a variable, names a script of the hook, so it is not a wrapper. */
+const isWrapper = (word: string) =>
+  WRAPPERS.includes(word) ||
+  (/^(?:\/|[A-Za-z]:[\\/])/.test(word) &&
+    PROGRAM_WRAPPERS.includes(baseName(word).replace(/\.exe$/i, '')))
+
 /** The index of the command word in the words of a simple command. A variable assignment and a
- *  wrapper such as `exec` come before it. A path that ends in a wrapper, such as `/usr/bin/env`,
- *  counts as that wrapper. The index is the length of `words` when no word is left. */
+ *  wrapper (`isWrapper`) come before it. The index is the length of `words` when no word is left. */
 export function commandWordAt(words: string[]): number {
   let at = 0
   while (
     at < words.length &&
-    (isAssignment(words[at] as string) || WRAPPERS.includes(baseName(words[at] as string)))
+    (isAssignment(words[at] as string) || isWrapper(words[at] as string))
   ) {
     at++
   }

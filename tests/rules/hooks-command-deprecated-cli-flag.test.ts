@@ -115,28 +115,19 @@ describe(`${name}: exec form`, () => {
     expect(exec('env', ['claude', '--remote'])).toEqual(['remote'])
     expect(exec('env', ['FOO=1', 'claude', '--remote'])).toEqual(['remote'])
     expect(exec('nohup', ['claude', '--remote'])).toEqual(['remote'])
-    expect(exec('/usr/bin/env', ['FOO=1', 'claude', '--remote'])).toEqual(['remote'])
-    expect(exec('C:\\Windows\\System32\\env', ['/usr/bin/claude', '--remote=x'])).toEqual([
-      'remote',
-    ])
     expect(exec('env', ['A=1', 'B=2', 'C:\\Tools\\claude.exe', '--remote'])).toEqual(['remote'])
   })
 
-  it('reads past a wrapper given by a path in shell form', () => {
-    expect(shell('/usr/bin/env FOO=1 claude --remote')).toEqual(['remote'])
-    expect(shell('/usr/bin/env -i FOO=1 claude --remote')).toEqual([])
-    expect(shell('"C:\\Windows\\env" claude --remote')).toEqual(['remote'])
-  })
-
-  it('is silent in exec form for env with no claude, a non-string item, and env -i', () => {
+  it('is silent in exec form for env with no claude, and for a non-string item', () => {
     expect(exec('env', [])).toEqual([])
     expect(exec('env', ['FOO=1'])).toEqual([])
     expect(exec('env', ['FOO=1', 'node', '--remote'])).toEqual([])
     expect(exec('env', ['--remote', 'claude'])).toEqual([])
     expect(exec('env', ['FOO=1', 5, 'claude', '--remote'])).toEqual([])
+  })
+
+  it('stops at an option of env, a limit that the rule doc states', () => {
     expect(exec('env', ['-i', 'claude', '--remote'])).toEqual([])
-    expect(exec('/usr/bin/envx', ['claude', '--remote'])).toEqual([])
-    expect(shell('/usr/bin/envx claude --remote')).toEqual([])
   })
 
   it('is silent for a command that holds only assignments or a wrapper', () => {
@@ -147,6 +138,25 @@ describe(`${name}: exec form`, () => {
 
   it('reads the line, not the arguments, when args is no array', () => {
     expect(ids(command({ command: 'claude --remote x', args: 'a' }))).toEqual(['remote'])
+  })
+})
+
+describe(`${name}: a wrapper given by a path`, () => {
+  it('reads past an absolute path to a wrapper, in each form', () => {
+    expect(exec('/usr/bin/env', ['FOO=1', 'claude', '--remote'])).toEqual(['remote'])
+    expect(shell('/usr/bin/env FOO=1 claude --remote')).toEqual(['remote'])
+    expect(
+      exec('C:\\Program Files\\Git\\usr\\bin\\env.exe', ['/usr/bin/claude', '--remote=x']),
+    ).toEqual(['remote'])
+    expect(shell('"C:\\Program Files\\Git\\usr\\bin\\env.exe" claude --remote')).toEqual(['remote'])
+  })
+
+  it('is silent for a path that is not a wrapper, and for an option of env', () => {
+    expect(exec('/usr/bin/envx', ['claude', '--remote'])).toEqual([])
+    expect(shell('/usr/bin/envx claude --remote')).toEqual([])
+    expect(exec('./scripts/env', ['claude', '--remote'])).toEqual([])
+    expect(shell('./scripts/env claude --remote')).toEqual([])
+    expect(shell('/usr/bin/env -i FOO=1 claude --remote')).toEqual([])
   })
 })
 
