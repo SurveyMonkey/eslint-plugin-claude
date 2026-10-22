@@ -3,7 +3,9 @@
 // arguments and import the script again, so v8 coverage sees the guard. Each
 // case gives arguments that make `main` fail before it runs a command or
 // reaches the network. The docs-classify case fails on a path that is not there.
-import { mkdtempSync, rmSync } from 'node:fs'
+// A second case in each group gives the script as a symbolic link. The entry
+// check follows the link, as `node` does.
+import { mkdtempSync, rmSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -35,6 +37,22 @@ describe.each(cases)('%s as the entry file', (name, args, message) => {
     process.argv = [process.execPath, script(name), ...args]
     // The query makes a new module, so the entry check runs again.
     await import(`${script(name)}?entry`)
+    expect(error).toHaveBeenCalledOnce()
+    expect(String(error.mock.calls[0]?.[0])).toMatch(message)
+    expect(process.exitCode).toBe(1)
+  })
+
+  it('runs main when the entry file is a symbolic link to the script', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const dir = mkdtempSync(path.join(tmpdir(), 'docs-entry-link-'))
+    try {
+      const link = path.join(dir, `${name}.ts`)
+      symlinkSync(script(name), link)
+      process.argv = [process.execPath, link, ...args]
+      await import(`${script(name)}?link`)
+    } finally {
+      rmSync(dir, { recursive: true })
+    }
     expect(error).toHaveBeenCalledOnce()
     expect(String(error.mock.calls[0]?.[0])).toMatch(message)
     expect(process.exitCode).toBe(1)

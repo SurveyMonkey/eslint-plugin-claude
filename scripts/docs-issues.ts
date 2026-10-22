@@ -84,7 +84,7 @@
 // before the failure stay. The next run makes the rest. All gh calls go
 // through a runner, so tests never call GitHub.
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readFileSync, realpathSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Finding, Kind, Tracked } from './docs-classify.ts'
@@ -1216,7 +1216,7 @@ export async function main(
   return 0
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   process.exitCode = await main(process.argv.slice(2), process.env).catch((error: Error) => {
     console.error(error.message)
     return 1
