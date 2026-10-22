@@ -256,6 +256,9 @@ describe(`${name}: an unquoted variable in the command`, () => {
     // expansion, so the `#` starts no comment, and `$F` is out of the quotes.
     expect(line(`echo "$(echo \${@:-$(echo }) #})" $F`)).toEqual(['unquoted'])
     expect(line(`echo "$(echo \${@:-\`echo }\` #})" $F`)).toEqual(['unquoted'])
+    // bash 5.3 prints `y`. In the inner substitution, the `#` starts a comment.
+    expect(line(`echo "$(echo \${@:-$(true #c ')\n)y})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-\`true #c '\`y})" $F`)).toEqual(['unquoted'])
     // bash 5.3 prints `#y`. The expansion goes on after a substitution in it.
     expect(line(`echo "$(echo \${@:-$(true) #y})" $F`)).toEqual(['unquoted'])
     expect(line(`echo "$(echo \${@:-\`true\` #y})" $F`)).toEqual(['unquoted'])

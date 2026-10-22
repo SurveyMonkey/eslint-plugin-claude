@@ -508,6 +508,23 @@ describe('scanCommands', () => {
       ['echo', `$(echo \${@:-\`echo }\` #})`],
       ['echo', 'SECOND'],
     ])
+    // bash 5.3 prints `y`, then `hi`. In the inner substitution, the `#` starts a comment.
+    expect(commandsOf(`echo "$(echo \${a:-$(true #c ')\n)y})"; echo hi`)).toEqual([
+      ['echo', `$(echo \${a:-$(true #c ')\n)y})`],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-$(true #c ')\n)y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      ['y}'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-\`true #c '\`y}; echo hi`)).toEqual([
+      ['echo', `\${a:-`],
+      ['true'],
+      ['y}'],
+      ['echo', 'hi'],
+    ])
   })
 
   it(`goes on with a \${...} expansion after a substitution in it`, () => {
