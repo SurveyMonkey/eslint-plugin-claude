@@ -41,19 +41,20 @@ directories of the path, as in `C:\Tools\claude.exe`. In shell form, quote a pat
 two forms of a command.
 
 - **Exec form** (the handler sets `args`). `command` is the executable.[^exec] The rule skips the wrappers `exec`,
-  `env`, `command` and `nohup`, and the `NAME=value` items, as in shell form. A path that ends in a wrapper, such
-  as `/usr/bin/env`, counts as that wrapper. So the `command` `env` with the
-  `args` `["FOO=1", "claude"]` runs `claude`. It reports an item of `args` after `claude` that is a removed flag. It
+  `env`, `command` and `nohup`, and the `NAME=value` items, as in shell form. So the `command` `env` with the `args`
+  `["FOO=1", "claude"]` runs `claude`. It reports an item of `args` after `claude` that is a removed flag. It
   reports at the item.
 - **Shell form** (no `args`). `command` is a shell line. The rule splits the line into simple commands at `;`, `&`,
   `|`, parentheses, backticks and new lines. It reads quotes and backslashes. It skips leading `NAME=value` words
-  and the wrappers `exec`, `env`, `command` and `nohup`, or a path that ends in one. It reports at the string when the command word is `claude`
+  and the wrappers `exec`, `env`, `command` and `nohup`. It reports at the string when the command word is `claude`
   and a later word is a removed flag. It gives one report for each removed flag in the string. The split does not
   expand a variable or a glob, and it does not read a command inside a string.
 
 The rule does not know which global flags take a value. It finds the subcommand as a word `remote-control` before
-the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault. The rule does not
-skip an option of `env`, such as `-i`.
+the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault. In each form, the
+rule also skips an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`. The path can end in
+`.exe`. A relative path, or a path that starts with a variable, is a script of the hook. The rule does not skip
+it. The rule does not skip an option of `env`, such as `-i`.
 
 In shell form, bash reads a backslash out of quotes as an escape. `\\` gives one backslash, and `\T` gives `T`.
 So the shell line `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`, and the rule gives no report.
