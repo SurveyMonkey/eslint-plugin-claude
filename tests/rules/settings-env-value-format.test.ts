@@ -49,11 +49,26 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'a positive whole number in plain digits',
   },
   {
-    // "from 100000 to 1000000. Accepts a plain integer such as 500000 only".
+    // "from 100000 to 1000000 tokens. Suffixed values such as 200k require v2.1.304 or later".
     name: 'CLAUDE_CODE_AUTO_COMPACT_WINDOW',
-    pass: ['100000', '500000', '1000000'],
-    fail: ['500k', '1M', '99999', '1000001', '5e5', '500000.0'],
-    expected: 'a plain integer from 100000 to 1000000',
+    pass: ['100000', '500000', '1000000', '200k', '1M', '1000k', '200K', '1m', '100k', '0001M'],
+    fail: [
+      '99999',
+      '1000001',
+      '50k',
+      '2M',
+      '1001k',
+      '1500000',
+      '5e5',
+      '500_000',
+      '500000.0',
+      '1.5M',
+      'k',
+      'M',
+      '200kk',
+      '-200k',
+    ],
+    expected: 'plain digits, with an optional k or M suffix, from 100000 to 1000000 tokens',
   },
   {
     // "default: 30000; maximum: 150000".

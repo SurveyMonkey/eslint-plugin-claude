@@ -51,7 +51,7 @@ A variable that is not in the table has no form, and any string is valid.
 | `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS` | A whole number from 1 to 256 in plain digits[^vars] |
 | `CLAUDE_CODE_WEBFETCH_DEADLINE_MS`, `CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR` | A whole number in plain digits. `0` is valid[^vars] |
 | `CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE` | A comma-separated list of whole seconds from 1 to 86400 in plain digits, such as `600,1800`. A space is not valid[^vars] |
-| `CLAUDE_CODE_AUTO_COMPACT_WINDOW` | A plain integer from 100000 to 1000000. A value such as `500k` reads as `500`[^vars] |
+| `CLAUDE_CODE_AUTO_COMPACT_WINDOW` | A whole number from 100000 to 1000000 tokens, in plain digits or with a `k` or `M` suffix, such as `200k` or `1M`. `k` means 1000 and `M` means 1000000. The suffix has any letter case. A value such as `5e5` is not valid[^vars] |
 | `BASH_MAX_OUTPUT_LENGTH` | At most 150000, the maximum[^vars] |
 | `CLAUDE_CODE_TOOL_MEMORY_LIMIT` | A size in plain digits with an optional `K`, `M`, `G` or `T` suffix, or `0`, `off`, `false`, `no`, `none`[^memory] |
 | `CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE` | `none`, `all-new`, or a comma-separated list of kind names such as `mcp`, `lsp` or `hooks`. Claude Code ignores a name that it does not know, so the rule checks the shape of each name only[^memory] |
@@ -65,8 +65,9 @@ A variable that is not in the table has no form, and any string is valid.
 
 The rule compares a value as written. It also accepts a few spellings that the docs do not
 state. A list entry may have spaces around it, except in `CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE`.
-The size suffix and the words of the memory limit have any letter case. A path has `\` or `/`
-between its parts, and may end in `.exe`.
+The size suffix and the words of the memory limit have any letter case. The suffix of
+`CLAUDE_CODE_AUTO_COMPACT_WINDOW` has any letter case too. A path has `\` or `/` between its
+parts, and may end in `.exe`.
 
 ### What the rule does not check
 
