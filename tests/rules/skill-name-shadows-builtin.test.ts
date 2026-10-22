@@ -46,6 +46,17 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
     { code: '---\nname: [clear]\n---\n', filename: inFolder('deploy') },
   ],
   invalid: [
+    // A direction control or a zero-width space in the folder shows as its code point.
+    {
+      code: named('clear'),
+      filename: inFolder('x\u202Ey'),
+      errors: [{ messageId: 'notTaken', data: { name: 'clear', folder: 'x<U+202E>y' } }],
+    },
+    {
+      code: named('clear'),
+      filename: inFolder('x\u200By'),
+      errors: [{ messageId: 'notTaken', data: { name: 'clear', folder: 'x<U+200B>y' } }],
+    },
     {
       code: named('clear'),
       filename: inFolder('s'),

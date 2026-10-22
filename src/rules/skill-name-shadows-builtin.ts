@@ -6,6 +6,7 @@ import { BUILT_IN_COMMANDS, BUNDLED_SKILLS } from '../data/command-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName } from '../skill-names.ts'
 
 const name = 'skill-name-shadows-builtin' as const
 
@@ -81,14 +82,14 @@ const rule: MarkdownRuleDefinition<{
           named && given === own ? fm.at(field.valueStart, field.valueEnd) : { start, end: start }
         const messageId = ownerOf(own)
         if (messageId !== null) {
-          context.report({ loc: ownLoc, messageId, data: { name: own } })
+          context.report({ loc: ownLoc, messageId, data: { name: escapeName(own) } })
         }
         // A `name` field that is a name Claude Code owns does not take.
         if (named && given !== own && ownerOf(given) !== null) {
           context.report({
             loc: fm.at(field.valueStart, field.valueEnd),
             messageId: 'notTaken',
-            data: { name: given, folder: own },
+            data: { name: escapeName(given), folder: escapeName(own) },
           })
         }
       },

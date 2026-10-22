@@ -86,6 +86,19 @@ markdownTester.run('skill-precedence-shadowing', ruleOf('skill-precedence-shadow
     },
   ],
   invalid: [
+    // A direction control or a zero-width space in the name shows as its code point.
+    {
+      code: bare,
+      filename: rootSkill('x\u202Ey'),
+      options: [{ personalNames: ['x\u202Ey'] }],
+      errors: [shadowed('personal', 'x<U+202E>y')],
+    },
+    {
+      code: bare,
+      filename: rootSkill('x\u200By'),
+      options: [{ enterpriseNames: ['x\u200By'] }],
+      errors: [shadowed('enterprise', 'x<U+200B>y')],
+    },
     // A project skill named in each list.
     {
       code: bare,

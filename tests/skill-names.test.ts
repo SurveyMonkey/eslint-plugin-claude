@@ -1,4 +1,4 @@
-// The name faults and the escaped text. Two rules share them.
+// The name faults and the escaped text. Two rules share the faults. Seven rules share the text.
 import { describe, expect, it } from 'vitest'
 import { escapeName, firstFault } from '../src/skill-names.ts'
 

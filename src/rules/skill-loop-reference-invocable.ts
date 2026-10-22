@@ -5,6 +5,7 @@ import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
+import { escapeName } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
@@ -95,7 +96,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'manualOnly' }> = {
             end: sourceCode.getLocFromIndex(start + 1 + (invoked[1] as string).length),
           },
           messageId: 'manualOnly',
-          data: { name: invoked[1] as string },
+          data: { name: escapeName(invoked[1] as string) },
         })
       },
     }
