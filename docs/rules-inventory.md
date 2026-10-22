@@ -1672,7 +1672,7 @@ Other names a rule may contain:
 [^managed-mcp-match-servers-by-url-command-or-name]: [Control MCP server access for your organization: Match servers by URL, command, or name](https://code.claude.com/docs/en/managed-mcp#match-servers-by-url-command-or-name)
 [^managed-mcp-example-configuration]: [Control MCP server access for your organization: Example configuration](https://code.claude.com/docs/en/managed-mcp#example-configuration)
 [^managed-mcp-how-a-server-is-evaluated]: [Control MCP server access for your organization: How a server is evaluated](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated)
-[^managed-mcp-how-policy-entries-expand]: [Control MCP server access for your organization: How policy entries expand](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand)
+[^managed-mcp-how-policy-entries-expand]: [Control MCP server access for your organization: Environment variables in serverCommand and serverUrl entries](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand)
 [^managed-mcp-what-an-entry-can-contain]: [Control MCP server access for your organization: What an entry can contain](https://code.claude.com/docs/en/managed-mcp#what-an-entry-can-contain)
 [^settings-reference-managedmcpservers]: [All settings: managedMcpServers](https://code.claude.com/docs/en/settings-reference#managedmcpservers)
 [^mcp-configure-tool-search]: [Connect Claude Code to tools via MCP: Configure tool search](https://code.claude.com/docs/en/mcp#configure-tool-search)

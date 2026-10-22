@@ -85,4 +85,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^expand]: [Control MCP server access for your organization: How policy entries expand](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand)
+[^expand]: [Control MCP server access for your organization: Environment variables in serverCommand and serverUrl entries](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand)
