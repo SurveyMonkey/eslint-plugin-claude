@@ -50,11 +50,12 @@ two forms of a command.
   and a later word is a removed flag. It gives one report for each removed flag in the string. The split does not
   expand a variable or a glob, and it does not read a command inside a string.
 
+In each form, the rule also skips an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`.
+The path can end in `.exe`. A relative path, or a path that starts with a variable, is a script of the hook.
+The rule does not skip it. The rule does not skip an option of `env`, such as `-i`.
+
 The rule does not know which global flags take a value. It finds the subcommand as a word `remote-control` before
-the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault. In each form, the
-rule also skips an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`. The path can end in
-`.exe`. A relative path, or a path that starts with a variable, is a script of the hook. The rule does not skip
-it. The rule does not skip an option of `env`, such as `-i`.
+the flag, in any position. The flag in another command (`echo --enable-auto-mode`) is no fault.
 
 In shell form, bash reads a backslash out of quotes as an escape. `\\` gives one backslash, and `\T` gives `T`.
 So the shell line `C:\Tools\claude.exe` runs `C:Toolsclaude.exe`, and the rule gives no report.
