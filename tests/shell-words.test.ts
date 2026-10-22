@@ -471,7 +471,7 @@ describe('scanCommands', () => {
     }
   })
 
-  it(`ends a \${...} expansion at a new line when no } comes after it`, () => {
+  it(`ends a \${...} expansion at a new line when the next line has no }`, () => {
     // bash reads the body of a quoted here-document as text, then runs `rm`. The reader does not
     // know a here-document. Out of one, bash refuses a `${` with no `}`.
     expect(commandsOf("cat <<'E'\n${x\nE\nrm -rf $T")).toEqual([
@@ -480,7 +480,7 @@ describe('scanCommands', () => {
       ['E'],
       ['rm', '-rf', '$T'],
     ])
-    // bash 5.3 prints `${x`, then runs the next two lines. A `}` two lines after the `${` does
+    // bash 5.3 prints `${x`, then runs `rm` and `echo`. A `}` two lines after the `${` does
     // not keep the new line in the expansion.
     expect(commandsOf(`cat <<'E'\n\${x\nE\nrm -rf $T; echo \${y}`)).toEqual([
       ['cat', '<<E'],
@@ -504,6 +504,38 @@ describe('scanCommands', () => {
     expect(commandsOf(`echo "$(echo \${x:-( #a)})"; echo after`)).toEqual([
       ['echo', `$(echo \${x:-( #a)})`],
       ['echo', 'after'],
+    ])
+    // A lone parenthesis in the expansion does not change the level. bash 5.3 prints `(` or
+    // `)`, then `RAN`.
+    expect(commandsOf(`echo "$(echo \${a:-(})"; echo RAN`)).toEqual([
+      ['echo', `$(echo \${a:-(})`],
+      ['echo', 'RAN'],
+    ])
+    expect(commandsOf(`echo "$(echo \${a:-(} #c"\n)"; echo RAN`)).toEqual([
+      ['echo', `$(echo \${a:-(} #c"\n)`],
+      ['echo', 'RAN'],
+    ])
+    expect(commandsOf(`echo "$(echo \${a:-)} #c"\n)"; echo RAN`)).toEqual([
+      ['echo', `$(echo \${a:-)} #c"\n)`],
+      ['echo', 'RAN'],
+    ])
+  })
+
+  it(`reads a process substitution in a \${...} expansion as a new level`, () => {
+    // bash 5.3 prints `/dev/fd/63`, then `RAN`. `#x ")` is a comment.
+    for (const operator of ['<', '>']) {
+      expect(commandsOf(`echo "$(echo \${a:-${operator}(true #x ")\n)})"; echo RAN`)).toEqual([
+        ['echo', `$(echo \${a:-${operator}(true #x ")\n)})`],
+        ['echo', 'RAN'],
+      ])
+    }
+    // bash 5.3 prints `/dev/fd/63 #y`, then `RAN`. The `}` in the process substitution does not
+    // end the expansion.
+    expect(commandsOf(`echo \${a:-<(echo }) #y}; echo RAN`)).toEqual([
+      ['echo', `\${a:-<`],
+      ['echo', '}'],
+      [' #y}'],
+      ['echo', 'RAN'],
     ])
   })
 
@@ -574,6 +606,13 @@ describe('scanCommands', () => {
     // bash 5.3 prints `;x`, then `hi`. The `;` is in the expansion.
     expect(commandsOf(`echo \${a:-$(true);x}; echo hi`)).toEqual([
       ['echo', `\${a:-$`],
+      ['true'],
+      [';x}'],
+      ['echo', 'hi'],
+    ])
+    // The same after a backtick substitution. bash 5.3 prints `;x`, then `hi`.
+    expect(commandsOf(`echo \${a:-\`true\`;x}; echo hi`)).toEqual([
+      ['echo', `\${a:-`],
       ['true'],
       [';x}'],
       ['echo', 'hi'],

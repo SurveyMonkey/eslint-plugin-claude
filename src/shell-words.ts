@@ -61,13 +61,14 @@ function closingParen(line: string, open: number, nesting = 0): number {
       const end = line.indexOf('\n', i)
       i = end === -1 ? line.length : end
       boundary = true
-    } else if (char === '(') {
-      // In an expansion, a parenthesis is plain text, unless it starts a command substitution.
+    } else if (char === '(' && (braces === 0 || /[$<>]/.test(line.charAt(i - 1)))) {
+      // In an expansion, a parenthesis is plain text, unless it starts a command or process
+      // substitution.
       depth++
       outer.push(braces)
-      braces = line.charAt(i - 1) === '$' ? 0 : braces
+      braces = 0
       boundary = true
-    } else if (char === ')') {
+    } else if (char === ')' && braces === 0) {
       // A `#` after a `)` starts no comment. The reader does not know if that `)` closes a
       // substitution. A word can go on after a substitution.
       if (--depth === 0) {
@@ -128,8 +129,8 @@ export interface Command {
  *  A quote or a backslash joins characters into one word. A quote is not part of the word. A command
  *  substitution in double quotes is part of the word, and holds quotes of its own. A `${...}`
  *  expansion is part of the word, with its spaces, operators and parentheses. A new line stays in it
- *  when the next line has a `}`. A command substitution in it gives its own commands. After the
- *  substitution, the rest of the expansion is a new command. */
+ *  when the next line has a `}`. A command or process substitution in it gives its own commands.
+ *  After the substitution, the rest of the expansion is a new command. */
 export function scanCommands(line: string): Command[] {
   const commands: Command[] = []
   let words: string[] = []
@@ -222,9 +223,10 @@ export function scanCommands(line: string): Command[] {
       (char === '}' ||
         /[^\S\n]|[;|&)]/.test(char) ||
         (char === '\n' && /^\n[^\n]*\}/.test(line.slice(i))) ||
-        (char === '(' && line.charAt(i - 1) !== '$'))
+        (char === '(' && !/[$<>]/.test(line.charAt(i - 1))))
     ) {
-      // A parenthesis in the expansion is plain text, unless it starts a command substitution.
+      // A parenthesis in the expansion is plain text, unless it starts a command or process
+      // substitution.
       braces -= char === '}' ? 1 : 0
       word += char
       open = true

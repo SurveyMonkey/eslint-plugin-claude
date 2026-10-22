@@ -105,6 +105,8 @@ describe(`${name}: an unquoted placeholder`, () => {
     // bash 5.3 prints `[/dev/fd/63#/a][b]`: the `#` starts no comment, and bash splits the path.
     expect(run(`printf "[%s]" <(true)#$CLAUDE_PROJECT_DIR`)).toEqual(['unquoted'])
     expect(run(`printf "[%s]" >(true)#${P}`)).toEqual(['unquoted'])
+    // bash 5.3 prints `[/dev/fd/63]`: the `#` after a blank starts a comment.
+    expect(run(`printf "[%s]" <(true) #${P}`)).toEqual([])
   })
 
   it('reports with an explicit bash shell', () => {

@@ -274,6 +274,17 @@ describe(`${name}: an unquoted variable in the command`, () => {
     // bash 5.3 prints `( #a)`, then `a` and `b`. The `#` is in the expansion, so `$F` is out
     // of the quotes.
     expect(line(`echo "$(echo \${@:-( #a)})" $F`)).toEqual(['unquoted'])
+    // A lone parenthesis in the expansion does not change the level. bash 5.3 prints `(` or `)`,
+    // then `a` and `b`.
+    expect(line(`echo "$(echo \${@:-(})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-)} #c"\n)" $F`)).toEqual(['unquoted'])
+  })
+
+  it(`reads a process substitution in a \${...} expansion in a substitution as a new level`, () => {
+    // bash 5.3 prints `/dev/fd/63`, then `a` and `b`. `#x ")` is a comment, so `$F` is out of
+    // the quotes.
+    expect(line(`echo "$(echo \${@:-<(true #x ")\n)})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:->(true #x ")\n)})" $F`)).toEqual(['unquoted'])
   })
 
   it('reads a comment after a redirect, as after a space', () => {

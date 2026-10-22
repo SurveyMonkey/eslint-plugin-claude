@@ -98,13 +98,14 @@ function closingParen(text: string, open: number): number {
       // substitution, it also ends before the backtick that ends the substitution.
       const length = text.slice(i).search(tick ? /[\n`]/ : /\n/)
       i = length === -1 ? text.length : i + length - 1
-    } else if (char === '(') {
-      // In an expansion, a parenthesis is plain text, unless it starts a command substitution.
+    } else if (char === '(' && (braces === 0 || /[$<>]/.test(text.charAt(i - 1)))) {
+      // In an expansion, a parenthesis is plain text, unless it starts a command or process
+      // substitution.
       depth++
       outer.push(braces)
-      braces = text.charAt(i - 1) === '$' ? 0 : braces
+      braces = 0
       boundary = true
-    } else if (char === ')') {
+    } else if (char === ')' && braces === 0) {
       // A `#` after a `)` starts no comment, as in `src/shell-words.ts`.
       if (--depth === 0) {
         return i
