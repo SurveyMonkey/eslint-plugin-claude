@@ -20,7 +20,7 @@ describe('sandbox-keys', () => {
   })
 
   it('counts the keys of the docs', () => {
-    expect(listedChildren(['sandbox'])).toHaveLength(15)
+    expect(listedChildren(['sandbox'])).toHaveLength(16)
     expect(listedChildren(['sandbox', 'filesystem'])).toHaveLength(6)
     expect(listedChildren(['sandbox', 'network'])).toHaveLength(11)
     expect(listedChildren(['sandbox', 'credentials'])).toHaveLength(5)

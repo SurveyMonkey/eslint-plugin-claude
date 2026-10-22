@@ -98,6 +98,7 @@ const USER_OR_MANAGED: readonly string[] = [
   'prependPlugins',
   'processWrapper',
   'sandbox.allowAppleEvents',
+  'sandbox.allowNestedUserNamespaces',
   'sandbox.credentials.allowPlaintextInject',
   'sandbox.credentials.awsPairs',
   'sandbox.credentials.sigv4',
