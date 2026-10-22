@@ -168,14 +168,13 @@ function unquotedVariables(text: string): string[] {
     } else if (char === '$') {
       const match = test
         ? null
-        : /^\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*|\d|[@*]))/.exec(text.slice(i))
+        : /^\$(?:\{#?([A-Za-z_]\w*)|([A-Za-z_]\w*|\d|[@*]))/.exec(text.slice(i))
       if (match !== null && !ASSIGNMENT.test(text.slice(wordStart, i))) {
         names.push((match[1] ?? match[2]) as string)
-        // The match ends at the first `}`, so each `${` in it, but the first, stays open.
-        braces += match[0].startsWith('${') ? match[0].split('${').length - 2 : 0
-        i += match[0].length - 1
-      } else if (/^\{[^\s|]/.test(text.slice(i + 1, i + 3))) {
-        // A blank or a `|` after `${` opens a bash 5.3 substitution of commands, not an expansion.
+      }
+      if (/^\{[^\s|]/.test(text.slice(i + 1, i + 3))) {
+        // The scan reads the expansion one character at a time, so a quote in it is a quote. A
+        // blank or a `|` after `${` opens a bash 5.3 substitution of commands, not an expansion.
         braces++
         i++
       }

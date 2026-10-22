@@ -312,6 +312,13 @@ describe(`${name}: an unquoted variable in the command`, () => {
       `echo \${1:-x) #y} $F`,
       `echo \${1:-<(echo }) #y} $F`,
       `echo \${1:->(echo }) #y} $F`,
+      // A process substitution in an expansion starts a level, so its `#` starts a comment.
+      `echo \${1:-<(true #'\n)} $F`,
+      // The rule skips `CLAUDE_PROJECT_DIR`. A quote or a nested `\${` in its expansion does not
+      // end it.
+      `echo \${CLAUDE_PROJECT_DIR:-\${b} #y} $F`,
+      `echo \${CLAUDE_PROJECT_DIR:-"}" #y} $F`,
+      `echo \${CLAUDE_PROJECT_DIR:-$F}`,
       // In a `[[ ]]` test and in an assignment value, the scan also counts the `\${`.
       `[[ \${a:-x #y} ]]; echo $F`,
       `A=\${b:-x #y} true; echo $F`,
@@ -350,6 +357,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo a|#c $F\ncat',
       'echo a&#c $F\nwait',
       `echo \${1} # $F`,
+      // A quote in an expansion is a quote, so the `\${` in it opens no expansion.
+      `echo \${CLAUDE_PROJECT_DIR:-'\${'} # $F`,
       // bash 5.3 reads `$$` as the process id, so the `#` after `{a ` starts a comment.
       'echo $${a #y} $F',
     ]) {
@@ -361,6 +370,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it('reports rm on a variable after a # that is no comment', () => {
     // bash 5.3 prints `#y`, so the `#` starts no comment, and `rm` runs.
     expect(line(`echo \${a:-$(true) #y}; rm -rf $T`)).toEqual(['destructive'])
+    // bash 5.3 prints `} #y`: the quoted `}` does not end the expansion.
+    expect(line(`echo \${a:-"}" #y}; rm -rf $T`)).toEqual(['destructive'])
   })
 
   it('ends a comment in a backtick substitution at the backtick that ends it', () => {
