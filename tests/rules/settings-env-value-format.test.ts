@@ -50,6 +50,7 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
   },
   {
     // "from 100000 to 1000000 tokens. Suffixed values such as 200k require v2.1.304 or later".
+    // The docs name the k suffix only. The M suffix and any letter case are choices of the plugin.
     name: 'CLAUDE_CODE_AUTO_COMPACT_WINDOW',
     pass: ['100000', '500000', '1000000', '200k', '1M', '1000k', '200K', '1m', '100k', '0001M'],
     fail: [
@@ -67,6 +68,10 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
       'M',
       '200kk',
       '-200k',
+      ' 200k',
+      '200k ',
+      '0M',
+      '99k',
     ],
     expected: 'plain digits, with an optional k or M suffix, from 100000 to 1000000 tokens',
   },
