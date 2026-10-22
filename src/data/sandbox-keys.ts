@@ -62,6 +62,7 @@ export const SANDBOX_SHAPES: Readonly<Record<string, Shape>> = {
   'sandbox.enableWeakerNestedSandbox': boolean,
   'sandbox.enableWeakerNetworkIsolation': boolean,
   'sandbox.allowAppleEvents': boolean,
+  'sandbox.allowNestedUserNamespaces': boolean,
   'sandbox.bwrapPath': { type: 'absolutePath' },
   'sandbox.socatPath': { type: 'absolutePath' },
   'sandbox.ignoreViolations': { type: 'violations' },

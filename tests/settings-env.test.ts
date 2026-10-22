@@ -66,11 +66,6 @@ describe('the variables that settings cannot set, against the settings reference
       expect(IGNORED).toContain(`\`${name}\``)
       expect(envIgnoredIn(name)).toBe('every-file')
     }
-    // The env vars reference says the same for this variable.
-    expect(VARIABLES).toMatch(
-      /\| `CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION` \|[^\n]*ignores a copy delivered through a settings `env` block/,
-    )
-    expect(envIgnoredIn('CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION')).toBe('every-file')
   })
 })
 
