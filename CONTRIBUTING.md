@@ -268,8 +268,8 @@ run, against the live docs. Then it runs `check` on the head state. It fails in 
   log prints a marker line for each block with no key match. Start the issue body with it, and
   leave it open.
 - The head snapshot is not the live docs. The docs changed after `update`, or the map changed
-  and `update` did not run. A block id or block hash that differs from the live page counts, even
-  when the page hash is the same. Run `update` again, and push.
+  and `update` did not run. The gate also fails when a block id or hash differs from the live
+  page. This holds when the page hash is the same. Run `update` again, and push.
 - `check` on the head has an error. Read the error. A map hash that is not the snapshot hash
   needs `update` again. Correct a heading that is not on the page, or that the page shows more
   than one time. Correct it in the map and the footnote. For a failed fetch, run the check

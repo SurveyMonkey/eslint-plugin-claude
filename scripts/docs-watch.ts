@@ -309,10 +309,10 @@ const statusOf = (before: string | undefined, now: string): Status =>
   before === undefined ? 'new' : before === now ? 'unchanged' : 'changed'
 
 // Compares the page now with its snapshot. `stored` is undefined when the
-// snapshot is missing: the page is then new. A page with the same hash and
-// the same block ids and hashes, in order, is changed only when a mapped
-// source is not in the snapshot yet. A hand edit of a block id or hash is a
-// change, so such a page goes to the block compare.
+// snapshot is missing: the page is then new. A page can have the same page
+// hash and the same block ids and hashes, in order. It is then changed only
+// when a mapped source is not in the snapshot yet. A hand edit of a block id
+// or hash is a change, so such a page goes to the block compare.
 export function comparePage(current: Snapshot, stored: Snapshot | undefined): PageReport {
   // The mapped heading is unique on a page. The block ID is not, when two
   // HTML headings share an `id` attribute.

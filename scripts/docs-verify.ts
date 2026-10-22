@@ -47,7 +47,7 @@
 //   map changed and `update` did not run. It also exits 1 when the check has
 //   an error, such as a failed fetch.
 // The two steps read each page once. So the head check compares the head
-// snapshot with the text that the dry run read. The compare covers the page
+// snapshot with the text that the dry run read. That check compares the page
 // hash, and the id and hash of each block, in order.
 // The repository comes from --repo, $GITHUB_REPOSITORY or
 // `gh repo view`. gh only reads. The gate writes nothing to GitHub.
