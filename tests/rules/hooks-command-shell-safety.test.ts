@@ -270,6 +270,12 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line(`echo "$(echo \${@:-\`true\`} #y ')\n)" $F`)).toEqual(['unquoted'])
   })
 
+  it(`reads a parenthesis in a \${...} expansion in a substitution as plain text`, () => {
+    // bash 5.3 prints `( #a)`, then `a` and `b`. The `#` is in the expansion, so `$F` is out
+    // of the quotes.
+    expect(line(`echo "$(echo \${@:-( #a)})" $F`)).toEqual(['unquoted'])
+  })
+
   it('reads a comment after a redirect, as after a space', () => {
     // bash reads `#x ')` as a comment, so the `)` on the next line ends the substitution.
     for (const text of [

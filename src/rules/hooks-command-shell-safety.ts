@@ -99,9 +99,10 @@ function closingParen(text: string, open: number): number {
       const length = text.slice(i).search(tick ? /[\n`]/ : /\n/)
       i = length === -1 ? text.length : i + length - 1
     } else if (char === '(') {
+      // In an expansion, a parenthesis is plain text, unless it starts a command substitution.
       depth++
       outer.push(braces)
-      braces = 0
+      braces = text.charAt(i - 1) === '$' ? 0 : braces
       boundary = true
     } else if (char === ')') {
       // A `#` after a `)` starts no comment, as in `src/shell-words.ts`.
