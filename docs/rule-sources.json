@@ -7425,7 +7425,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
-      "heading": "Characters a skill name can't hold"
+      "heading": "Characters a skill name can't hold",
+      "hash": "24d0258e9ff5055831a908adedff75ca85478a946dd14ecdd1810611b12599f6"
     }
   ],
   "skill-no-bom": [
