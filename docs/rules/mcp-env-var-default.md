@@ -49,6 +49,9 @@ The rule does not report these cases:
 - `CLAUDE_PLUGIN_ROOT`, `CLAUDE_PLUGIN_DATA` and `CLAUDE_PROJECT_DIR`. A plugin configuration
   substitutes them directly.[^plugin] `mcp-project-dir-default` reports `${CLAUDE_PROJECT_DIR}` in the
   `command` and `args` of a project file. This rule is silent for the three names in every file.
+  This includes the root `.mcp.json` of a plugin repository. The example plugin configuration
+  has a bare `${CLAUDE_PLUGIN_ROOT}` in that file.[^plugin] The limit: Claude Code does not set
+  `CLAUDE_PLUGIN_ROOT` when it reads that file as the project file.
 - `${user_config.KEY}`. It is a setting of the plugin, and no environment variable.
 - A credential variable in the `url` or `headers` of a remote server, such as
   `${ANTHROPIC_API_KEY}`. Claude Code reads it as empty, and a default does not help.[^empty]

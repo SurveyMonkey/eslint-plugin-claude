@@ -8,6 +8,7 @@ import {
   lintManifest,
   lintPluginFile,
   lintProject,
+  lintRootPluginFile,
   mapOf,
 } from '../mcp-server-rule.test-support.ts'
 
@@ -88,6 +89,14 @@ it('stays silent for the variables that Claude Code sets', () => {
     expect(ids(lintPluginFile(NAME, at({ command: text, env: { K: text } }))), name).toEqual([])
     expect(ids(lintProject(NAME, at({ command: text, args: [text] }))), name).toEqual([])
   }
+})
+// Ruling 8 on #461: a `both` file keeps the exemption. The MCP page gives a plugin root
+// `.mcp.json` with a bare `${CLAUDE_PLUGIN_ROOT}` ("Example plugin MCP configuration").
+it('stays silent for CLAUDE_PLUGIN_ROOT in a both file, and still reports another variable', () => {
+  const code = at({ command: `${ref('CLAUDE_PLUGIN_ROOT')}/bin/s`, args: [ref('FOO')] })
+  const found = lintRootPluginFile(NAME, code)
+  expect(ids(found)).toEqual(['noDefault'])
+  expect(found[0]?.message).toContain(`\`${ref('FOO')}\``)
 })
 it('stays silent for user_config references, which is no environment variable', () => {
   expect(

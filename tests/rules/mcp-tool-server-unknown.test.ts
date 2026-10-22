@@ -26,6 +26,11 @@ const allow = (...rules: string[]) => JSON.stringify({ permissions: { allow: rul
 function settings(code: string, files: Record<string, string>, file = '.claude/settings.json') {
   return lintJson(NAME, code, path.join(repo(files), file))
 }
+/** Lint the `disallowed-tools` list `tools` of a project skill, in a repository with `files`. */
+function lintDisallowed(tools: string, files: Record<string, string>) {
+  const file = path.join(repo(files), '.claude/skills/s/SKILL.md')
+  return lintMarkdown(NAME, `---\ndisallowed-tools: ${tools}\n---\n`, file)
+}
 /** Lint the tool list `tools` of the skill or command `file` of a repository with `files`. */
 function skill(tools: string, files: Record<string, string>, file = '.claude/skills/s/SKILL.md') {
   return lintMarkdown(NAME, `---\nallowed-tools: ${tools}\n---\n`, path.join(repo(files), file))
@@ -60,15 +65,109 @@ it('uses the .mcp.json of the project that holds the .claude folder', () => {
 })
 it('stays silent for a server that .mcp.json declares', () => {
   const files = { '.mcp.json': servers('db', 'my.server', 'a-b_c') }
-  const code = allow(
-    'mcp__db',
-    'mcp__db__*',
-    'mcp__db__t(x)',
-    'mcp__my.server__t',
-    'mcp__my_server__t',
-    'mcp__a-b_c__t',
-  )
+  const code = allow('mcp__db', 'mcp__db__*', 'mcp__db__t(x)', 'mcp__my_server__t', 'mcp__a-b_c__t')
   expect(ids(settings(code, files))).toEqual([])
+})
+// The permissions page, "MCP": a `.` or a space in a server name becomes `_`, so for `my.server`
+// the rule is `mcp__my_server__*`. The name as written matches no tool, in any list.
+it('reports a server name as written, with the form that has _ as the hint', () => {
+  const files = { '.mcp.json': servers('my.server', 'a b') }
+  const code = JSON.stringify({
+    permissions: { allow: ['mcp__my.server__*', 'mcp__a b__t'], deny: ['mcp__my.server'] },
+  })
+  const found = settings(code, files)
+  expect(found.map((m) => [m.messageId, m.message])).toEqual([
+    [
+      'hint',
+      'The tool "mcp__my.server__*" names the server "my.server", which the .mcp.json of the project does not declare. Write "mcp__my_server__*" for the declared server.',
+    ],
+    ['hint', expect.stringContaining('Write "mcp__a_b__t"')],
+    ['hint', expect.stringContaining('Write "mcp__my_server"')],
+  ])
+  expect(ids(settings(allow('mcp__my_server__*', 'mcp__my_server', 'mcp__a_b__t'), files))).toEqual(
+    [],
+  )
+})
+it('reports a name as written with no hint when no declared name has its form', () => {
+  const found = settings(allow('mcp__no.pe__x'), { '.mcp.json': servers('db') })
+  expect(ids(found)).toEqual(['unknown'])
+  expect(found[0]?.message).toContain('"no.pe"')
+})
+// The permissions page, "MCP": "For a server named `reports__v2`, write `mcp__reports__v2__*`.
+// The bare `mcp__reports__v2` and the shorter `mcp__reports` don't match its tools as allow rules,
+// because Claude Code reads both as rules for a server named `reports`."
+it('reports the bare form and a prefix of a name with __ in an allow rule, with the wildcard hint', () => {
+  const files = { '.mcp.json': servers('reports__v2') }
+  const found = settings(allow('mcp__reports__v2', 'mcp__reports'), files)
+  expect(found.map((m) => [m.messageId, m.message])).toEqual([
+    [
+      'hint',
+      'The tool "mcp__reports__v2" names the server "reports", which the .mcp.json of the project does not declare. Write "mcp__reports__v2__*" for the declared server.',
+    ],
+    ['hint', expect.stringContaining('Write "mcp__reports__v2__*"')],
+  ])
+  expect(skill('mcp__reports__v2', files).map((m) => m.message)).toEqual([
+    expect.stringContaining('Write "mcp__reports__v2__*"'),
+  ])
+  expect(ids(settings(allow('mcp__reports__v2__*', 'mcp__reports__v2__t'), files))).toEqual([])
+})
+// The live permissions page, "MCP" (newer than the stored snapshot): "As a deny or ask rule,
+// though, each of those two names also covers every tool of the `reports__v2` server."
+// Mid-round ruling 24 on #366.
+it('stays silent for the bare form and a prefix of a name with __ in a deny or ask rule', () => {
+  const files = { '.mcp.json': servers('reports__v2') }
+  const lists = JSON.stringify({
+    permissions: {
+      ask: ['mcp__reports__v2', 'mcp__reports'],
+      deny: ['mcp__reports__v2', 'mcp__reports'],
+    },
+  })
+  expect(ids(settings(lists, files))).toEqual([])
+  expect(ids(lintDisallowed('mcp__reports__v2 mcp__reports', files))).toEqual([])
+  const tools = JSON.stringify({
+    permissions: { deny: ['mcp__reports__v2__t', 'mcp__reports__v2__*'] },
+  })
+  expect(ids(settings(tools, files))).toEqual([])
+  // The near miss: a tool of the server `reports` is no tool of `reports__v2`.
+  const near = JSON.stringify({ permissions: { ask: ['mcp__reports__x'], deny: ['mcp__rep'] } })
+  expect(ids(settings(near, files))).toEqual(['unknown', 'unknown'])
+  // The near miss: `mcp__db` is a rule for the server `db`, and no prefix of `db_x` at a `__`.
+  const db = JSON.stringify({ permissions: { deny: ['mcp__db'] } })
+  expect(ids(settings(db, { '.mcp.json': servers('db_x') }))).toEqual(['unknown'])
+  // The near miss: a longer name is no tool of `db`, and no prefix of `db` at a `__`.
+  const longer = JSON.stringify({ permissions: { deny: ['mcp__db2__t', 'mcp__db_x'] } })
+  expect(ids(settings(longer, { '.mcp.json': servers('db') }))).toEqual(['unknown', 'unknown'])
+})
+// The permissions page, "MCP": the same holds for a `<server>` that ends in `_`.
+// Mid-round ruling 28 on #366: the deny and ask result of ruling 24 holds for it too.
+it('reports the bare form of a name that ends in _ in an allow rule only', () => {
+  const files = { '.mcp.json': servers('foo_') }
+  const found = settings(allow('mcp__foo_', 'mcp__foo___*'), files)
+  expect(found.map((m) => m.message)).toEqual([expect.stringContaining('Write "mcp__foo___*"')])
+  const deny = JSON.stringify({
+    permissions: { deny: ['mcp__foo_', 'mcp__foo'], ask: ['mcp__foo'] },
+  })
+  expect(ids(settings(deny, files))).toEqual([])
+  expect(ids(lintDisallowed('mcp__foo', files))).toEqual([])
+  // The shorter `mcp__foo` is a rule for the server `foo`, as `mcp__reports` is for `reports`.
+  expect(settings(allow('mcp__foo'), files).map((m) => m.message)).toEqual([
+    expect.stringContaining('Write "mcp__foo___*"'),
+  ])
+})
+// The permissions page, "MCP": a `.` becomes `_`, and a name with `__` takes the wildcard form.
+it('gives a hint that matches in the list of the rule', () => {
+  const dotted = { '.mcp.json': servers('a.b__v2', 'my.reports__v2', 'foo.') }
+  const found = settings(
+    JSON.stringify({
+      permissions: { allow: ['mcp__a.b__v2', 'mcp__my.reports'], deny: ['mcp__foo.'] },
+    }),
+    dotted,
+  )
+  expect(found.map((m) => m.message)).toEqual([
+    expect.stringContaining('Write "mcp__a_b__v2__*"'),
+    expect.stringContaining('Write "mcp__my_reports__v2__*"'),
+    expect.stringContaining('Write "mcp__foo_"'),
+  ])
 })
 it('reports a name that only starts with a declared name, after names it skips', () => {
   const files = { '.mcp.json': servers('db') }
@@ -236,6 +335,12 @@ it('knows the servers of the manifest, of a declared file and of a name with an 
     'p/.mcp.json': servers('db'),
   }
   expect(ids(inPlugin('mcp__plugin_my_plugin_db__t', dotted))).toEqual([])
+})
+it('gives the scoped form with _ as the hint in a plugin file', () => {
+  const files = { ...PLUGIN, 'p/.mcp.json': servers('my.db') }
+  const found = inPlugin('mcp__plugin_my-plugin_my.db__t', files)
+  expect(found.map((m) => m.message)).toEqual([expect.stringContaining('names the server "my.db"')])
+  expect(found[0]?.message).toContain('Write "mcp__plugin_my-plugin_my_db__t"')
 })
 it('stays silent in a plugin file for a name that is not scoped to its plugin', () => {
   const tools =

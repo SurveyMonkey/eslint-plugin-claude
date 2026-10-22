@@ -50,8 +50,10 @@ Other rules own the rest:
   `permissions-tool-name-glob` owns the place of a glob in an allow rule. This rule still reports
   `mcp____*`, which has no server name.
 - A rule with parentheses on an `mcp__` name. The rule `permissions-mcp-rule-parens` owns it.
-- A server name that no `.mcp.json` declares. The docs state no set of characters for a server
-  name, so the rule does not check the characters of the server segment.
+- A server name that the repository does not declare. The rule `mcp-tool-server-unknown` reports
+  it when it can read the declared servers. That rule is `off` in `recommended`.
+- A server name with a character that a tool name does not hold, such as `mcp__my.server__*`. The
+  rule `mcp-tool-server-unknown` reports it, with the same limits.
 - The `matcher` of a hook. It is not a permission rule, so this rule does not read it.
 
 Fail:
