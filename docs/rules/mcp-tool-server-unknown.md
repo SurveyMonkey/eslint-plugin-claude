@@ -45,8 +45,7 @@ server `my.server`, the rule is `mcp__my_server__*`, and `mcp__my.server__*` mat
 The rule reports the name as written, in each list.
 
 Claude Code reads the bare name `mcp__reports__v2` as a rule for the server `reports`. In an allow
-rule, the bare name of a server matches only when the name has no `__` and does not end in `_`. So
-for the server `reports__v2`, the rule reports `mcp__reports__v2` and `mcp__reports` in an allow
+rule, a bare name matches when it has no `__`. It must not end in `_`. So for the server `reports__v2`, the rule reports `mcp__reports__v2` and `mcp__reports` in an allow
 rule.[^mcp] In a deny or ask rule, each of the two covers every tool of `reports__v2`, so the rule
 makes no report.[^mcp]
 

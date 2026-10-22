@@ -163,8 +163,8 @@ function serverOf(tool: string): string | undefined {
 
 /** True when the rest `rest` of a tool name, after `mcp__`, matches a name of `forms`. A tool
  *  name and a wildcard match by prefix. Claude Code reads `mcp__reports__v2` as a rule for the
- *  server `reports`. In an allow rule, the bare name of a server matches only when the name has
- *  no `__` and does not end in `_`. In a deny or ask rule, `mcp__reports__v2` and `mcp__reports`
+ *  server `reports`. In an allow rule, a bare name matches when it has no `__`. It must not end
+ *  in `_`. In a deny or ask rule, `mcp__reports__v2` and `mcp__reports`
  *  also cover each tool of the server `reports__v2`. */
 function matches(rest: string, forms: Set<string>, allowRule: boolean): boolean {
   return [...forms].some((form) =>
