@@ -35,8 +35,8 @@ describe('firstFault', () => {
   })
 })
 
-// The docs say that the refused characters of a plugin skill folder become hyphens. Each one
-// becomes one hyphen. Other characters stay.
+// The docs say that the refused characters of a plugin skill folder become hyphens. `hyphenate`
+// changes each one to one hyphen. Other characters stay.
 describe('hyphenate', () => {
   it.each([
     ['deploy', 'deploy'],
@@ -48,13 +48,15 @@ describe('hyphenate', () => {
     ['a\u{A0}b', 'a-b'],
     ['a\u{202E}b', 'a-b'],
     ['a\tb', 'a-b'],
-    // A private-use character outside the first plane is one character, so it gives one hyphen.
+    // A private-use character above U+FFFF is one character, so it gives one hyphen.
     ['a\u{F0000}b', 'a-b'],
     [' a', '-a'],
     ['a ', 'a-'],
     ['a b', 'a b'],
-    // Of two spaces, the first is before another space, so it is the refused one.
-    ['a  b', 'a- b'],
+    // The docs refuse two spaces in a row, so each space of the run becomes a hyphen.
+    ['a  b', 'a--b'],
+    ['a   b', 'a---b'],
+    ['a  ', 'a--'],
     // The docs do not name a dot, so it stays.
     ['a.b', 'a.b'],
   ])('gives %j as %j', (text, loaded) => {
