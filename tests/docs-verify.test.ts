@@ -405,6 +405,25 @@ describe('a diff that changes the snapshot', () => {
     expect(text).not.toContain('The docs changed after')
   })
 
+  it.each(['hash', 'id'] as const)(
+    'fails when a block %s of the head was edited by hand and the page hash is the live hash (#465)',
+    async (field) => {
+      const { root, base } = await repoWith((dir) => {
+        const file = path.join(dir, SNAPSHOT)
+        const snapshot = JSON.parse(readFileSync(file, 'utf8'))
+        snapshot.blocks[3][field] = field === 'hash' ? 'f'.repeat(64) : 'renamed-by-hand'
+        writeFileSync(file, `${JSON.stringify(snapshot)}\n`)
+      })
+      const { code, text } = await verify(root, base, {
+        fetchText: serve(PAGE),
+        fetch: fakeJev().fetch,
+        run: fakeGh().run,
+      })
+      expect(code).toBe(1)
+      expect(text).toContain('1 page(s) of the head snapshot are not the live docs')
+    },
+  )
+
   it('fails when the head map cannot be read', async () => {
     const { root, base } = await repoWith((dir) => {
       writeFileSync(path.join(dir, 'docs/rule-sources.json'), '{ not json')

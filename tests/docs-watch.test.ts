@@ -536,6 +536,49 @@ describe('checkPages', () => {
     ])
   })
 
+  it('reports a block hash that was edited by hand, with the page hash unchanged (#465)', async () => {
+    const snapshots = await snapshotOf(FIXTURE, headings)
+    const name = api.snapshotName(URL_)
+    const stored = snapshots.get(name)
+    const block = stored?.blocks[3]
+    if (!stored || !block) throw new Error('the fixture has too few blocks')
+    snapshots.set(name, {
+      ...stored,
+      blocks: stored.blocks.map((b) => (b === block ? { ...b, hash: 'f'.repeat(64) } : b)),
+    })
+    const report = await api.checkPages({
+      map: map(...headings),
+      snapshots,
+      fetchText: serve(FIXTURE),
+    })
+    expect(report.changed).toBe(1)
+    expect(report.pages[0]?.status).toBe('changed')
+    expect(report.pages[0]?.blocks.changed).toEqual([block.id])
+    expect(report.pages[0]?.blocks.added).toEqual([])
+    expect(report.pages[0]?.blocks.removed).toEqual([])
+  })
+
+  it('reports a block id that was edited by hand, with the page hash unchanged (#465)', async () => {
+    const snapshots = await snapshotOf(FIXTURE, headings)
+    const name = api.snapshotName(URL_)
+    const stored = snapshots.get(name)
+    const block = stored?.blocks[4]
+    if (!stored || !block) throw new Error('the fixture has too few blocks')
+    snapshots.set(name, {
+      ...stored,
+      blocks: stored.blocks.map((b) => (b === block ? { ...b, id: 'renamed-by-hand' } : b)),
+    })
+    const report = await api.checkPages({
+      map: map(...headings),
+      snapshots,
+      fetchText: serve(FIXTURE),
+    })
+    expect(report.changed).toBe(1)
+    expect(report.pages[0]?.status).toBe('changed')
+    expect(report.pages[0]?.blocks.added).toEqual([block.id])
+    expect(report.pages[0]?.blocks.removed).toEqual(['renamed-by-hand'])
+  })
+
   it('lists an added heading and a removed heading', async () => {
     const snapshots = await snapshotOf(FIXTURE, headings)
     const edited = FIXTURE.replace('### `commands`', '### `agents`')

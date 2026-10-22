@@ -279,7 +279,9 @@ and passes at once when the diff does not change `docs/docs-snapshot/` or
    counts.
 4. It runs `check` on the head map and the head snapshot. It fails when a page changed or the
    check has an error. The two steps read each page once. So the check compares the stored
-   hashes with the text that the dry run read.
+   hashes with the text that the dry run read. It compares the page hash, and the id and hash
+   of each block, in order. A page with the same page hash but another block id or hash is
+   changed.
 
 **The base compare (#419).** On 2026-10-19 the docs changed three times in one day. PR #388
 changed the snapshot format and no block hash. It failed the check four times, each time for a
