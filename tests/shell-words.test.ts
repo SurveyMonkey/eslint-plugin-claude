@@ -480,6 +480,31 @@ describe('scanCommands', () => {
       ['E'],
       ['rm', '-rf', '$T'],
     ])
+    // bash 5.3 prints `${x`, then runs the next two lines. A `}` two lines after the `${` does
+    // not keep the new line in the expansion.
+    expect(commandsOf(`cat <<'E'\n\${x\nE\nrm -rf $T; echo \${y}`)).toEqual([
+      ['cat', '<<E'],
+      [`\${x`],
+      ['E'],
+      ['rm', '-rf', '$T'],
+      ['echo', `\${y}`],
+    ])
+    // A `}` before the `${` does not keep it either.
+    expect(commandsOf(`echo \${y}; cat <<'E'\n\${x\nE\nrm -rf $T`)).toEqual([
+      ['echo', `\${y}`],
+      ['cat', '<<E'],
+      [`\${x`],
+      ['E'],
+      ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it(`reads a parenthesis in a \${...} expansion in a substitution as plain text`, () => {
+    // bash 5.3 prints `( #a)`, then `after`. The `#` is in the expansion.
+    expect(commandsOf(`echo "$(echo \${x:-( #a)})"; echo after`)).toEqual([
+      ['echo', `$(echo \${x:-( #a)})`],
+      ['echo', 'after'],
+    ])
   })
 
   it(`reads no comment in a nested \${...} expansion in a substitution`, () => {
@@ -546,6 +571,13 @@ describe('scanCommands', () => {
       ['echo', `$(echo \${a:-$(true) #y})`],
       ['echo', 'hi'],
     ])
+    // bash 5.3 prints `;x`, then `hi`. The `;` is in the expansion.
+    expect(commandsOf(`echo \${a:-$(true);x}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [';x}'],
+      ['echo', 'hi'],
+    ])
   })
 
   it(`goes on with a \${...} expansion after a new line in it`, () => {
@@ -577,6 +609,30 @@ describe('scanCommands', () => {
       ['}'],
       ['echo', 'hi'],
     ])
+    // In double quotes too. bash 5.3 reads `#y ')` as a comment, so the `)` on the next line
+    // ends the substitution. It prints an empty line, then `hi`.
+    expect(commandsOf(`echo "$(echo \${a:-$(true)} #y ')\n)"; echo hi`)).toEqual([
+      ['echo', `$(echo \${a:-$(true)} #y ')\n)`],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it('goes on with a word after a process substitution', () => {
+    // bash 5.3 gives `cat` the argument `/dev/fd/63#x`. The `#` starts no comment.
+    expect(commandsOf('cat <(true)#x; echo hi')).toEqual([
+      ['cat', '<'],
+      ['true'],
+      ['#x'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf('cat >(true)#x; echo hi')).toEqual([
+      ['cat', '>'],
+      ['true'],
+      ['#x'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3 runs `true`, reads `#x` as a comment, then prints `after`.
+    expect(commandsOf('(true)#x\necho after')).toEqual([['true'], ['echo', 'after']])
   })
 
   it('reads no comment after an escaped character', () => {
