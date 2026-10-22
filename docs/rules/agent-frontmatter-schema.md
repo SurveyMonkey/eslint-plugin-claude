@@ -41,8 +41,8 @@ The rule reports these faults, on the narrowest part of the key or value:
   comma-separated string or a list of strings. `model` is a string that is not blank. `maxTurns` is a
   positive integer. The subagent table gives no type, and only the SDK table says `number`.[^sdk] `skills` is a list of strings. `background` and `omitClaudeMd` are Booleans.
   `experimental` is a map. `autoCompactWindow` is a plain integer from `100000` to
-  `1000000`.[^fields] The rule reads a number as written, so `1.5e5` and `0x30d40` get a report.
-  Claude Code reads `200k` as 200, and then ignores the field. So a string must be plain digits in
+  `1000000`.[^fields][^compact] The rule reads a number as written, so `1.5e5` and `0x30d40` get a report.
+  Claude Code reads `200k` as 200, and then ignores the field.[^compact] So a string must be plain digits in
   the range: `200k` gets a report, and `"200000"` does not.
 - **Value.** `permissionMode` is `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`,
   `plan` or `manual`. `memory` is `user`, `project` or `local`. `effort` is `low`, `medium`, `high`,
@@ -103,6 +103,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^fields]: [Create custom subagents: Frontmatter reference](https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields)
 [^dir]: [Explore the .claude directory: Frontmatter fields by file](https://code.claude.com/docs/en/claude-directory#frontmatter-fields-by-file)
+[^compact]: [Create custom subagents: Set the auto-compact window for one subagent](https://code.claude.com/docs/en/sub-agents#set-the-auto-compact-window-for-one-subagent)
 [^sdk]: [Subagents in the SDK: AgentDefinition configuration](https://code.claude.com/docs/en/agent-sdk/subagents#agentdefinition-configuration)
 [^plugin]: [Add components to a plugin: Frontmatter fields in plugin agents](https://code.claude.com/docs/en/plugins/components#frontmatter-fields-in-plugin-agents)
 [^skillsref]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)

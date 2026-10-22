@@ -71,6 +71,11 @@
       "hash": "ad9df6d7413af0f762173c8e133754b61333e4065d3794d3871b72305286ac5d"
     },
     {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "heading": "Set the auto-compact window for one subagent",
+      "hash": "7103bcf14e2a18202dfdbfb10028d897574ad85e4d2939cbb461b4f4956d8bf0"
+    },
+    {
       "url": "https://code.claude.com/docs/en/agent-sdk/subagents",
       "heading": "AgentDefinition configuration",
       "hash": "eec5889e7f0b5c3d576134c4771d9ad5b2a01df2f48c632707d3fa19beba0ad2"
