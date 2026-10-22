@@ -299,7 +299,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
-  it('reports a variable after a # that is no comment', () => {
+  it('reports a variable that no comment holds', () => {
     // Each case is bash 5.3 with F="a b": `set -x` shows `$F` split in two words. The rule reports
     // no name in `\${1...}`, so only `$F` can give the report.
     for (const text of [
@@ -318,6 +318,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       // end it.
       `echo \${CLAUDE_PROJECT_DIR:-\${b} #y} $F`,
       `echo \${CLAUDE_PROJECT_DIR:-"}" #y} $F`,
+      // The scan reads a variable in the expansion too.
       `echo \${CLAUDE_PROJECT_DIR:-$F}`,
       // In a `[[ ]]` test and in an assignment value, the scan also counts the `\${`.
       `[[ \${a:-x #y} ]]; echo $F`,
