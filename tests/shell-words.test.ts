@@ -78,7 +78,8 @@ describe('commandWordAt', () => {
     }
     expect(commandWordAt(['$CLAUDE_PLUGIN_ROOT/hooks/env', 'claude'])).toBe(0)
     expect(commandWordAt(['$HOME/bin/command', 'claude'])).toBe(0)
-    expect(commandWordAt(['C:env', 'claude'])).toBe(0)
+    // A drive letter with no separator after it starts a relative path on Windows.
+    expect(commandWordAt(['C:tools\\env', 'claude'])).toBe(0)
   })
 
   it('gives the length when only assignments and wrappers are left', () => {
