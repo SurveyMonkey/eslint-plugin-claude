@@ -142,7 +142,8 @@ export function scanCommands(line: string): Command[] {
   let substitutions = 0
   let amp = false
   let ticks = false
-  // True when the character before is the end of a command substitution. The word goes on after it.
+  // True when the character before is the end of a command or process substitution. The word goes
+  // on after it.
   let closed = false
   // True when the character before is a redirect operator, `<` or `>`, out of a `${...}` expansion.
   let redirect = false
