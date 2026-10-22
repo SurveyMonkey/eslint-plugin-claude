@@ -22,10 +22,12 @@ const VARIABLES = PATH_VARIABLES.join('|')
 const REFERENCE = new RegExp(`\\$\\{(?:${VARIABLES})\\}|\\$(?:${VARIABLES})(?![A-Za-z0-9_])`, 'g')
 
 /** The first reference in `line` that sits outside quotes, or undefined. Each reference becomes two
- *  marks with a space between them. Private-use characters delimit each mark, so a quoted text such
- *  as "0 0" cannot look like one. The shell splits a word at an unquoted space. So the marks of a
- *  quoted reference stay in one word, and the marks of an unquoted one do not. A line with a command
- *  substitution is not read, because quotes nest inside it. */
+ *  marks with a backslash and a space between them. Private-use characters delimit each mark, so a
+ *  quoted text such as "0 0" cannot look like one. Out of quotes, the reader drops the backslash. In
+ *  quotes, it keeps it. A `${...}` expansion does not change this, so a reference in the value of an
+ *  unquoted expansion is out of quotes too. bash splits that value at a space. A reference in a
+ *  comment is in no word. A line with a command substitution is not read, because quotes nest inside
+ *  it. */
 function unquotedReference(line: string): string | undefined {
   if (line.includes('$(') || line.includes('`')) {
     return undefined
@@ -34,13 +36,10 @@ function unquotedReference(line: string): string | undefined {
   const marked = line.replace(REFERENCE, (text) => {
     found.push(text)
     const mark = found.length - 1
-    return `${mark} ${mark}`
+    return `${mark}\\ ${mark}`
   })
-  // Out of quotes, the shell splits the value of a `${...}` expansion at a space. A backslash
-  // before the `{` makes the reader split the expansion into words. The reader then also reads a
-  // `#` or a `;` in the expansion as out of it.
-  const words = commandsOf(marked.replaceAll('${', '$\\{')).flat()
-  return found.find((_, mark) => words.every((word) => !word.includes(`${mark} ${mark}`)))
+  const words = commandsOf(marked).flat()
+  return found.find((_, mark) => words.some((word) => word.includes(`${mark} ${mark}`)))
 }
 
 const rule: Rule.RuleModule = {
