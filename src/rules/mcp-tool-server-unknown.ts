@@ -1,13 +1,14 @@
 // A tool reference `mcp__<server>` that names a server which the repository does not declare
 // (docs/rules/mcp-tool-server-unknown.md). The permissions page says that an MCP rule names the
 // server as its tool names do, so a `.` or a space becomes `_`. The rule changes each character
-// outside `A-Za-z0-9_-`. It reads the permission rules of the project settings files, and the
-// `allowed-tools` and `disallowed-tools` of skills and commands. A project file uses the servers
-// of the `.mcp.json` beside `.claude/` and the inline servers of the local agents. A file of a
-// plugin uses the scoped names of its own plugin (`mcp__plugin_<plugin>_<server>`), as the MCP
-// page gives them. The rule rests on an absence, so it makes no report when a source cannot be
-// read. A user-scope server and a connector are not in the repository, so the rule is a
-// heuristic: it reports no connector name and no name of another plugin (ADR 001, Decision 14).
+// outside `A-Za-z0-9_-` of a declared name to `_`. It reads the permission rules of the project
+// settings files, and the `allowed-tools` and `disallowed-tools` of skills and commands. A project
+// file uses the servers of the `.mcp.json` beside `.claude/` and the inline servers of the local
+// agents. A file of a plugin uses the scoped names of its own plugin
+// (`mcp__plugin_<plugin>_<server>`), as the MCP page gives them. The rule rests on an absence, so
+// it makes no report when a source cannot be read. A user-scope server and a connector are not in
+// the repository, so the rule is a heuristic: it reports no connector name and no name of another
+// plugin (ADR 001, Decision 14).
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import type { Rule } from 'eslint'
@@ -166,7 +167,7 @@ function serverOf(tool: string): string | undefined {
  *  and a wildcard match by prefix. Claude Code reads `mcp__reports__v2` as a rule for the server
  *  `reports`. So in an allow rule, a bare name matches only when it has no `__` and does not end
  *  in `_`. In a deny or ask rule, a bare name covers each server whose name and `__` start with
- *  that name and `__`: `mcp__reports` covers `reports__v2`, and `mcp__foo` covers `foo_`. */
+ *  that name and `__`. So `mcp__reports` covers `reports__v2`, and `mcp__foo` covers `foo_`. */
 function matches(rest: string, forms: Set<string>, allowRule: boolean): boolean {
   return [...forms].some((form) =>
     allowRule
@@ -179,8 +180,8 @@ function matches(rest: string, forms: Set<string>, allowRule: boolean): boolean 
 
 /** The tool name to write in place of `mcp__<rest>`, or undefined when the rule knows none. The
  *  fixed name has `_` for each character outside `A-Za-z0-9_-` in the server part. The hint is
- *  the fixed name when it matches. Else it is the wildcard form of a declared name that is the
- *  fixed name, or starts with it and `__`. */
+ *  the fixed name when it matches. Else it is the wildcard form of a declared name. That name
+ *  and `__` start with the fixed name and `__`, as `foo_` does for `foo`. */
 function hintOf(rest: string, forms: Set<string>, allowRule: boolean): string | undefined {
   const server = rest.split(MCP_SEPARATOR, 1)[0] as string
   const fixed = `${sanitizeName(server)}${rest.slice(server.length)}`

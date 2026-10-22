@@ -41,14 +41,14 @@ and a tool name or `*` can follow it. What the rule compares with depends on whe
 
 A `.` or a space in a server name becomes `_` in its tool names. So for the server `my.server`,
 the rule is `mcp__my_server__*`, and `mcp__my.server__*` matches no tool.[^mcp] The rule changes
-each character outside `A-Za-z0-9_-` to `_`. It reports the name as written in an allow, deny or
-ask rule.
+each character outside `A-Za-z0-9_-` of a declared name to `_`. It reports the name as written in
+each list.
 
-Claude Code reads the bare name `mcp__reports__v2` as a rule for the server `reports`.[^mcp] So in
-an allow rule, a bare name matches only a server name with no `__` that does not end in `_`. For
-the server `reports__v2`, the rule reports `mcp__reports__v2` and the shorter `mcp__reports`. For
-the server `foo_`, it reports `mcp__foo_` and `mcp__foo`. In a deny or ask rule, these names cover
-every tool of the server, so the rule makes no report.[^mcp]
+Claude Code reads the bare name `mcp__reports__v2` as a rule for the server `reports`.[^mcp] In an
+allow rule, a bare name matches a server name with no `__` and no final `_`. For the server
+`reports__v2`, the rule reports `mcp__reports__v2` and the shorter `mcp__reports`. For the server
+`foo_`, it reports `mcp__foo_` and `mcp__foo`. In a deny or ask rule, these names cover every tool
+of the server, so the rule makes no report.[^mcp]
 
 The message names the tool and the server, and says where the rule looked. When the rule knows a
 form that matches, the message gives it: `mcp__my_server__*`, or `mcp__reports__v2__*`. The report
