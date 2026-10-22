@@ -122,14 +122,24 @@ function closingParen(text: string, open: number): number {
 
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
  *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a command substitution on its own,
- *  because a quote in it starts a new quote level. */
+ *  because a quote in it starts a new quote level. A `#` starts a comment only at the start of a word, and
+ *  not in a `${...}` expansion. As in `closingParen`, each parenthesis level has its own count of open
+ *  `${` expansions. */
 function unquotedVariables(text: string): string[] {
   const names: string[] = []
   let quote = ''
   let test = false
   let wordStart = 0
+  // The open `${` expansions at this level, and the counts of the outer levels.
+  let braces = 0
+  const outer: number[] = []
+  // True when the next character starts a word. The shell removes each backslash and new line
+  // pair first, so a pair does not change `boundary`.
+  let boundary = true
   for (let i = 0; i < text.length; i++) {
     const char = text.charAt(i)
+    const before: boolean = boundary
+    boundary = false
     if (quote === "'") {
       quote = char === "'" ? '' : quote
     } else if (char === '$' && text.startsWith('(', i + 1)) {
@@ -138,25 +148,50 @@ function unquotedVariables(text: string): string[] {
       i = end
     } else if (char === '\\') {
       i++
+      boundary = before && text.charAt(i) === '\n'
     } else if (quote === '"') {
       quote = char === '"' ? '' : quote
     } else if (char === '"' || char === "'") {
       quote = char
-    } else if (char === '#' && i === wordStart) {
+    } else if (char === '#' && before && braces === 0) {
+      // The comment ends before the next new line, which the next pass reads.
       const end = text.indexOf('\n', i)
-      i = end === -1 ? text.length : end
-      wordStart = i + 1
+      i = end === -1 ? text.length : end - 1
+    } else if (char === '}' && braces > 0) {
+      braces--
     } else if (text.startsWith('[[', i) || text.startsWith(']]', i)) {
       test = char === '['
       i++
-    } else if (char === '$' && !test) {
-      const match = /^\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*|\d|[@*]))/.exec(text.slice(i))
+    } else if (char === '$' && text.charAt(i + 1) === '$') {
+      // `$$` is a parameter, so a `{` after it opens no expansion.
+      i++
+    } else if (char === '$') {
+      const match = test
+        ? null
+        : /^\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*|\d|[@*]))/.exec(text.slice(i))
       if (match !== null && !ASSIGNMENT.test(text.slice(wordStart, i))) {
         names.push((match[1] ?? match[2]) as string)
+        // The match ends at the first `}`, so each `${` in it, but the first, stays open.
+        braces += match[0].startsWith('${') ? match[0].split('${').length - 2 : 0
         i += match[0].length - 1
+      } else if (/^\{[^\s|]/.test(text.slice(i + 1, i + 3))) {
+        // A blank or a `|` after `${` opens a bash 5.3 substitution of commands, not an expansion.
+        braces++
+        i++
       }
-    } else if (/[\s;&|()]/.test(char)) {
-      wordStart = i + 1
+    } else {
+      boundary = /[\s;|&<>]/.test(char)
+      if (/[\s;&|()]/.test(char)) {
+        wordStart = i + 1
+      }
+      if (char === '(' && (braces === 0 || /[<>]/.test(text.charAt(i - 1)))) {
+        // In an expansion, a parenthesis is plain text, unless it starts a process substitution.
+        outer.push(braces)
+        braces = 0
+        boundary = true
+      } else if (char === ')' && braces === 0) {
+        braces = outer.pop() ?? 0
+      }
     }
   }
   return names
