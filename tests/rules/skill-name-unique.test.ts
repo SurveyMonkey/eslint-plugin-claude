@@ -103,6 +103,7 @@ for (const tree of [
   'hyphname',
   'hyphdot',
   'hyphsp',
+  'hyphmix',
   'hyphrn',
 ]) {
   put(`${tree}/.claude-plugin/plugin.json`, `{"name":"${tree}"}`)
@@ -214,6 +215,9 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: bare, filename: put('hyphdot/skills/a-b/SKILL.md', bare) },
     // Each space of a run in a plugin skill folder becomes a hyphen, so `a  b` is `a--b`, not `a-b`.
     { code: bare, filename: put('hyphsp/skills/a-b/SKILL.md', bare) },
+    // A plain space next to a no-break space becomes a hyphen too, so `a<U+00A0><U+0020>b` is
+    // `a--b`, not `a-b`.
+    { code: bare, filename: put('hyphmix/skills/a-b/SKILL.md', bare) },
     // A command file name with a space at the end is refused. The rule compares neither file.
     { code: bare, filename: put('edge2/.claude/commands/a.md', bare) },
     { code: bare, filename: put('edge2/.claude/commands/a .md', bare) },
@@ -574,6 +578,27 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         {
           messageId: 'duplicate',
           data: { name: 'a--b', others: '`skills/a<U+0020> b/SKILL.md`' },
+        },
+      ],
+    },
+    // A no-break space and a plain space in a row in a plugin skill folder become two hyphens.
+    {
+      code: bare,
+      filename: put('hyphmix/skills/a\u{a0} b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a--b', others: '`skills/a--b/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphmix/skills/a--b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a--b', others: '`skills/a<U+00A0> b/SKILL.md`' },
         },
       ],
     },

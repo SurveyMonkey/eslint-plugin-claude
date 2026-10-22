@@ -36,7 +36,8 @@ describe('firstFault', () => {
 })
 
 // The docs say that the refused characters of a plugin skill folder become hyphens. `hyphenate`
-// changes each one to one hyphen. Other characters stay.
+// changes each one to one hyphen. It also changes a plain space next to another blank. Other
+// characters stay.
 describe('hyphenate', () => {
   it.each([
     ['deploy', 'deploy'],
@@ -53,10 +54,16 @@ describe('hyphenate', () => {
     [' a', '-a'],
     ['a ', 'a-'],
     ['a b', 'a b'],
-    // The docs refuse two spaces in a row, so each space of the run becomes a hyphen.
+    // The docs refuse a blank other than one plain space between words. The rule reads this as:
+    // each space of a run of blanks becomes a hyphen.
     ['a  b', 'a--b'],
     ['a   b', 'a---b'],
     ['a  ', 'a--'],
+    ['  a', '--a'],
+    ['a\u{A0} b', 'a--b'],
+    ['a \u{A0}b', 'a--b'],
+    // A space next to an angle bracket is one plain space, so it stays.
+    ['a< b', 'a- b'],
     // The docs do not name a dot, so it stays.
     ['a.b', 'a.b'],
   ])('gives %j as %j', (text, loaded) => {
