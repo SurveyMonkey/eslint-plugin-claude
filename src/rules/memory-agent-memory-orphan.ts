@@ -7,7 +7,7 @@
 // A subagent file with no usable frontmatter has no name, and does not own a folder.
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { classifyAgentFile } from '../agent-files.ts'
+import { agentFileOf } from '../agent-files.ts'
 import { docsUrl } from '../docs-url.ts'
 import { gitTop } from '../memory-imports.ts'
 import { frontmatterOfFile, markdownFiles, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
@@ -57,7 +57,13 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'orphan' 
         const scan = markdownFiles(top, repositoryRoot(top))
         let unreadable = scan.unreadable || scan.outside
         for (const file of scan.files) {
-          if (classifyAgentFile(file) === null) {
+          const found = agentFileOf(file)
+          if (found === null) {
+            continue
+          }
+          // The check cannot tell if the file is an agent, so the file can own the folder.
+          if (found === UNREADABLE) {
+            unreadable = true
             continue
           }
           const fields = frontmatterOfFile(file)

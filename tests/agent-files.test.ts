@@ -1,11 +1,17 @@
 // Where a subagent file or an output style file sits decides what it is. A
 // plugin root is found by its manifest, on disk. A root that the check cannot
-// see gives null, and the walk does not go on to an `agents/` directory above it.
+// see gives null, or `UNREADABLE` from `agentFileOf`, and the walk does not go on to an `agents/` directory above it.
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { classifyAgentFile, classifyLinted, classifyOutputStyle } from '../src/agent-files.ts'
+import {
+  agentFileOf,
+  classifyAgentFile,
+  classifyLinted,
+  classifyOutputStyle,
+} from '../src/agent-files.ts'
+import { UNREADABLE } from '../src/skill-tree.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'agent-files-'))
@@ -100,6 +106,7 @@ describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
     withoutAccess(plugin('p2'), () => {
       expect(classifyAgentFile(at('p2', 'agents', 'a.md'))).toBeNull()
       expect(classifyOutputStyle(at('p2', 'output-styles', 's.md'))).toBeNull()
+      expect(agentFileOf(at('p2', 'agents', 'a.md'))).toBe(UNREADABLE)
     })
   })
 
@@ -195,6 +202,8 @@ describe('the manifest key agents', () => {
       const root = manifested(`m7-${index}`, { agents })
       expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toBeNull()
       expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
+      expect(agentFileOf(path.join(root, 'agents', 'a.md'))).toBe(UNREADABLE)
+      expect(agentFileOf(path.join(root, 'custom', 'a.md'))).toBe(UNREADABLE)
     }
     const text = manifested('m8', '{')
     expect(classifyAgentFile(path.join(text, 'agents', 'a.md'))).toBeNull()

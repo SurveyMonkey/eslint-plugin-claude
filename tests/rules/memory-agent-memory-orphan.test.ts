@@ -99,6 +99,29 @@ describe(`${RULE}: the option allow`, () => {
 })
 
 describe(`${RULE}: what the rule cannot read`, () => {
+  // A plugin manifest that does not say which files load can name any file as an agent.
+  it('makes no report when a plugin manifest does not say which files load', () => {
+    for (const manifest of ['{', '{"agents":5}', '{"agents":["./custom/a.md",5]}']) {
+      const files = { 'plugins/p/.claude-plugin/plugin.json': manifest }
+      expect(lint({ ...files, 'plugins/p/agents/x.md': agent('rev') }), manifest).toEqual([])
+      expect(lint({ ...files, 'plugins/p/notes.md': agent('other') }), manifest).toEqual([])
+    }
+  })
+
+  // The check cannot model the plugin of an entry with a key that replaces a default location.
+  it('makes no report when a marketplace entry replaces a default location', () => {
+    const listed = (entry: object) => ({
+      '.claude-plugin/marketplace.json': JSON.stringify({ name: 'm', plugins: [entry] }),
+      'p/notes.md': agent('other'),
+    })
+    expect(ids(lint(listed({ name: 'p', source: './p' })))).toEqual(['orphan'])
+    expect(lint(listed({ name: 'p', source: './p', themes: './t' }))).toEqual([])
+    const named = {
+      ...listed({ name: 'p', source: './p', themes: './t' }),
+      'p/agents/x.md': agent('rev'),
+    }
+    expect(lint(named)).toEqual([])
+  })
   it.skipIf(chmodCannotBlock)('makes no report when a subagent file has no read right', () => {
     const dir = tree({ '.claude/agents/other.md': agent('other') })
     withoutAccess(path.join(dir, '.claude/agents/other.md'), () => {
