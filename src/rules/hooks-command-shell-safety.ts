@@ -50,8 +50,10 @@ function quoteEnd(text: string, start: number): number {
 }
 
 /** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A
- *  parenthesis in quotes, after a backslash or in a comment does not count. Each parenthesis level and
- *  each backtick substitution has its own count of open `${` expansions, as in `src/shell-words.ts`. */
+ *  parenthesis in quotes, after a backslash or in a comment does not count. In a `${...}` expansion,
+ *  only a parenthesis that starts a command or process substitution counts. Each parenthesis level
+ *  and each backtick substitution has its own count of open `${` expansions, as in
+ *  `src/shell-words.ts`. */
 function closingParen(text: string, open: number): number {
   let depth = 0
   // The open `${` expansions at this level, the counts of the outer levels, and if a backtick
