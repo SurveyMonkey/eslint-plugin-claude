@@ -161,33 +161,33 @@ function serverOf(tool: string): string | undefined {
   return outside ? undefined : rest
 }
 
-/** True when the rest `rest` of a tool name, after `mcp__`, matches a name of `forms`. A tool
- *  name and a wildcard match by prefix. Claude Code reads `mcp__reports__v2` as a rule for the
- *  server `reports`. In an allow rule, a bare name matches when it has no `__`. It must not end
- *  in `_`. In a deny or ask rule, `mcp__reports__v2` and `mcp__reports`
- *  also cover each tool of the server `reports__v2`. */
+/** True when the part `rest` of a tool name after `mcp__` matches a name of `forms`. A tool name
+ *  and a wildcard match by prefix. Claude Code reads `mcp__reports__v2` as a rule for the server
+ *  `reports`. So in an allow rule, a bare name matches only when it has no `__` and does not end
+ *  in `_`. In a deny or ask rule, a bare name covers each server whose name and `__` start with
+ *  that name and `__`: `mcp__reports` covers `reports__v2`, and `mcp__foo` covers `foo_`. */
 function matches(rest: string, forms: Set<string>, allowRule: boolean): boolean {
   return [...forms].some((form) =>
     allowRule
       ? rest.startsWith(`${form}${MCP_SEPARATOR}`) ||
         (rest === form && !form.includes(MCP_SEPARATOR) && !form.endsWith('_'))
-      : rest === form ||
-        rest.startsWith(`${form}${MCP_SEPARATOR}`) ||
-        form.startsWith(`${rest}${MCP_SEPARATOR}`),
+      : rest.startsWith(`${form}${MCP_SEPARATOR}`) ||
+        `${form}${MCP_SEPARATOR}`.startsWith(`${rest}${MCP_SEPARATOR}`),
   )
 }
 
-/** The tool name to write in place of `mcp__<rest>`, or undefined when the rule knows none. It
- *  gives the server part with `_` for each character outside `A-Za-z0-9_-`. Else it gives the
- *  wildcard form of a declared name that is that server part, or starts with it and `__`. */
+/** The tool name to write in place of `mcp__<rest>`, or undefined when the rule knows none. The
+ *  fixed name has `_` for each character outside `A-Za-z0-9_-` in the server part. The hint is
+ *  the fixed name when it matches. Else it is the wildcard form of a declared name that starts
+ *  with the fixed name and `__`. */
 function hintOf(rest: string, forms: Set<string>, allowRule: boolean): string | undefined {
   const server = rest.split(MCP_SEPARATOR, 1)[0] as string
   const fixed = `${sanitizeName(server)}${rest.slice(server.length)}`
-  if (fixed !== rest && matches(fixed, forms, allowRule)) {
+  if (matches(fixed, forms, allowRule)) {
     return `${MCP_PREFIX}${fixed}`
   }
-  const whole = [...forms].find(
-    (form) => form === fixed || form.startsWith(`${fixed}${MCP_SEPARATOR}`),
+  const whole = [...forms].find((form) =>
+    `${form}${MCP_SEPARATOR}`.startsWith(`${fixed}${MCP_SEPARATOR}`),
   )
   return whole === undefined ? undefined : `${MCP_PREFIX}${whole}${MCP_SEPARATOR}*`
 }

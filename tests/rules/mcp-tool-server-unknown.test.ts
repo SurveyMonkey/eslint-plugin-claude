@@ -106,7 +106,9 @@ it('reports the bare form and a prefix of a name with __ in an allow rule, with 
     ],
     ['hint', expect.stringContaining('Write "mcp__reports__v2__*"')],
   ])
-  expect(ids(skill('mcp__reports__v2', files))).toEqual(['hint'])
+  expect(skill('mcp__reports__v2', files).map((m) => m.message)).toEqual([
+    expect.stringContaining('Write "mcp__reports__v2__*"'),
+  ])
   expect(ids(settings(allow('mcp__reports__v2__*', 'mcp__reports__v2__t'), files))).toEqual([])
 })
 // The live permissions page, "MCP" (newer than the stored snapshot): "As a deny or ask rule,
@@ -125,14 +127,39 @@ it('stays silent for the bare form and a prefix of a name with __ in a deny or a
   // The near miss: a tool of the server `reports` is no tool of `reports__v2`.
   const near = JSON.stringify({ permissions: { ask: ['mcp__reports__x'], deny: ['mcp__rep'] } })
   expect(ids(settings(near, files))).toEqual(['unknown', 'unknown'])
+  // The near miss: `mcp__db` is a rule for the server `db`, and no prefix of `db_x` at a `__`.
+  const db = JSON.stringify({ permissions: { deny: ['mcp__db'] } })
+  expect(ids(settings(db, { '.mcp.json': servers('db_x') }))).toEqual(['unknown'])
 })
 // The permissions page, "MCP": the same holds for a `<server>` that ends in `_`.
 it('reports the bare form of a name that ends in _ in an allow rule only', () => {
   const files = { '.mcp.json': servers('foo_') }
   const found = settings(allow('mcp__foo_', 'mcp__foo___*'), files)
   expect(found.map((m) => m.message)).toEqual([expect.stringContaining('Write "mcp__foo___*"')])
-  const deny = JSON.stringify({ permissions: { deny: ['mcp__foo_'] } })
+  const deny = JSON.stringify({
+    permissions: { deny: ['mcp__foo_', 'mcp__foo'], ask: ['mcp__foo'] },
+  })
   expect(ids(settings(deny, files))).toEqual([])
+  expect(ids(lintDisallowed('mcp__foo', files))).toEqual([])
+  // The shorter `mcp__foo` is a rule for the server `foo`, as `mcp__reports` is for `reports`.
+  expect(settings(allow('mcp__foo'), files).map((m) => m.message)).toEqual([
+    expect.stringContaining('Write "mcp__foo___*"'),
+  ])
+})
+// The permissions page, "MCP": a `.` becomes `_`, and a name with `__` takes the wildcard form.
+it('gives a hint that matches in the list of the rule', () => {
+  const dotted = { '.mcp.json': servers('a.b__v2', 'my.reports__v2', 'foo.') }
+  const found = settings(
+    JSON.stringify({
+      permissions: { allow: ['mcp__a.b__v2', 'mcp__my.reports'], deny: ['mcp__foo.'] },
+    }),
+    dotted,
+  )
+  expect(found.map((m) => m.message)).toEqual([
+    expect.stringContaining('Write "mcp__a_b__v2__*"'),
+    expect.stringContaining('Write "mcp__my_reports__v2__*"'),
+    expect.stringContaining('Write "mcp__foo_"'),
+  ])
 })
 it('reports a name that only starts with a declared name, after names it skips', () => {
   const files = { '.mcp.json': servers('db') }
