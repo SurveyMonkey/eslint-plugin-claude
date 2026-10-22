@@ -58,8 +58,8 @@ export function escapeName(text: string): string {
 
 /** `text` with each character that `CLASSES` and `kindAt` refuse as one `-`. The docs say that
  *  these characters become hyphens in the command name of a plugin skill folder. The docs refuse
- *  two spaces in a row, so each space of a run becomes a hyphen. `kindAt` refuses only the
- *  spaces before the last one, so this function also changes a space after a space. The
+ *  two spaces in a row, so each space of a run becomes a hyphen. Between two words, `kindAt`
+ *  takes the last space of a run, so this function also changes a space after a space. The
  *  function does not join a run of hyphens. A character outside `CLASSES` stays. */
 export function hyphenate(text: string): string {
   const chars = [...text]
