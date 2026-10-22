@@ -41,8 +41,8 @@ function shownPath(relative: string): string {
  *  load such a skill or command, and `skill-name-characters` reports it. The rule compares
  *  no such name. The check is for each part alone: a space at the edge of one part is a
  *  fault. A plugin skill folder is the exception. Claude Code loads it with hyphens in place
- *  of the refused characters, and `skill-name-characters` does not report it. `skillName`
- *  gives such a folder its name with hyphens. */
+ *  of the refused characters, and `skill-name-characters` does not report it. When such a
+ *  folder has no loaded `name`, `skillName` gives it its name with hyphens. */
 function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
@@ -168,7 +168,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             : refused(file.names)
               ? null
               : file.names.join(':')
-        // Claude Code loads no project skill or command with a refused name. It has no name to share.
+        // Claude Code loads no project skill or command with a refused folder or file name. It has
+        // no name to share.
         if (own === null) {
           return
         }
