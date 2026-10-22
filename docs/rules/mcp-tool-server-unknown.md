@@ -26,21 +26,32 @@ The rule is `off` in `recommended`. It is a heuristic.
 
 ## Rule details
 
-An MCP rule uses the server name as configured: `mcp__puppeteer`, `mcp__puppeteer__*` and
+An MCP rule names a server as its tool names do: `mcp__puppeteer`, `mcp__puppeteer__*` and
 `mcp__puppeteer__puppeteer_navigate`.[^mcp] A rule for a server that does not exist matches no tool.
 
 The rule reads the permission rules of the two project settings files, and the `allowed-tools` and
-`disallowed-tools` of skills and commands. It takes the server from the part after `mcp__` and
-before the next `__`. What it compares with depends on where the file is:
+`disallowed-tools` of skills and commands. A rule matches a declared server when the part after
+`mcp__` is the server name and `__`, and then a tool name or `*`. What it compares with depends on
+where the file is:
 
 - A project file or a skill or command in `.claude/`: the servers of the `.mcp.json` in the
   directory that holds `.claude/`, and the inline servers of the agent files in `.claude/agents/`.
-  A name also matches when its characters outside `A-Za-z0-9_-` are `_`.
 - A skill or command of a plugin: the scoped name `mcp__plugin_<plugin>_<server>`, with the servers
   that the plugin declares in its `.mcp.json`, in the `.json` files that `mcpServers` names and
   inline.[^plugin] The plugin needs a string manifest `name`.
 
-The message names the tool and the server, and says where the rule looked. The report is on the
+A character outside `A-Za-z0-9_-` in a server name becomes `_` in its tool names. So for the
+server `my.server`, the rule is `mcp__my_server__*`, and `mcp__my.server__*` matches no tool.[^mcp]
+The rule reports the name as written, in each list.
+
+Claude Code reads the bare name `mcp__reports__v2` as a rule for the server `reports`. In an allow
+rule, the bare name of a server matches only when the name has no `__` and does not end in `_`. So
+for the server `reports__v2`, the rule reports `mcp__reports__v2` and `mcp__reports` in an allow
+rule.[^mcp] In a deny or ask rule, each of the two covers every tool of `reports__v2`, so the rule
+makes no report.[^mcp]
+
+The message names the tool and the server, and says where the rule looked. When the rule knows a
+form that matches, the message gives it: `mcp__my_server__*`, or `mcp__reports__v2__*`. The report is on the
 entry. Of two members with one name, the last one counts, as `JSON.parse` keeps it.
 
 The rule rests on an absence, so it makes no report when it cannot read a source (ADR 001,
