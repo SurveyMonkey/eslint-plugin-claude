@@ -109,7 +109,7 @@ describe(`${name}: the variables`, () => {
     ])
   })
 
-  it('reads a flag cluster with c, and a shell behind a wrapper', () => {
+  it('reads a flag cluster with c, and a shell behind a wrapper but not behind a script', () => {
     expect(ids({ type: 'command', command: 'bash', args: ['-ce', 'echo $HOME'] })).toEqual([])
     expect(ids({ type: 'command', command: 'env', args: ['bash', '-c', 'echo $HOME'] })).toEqual([])
     expect(

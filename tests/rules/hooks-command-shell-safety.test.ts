@@ -138,10 +138,13 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it('starts a new word after each comment line', () => {
     expect(script("#!/bin/bash\n# it's a hook\ncat $TARGET\n")).toEqual(['unquoted'])
     expect(script('#!/bin/bash\n# a hook\nrm -rf $TARGET\n')).toEqual(['destructive'])
-    expect(script('#!/bin/bash\n/usr/bin/env rm -rf $TARGET\n')).toEqual(['destructive'])
     expect(script('#!/bin/bash\n# uses $FILE\ncat x\n')).toEqual([])
     expect(script('# c\nX=$Y\n')).toEqual([])
     expect(script('# c\n# $X\n')).toEqual([])
+  })
+
+  it('reads past an absolute path to a wrapper', () => {
+    expect(script('#!/bin/bash\n/usr/bin/env rm -rf $TARGET\n')).toEqual(['destructive'])
   })
 
   it('skips a quote in a comment inside a command substitution', () => {

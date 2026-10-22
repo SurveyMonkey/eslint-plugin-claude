@@ -169,7 +169,7 @@ describe(`${name}: exec form`, () => {
     expect(shell('env -i claude --enable-auto-mode')).toEqual([])
   })
 
-  it('reads past a wrapper given by a path, in exec form and in shell form', () => {
+  it('reads past an absolute path to a wrapper, and not past another path', () => {
     expect(exec('/usr/bin/env', ['FOO=1', 'claude', 'remote-control', '--sandbox'])).toEqual([
       'removedFromSubcommand',
     ])
