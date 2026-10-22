@@ -23,11 +23,12 @@ const REFERENCE = new RegExp(`\\$\\{(?:${VARIABLES})\\}|\\$(?:${VARIABLES})(?![A
 
 /** The first reference in `line` that sits outside quotes, or undefined. Each reference becomes two
  *  marks with a backslash and a space between them. Private-use characters delimit each mark, so a
- *  quoted text such as "0 0" cannot look like one. Out of quotes, the reader drops the backslash. In
- *  quotes, it keeps it. A `${...}` expansion does not change this, so a reference in the value of an
- *  unquoted expansion is out of quotes too. bash splits that value at a space. A reference in a
- *  comment is in no word. A line with a command substitution is not read, because quotes nest inside
- *  it. */
+ *  quoted text such as "0 0" cannot look like one.
+ *
+ *  Out of quotes, the reader drops the backslash. In quotes, it keeps it. A `${...}` expansion does
+ *  not change this, so a reference in the value of an unquoted expansion is out of quotes too. bash
+ *  splits that value at a space. A reference in a comment is in no word. The function does not read
+ *  a line with a command substitution, because quotes nest inside it. */
 function unquotedReference(line: string): string | undefined {
   if (line.includes('$(') || line.includes('`')) {
     return undefined
