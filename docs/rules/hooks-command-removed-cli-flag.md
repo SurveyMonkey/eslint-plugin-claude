@@ -51,7 +51,7 @@ two forms of a command.
   expand a variable or a glob, and it does not read a command inside a string.
 
 In each form, the rule also skips an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`.
-The path can end in `.exe`. A relative path, or a path that starts with a variable, is a script of the hook.
+The path can end in `.exe`. A relative path, or a path that starts with `~` or a variable, is a script of the hook.
 The rule does not skip it. The rule does not skip an option of `env`, such as `-i`.
 
 The rule does not know which global flags take a value. It finds the subcommand as a word `remote-control` before

@@ -30,7 +30,8 @@ docs say to write the hook script in PowerShell and to add `shell: powershell` t
 
 The rule reports a shell-form `command` with a simple command whose command word ends in `.ps1`. It skips the
 words `exec`, `env`, `command` and `nohup`, and a variable assignment, before the command word. It also skips
-an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`. A command such as
+an absolute path to `env`, `command` or `nohup`, such as `/usr/bin/env`. The path can end in `.exe`. A
+relative path, or a path that starts with `~` or a variable, is the command word. A command such as
 `pwsh -File ./a.ps1` has `pwsh` as its command word, so it gets no report. It reports once for each handler, at
 the `command` string.
 
