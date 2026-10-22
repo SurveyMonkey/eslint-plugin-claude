@@ -57,6 +57,9 @@ describe('commandWordAt', () => {
     // Git for Windows installs `env.exe` and `nohup.exe` in `usr\bin`.
     expect(commandWordAt(['C:\\Program Files\\Git\\usr\\bin\\env.exe', 'claude'])).toBe(1)
     expect(commandWordAt(['c:/Program Files/Git/usr/bin/nohup.EXE', 'claude'])).toBe(1)
+    // A UNC path starts with two backslashes. One backslash does not start a UNC path.
+    expect(commandWordAt(['\\\\server\\tools\\env.exe', 'claude'])).toBe(1)
+    expect(commandWordAt(['\\env', 'claude'])).toBe(0)
     expect(commandWordAt(['/usr/bin/env'])).toBe(1)
     expect(commandWordAt(['env', 'claude'])).toBe(1)
   })

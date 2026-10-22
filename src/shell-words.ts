@@ -253,15 +253,17 @@ export const commandsOf = (line: string): string[][] => scanCommands(line).map((
 const baseName = (word: string) =>
   word.slice(Math.max(word.lastIndexOf('/'), word.lastIndexOf('\\')) + 1)
 
-/** The wrappers that are also programs on disk. `exec` is a shell builtin only, so no path names it. */
+/** The wrappers that are also programs on disk. `exec` is a shell builtin only, so a path to `exec`
+ *  names a script. */
 const PROGRAM_WRAPPERS = ['env', 'command', 'nohup']
 
 /** True when `word` is a wrapper: its name, or an absolute path to a program wrapper, as in
- *  `/usr/bin/env` or `C:\Program Files\Git\usr\bin\env.exe`. A relative path, or a path that starts
- *  with a variable, names a script of the hook, so it is not a wrapper. */
+ *  `/usr/bin/env`, `C:\Program Files\Git\usr\bin\env.exe` or `\\server\tools\env.exe`. A relative
+ *  path, or a path that starts with `~` or a variable, names a script of the hook, so it is not a
+ *  wrapper. */
 const isWrapper = (word: string) =>
   WRAPPERS.includes(word) ||
-  (/^(?:\/|[A-Za-z]:[\\/])/.test(word) &&
+  (/^(?:\/|\\\\|[A-Za-z]:[\\/])/.test(word) &&
     PROGRAM_WRAPPERS.includes(baseName(word).replace(/\.exe$/i, '')))
 
 /** The index of the command word in the words of a simple command. A variable assignment and a
