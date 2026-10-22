@@ -3,8 +3,9 @@
 // page says that `Bash(*)` is the same as `Bash`, and a bare `PowerShell` or
 // `PowerShell(*)` matches every command. It also says that `mcp__<server>` and
 // `mcp__<server>__*` match every tool of the server.
-import { pluginSkill } from '../plugin-fixture.test-support.ts'
-import { markdownTester, ruleOf } from '../rule-tester.test-support.ts'
+import { describe, expect, it } from 'vitest'
+import { pluginCommand, pluginSkill } from '../plugin-fixture.test-support.ts'
+import { lintMarkdown, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
 
 const skill = '.claude/skills/s/SKILL.md'
 const file = (fields: string, filename = skill) => ({
@@ -34,6 +35,8 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
     file('allowed-tools: Bash(\n'),
     file('allowed-tools: 3\n'),
     file('allowed-tools: Bash\n', 'docs/SKILL.md'),
+    // A scoped grant in a plugin skill stays silent.
+    file('allowed-tools: Bash(git *)\n', pluginSkill()),
     { code: '# No frontmatter\n', filename: skill },
     file('allowed-tools: [unclosed\n'),
     // The option `allow` names the rules that the team accepts.
@@ -83,7 +86,19 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
       ...file('allowed-tools:\n  - Bash\n  - Read\n', '.claude/commands/c.md'),
       errors: [{ messageId: 'broad', line: 3 }],
     },
-    { ...file('allowed-tools: [Write]\n', pluginSkill()), errors: [{ messageId: 'broad' }] },
+    // A plugin skill has no project trust to skip, so its message has no trust clause.
+    {
+      ...file('allowed-tools: [Write]\n', pluginSkill()),
+      errors: [{ messageId: 'broadPlugin', data: { rule: 'Write' } }],
+    },
+    {
+      ...file('allowed-tools: Bash\n', pluginSkill()),
+      errors: [{ messageId: 'broadPlugin', data: { rule: 'Bash' } }],
+    },
+    {
+      ...file('allowed-tools: mcp__github__*\n', pluginCommand()),
+      errors: [{ messageId: 'broadPlugin', data: { rule: 'mcp__github__*' } }],
+    },
     // The option names exact rules.
     {
       ...file('allowed-tools: Bash Write\n'),
@@ -96,4 +111,22 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
       errors: [{ messageId: 'broad', data: { rule: 'Bash(*)' } }],
     },
   ],
+})
+
+describe('the message', () => {
+  const text = (filename: string) =>
+    lintMarkdown('skill-allowed-tools-broad', file('allowed-tools: Bash\n').code, filename)[0]
+      ?.message
+
+  it('says that a project skill needs no workspace trust', () => {
+    expect(text(skill)).toBe(
+      '`Bash` grants every use of a tool or of an MCP server, and Claude Code applies it with no workspace trust. Scope the rule to the commands or paths that the skill needs.',
+    )
+  })
+
+  it('leaves the clause out for a plugin skill', () => {
+    expect(text(pluginSkill())).toBe(
+      '`Bash` grants every use of a tool or of an MCP server. Scope the rule to the commands or paths that the skill needs.',
+    )
+  })
 })

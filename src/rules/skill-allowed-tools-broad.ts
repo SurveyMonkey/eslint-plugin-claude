@@ -1,6 +1,7 @@
-// `allowed-tools` in a skill grants a tool with no workspace trust. A bare
-// `Bash`, or a rule for a whole MCP server, grants every use of it
-// (docs/rules/skill-allowed-tools-broad.md).
+// `allowed-tools` in a skill grants a tool. A bare `Bash`, or a rule for a whole MCP
+// server, grants every use of it (docs/rules/skill-allowed-tools-broad.md). The message of a
+// project skill adds that the grant needs no workspace trust. The docs say this of a project
+// skill only, so the message of a plugin skill does not.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { MCP_PREFIX } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -39,59 +40,67 @@ function isBroad({ tool, specifier }: ParsedRule): boolean {
     : specifier === '*' && STAR_BROAD.includes(tool)
 }
 
-const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'broad' }> = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'Do not give a skill an unscoped tool grant in allowed-tools',
-      url: docsUrl(name),
-    },
-    schema: [
-      {
-        type: 'object',
-        properties: {
-          allow: {
-            description:
-              'Rules to accept, as each one is in allowed-tools, such as Bash or mcp__github__*.',
-            type: 'array',
-            items: { type: 'string' },
-            uniqueItems: true,
+const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'broad' | 'broadPlugin' }> =
+  {
+    meta: {
+      type: 'problem',
+      docs: {
+        description: 'Do not give a skill an unscoped tool grant in allowed-tools',
+        url: docsUrl(name),
+      },
+      schema: [
+        {
+          type: 'object',
+          properties: {
+            allow: {
+              description:
+                'Rules to accept, as each one is in allowed-tools, such as Bash or mcp__github__*.',
+              type: 'array',
+              items: { type: 'string' },
+              uniqueItems: true,
+            },
           },
+          additionalProperties: false,
         },
-        additionalProperties: false,
+      ],
+      defaultOptions: [{ allow: [] }],
+      messages: {
+        broad:
+          '`{{rule}}` grants every use of a tool or of an MCP server, and Claude Code applies it with no workspace trust. Scope the rule to the commands or paths that the skill needs.',
+        broadPlugin:
+          '`{{rule}}` grants every use of a tool or of an MCP server. Scope the rule to the commands or paths that the skill needs.',
       },
-    ],
-    defaultOptions: [{ allow: [] }],
-    messages: {
-      broad:
-        '`{{rule}}` grants every use of a tool or of an MCP server, and Claude Code applies it with no workspace trust. Scope the rule to the commands or paths that the skill needs.',
     },
-  },
-  create(context) {
-    if (classifySkillFile(context.filename) === null) {
-      return {}
-    }
-    const [{ allow }] = context.options
-    return {
-      yaml(node) {
-        const fm = readFrontmatter(context.sourceCode, node)
-        if (fm === null) {
-          return
-        }
-        for (const { list, loc, result } of skillEntries(fm, node.value)) {
-          if (list !== 'allow' || !result.ok || !isBroad(result)) {
-            continue
+    create(context) {
+      const file = classifySkillFile(context.filename)
+      if (file === null) {
+        return {}
+      }
+      const [{ allow }] = context.options
+      return {
+        yaml(node) {
+          const fm = readFrontmatter(context.sourceCode, node)
+          if (fm === null) {
+            return
           }
-          const text =
-            result.specifier === null ? result.tool : `${result.tool}(${result.specifier})`
-          if (!allow.includes(text)) {
-            context.report({ loc, messageId: 'broad', data: { rule: text } })
+          for (const { list, loc, result } of skillEntries(fm, node.value)) {
+            if (list !== 'allow' || !result.ok || !isBroad(result)) {
+              continue
+            }
+            const text =
+              result.specifier === null ? result.tool : `${result.tool}(${result.specifier})`
+            if (!allow.includes(text)) {
+              context.report({
+                loc,
+                messageId: file.plugin ? 'broadPlugin' : 'broad',
+                data: { rule: text },
+              })
+            }
           }
-        }
-      },
-    }
-  },
-}
+        },
+      }
+    },
+  }
 
 export const target = {
   name,
