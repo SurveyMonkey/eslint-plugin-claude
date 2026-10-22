@@ -4,7 +4,7 @@
 // (https://code.claude.com/docs/en/settings-reference#variables-claude-code-ignores-in-env),
 // and the server-managed settings page
 // (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
-// checked on Claude Code 2.1.296 on 2026-10-11. Review these lists on or before 2027-04-08,
+// checked on Claude Code 2.1.307 on 2026-10-21. Review these lists on or before 2027-04-08,
 // the `stale_after` date of docs/rules/settings-env-credential.md.
 
 // The first Claude Code version that reads a variable. Source: the sentence "Requires Claude Code
@@ -223,9 +223,16 @@ const FORMS = new Map<string, EnvForm>([
   [
     'CLAUDE_CODE_AUTO_COMPACT_WINDOW',
     {
-      expected: 'a plain integer from 100000 to 1000000',
-      accepts: (value) =>
-        PLAIN_DIGITS.test(value) && Number(value) >= 100000 && Number(value) <= 1000000,
+      expected: 'plain digits, with an optional k or M suffix, from 100000 to 1000000 tokens',
+      // The suffix k means 1000 times the number and M means 1000000 times, in any letter case. The env vars row
+      // says "Suffixed values such as 200k require v2.1.304 or later". The rule has no version
+      // option, so it accepts the suffix.
+      accepts: (value) => {
+        if (!/^\d+[kKmM]?$/.test(value)) return false
+        const factor = /k$/i.test(value) ? 1000 : /m$/i.test(value) ? 1000000 : 1
+        const tokens = Number(value.replace(/[kKmM]$/, '')) * factor
+        return tokens >= 100000 && tokens <= 1000000
+      },
     },
   ],
   [

@@ -123,7 +123,8 @@ describe(`${name}: silent cases`, () => {
 
 describe(`${name}: the forms of settings-env-value-format`, () => {
   it('leaves a variable whose form rejects the value to settings-env-value-format', () => {
-    // This variable takes plain digits only, so settings-env-value-format reports the spelling.
+    // The form of this variable takes digits with an optional k or M suffix, so
+    // settings-env-value-format reports the spelling.
     // The variables that need a later client are in the last describe of this file.
     for (const [variable, value] of [['CLAUDE_CODE_AUTO_COMPACT_WINDOW', '5e5']] as const) {
       expect(ids(env({ [variable]: value })), variable).toEqual([])
