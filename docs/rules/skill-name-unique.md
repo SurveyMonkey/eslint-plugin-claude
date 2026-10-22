@@ -51,17 +51,20 @@ skill:[^fold]
 The rule does not compare a folder or command name that Claude Code refuses. Claude Code does
 not load such a skill or command, and [`skill-name-characters`](skill-name-characters.md) reports
 it. A command `deploy<U+00A0>.md` and a command `deploy.md` give no report, in either file. The
-same is true for a command name that has a refused part. It is also true for a skill that has a
-refused folder name, with or without a loaded `name`.
+same is true for a command name that has a refused part. It is also true for a project skill that
+has a refused folder name, with or without a loaded `name`.
 
 A skill name is the `name` field, or the folder name when the field is not a loaded name. The docs
 say that Claude Code ignores a refused `name`. The rule reads this as: the skill goes by its
 folder name. So the rule compares that folder name.
 
-A folder in the `skills/` directory of a plugin is an exception. Claude Code loads it, with hyphens
-in place of the refused characters, and `skill-name-characters` does not report it. A plugin skill
-with a loaded `name` has that name. The rule does not compare the name of such a folder that has
-no loaded `name`.
+A folder in the `skills/` directory of a plugin is an exception. Claude Code loads it, and the
+refused characters become hyphens in the command name.[^characters] `skill-name-characters` does not
+report it. A plugin skill with a loaded `name` has that name. Without a loaded `name`, the rule
+compares the folder name with one hyphen in place of each refused character. The rule puts in the
+hyphens before it removes the differences above. A plugin folder `a<b` and a plugin folder `a-b`
+give a report in each file. The rule changes only the characters that the docs name. The docs give
+no other mapping, so a plugin folder `a.b` and a plugin folder `a-b` give no report.
 
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
@@ -135,3 +138,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^resolve]: [Extend Claude with skills: Resolve skills that share a name](https://code.claude.com/docs/en/skills#resolve-skills-that-share-a-name)
 [^name]: [Extend Claude with skills: How a skill gets its command name](https://code.claude.com/docs/en/skills#how-a-skill-gets-its-command-name)
 [^fold]: [Extend Claude with skills: When a synced skill name matches another command](https://code.claude.com/docs/en/skills#when-a-synced-skill-name-matches-another-command)
+[^characters]: [Extend Claude with skills: Characters a skill name can't hold](https://code.claude.com/docs/en/skills#characters-a-skill-name-cant-hold)
