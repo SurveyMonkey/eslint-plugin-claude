@@ -262,6 +262,24 @@ describe('a directory that a marketplace lists with no manifest', () => {
     expect(isPluginRoot(repo('in', 'p'))).toBe(true)
   })
 
+  it('is unseen when an inner marketplace has the replacing entry, and an outer one lists the directory', () => {
+    mkdirSync(repo('in', 'p'), { recursive: true })
+    market('in', [{ name: 'c', source: './p', commands: ['./x.md'] }])
+    market('.', [{ name: 'p', source: './in/p' }])
+    expect(isPluginRoot(repo('in', 'p'))).toBe(UNREADABLE)
+  })
+
+  it.skipIf(process.platform === 'win32')(
+    'is unseen when an inner marketplace lists the directory, and the check cannot see an outer one',
+    () => {
+      mkdirSync(repo('in', 'p'), { recursive: true })
+      market('in', [{ name: 'p', source: './p' }])
+      mkdirSync(repo('.claude-plugin'))
+      symlinkSync('missing.json', repo('.claude-plugin', 'marketplace.json'))
+      expect(isPluginRoot(repo('in', 'p'))).toBe(UNREADABLE)
+    },
+  )
+
   it('is unseen when the marketplace is JSON that is too deep to read', () => {
     put(repo('.claude-plugin', 'marketplace.json'), `${'['.repeat(200_000)}${']'.repeat(200_000)}`)
     mkdirSync(repo('p'))
