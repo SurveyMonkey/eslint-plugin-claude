@@ -33,10 +33,14 @@ inside the plugin directory.[^loading]
 The `mcpServers` key of `plugin.json` takes a path to a `.json` file, a path or URL of an MCP
 bundle, an inline map, or an array that mixes them.[^manifest] The rule reports each string item
 that ends in `.mcpb` or `.dxt`. The report is on that string. The rule reads the end of the
-whole string, as `claude plugin validate` does (Claude Code 2.1.304). So
+string, as `claude plugin validate` does (Claude Code 2.1.307). So
 `https://x.test/dl?f=db.mcpb` and `https://x.test/dl#db.mcpb` are bundles. `db.mcpb?x=1` and
-`https://x.test/dl?f=db.json` are not. Validate drops the trailing spaces of a URL, and so does the
-rule. The extension match is in lower case.
+`https://x.test/dl?f=db.json` are not. The extension match is in lower case.
+
+Validate removes the white space at the two ends of a string that then parses as a URL, and so
+does the rule. A drive letter, such as `D:`, parses as a URL scheme. So `D:/db.mcpb` with a
+trailing tab, and `https://x.test/db.mcpb` with a leading space, are bundles. A path with no
+scheme keeps its white space, so `./db.mcpb ` and `/opt/db.mcpb ` are not bundles.
 
 The rule makes no report for a `.json` path inside the plugin, for an inline map, or for a value
 that is not a string. When a file has two `mcpServers` keys, the rule reads the last, as

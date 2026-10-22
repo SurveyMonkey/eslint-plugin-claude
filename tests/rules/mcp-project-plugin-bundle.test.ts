@@ -13,6 +13,12 @@ const rule = ruleOf('mcp-project-plugin-bundle')
 
 const manifest = '.claude/skills/p/.claude-plugin/plugin.json'
 const plugin = (mcpServers: unknown) => JSON.stringify({ name: 'p', mcpServers })
+/** The string `text` as JSON, with each character out of printable ASCII as a `\u` escape. */
+const shown = (text: string) =>
+  JSON.stringify(text).replaceAll(
+    /[^\x20-\x7e]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`,
+  )
 
 jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
   valid: [
@@ -60,26 +66,31 @@ jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
       code: plugin('https://x.test/dl?f=db.json'),
       filename: manifest,
     },
-    // Validate 2.1.304 fails a URL that ends in a tab, a line break or a no-break space.
-    // It drops only spaces.
+    // Each case below gives "must end with .json" in `claude plugin validate` 2.1.307, so it is
+    // no bundle. The rule reads a URL as no file.
     {
-      name: 'a bundle URL with a trailing tab',
-      code: plugin('https://x.test/db.mcpb\t'),
+      name: 'validate 2.1.307, no bundle: an upper case extension in a URL, with a trailing space',
+      code: plugin('https://x.test/db.MCPB '),
       filename: manifest,
     },
     {
-      name: 'a bundle URL with a trailing line break',
-      code: plugin('https://x.test/db.mcpb\n'),
+      name: 'validate 2.1.307, no bundle: a fragment after the extension, with a trailing space',
+      code: plugin('https://x.test/db.mcpb#top '),
       filename: manifest,
     },
     {
-      name: 'a bundle URL with a trailing no-break space',
-      code: plugin('https://x.test/db.mcpb '),
+      name: 'validate 2.1.307, no bundle: a json URL with a trailing tab',
+      code: plugin('https://x.test/db.json\t'),
       filename: manifest,
     },
     {
-      name: 'a bundle URL with a leading space and a trailing space',
-      code: plugin(' https://x.test/db.mcpb '),
+      name: 'validate 2.1.307, no bundle: a URL that does not parse, with a trailing space',
+      code: plugin('https://exa mple.test/db.mcpb '),
+      filename: manifest,
+    },
+    {
+      name: 'validate 2.1.307, no bundle: a scheme that starts with a digit',
+      code: plugin('1a:/db.mcpb '),
       filename: manifest,
     },
     // A path that leaves the plugin directory fails `claude plugin validate`.
@@ -163,6 +174,41 @@ jsonTester.run('mcp-project-plugin-bundle (invalid)', rule, {
       filename: manifest,
       errors: [{ messageId: 'skipped', data: { bundle: 'ftp://x.test/db.dxt ' } }],
     },
+    // Validate 2.1.307 removes the white space at the two ends of a string that parses as a URL.
+    // A drive letter is a scheme of one letter. Validate passes each of these strings as a bundle.
+    ...[
+      'D:/db.mcpb ',
+      'D:/db.mcpb\t',
+      'D:/db.mcpb\n',
+      'D:/db.mcpb\r\n',
+      'D:/db.mcpb\u00a0',
+      'D:/db.mcpb\u2003',
+      'D:/db.mcpb\ufeff',
+      'D:\\db.mcpb ',
+      'D:db.dxt\n',
+      '\t D:/db.mcpb',
+      'https://x.test/db.mcpb\t',
+      'https://x.test/db.mcpb\n',
+      'https://x.test/db.mcpb\r\n',
+      'https://x.test/db.mcpb\u00a0',
+      ' https://x.test/db.mcpb ',
+      'ab:/db.mcpb ',
+    ].map((bundle) => ({
+      name: `validate 2.1.307, a bundle: ${shown(bundle)}`,
+      code: plugin(bundle),
+      filename: manifest,
+      errors: [{ messageId: 'skipped' as const, data: { bundle } }],
+    })),
+    // Validate 2.1.307 gives "must end with .json" for each of these strings, so it is no bundle.
+    // Each one is an absolute path out of the plugin. A zero width space is no white space.
+    ...['D:/db.mcpb?x=1', 'D:/db.MCPB ', 'D:/db.json ', 'D:/db.mcpb\u200b', '/abs/db.mcpb '].map(
+      (path) => ({
+        name: `validate 2.1.307, no bundle: ${shown(path)}`,
+        code: plugin(path),
+        filename: manifest,
+        errors: [{ messageId: 'outside' as const, data: { path } }],
+      }),
+    ),
     {
       name: 'a bundle extension at the end of the query of a path',
       code: plugin('./dl?f=a.mcpb'),
