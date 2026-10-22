@@ -143,6 +143,10 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(script('# c\n# $X\n')).toEqual([])
   })
 
+  it('reads past an absolute path to a wrapper', () => {
+    expect(script('#!/bin/bash\n/usr/bin/env rm -rf $TARGET\n')).toEqual(['destructive'])
+  })
+
   it('skips a quote in a comment inside a command substitution', () => {
     // A quote in a comment does not hide the end of the substitution, or the report below it.
     expect(script("x=$(date # it's\n)\ncat $FILE\n")).toEqual(['unquoted'])

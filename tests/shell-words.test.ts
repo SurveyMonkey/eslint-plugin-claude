@@ -50,6 +50,45 @@ describe('commandWordAt', () => {
     expect(commandWordAt(['A=1', 'exec', 'env', 'B=2', 'command', 'nohup', 'claude', 'x'])).toBe(6)
   })
 
+  it('reads past an absolute path to a wrapper, and keeps the plain words', () => {
+    expect(commandWordAt(['/usr/bin/env', 'claude'])).toBe(1)
+    expect(commandWordAt(['/bin/env', 'FOO=1', 'claude'])).toBe(2)
+    expect(commandWordAt(['/usr/bin/nohup', '/usr/bin/command', 'claude'])).toBe(2)
+    // Git for Windows installs `env.exe` and `nohup.exe` in `usr\bin`.
+    expect(commandWordAt(['C:\\Program Files\\Git\\usr\\bin\\env.exe', 'claude'])).toBe(1)
+    expect(commandWordAt(['c:/Program Files/Git/usr/bin/nohup.EXE', 'claude'])).toBe(1)
+    // A UNC path starts with two backslashes. One backslash does not start a UNC path.
+    expect(commandWordAt(['\\\\server\\tools\\env.exe', 'claude'])).toBe(1)
+    expect(commandWordAt(['\\env', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/env'])).toBe(1)
+    expect(commandWordAt(['env', 'claude'])).toBe(1)
+  })
+
+  it('does not read a path that is not a wrapper', () => {
+    expect(commandWordAt(['/usr/bin/envx', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/xenv', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/env/', 'claude'])).toBe(0)
+    expect(commandWordAt(['C:\\bin\\env\\', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/env.exe.sh', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/.exeenv', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/envxexe', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/ENV', 'claude'])).toBe(0)
+  })
+
+  it('does not read a script of the hook that has the name of a wrapper, or a path to exec', () => {
+    // bash runs the file of the hook, and never the wrapper. No `exec` program exists.
+    for (const word of ['./exec', './scripts/env', 'scripts/nohup', '~/bin/env', '/bin/exec']) {
+      expect(commandWordAt([word, 'claude']), word).toBe(0)
+    }
+    expect(commandWordAt(['$CLAUDE_PLUGIN_ROOT/hooks/env', 'claude'])).toBe(0)
+    expect(commandWordAt(['$HOME/bin/command', 'claude'])).toBe(0)
+    // A drive letter with no separator after it starts a relative path on Windows.
+    expect(commandWordAt(['C:tools\\env', 'claude'])).toBe(0)
+    // A relative path can hold a drive letter after its start.
+    expect(commandWordAt(['./c:/env', 'claude'])).toBe(0)
+  })
+
   it('gives the length when only assignments and wrappers are left', () => {
     expect(commandWordAt(['A=1', 'exec'])).toBe(2)
     expect(commandWordAt([])).toBe(0)

@@ -41,6 +41,7 @@ describe(`${name}: the report`, () => {
       `$CLAUDE_PROJECT_DIR/hooks/b.sh`,
       `${P}/hooks/b.sh --fix`,
       `exec ${P}/hooks/b.sh`,
+      `/usr/bin/env FOO=1 ${P}/hooks/b.sh`,
       `echo x && ${P}/hooks/b.sh`,
     ]) {
       expect(run(line), line).toEqual(['shebang'])
@@ -57,6 +58,10 @@ describe(`${name}: the report`, () => {
     expect(ids({ 'hooks/b.sh': BAD }, { command: `${P}/hooks/b.sh`, args: [5, null] })).toEqual([
       'shebang',
     ])
+  })
+
+  it('reads a script that has the name of a wrapper', () => {
+    expect(run(`${P}/hooks/env`, { 'hooks/env': BAD })).toEqual(['shebang'])
   })
 
   it('reports each script of a line', () => {
