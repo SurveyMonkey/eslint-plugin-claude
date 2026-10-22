@@ -240,6 +240,22 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
     { code: fork('ghost'), filename: path.join(project, '.claude', 'agents', 'reviewer.md') },
   ],
   invalid: [
+    // A direction control or a zero-width space in the agent name shows as its code point.
+    {
+      code: fork('a\u202Eb'),
+      filename: projectSkill,
+      errors: [{ messageId: 'project', data: { agent: 'a<U+202E>b' } }],
+    },
+    {
+      code: fork('a\u200Bb'),
+      filename: projectSkill,
+      errors: [{ messageId: 'project', data: { agent: 'a<U+200B>b' } }],
+    },
+    {
+      code: fork('p:a\u202Eb'),
+      filename: pluginSkill,
+      errors: [{ messageId: 'plugin', data: { agent: 'p:a<U+202E>b' } }],
+    },
     {
       code: fork('ghost'),
       filename: projectSkill,

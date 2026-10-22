@@ -7,6 +7,7 @@ import { docsUrl } from '../docs-url.ts'
 import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName } from '../skill-names.ts'
 import { readManifest, repositoryRoot, scopeRoot, UNREADABLE } from '../skill-tree.ts'
 
 const name = 'skill-plugin-name-prefix' as const
@@ -66,7 +67,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'doubled'
           context.report({
             loc: fm.at(field.valueStart, field.valueEnd),
             messageId: 'doubled',
-            data: { name: given, plugin },
+            data: { name: escapeName(given), plugin: escapeName(plugin) },
           })
         }
       },

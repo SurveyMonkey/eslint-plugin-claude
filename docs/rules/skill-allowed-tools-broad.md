@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-allowed-tools-broad, which reports an unscoped grant in the allowed-tools of a skill or command file, such as a bare Bash, Write or Edit, or a rule for a whole MCP server, because Claude Code applies it with no workspace trust.
+description: The ESLint rule claude/skill-allowed-tools-broad, which reports an unscoped grant in the allowed-tools of a skill or command file, such as a bare Bash, Write or Edit, or a rule for a whole MCP server. A project skill grant needs no workspace trust.
 owner: brianespinosa
 created: 2026-10-02
 related_issues: [9, 15]
@@ -28,6 +28,7 @@ The `allowed-tools` field of a skill grants the tools that it lists. Claude Code
 invokes the skill.[^preapprove]
 Workspace trust does not gate the field. Claude Code applies the `allowed-tools` of a project skill even in a `-p` run in a
 folder that you never trusted.[^preapprove] A skill in a repository can grant itself broad access in this way.
+The docs state this for a project skill only. The message for a plugin skill or command therefore has no trust clause.
 
 The rule reports an entry of `allowed-tools` that grants every use of a tool:
 

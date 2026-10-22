@@ -24,6 +24,11 @@ put('numeric/.claude-plugin/plugin.json', '{"name": 5}')
 put('blank/.claude-plugin/plugin.json', '{"name": ""}')
 put('spaces/.claude-plugin/plugin.json', '{"name": "  "}')
 put('nul/.claude-plugin/plugin.json', '{"name": null}')
+// Plugins whose name holds a character that a message must escape.
+put('bidi/.claude-plugin/plugin.json', '{"name": "p\\u202Eq"}')
+put('zero/.claude-plugin/plugin.json', '{"name": "z\\u200Bw"}')
+const bidiSkill = put('bidi/skills/s/SKILL.md', '')
+const zeroSkill = put('zero/skills/s/SKILL.md', '')
 const skill = put('plug/skills/s/SKILL.md', '')
 const rootSkill = put('plug/SKILL.md', '')
 const bareSkill = put('bare/skills/s/SKILL.md', '')
@@ -92,6 +97,19 @@ markdownTester.run('skill-plugin-name-prefix', ruleOf('skill-plugin-name-prefix'
     { code: named('my-plugin:fancy'), filename: decoy, options: BEFORE_FIX },
   ],
   invalid: [
+    // A direction control or a zero-width space shows in the message as its code point.
+    {
+      code: named('p\u202Eq:x'),
+      filename: bidiSkill,
+      options: BEFORE_FIX,
+      errors: [error({ data: { name: 'p<U+202E>q:x', plugin: 'p<U+202E>q' } })],
+    },
+    {
+      code: named('z\u200Bw:x'),
+      filename: zeroSkill,
+      options: BEFORE_FIX,
+      errors: [error({ data: { name: 'z<U+200B>w:x', plugin: 'z<U+200B>w' } })],
+    },
     {
       code: named('my-plugin:fancy'),
       filename: skill,

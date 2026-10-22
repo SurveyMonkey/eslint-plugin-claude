@@ -6,6 +6,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile, type SkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName } from '../skill-names.ts'
 import { realDirectory, repositoryRoot, scopeRoot } from '../skill-tree.ts'
 
 const name = 'skill-precedence-shadowing' as const
@@ -83,7 +84,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'shadowed
               messageId: 'shadowed',
               data: {
                 scope: scopeName,
-                name: hit,
+                name: escapeName(hit),
                 kind: file.kind === 'skill' ? 'skill' : 'command',
               },
             })

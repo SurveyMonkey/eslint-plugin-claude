@@ -6,6 +6,7 @@ import { BUILT_IN_AGENTS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
@@ -167,7 +168,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'project'
             // A key that is an alias has a value but no field.
             loc: field === undefined ? fm.at(0, 0) : fm.at(field.valueStart, field.valueEnd),
             messageId: plugin === null ? 'project' : 'plugin',
-            data: { agent },
+            data: { agent: escapeName(agent) },
           })
         }
       },
