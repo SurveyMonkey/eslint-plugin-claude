@@ -1,7 +1,7 @@
 // `allowed-tools` in a skill grants a tool. A bare `Bash`, or a rule for a whole MCP
 // server, grants every use of it (docs/rules/skill-allowed-tools-broad.md). The message of a
-// project skill adds that the grant needs no workspace trust. The docs say this of a project
-// skill only, so the message of a plugin skill does not.
+// project skill or command says that the grant needs no workspace trust. The docs say this of
+// a project skill only, so the message of a plugin skill or command does not.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { MCP_PREFIX } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'

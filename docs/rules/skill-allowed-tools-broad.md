@@ -28,7 +28,7 @@ The `allowed-tools` field of a skill grants the tools that it lists. Claude Code
 invokes the skill.[^preapprove]
 Workspace trust does not gate the field. Claude Code applies the `allowed-tools` of a project skill even in a `-p` run in a
 folder that you never trusted.[^preapprove] A skill in a repository can grant itself broad access in this way.
-The docs state this for a project skill only. So the message for a plugin skill or command has no trust clause.
+The docs state this for a project skill only. The message for a plugin skill or command therefore has no trust clause.
 
 The rule reports an entry of `allowed-tools` that grants every use of a tool:
 

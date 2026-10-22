@@ -86,7 +86,7 @@ markdownTester.run('skill-allowed-tools-broad', ruleOf('skill-allowed-tools-broa
       ...file('allowed-tools:\n  - Bash\n  - Read\n', '.claude/commands/c.md'),
       errors: [{ messageId: 'broad', line: 3 }],
     },
-    // A plugin skill has no project trust to skip, so its message has no trust clause.
+    // The docs state the no-trust fact for a project skill only. So a plugin message has no trust clause.
     {
       ...file('allowed-tools: [Write]\n', pluginSkill()),
       errors: [{ messageId: 'broadPlugin', data: { rule: 'Write' } }],

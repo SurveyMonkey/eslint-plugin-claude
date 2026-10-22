@@ -1,5 +1,5 @@
 // This module holds the name checks of the skill rules. It also holds the text that
-// shows a name in a message. Seven skill rules print a name with `escapeName`.
+// shows a name in a message. Each skill rule that prints a name uses `escapeName`.
 
 /** Each class of characters in the docs, with the text of the message.
  *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so this module counts it

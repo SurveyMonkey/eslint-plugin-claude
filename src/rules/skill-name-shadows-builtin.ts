@@ -80,6 +80,8 @@ const rule: MarkdownRuleDefinition<{
         const start = { line: 1, column: 1 }
         const ownLoc =
           named && given === own ? fm.at(field.valueStart, field.valueEnd) : { start, end: start }
+        // `ownerOf` accepts a built-in name only. So `escapeName` has no effect on `own` or
+        // `given` here. It guards the message. Only `folder` can hold a refused character.
         const messageId = ownerOf(own)
         if (messageId !== null) {
           context.report({ loc: ownLoc, messageId, data: { name: escapeName(own) } })

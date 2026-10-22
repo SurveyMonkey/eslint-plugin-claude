@@ -37,9 +37,10 @@ put('a/.claude/skills/off/SKILL.md', '---\ndisable-model-invocation: false\n---\
 put('a/.claude/skills/user-only/SKILL.md', '---\nuser-invocable: false\n---\n')
 put('a/.claude/skills/bad-yaml/SKILL.md', '---\ndisable-model-invocation: [true\n---\n')
 put('a/.claude/skills/plain/SKILL.md', 'Body\n')
-// Two skills with one name: the rule cannot tell which one runs, so it reports neither.
+// Skills whose names hold a direction control or a zero-width space.
 put('a/.claude/skills/odd-bidi/SKILL.md', manual.replace('description: d', 'name: x\u202Ey'))
 put('a/.claude/skills/odd-zero/SKILL.md', manual.replace('description: d', 'name: x\u200By'))
+// Two skills with one name: the rule cannot tell which one runs, so it reports neither.
 put('a/.claude/skills/dup/SKILL.md', manual)
 put('a/.claude/skills/other/SKILL.md', '---\nname: dup\n---\n')
 // A skill wins over a command file of the same name.
