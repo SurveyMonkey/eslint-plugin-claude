@@ -62,6 +62,17 @@ describe('agent-descriptions-budget', () => {
     expect(run(A, 'plugins/r/custom/a.md', listed)).toHaveLength(1)
   })
 
+  it('counts the agents/ folder of a listed plugin root with no manifest', () => {
+    const files = {
+      '.claude-plugin/marketplace.json': JSON.stringify({
+        name: 'm',
+        plugins: [{ name: 'l', source: './plugins/l' }],
+      }),
+      'plugins/l/agents/b.md': agent('b', 30000),
+    }
+    expect(run(A, 'plugins/l/agents/a.md', files)).toHaveLength(1)
+  })
+
   it('counts the agents of a subfolder', () => {
     expect(run(A, LOCAL, sibling(30000, '.claude/agents/team/deep/b.md'))).toHaveLength(1)
   })

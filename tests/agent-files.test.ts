@@ -33,10 +33,10 @@ describe('a plugin root that the check can see', () => {
     expect(classifyOutputStyle(at('p', 'other', 's.md'))).toBeNull()
   })
 
-  it('gives plugin for a dangling manifest link', () => {
+  it('gives null for a dangling manifest link, which the check cannot read', () => {
     mkdirSync(at('dangling', '.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', at('dangling', '.claude-plugin', 'plugin.json'))
-    expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toMatchObject({ plugin: true })
+    expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toBeNull()
   })
 })
 
@@ -190,18 +190,28 @@ describe('the manifest key agents', () => {
     expect(classifyAgentFile(path.join(path.dirname(root), 'outside', 'a.md'))).toBeNull()
   })
 
-  it('keeps agents/ for a manifest that is no list of paths, and sees no other file', () => {
+  it('sees no file for a manifest that is no list of paths', () => {
     for (const [index, agents] of [5, { a: 1 }, ['./custom/a.md', 5], true].entries()) {
       const root = manifested(`m7-${index}`, { agents })
-      expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toEqual({ plugin: true, root })
+      expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toBeNull()
       expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
     }
     const text = manifested('m8', '{')
-    expect(classifyAgentFile(path.join(text, 'agents', 'a.md'))).toEqual({
-      plugin: true,
-      root: text,
-    })
+    expect(classifyAgentFile(path.join(text, 'agents', 'a.md'))).toBeNull()
     expect(classifyAgentFile(path.join(text, 'custom', 'a.md'))).toBeNull()
+  })
+
+  it('keeps agents/ for a listed root with no manifest', () => {
+    mkdirSync(at('m8b', '.git'), { recursive: true })
+    mkdirSync(at('m8b', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m8b', '.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ name: 'm', plugins: [{ name: 'p', source: './p' }] }),
+    )
+    const root = at('m8b', 'p')
+    mkdirSync(path.join(root, 'agents'), { recursive: true })
+    expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toEqual({ plugin: true, root })
+    expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
   })
 
   it('uses the plugin root nearest to the file', () => {

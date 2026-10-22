@@ -70,7 +70,8 @@ export function hasManifest(dir: string): boolean | Unreadable {
  *  of these keys, and the check gives `UNREADABLE` for its directory.
  *  A `skills` key adds to the default in a manifest. It replaces the default
  *  in an entry whose source is the marketplace root. The check does not tell
- *  the two apart, so `skills` is here for each entry.
+ *  the two apart, so `skills` is here for each entry. The top-level `themes`
+ *  and `monitors` keys replace the folders `themes/` and `monitors/`.
  *  (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location,
  *  https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json) */
 const REPLACES: readonly string[] = [
@@ -80,6 +81,8 @@ const REPLACES: readonly string[] = [
   'outputStyles',
   'workflows',
   'experimental',
+  'themes',
+  'monitors',
 ]
 
 /** What the check knows of one `marketplace.json`. `stamp` is the time of the
@@ -183,10 +186,11 @@ function listedAt(file: string, bound: string): Listing | null | Unreadable {
  *  marketplace of `dir` only. The manifest reference says that "The manifest
  *  is optional", and that Claude Code then loads the standard layout.
  *
- *  When no marketplace lists `dir` as a plain root, the result is
- *  `UNREADABLE` in three cases. The check cannot see a marketplace of the
- *  walk. Or an entry has the path `dir`, and the check cannot see its source.
- *  Or the source of an entry with a key of `REPLACES` is `dir`. */
+ *  The result is `UNREADABLE` in three cases, also when a marketplace lists
+ *  `dir` as a plain root. The check cannot see a marketplace of the walk. Or
+ *  an entry has the path `dir`, and the check cannot see its source. Or the
+ *  source of an entry with a key of `REPLACES` is `dir`, in any marketplace of
+ *  the walk. So the walk ends before the result is true. */
 function isListed(dir: string): boolean | Unreadable {
   const real = realOf(dir)
   if (typeof real !== 'string') {
@@ -194,21 +198,20 @@ function isListed(dir: string): boolean | Unreadable {
   }
   const at = path.resolve(dir)
   const bound = repositoryRoot(dir)
+  let listed = false
   let unseen = false
   for (let up = at; ; up = path.dirname(up)) {
     const listing = listedAt(path.join(up, '.claude-plugin', 'marketplace.json'), bound)
     if (listing === UNREADABLE) {
       unseen = true
     } else if (listing !== null) {
-      if (listing.roots.has(real)) {
-        return true
-      }
+      listed ||= listing.roots.has(real)
       unseen ||=
         listing.replaced.has(real) || listing.unseen.some((entry) => listing.pathOf(entry) === at)
     }
     // `repositoryRoot` is the real path of `dir` or of a directory above it, so the walk ends.
     if (realDirectory(up) === bound) {
-      return unseen ? UNREADABLE : false
+      return unseen ? UNREADABLE : listed
     }
   }
 }

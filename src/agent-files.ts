@@ -63,7 +63,8 @@ function directoriesUp(file: string): string[] {
 
 /** The agent files that the manifest key `agents` of the plugin root `root`
  *  names, as absolute paths. The result is null when the manifest has no
- *  `agents` key, and the `agents/` directory then holds the agents. The result
+ *  `agents` key, or when no `plugin.json` is there, as in a root that a
+ *  marketplace lists. The `agents/` directory then holds the agents. The result
  *  is `UNREADABLE` when the check cannot tell which files load: the manifest
  *  cannot be read, or `agents` is neither a path nor a list of paths. A path
  *  loads only when it starts with `./`, ends in `.md`, and stays in the plugin
@@ -72,10 +73,10 @@ function directoriesUp(file: string): string[] {
  *  The check drops each of them. */
 export function manifestAgents(root: string, bound: string): string[] | null | Unreadable {
   const manifest = readManifest(root, bound)
-  if (manifest === UNREADABLE || manifest === null) {
+  if (manifest === UNREADABLE) {
     return UNREADABLE
   }
-  if (!('agents' in manifest)) {
+  if (manifest === null || !('agents' in manifest)) {
     return null
   }
   const entries: unknown[] = Array.isArray(manifest.agents) ? manifest.agents : [manifest.agents]
@@ -116,13 +117,16 @@ export function agentFileState(
 }
 
 /** Gives `found` when the manifest of the plugin root `found.root` loads `file`. The `agents/`
- *  directory holds the agents when the manifest has no `agents` key, or when the check cannot
- *  read it. When the key names files, only those files are agents, so the result is null for
- *  `file` unless it is one of them. */
+ *  directory holds the agents when the manifest has no `agents` key. When the key names files,
+ *  only those files are agents, so the result is null for `file` unless it is one of them. The
+ *  result is null also when the check cannot read the key. */
 function loadedBy(found: AgentFile, file: string, inFolder: boolean): AgentFile | null {
   const bound = repositoryRoot(found.root)
   const listed = manifestAgents(found.root, bound)
-  if (!Array.isArray(listed)) {
+  if (listed === UNREADABLE) {
+    return null
+  }
+  if (listed === null) {
     return inFolder ? found : null
   }
   if (!listed.includes(file)) {

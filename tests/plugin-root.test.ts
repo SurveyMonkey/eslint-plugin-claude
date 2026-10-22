@@ -226,9 +226,11 @@ describe('a directory that a marketplace lists with no manifest', () => {
       { name: 'o', source: './o', outputStyles: './styles/' },
       { name: 'w', source: './w', workflows: './flows/' },
       { name: 'e', source: './e', experimental: { themes: './themes/' } },
+      { name: 't', source: './t', themes: './themes/' },
+      { name: 'n', source: './n', monitors: './monitors.json' },
       { name: 'm', source: './m', mcpServers: { x: { command: 'x' } } },
     ])
-    const replaced = ['c', 'a', 's', 'o', 'w', 'e']
+    const replaced = ['c', 'a', 's', 'o', 'w', 'e', 't', 'n']
     for (const dir of [...replaced, 'm', 'q']) {
       mkdirSync(repo(dir))
     }
@@ -241,13 +243,23 @@ describe('a directory that a marketplace lists with no manifest', () => {
     expect(isPluginRoot(repo('q'))).toBe(false)
   })
 
-  it('is a plugin root when a second entry lists the directory with no such key', () => {
-    market('.', [
-      { name: 'c', source: './p', commands: ['./x.md'] },
-      { name: 'p', source: './p' },
-    ])
+  it('is unseen when a second entry names the directory with a key that replaces a default', () => {
+    const plain = { name: 'p', source: './p' }
+    const replacing = { name: 'c', source: './p', commands: ['./x.md'] }
     mkdirSync(repo('p'))
-    expect(isPluginRoot(repo('p'))).toBe(true)
+    market('.', [replacing, plain])
+    expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
+    market('.', [plain, replacing])
+    expect(isPluginRoot(repo('p'))).toBe(UNREADABLE)
+  })
+
+  it('is unseen when an outer marketplace has the replacing entry of a directory that an inner one lists', () => {
+    mkdirSync(repo('in', 'p'), { recursive: true })
+    market('in', [{ name: 'p', source: './p' }])
+    market('.', [{ name: 'c', source: './in/p', commands: ['./x.md'] }])
+    expect(isPluginRoot(repo('in', 'p'))).toBe(UNREADABLE)
+    market('.', [{ name: 'c', source: './in/p' }])
+    expect(isPluginRoot(repo('in', 'p'))).toBe(true)
   })
 
   it('is unseen when the marketplace is JSON that is too deep to read', () => {
