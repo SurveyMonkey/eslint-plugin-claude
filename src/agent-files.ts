@@ -62,15 +62,17 @@ function directoriesUp(file: string): string[] {
 }
 
 /** The agent files that the manifest key `agents` of the plugin root `root`
- *  names, as absolute paths. The result is null when the manifest has no
- *  `agents` key, or when no `plugin.json` is there, as in a root that a
- *  marketplace lists. The `agents/` directory then holds the agents. The result
- *  is `UNREADABLE` when the check cannot tell which files load: the manifest
- *  cannot be read, or `agents` is neither a path nor a list of paths. A path
- *  loads only when it starts with `./`, ends in `.md`, and stays in the plugin
- *  root. The manifest reference says that a path outside the root, or a path that
- *  does not exist, does not load, and that a path without `./` fails validation.
- *  The check drops each of them. */
+ *  names, as absolute paths. The result is null in two cases. The manifest has
+ *  no `agents` key. Or no `plugin.json` is there, as in a root that a
+ *  marketplace lists. `isPluginRoot` gives `UNREADABLE` for an entry with a
+ *  key of `REPLACES`, so such an entry names no agent here. The `agents/`
+ *  directory then holds the agents. The result is `UNREADABLE` when the check
+ *  cannot tell which files load: the manifest cannot be read, or `agents` is
+ *  neither a path nor a list of paths. A path loads only when it starts with
+ *  `./`, ends in `.md`, and stays in the plugin root. The manifest reference
+ *  says that a path outside the root, or a path that does not exist, does not
+ *  load, and that a path without `./` fails validation. The check drops each
+ *  of them. */
 export function manifestAgents(root: string, bound: string): string[] | null | Unreadable {
   const manifest = readManifest(root, bound)
   if (manifest === UNREADABLE) {

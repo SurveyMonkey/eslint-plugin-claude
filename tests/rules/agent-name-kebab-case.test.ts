@@ -77,8 +77,9 @@ describe('agent-name-kebab-case', () => {
     })
   })
 
-  // A marketplace entry with no `plugin.json` is the manifest. The check cannot model the
-  // plugin of an entry whose key replaces a default location, so no report rests on its files.
+  // With no `plugin.json`, the entry is the manifest. The check cannot model the plugin of an
+  // entry with a key that replaces a default location. So no report rests on its files. This is
+  // true for any entry of the directory.
   describe('for a plugin that a marketplace lists', () => {
     const bad = '---\nname: My_Agent\ndescription: d\n---\n\nBody.\n'
     const listed = (...plugins: object[]) => ({
@@ -103,5 +104,16 @@ describe('agent-name-kebab-case', () => {
       expect(lintListed(listed(plain, replacing), 'p')).toEqual([])
       expect(lintListed(listed(replacing, plain), 'p')).toEqual([])
     })
+  })
+
+  // A manifest that does not say which files load can name other files than `agents/`.
+  it('stays silent when the plugin manifest does not say which files load', () => {
+    const bad = '---\nname: My_Agent\ndescription: d\n---\n\nBody.\n'
+    const at = (manifest: string) =>
+      path.join(repo({ 'p/.claude-plugin/plugin.json': manifest }), 'p', 'agents', 'a.md')
+    expect(lintAgent('agent-name-kebab-case', bad, at('{}'))).toHaveLength(1)
+    for (const manifest of ['{', '{"agents":5}', '{"agents":["./custom/a.md",5]}']) {
+      expect(lintAgent('agent-name-kebab-case', bad, at(manifest)), manifest).toEqual([])
+    }
   })
 })

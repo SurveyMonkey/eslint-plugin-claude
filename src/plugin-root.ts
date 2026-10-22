@@ -70,10 +70,13 @@ export function hasManifest(dir: string): boolean | Unreadable {
  *  of these keys, and the check gives `UNREADABLE` for its directory.
  *  A `skills` key adds to the default in a manifest. It replaces the default
  *  in an entry whose source is the marketplace root. The check does not tell
- *  the two apart, so `skills` is here for each entry. The top-level `themes`
- *  and `monitors` keys replace the folders `themes/` and `monitors/`.
+ *  the two apart, so `skills` is here for each entry. The keys
+ *  `experimental.themes` and `experimental.monitors` replace the folders
+ *  `themes/` and `monitors/`. The top-level `themes` and `monitors` keys still
+ *  load, so they are here too (Fields table, `experimental.themes`).
  *  (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location,
- *  https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json) */
+ *  https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json,
+ *  https://code.claude.com/docs/en/plugins/manifest-reference#fields) */
 const REPLACES: readonly string[] = [
   'commands',
   'agents',
@@ -186,11 +189,12 @@ function listedAt(file: string, bound: string): Listing | null | Unreadable {
  *  marketplace of `dir` only. The manifest reference says that "The manifest
  *  is optional", and that Claude Code then loads the standard layout.
  *
- *  The result is `UNREADABLE` in three cases, also when a marketplace lists
- *  `dir` as a plain root. The check cannot see a marketplace of the walk. Or
- *  an entry has the path `dir`, and the check cannot see its source. Or the
- *  source of an entry with a key of `REPLACES` is `dir`, in any marketplace of
- *  the walk. So the walk ends before the result is true. */
+ *  The result is `UNREADABLE` when one of three cases occurs in any
+ *  marketplace of the walk. The check cannot see the marketplace. Or an entry
+ *  has the path `dir`, and the check cannot see its source. Or the source of
+ *  an entry with a key of `REPLACES` is `dir`. A marketplace that lists `dir`
+ *  as a plain root does not change this. So the walk goes to the repository
+ *  root before the result can be true. */
 function isListed(dir: string): boolean | Unreadable {
   const real = realOf(dir)
   if (typeof real !== 'string') {
