@@ -47,7 +47,7 @@ jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
     { name: 'dxt without a dot', code: plugin('./dxt'), filename: manifest },
     { name: 'an extension in the middle', code: plugin('./a.mcpb.json'), filename: manifest },
     { name: 'an upper case extension', code: plugin('./a.MCPB'), filename: manifest },
-    // `claude plugin validate` 2.1.304 checks the end of the whole string. A query or fragment
+    // `claude plugin validate` 2.1.307 checks the end of the whole string. A query or fragment
     // after the extension makes the string no bundle.
     { name: 'a path with a query', code: plugin('./a.mcpb?x=1'), filename: manifest },
     { name: 'a path with a trailing space', code: plugin('./a.mcpb '), filename: manifest },

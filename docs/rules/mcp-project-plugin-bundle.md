@@ -37,10 +37,10 @@ string, as `claude plugin validate` does (Claude Code 2.1.307). So
 `https://x.test/dl?f=db.mcpb` and `https://x.test/dl#db.mcpb` are bundles. `db.mcpb?x=1` and
 `https://x.test/dl?f=db.json` are not. The extension match is in lower case.
 
-Validate removes the white space at the two ends of a string that then parses as a URL, and so
-does the rule. A drive letter, such as `D:`, parses as a URL scheme. So `D:/db.mcpb` with a
-trailing tab, and `https://x.test/db.mcpb` with a leading space, are bundles. A path with no
-scheme keeps its white space, so `./db.mcpb ` and `/opt/db.mcpb ` are not bundles.
+Validate removes the white space at the two ends of a string that then parses as a URL. The rule
+does the same. A drive letter, such as `D:`, parses as a URL scheme. So `D:/db.mcpb` and
+`https://x.test/db.mcpb` with a tab or a line break at the end are bundles. A path with no scheme
+keeps its white space, so `./db.mcpb ` and `/opt/db.mcpb ` are not bundles.
 
 The rule makes no report for a `.json` path inside the plugin, for an inline map, or for a value
 that is not a string. When a file has two `mcpServers` keys, the rule reads the last, as

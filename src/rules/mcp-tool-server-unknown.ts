@@ -1,9 +1,10 @@
 // A tool reference `mcp__<server>` that names a server which the repository does not declare
 // (docs/rules/mcp-tool-server-unknown.md). The permissions page says that an MCP rule names the
-// server as its tool names do: a character outside `A-Za-z0-9_-` becomes `_`. The rule reads the permission rules of the project settings files,
-// and the `allowed-tools` and `disallowed-tools` of skills and commands. A project file uses the
-// servers of the `.mcp.json` beside `.claude/` and the inline servers of the local agents. A file
-// of a plugin uses the scoped names of its own plugin (`mcp__plugin_<plugin>_<server>`), as the MCP
+// server as its tool names do, so a `.` or a space becomes `_`. The rule changes each character
+// outside `A-Za-z0-9_-`. It reads the permission rules of the project settings files, and the
+// `allowed-tools` and `disallowed-tools` of skills and commands. A project file uses the servers
+// of the `.mcp.json` beside `.claude/` and the inline servers of the local agents. A file of a
+// plugin uses the scoped names of its own plugin (`mcp__plugin_<plugin>_<server>`), as the MCP
 // page gives them. The rule rests on an absence, so it makes no report when a source cannot be
 // read. A user-scope server and a connector are not in the repository, so the rule is a
 // heuristic: it reports no connector name and no name of another plugin (ADR 001, Decision 14).

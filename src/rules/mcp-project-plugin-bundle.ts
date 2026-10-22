@@ -20,11 +20,12 @@ const name = 'mcp-project-plugin-bundle' as const
 // extension makes the string no bundle. A string that ends in the extension is a bundle, also when
 // the extension is in the query or fragment. The extension match is in lower case. Validate
 // removes the white space at the two ends of a string that parses as a URL. A scheme of one
-// letter, such as `D:`, also parses, so `D:/db.mcpb\t` and ` https://x.test/db.mcpb` are bundles.
+// letter, such as `D:`, also parses, so `D:/db.mcpb\t` and `https://x.test/db.mcpb\n` are bundles.
 // It keeps the white space of a path that does not parse, so `./db.mcpb ` is no bundle.
 const BUNDLE_EXTENSIONS = ['.mcpb', '.dxt']
 
-// A URL has a scheme and two slashes. A drive letter has one letter, and `pathFault` reads it first.
+// For the file check, a URL has a scheme and two slashes. The bundle check above uses
+// `URL.canParse`, which also takes a drive letter. Here `pathFault` reads a drive letter first.
 const URL_SCHEME = /^[A-Za-z][A-Za-z0-9+.-]*:\/\//
 
 const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }> = {
