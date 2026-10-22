@@ -134,8 +134,12 @@ it('stays silent for the bare form and a prefix of a name with __ in a deny or a
   // The near miss: `mcp__db` is a rule for the server `db`, and no prefix of `db_x` at a `__`.
   const db = JSON.stringify({ permissions: { deny: ['mcp__db'] } })
   expect(ids(settings(db, { '.mcp.json': servers('db_x') }))).toEqual(['unknown'])
+  // The near miss: a longer name is no tool of `db`, and no prefix of `db` at a `__`.
+  const longer = JSON.stringify({ permissions: { deny: ['mcp__db2__t', 'mcp__db_x'] } })
+  expect(ids(settings(longer, { '.mcp.json': servers('db') }))).toEqual(['unknown', 'unknown'])
 })
 // The permissions page, "MCP": the same holds for a `<server>` that ends in `_`.
+// Mid-round ruling 28 on #366: the deny and ask result of ruling 24 holds for it too.
 it('reports the bare form of a name that ends in _ in an allow rule only', () => {
   const files = { '.mcp.json': servers('foo_') }
   const found = settings(allow('mcp__foo_', 'mcp__foo___*'), files)
