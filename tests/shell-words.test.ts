@@ -50,6 +50,24 @@ describe('commandWordAt', () => {
     expect(commandWordAt(['A=1', 'exec', 'env', 'B=2', 'command', 'nohup', 'claude', 'x'])).toBe(6)
   })
 
+  it('reads past a wrapper given by a path, and keeps the plain words', () => {
+    expect(commandWordAt(['/usr/bin/env', 'claude'])).toBe(1)
+    expect(commandWordAt(['/bin/env', 'FOO=1', 'claude'])).toBe(2)
+    expect(commandWordAt(['C:\\Windows\\System32\\env', 'claude'])).toBe(1)
+    expect(commandWordAt(['./exec', '/usr/bin/nohup', 'claude'])).toBe(2)
+    expect(commandWordAt(['/usr/bin/env'])).toBe(1)
+    expect(commandWordAt(['env', 'claude'])).toBe(1)
+  })
+
+  it('does not read a path that is not a wrapper', () => {
+    expect(commandWordAt(['/usr/bin/envx', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/xenv', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/env/', 'claude'])).toBe(0)
+    expect(commandWordAt(['C:\\bin\\env\\', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/env.exe', 'claude'])).toBe(0)
+  })
+
   it('gives the length when only assignments and wrappers are left', () => {
     expect(commandWordAt(['A=1', 'exec'])).toBe(2)
     expect(commandWordAt([])).toBe(0)

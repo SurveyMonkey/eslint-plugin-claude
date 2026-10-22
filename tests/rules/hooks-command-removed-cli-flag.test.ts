@@ -169,6 +169,22 @@ describe(`${name}: exec form`, () => {
     expect(shell('env -i claude --enable-auto-mode')).toEqual([])
   })
 
+  it('reads past a wrapper given by a path, in exec form and in shell form', () => {
+    expect(exec('/usr/bin/env', ['FOO=1', 'claude', 'remote-control', '--sandbox'])).toEqual([
+      'removedFromSubcommand',
+    ])
+    expect(shell('/usr/bin/env FOO=1 claude remote-control --sandbox')).toEqual([
+      'removedFromSubcommand',
+    ])
+    expect(shell('/usr/bin/env FOO=1 claude --enable-auto-mode')).toEqual(['removed'])
+    expect(exec('C:\\Windows\\System32\\env', ['claude', '--enable-auto-mode'])).toEqual([
+      'removed',
+    ])
+    expect(shell('/usr/bin/envx claude --enable-auto-mode')).toEqual([])
+    expect(exec('/usr/bin/envx', ['claude', '--enable-auto-mode'])).toEqual([])
+    expect(exec('/usr/bin/env', ['FOO=1'])).toEqual([])
+  })
+
   it('reads a Windows path with backslashes to claude', () => {
     expect(exec('C:\\Tools\\claude.exe', ['--enable-auto-mode'])).toEqual(['removed'])
     expect(exec('C:\\Tools\\claude', ['--enable-auto-mode'])).toEqual(['removed'])

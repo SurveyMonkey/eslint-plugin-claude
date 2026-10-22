@@ -41,12 +41,13 @@ directories of the path, as in `C:\Tools\claude.exe`. In shell form, quote a pat
 two forms of a command.
 
 - **Exec form** (the handler sets `args`). `command` is the executable.[^exec] The rule skips the wrappers `exec`,
-  `env`, `command` and `nohup`, and the `NAME=value` items, as in shell form. So the `command` `env` with the
+  `env`, `command` and `nohup`, and the `NAME=value` items, as in shell form. A path that ends in a wrapper, such
+  as `/usr/bin/env`, counts as that wrapper. So the `command` `env` with the
   `args` `["FOO=1", "claude"]` runs `claude`. It reports an item of `args` after `claude` that is a removed flag. It
   reports at the item.
 - **Shell form** (no `args`). `command` is a shell line. The rule splits the line into simple commands at `;`, `&`,
   `|`, parentheses, backticks and new lines. It reads quotes and backslashes. It skips leading `NAME=value` words
-  and the wrappers `exec`, `env`, `command` and `nohup`. It reports at the string when the command word is `claude`
+  and the wrappers `exec`, `env`, `command` and `nohup`, or a path that ends in one. It reports at the string when the command word is `claude`
   and a later word is a removed flag. It gives one report for each removed flag in the string. The split does not
   expand a variable or a glob, and it does not read a command inside a string.
 

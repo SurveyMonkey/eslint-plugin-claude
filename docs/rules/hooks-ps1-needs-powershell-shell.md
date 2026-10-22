@@ -29,7 +29,8 @@ is not installed.[^fields] A PowerShell script is not a shell script, so it fail
 docs say to write the hook script in PowerShell and to add `shell: powershell` to the hook entry.[^subagents]
 
 The rule reports a shell-form `command` with a simple command whose command word ends in `.ps1`. It skips the
-words `exec`, `env`, `command` and `nohup`, and a variable assignment, before the command word. A command such as
+words `exec`, `env`, `command` and `nohup`, and a variable assignment, before the command word. A path that ends
+in one of these words, such as `/usr/bin/env`, counts too. A command such as
 `pwsh -File ./a.ps1` has `pwsh` as its command word, so it gets no report. It reports once for each handler, at
 the `command` string.
 

@@ -26,17 +26,19 @@ generated:
 
 A hook can start Claude Code, for example to start a cloud session. The CLI reference calls `--remote` a
 deprecated alias for `--cloud`.[^flags] The rule reports a `command` hook that runs `claude` with `--remote`
-or `--remote=value`. It reads exec form and shell form. In exec form, it does not skip a wrapper such as
-`env`, or a `NAME=value` item. [`hooks-command-removed-cli-flag`](hooks-command-removed-cli-flag.md) skips both.
+or `--remote=value`. It reads exec form and shell form.
 
 The rule does not report `--remote-control`, `--rc` or the `claude remote-control` command. These are other
 flags and commands.
 
 - **Exec form** (the handler sets `args`). The executable is `claude`, a path that ends in `claude`, or
-  `claude.exe`. A `/` or a `\` separates the directories of the path. The rule reports an item of `args` that is
-  the flag, at the item.
+  `claude.exe`. A `/` or a `\` separates the directories of the path. The rule skips the wrappers `exec`, `env`,
+  `command` and `nohup`, and the `NAME=value` items, to find the executable. A path that ends in a wrapper, such
+  as `/usr/bin/env`, counts as that wrapper. It reports an item of `args` after `claude` that is the flag, at the
+  item.
 - **Shell form** (no `args`). The rule splits the line into simple commands and reads quotes and backslashes.
   It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`.
+  A path that ends in a wrapper, such as `/usr/bin/env`, counts as that wrapper.
   It reports at the string. The command word must be `claude`, or a path that ends in it. A later word must be
   the flag.
 

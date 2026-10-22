@@ -107,11 +107,36 @@ describe(`${name}: exec form`, () => {
     expect(exec('claude', ['--remote', 'x', '--remote'])).toEqual(['remote', 'remote'])
     expect(exec('claude.EXE', ['--remote'])).toEqual(['remote'])
     expect(exec('claude_exe', ['--remote'])).toEqual([])
-    // Exec form does not skip a wrapper or an assignment (the rule doc says so).
-    expect(exec('env', ['FOO=1', 'claude', '--remote'])).toEqual([])
-    expect(exec('env', ['claude', '--remote'])).toEqual([])
     // An array `args` selects exec form, so the shell words of `command` are not read.
     expect(ids(command({ command: 'claude --remote x', args: [] }))).toEqual([])
+  })
+
+  it('reads past a wrapper and the assignments in exec form', () => {
+    expect(exec('env', ['claude', '--remote'])).toEqual(['remote'])
+    expect(exec('env', ['FOO=1', 'claude', '--remote'])).toEqual(['remote'])
+    expect(exec('nohup', ['claude', '--remote'])).toEqual(['remote'])
+    expect(exec('/usr/bin/env', ['FOO=1', 'claude', '--remote'])).toEqual(['remote'])
+    expect(exec('C:\\Windows\\System32\\env', ['/usr/bin/claude', '--remote=x'])).toEqual([
+      'remote',
+    ])
+    expect(exec('env', ['A=1', 'B=2', 'C:\\Tools\\claude.exe', '--remote'])).toEqual(['remote'])
+  })
+
+  it('reads past a wrapper given by a path in shell form', () => {
+    expect(shell('/usr/bin/env FOO=1 claude --remote')).toEqual(['remote'])
+    expect(shell('/usr/bin/env -i FOO=1 claude --remote')).toEqual([])
+    expect(shell('"C:\\Windows\\env" claude --remote')).toEqual(['remote'])
+  })
+
+  it('is silent in exec form for env with no claude, a non-string item, and env -i', () => {
+    expect(exec('env', [])).toEqual([])
+    expect(exec('env', ['FOO=1'])).toEqual([])
+    expect(exec('env', ['FOO=1', 'node', '--remote'])).toEqual([])
+    expect(exec('env', ['--remote', 'claude'])).toEqual([])
+    expect(exec('env', ['FOO=1', 5, 'claude', '--remote'])).toEqual([])
+    expect(exec('env', ['-i', 'claude', '--remote'])).toEqual([])
+    expect(exec('/usr/bin/envx', ['claude', '--remote'])).toEqual([])
+    expect(shell('/usr/bin/envx claude --remote')).toEqual([])
   })
 
   it('is silent for a command that holds only assignments or a wrapper', () => {

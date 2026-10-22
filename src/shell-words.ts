@@ -249,13 +249,18 @@ export function scanCommands(line: string): Command[] {
 /** The simple commands of a shell line, each as its words. */
 export const commandsOf = (line: string): string[][] => scanCommands(line).map(({ words }) => words)
 
+/** The part of `word` after its last `/` or `\`. It is empty when `word` ends in a separator. */
+const baseName = (word: string) =>
+  word.slice(Math.max(word.lastIndexOf('/'), word.lastIndexOf('\\')) + 1)
+
 /** The index of the command word in the words of a simple command. A variable assignment and a
- *  wrapper such as `exec` come before it. The index is the length of `words` when no word is left. */
+ *  wrapper such as `exec` come before it. A path that ends in a wrapper, such as `/usr/bin/env`,
+ *  counts as that wrapper. The index is the length of `words` when no word is left. */
 export function commandWordAt(words: string[]): number {
   let at = 0
   while (
     at < words.length &&
-    (isAssignment(words[at] as string) || WRAPPERS.includes(words[at] as string))
+    (isAssignment(words[at] as string) || WRAPPERS.includes(baseName(words[at] as string)))
   ) {
     at++
   }
@@ -266,8 +271,7 @@ export function commandWordAt(words: string[]): number {
  *  or a `\` separates the directories of the path, as in `C:\Tools\claude.exe`. The name must be lower case. The
  *  `.exe` can be in upper or lower case. */
 export function isClaude(word: string): boolean {
-  const name = word.slice(Math.max(word.lastIndexOf('/'), word.lastIndexOf('\\')) + 1)
-  return name.replace(/\.exe$/i, '') === 'claude'
+  return baseName(word).replace(/\.exe$/i, '') === 'claude'
 }
 
 /** The arguments of each simple command of `line` that runs `claude`, as lists of words. */

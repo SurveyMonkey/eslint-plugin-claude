@@ -98,6 +98,7 @@ describe(`${name}: the command`, () => {
       'exec ./a.ps1',
       'FOO=1 ./a.ps1 arg',
       'env ./a.ps1',
+      '/usr/bin/env FOO=1 ./a.ps1',
       'echo x && ./b.ps1',
       '.\\check.ps1',
     ]) {
