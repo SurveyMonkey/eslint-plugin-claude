@@ -78,7 +78,8 @@ run `pnpm docs:seed`, and then `pnpm docs:update`. Commit `docs/rule-sources.jso
 `node scripts/docs-watch.ts update`. It fetches the live docs and sets `hash` on each new source.
 It also rewrites the snapshot of each page that the map cites. So it takes in each docs change
 that nobody has triaged. The `docs-snapshot` check of CI fails the pull request for such a
-change (see [Docs snapshot check](#docs-snapshot-check)).
+change (see [Docs snapshot check](#docs-snapshot-check)). `pnpm docs:seed` also removes the
+entry of a removed rule (see [Deprecate and remove a rule](#deprecate-and-remove-a-rule)).
 
 Write each footnote on one line, as `[^id]: [Page title: Heading](url#anchor)`. Put no indent,
 link title or text after the link. The script takes the text after the first colon and space
@@ -118,6 +119,76 @@ A new rule that checks a number takes the number as a rule option (ADR 001, Deci
 
 `tests/limit-options.test.ts` reads the `limit` rows of the inventory. It fails for a built
 rule that lacks the option that its row names.
+
+## Deprecate and remove a rule
+
+A Claude Code CLI tool can start to make the check of a built rule (ADR 001, Decision 2).
+Then a minor release deprecates the rule, and the next major release removes it.
+
+### Deprecate a rule
+
+1. In `src/rules/<rule>.ts`, set `meta.deprecated` to the object form that ESLint 10 reads. Do
+   not set `true`, which carries no message.
+
+   ```ts
+   meta: {
+     type: 'problem',
+     deprecated: {
+       message: 'Claude Code 2.2.0 reports this fault in `claude plugin validate`.',
+       deprecatedSince: '0.12.0',
+       availableUntil: '1.0.0',
+       replacedBy: [],
+     },
+     // ...
+   },
+   ```
+
+   The message names the tool and the Claude Code version that makes the check.
+   `deprecatedSince` is the version of this plugin that ships the change, with no `v`.
+   `availableUntil` is the next major version. `replacedBy: []` says that no rule replaces it.
+2. Run `pnpm docs:generate`, and commit the result. It writes the message in the header of
+   `docs/rules/<rule>.md`, as a "deprecated since" notice. Until you run it, `pnpm docs:check`
+   fails on that header. It changes no other file: the README rule list has no deprecated column.
+3. Write the tool, its version and the result of the check in the inventory row, as
+   `.claude/rules/path-rule-scope.md` says. Keep the row as it is in the other cells.
+4. Commit as `feat(<group>): deprecate <rule>`. This is not a breaking change.
+
+Do not edit `src/index.ts` or the group list in `.eslint-doc-generatorrc.mjs`. The rule stays in
+`recommended` and `strict` at its severity, because `configFor` reads only the `recommended`
+table. A user keeps its reports until the major release. No test lists the deprecated rules.
+
+### Remove a rule
+
+Do this in the major release that `availableUntil` names. Run each step in order.
+
+1. Delete `src/rules/<rule>.ts` and `tests/rules/<rule>.test.ts`. Delete `tests/fixtures/<rule>/`
+   if it exists. In `src/index.ts`, delete its `import` line, its entry in `modules` and its
+   entry in `recommended`. `pnpm typecheck` finds a miss. Then delete its name from the group in
+   `.eslint-doc-generatorrc.mjs`. Until you do, `pnpm docs:check` stops with
+   "names <rule>, which is not a rule".
+2. Run `pnpm docs:generate`. It removes the row of the rule from the README list. Delete
+   `docs/rules/<rule>.md`, and the line of the rule in `docs/rules/index.md`. `pnpm docs:check`
+   does not find a rule doc that stays behind, so delete it by hand.
+3. Run `git grep -n <rule> tests`. Delete the name from the lists in `tests/docs.test.ts` and
+   `tests/configs.test.ts`, and from any other test that names it. Delete each case that tests
+   only this rule.
+4. In `docs/rules-inventory.md`, start the Checks cell of the row with `Dropped.`, and name the
+   tool and its version. Set Preset and Severity to `–`. The Summary counts the kept rows only,
+   so update each count and table that the row changed.
+5. Run `pnpm docs:seed`, then `pnpm docs:update`. The seed removes the entry of the rule from
+   `docs/rule-sources.json`. `docs:update` deletes the snapshot file of a page that no rule cites
+   now. Commit `docs/rule-sources.json` and `docs/docs-snapshot/`. `docs:update` also takes in
+   each untriaged docs change (see [Docs snapshot check](#docs-snapshot-check)).
+6. Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm knip` and `pnpm docs:check`. `knip`
+   finds a helper that only this rule used. `tests/rule-sources.test.ts` fails when step 5 did
+   not run.
+7. Commit as `feat(<group>)!: remove <rule>`, and use the same title for the pull request.
+   Pull requests are squash-merged, so the title and the body become the commit on `main`. Put a
+   `BREAKING CHANGE:` footer that names the tool in the last paragraph of the body.
+   release-please reads the `!` to pick the version. Do not change the version by hand.
+   While the version is 0.x, `bump-minor-pre-major` in `release-please-config.json` makes `!` a
+   minor bump. When `availableUntil` is `1.0.0`, add a `Release-As: 1.0.0` footer to the same
+   last paragraph.
 
 ## Docs watch
 

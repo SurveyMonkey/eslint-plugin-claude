@@ -23,13 +23,14 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **456 candidate rules** in 9 groups. 340 rules go in `recommended`: 204 at `error` and 136 at
+- **456 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
+  and not-built rows. 340 rules go in `recommended`: 204 at `error` and 136 at
   `warn`. 116 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 142 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
-- **`claude plugin validate` covers little of this.** 17 rules are `partial`: validate reports
-  some of their cases. The other 439 it does not report at all. Validate runs only on plugin and
+- **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
+  some of their cases. The other 440 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
