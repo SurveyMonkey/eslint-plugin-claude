@@ -124,6 +124,10 @@ it('stays silent for the bare form and a prefix of a name with __ in a deny or a
   })
   expect(ids(settings(lists, files))).toEqual([])
   expect(ids(lintDisallowed('mcp__reports__v2 mcp__reports', files))).toEqual([])
+  const tools = JSON.stringify({
+    permissions: { deny: ['mcp__reports__v2__t', 'mcp__reports__v2__*'] },
+  })
+  expect(ids(settings(tools, files))).toEqual([])
   // The near miss: a tool of the server `reports` is no tool of `reports__v2`.
   const near = JSON.stringify({ permissions: { ask: ['mcp__reports__x'], deny: ['mcp__rep'] } })
   expect(ids(settings(near, files))).toEqual(['unknown', 'unknown'])
