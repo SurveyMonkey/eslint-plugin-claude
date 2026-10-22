@@ -1,9 +1,11 @@
 // Find out if a file is a subagent file or an output style file. The globs of
 // the rules are broad, so each rule asks here where the file sits (ADR 001,
 // Decision 10). `isPluginRoot` finds a plugin root. A root that the check
-// cannot see gives null. An agent file also gives its scope root. The manifest
-// key `agents` of a plugin names its agent files. It replaces the `agents/`
-// directory scan (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location).
+// cannot see gives `UNREADABLE` from `agentFileOf`, and null from
+// `classifyAgentFile` and `classifyOutputStyle`. An agent file also gives its
+// scope root. The manifest key `agents` of a plugin names its agent files. It
+// replaces the `agents/` directory scan
+// (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location).
 // The fields table of that page says that the key takes `.md` files and no directory.
 import { existsSync } from 'node:fs'
 import path from 'node:path'
@@ -62,20 +64,24 @@ function directoriesUp(file: string): string[] {
 }
 
 /** The agent files that the manifest key `agents` of the plugin root `root`
- *  names, as absolute paths. The result is null when the manifest has no
- *  `agents` key, and the `agents/` directory then holds the agents. The result
- *  is `UNREADABLE` when the check cannot tell which files load: the manifest
+ *  names, as absolute paths. The result is null in two cases. The manifest has
+ *  no `agents` key. Or no `plugin.json` is there, as in a root that a
+ *  marketplace lists. The `agents/` directory then holds the agents. Call it
+ *  only for a root where `isPluginRoot` is true. `isPluginRoot` gives
+ *  `UNREADABLE` for the source directory of an entry with a key of `REPLACES`,
+ *  so the agents of such an entry do not come here. The result is
+ *  `UNREADABLE` when the check cannot tell which files load: the manifest
  *  cannot be read, or `agents` is neither a path nor a list of paths. A path
  *  loads only when it starts with `./`, ends in `.md`, and stays in the plugin
- *  root. The manifest reference says that a path outside the root, or a path that
- *  does not exist, does not load, and that a path without `./` fails validation.
- *  The check drops each of them. */
+ *  root. The manifest reference says that a path outside the root, or a path
+ *  that does not exist, does not load, and that a path without `./` fails
+ *  validation. The check drops each of them. */
 export function manifestAgents(root: string, bound: string): string[] | null | Unreadable {
   const manifest = readManifest(root, bound)
-  if (manifest === UNREADABLE || manifest === null) {
+  if (manifest === UNREADABLE) {
     return UNREADABLE
   }
-  if (!('agents' in manifest)) {
+  if (manifest === null || !('agents' in manifest)) {
     return null
   }
   const entries: unknown[] = Array.isArray(manifest.agents) ? manifest.agents : [manifest.agents]
@@ -116,13 +122,21 @@ export function agentFileState(
 }
 
 /** Gives `found` when the manifest of the plugin root `found.root` loads `file`. The `agents/`
- *  directory holds the agents when the manifest has no `agents` key, or when the check cannot
- *  read it. When the key names files, only those files are agents, so the result is null for
- *  `file` unless it is one of them. */
-function loadedBy(found: AgentFile, file: string, inFolder: boolean): AgentFile | null {
+ *  directory holds the agents when the manifest has no `agents` key, or when no `plugin.json` is
+ *  there. When the key names files, only those files are agents. So the result is null for
+ *  `file` unless it is one of them. The result is `UNREADABLE` when `manifestAgents` cannot tell
+ *  which files load. */
+function loadedBy(
+  found: AgentFile,
+  file: string,
+  inFolder: boolean,
+): AgentFile | null | Unreadable {
   const bound = repositoryRoot(found.root)
   const listed = manifestAgents(found.root, bound)
-  if (!Array.isArray(listed)) {
+  if (listed === UNREADABLE) {
+    return UNREADABLE
+  }
+  if (listed === null) {
     return inFolder ? found : null
   }
   if (!listed.includes(file)) {
@@ -134,10 +148,14 @@ function loadedBy(found: AgentFile, file: string, inFolder: boolean): AgentFile 
 
 /** What `file` is: a subagent file in `.claude/agents/`, in the `agents/`
  *  directory of a plugin at any depth, or a file that the manifest key `agents`
- *  of a plugin names, or null. The result is also null when the plugin root of
- *  the file is unseen. The root is the parent of the deepest `agents/`
- *  directory that fits, or the plugin root of the manifest. */
-export function classifyAgentFile(file: string): AgentFile | null {
+ *  of a plugin names, or null. The result is `UNREADABLE` when the plugin root
+ *  of the file is unseen, or when its manifest does not say which files load.
+ *  A file that the manifest names, but that the check cannot see, gives null.
+ *  The root is the parent of the deepest `agents/` directory that fits, or the
+ *  plugin root of the manifest.
+ *
+ *  `UNREADABLE` is a truthy symbol. Compare the result to `UNREADABLE` first. */
+export function agentFileOf(file: string): AgentFile | null | Unreadable {
   const resolved = path.resolve(file)
   // The deepest `agents/` directory that fits is the one that counts. The
   // loop ends at the root of the file system, which is its own parent.
@@ -149,7 +167,7 @@ export function classifyAgentFile(file: string): AgentFile | null {
     // The walk stops at a root that the check cannot see. It does not go on to an
     // `agents/` directory above it.
     if (scope === UNREADABLE) {
-      return null
+      return UNREADABLE
     }
     if (scope !== null) {
       const found = { ...scope, root: path.dirname(dir) }
@@ -160,13 +178,20 @@ export function classifyAgentFile(file: string): AgentFile | null {
   for (const dir of directoriesUp(resolved)) {
     const plugin = isPluginRoot(dir)
     if (plugin === UNREADABLE) {
-      return null
+      return UNREADABLE
     }
     if (plugin) {
       return loadedBy({ plugin: true, root: dir }, resolved, false)
     }
   }
   return null
+}
+
+/** `agentFileOf` for a rule that makes no report on a file that the check cannot see. The
+ *  result is null in place of `UNREADABLE`. */
+export function classifyAgentFile(file: string): AgentFile | null {
+  const found = agentFileOf(file)
+  return found === UNREADABLE ? null : found
 }
 
 /** What `file` is: an output style file directly in `.claude/output-styles/`

@@ -51,6 +51,8 @@ The rule makes no report in these cases:
   a link that leads out of the repository, or a link with no target. The part may hold the
   subagent. So one link with no target in the repository, out of `.git` and `node_modules`,
   stops each report of the rule.
+- The check cannot see a plugin root, or a plugin manifest does not say which files load. A
+  Markdown file of that plugin can be the subagent.
 
 A subagent file without frontmatter, with YAML that does not parse, or with a `name` or `memory`
 that is not a string has no usable name. It does not own a folder. The rule cannot tell a missing

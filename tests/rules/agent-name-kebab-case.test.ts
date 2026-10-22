@@ -2,8 +2,12 @@
 // `code-reviewer` or `reviewer-v2`. ... The filename doesn't have to match." Every documented
 // example is lowercase words joined by hyphens. The rule reports a name of another shape. The
 // built-in names are the case of `agent-name-shadows-builtin`.
+
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAt, PLACES } from '../agent-description.test-support.ts'
+import { lintAgent } from '../agent-rules.test-support.ts'
+import { repo } from '../agent-settings.test-support.ts'
 
 const lint = (name: string, place: string = PLACES.local) =>
   lintAt('agent-name-kebab-case', `---\nname: ${name}\ndescription: d\n---\n\nBody.\n`, place)
@@ -71,5 +75,45 @@ describe('agent-name-kebab-case', () => {
       expect(lint('My_Agent', 'docs/a.md')).toEqual([])
       expect(lint('My_Agent', 'plugins/q/agents/a.md')).toEqual([])
     })
+  })
+
+  // With no `plugin.json`, the entry is the manifest. The check cannot model the plugin of an
+  // entry with a key that replaces a default location. So no report rests on its files. This is
+  // true for any entry whose source is the directory, in any marketplace of the walk.
+  describe('for a plugin that a marketplace lists', () => {
+    const bad = '---\nname: My_Agent\ndescription: d\n---\n\nBody.\n'
+    const listed = (...plugins: object[]) => ({
+      'p/agents/a.md': bad,
+      '.claude-plugin/marketplace.json': JSON.stringify({ name: 'm', plugins }),
+    })
+    const lintListed = (files: Record<string, string>, dir: string) =>
+      lintAgent('agent-name-kebab-case', bad, path.join(repo(files), dir, 'agents', 'a.md'))
+
+    it('reports for a plain entry', () => {
+      expect(lintListed(listed({ name: 'p', source: './p' }), 'p')).toHaveLength(1)
+    })
+    it('stays silent for an entry with a top-level themes or monitors key', () => {
+      expect(lintListed(listed({ name: 'p', source: './p', themes: './t' }), 'p')).toEqual([])
+      expect(lintListed(listed({ name: 'p', source: './p', monitors: './m.json' }), 'p')).toEqual(
+        [],
+      )
+    })
+    it('stays silent when a second entry names the directory with a replacing key', () => {
+      const plain = { name: 'p', source: './p' }
+      const replacing = { name: 'q', source: './p', agents: './agents/' }
+      expect(lintListed(listed(plain, replacing), 'p')).toEqual([])
+      expect(lintListed(listed(replacing, plain), 'p')).toEqual([])
+    })
+  })
+
+  // A manifest that does not say which files load can name files outside `agents/`.
+  it('stays silent when the plugin manifest does not say which files load', () => {
+    const bad = '---\nname: My_Agent\ndescription: d\n---\n\nBody.\n'
+    const at = (manifest: string) =>
+      path.join(repo({ 'p/.claude-plugin/plugin.json': manifest }), 'p', 'agents', 'a.md')
+    expect(lintAgent('agent-name-kebab-case', bad, at('{}'))).toHaveLength(1)
+    for (const manifest of ['{', '{"agents":5}', '{"agents":["./custom/a.md",5]}']) {
+      expect(lintAgent('agent-name-kebab-case', bad, at(manifest)), manifest).toEqual([])
+    }
   })
 })

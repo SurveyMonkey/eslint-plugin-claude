@@ -1,11 +1,18 @@
 // Where a subagent file or an output style file sits decides what it is. A
 // plugin root is found by its manifest, on disk. A root that the check cannot
-// see gives null, and the walk does not go on to an `agents/` directory above it.
+// see gives null from `classifyAgentFile`, and `UNREADABLE` from `agentFileOf`.
+// The walk does not go on to an `agents/` directory above it.
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { classifyAgentFile, classifyLinted, classifyOutputStyle } from '../src/agent-files.ts'
+import {
+  agentFileOf,
+  classifyAgentFile,
+  classifyLinted,
+  classifyOutputStyle,
+} from '../src/agent-files.ts'
+import { UNREADABLE } from '../src/skill-tree.ts'
 import { chmodCannotBlock, withoutAccess } from './rule-tester.test-support.ts'
 
 const scratch = mkdtempSync(path.join(tmpdir(), 'agent-files-'))
@@ -33,10 +40,10 @@ describe('a plugin root that the check can see', () => {
     expect(classifyOutputStyle(at('p', 'other', 's.md'))).toBeNull()
   })
 
-  it('gives plugin for a dangling manifest link', () => {
+  it('gives null for a dangling manifest link, which the check cannot read', () => {
     mkdirSync(at('dangling', '.claude-plugin'), { recursive: true })
     symlinkSync('missing.json', at('dangling', '.claude-plugin', 'plugin.json'))
-    expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toMatchObject({ plugin: true })
+    expect(classifyAgentFile(at('dangling', 'agents', 'a.md'))).toBeNull()
   })
 })
 
@@ -100,6 +107,7 @@ describe.skipIf(chmodCannotBlock)('with no access to .claude-plugin/', () => {
     withoutAccess(plugin('p2'), () => {
       expect(classifyAgentFile(at('p2', 'agents', 'a.md'))).toBeNull()
       expect(classifyOutputStyle(at('p2', 'output-styles', 's.md'))).toBeNull()
+      expect(agentFileOf(at('p2', 'agents', 'a.md'))).toBe(UNREADABLE)
     })
   })
 
@@ -190,18 +198,44 @@ describe('the manifest key agents', () => {
     expect(classifyAgentFile(path.join(path.dirname(root), 'outside', 'a.md'))).toBeNull()
   })
 
-  it('keeps agents/ for a manifest that is no list of paths, and sees no other file', () => {
+  it('sees no file for a manifest that is no list of paths', () => {
     for (const [index, agents] of [5, { a: 1 }, ['./custom/a.md', 5], true].entries()) {
       const root = manifested(`m7-${index}`, { agents })
-      expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toEqual({ plugin: true, root })
+      expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toBeNull()
       expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
+      expect(agentFileOf(path.join(root, 'agents', 'a.md'))).toBe(UNREADABLE)
+      expect(agentFileOf(path.join(root, 'custom', 'a.md'))).toBe(UNREADABLE)
     }
     const text = manifested('m8', '{')
-    expect(classifyAgentFile(path.join(text, 'agents', 'a.md'))).toEqual({
-      plugin: true,
-      root: text,
-    })
+    expect(classifyAgentFile(path.join(text, 'agents', 'a.md'))).toBeNull()
     expect(classifyAgentFile(path.join(text, 'custom', 'a.md'))).toBeNull()
+  })
+
+  it('keeps agents/ for a listed root with no manifest', () => {
+    mkdirSync(at('m8b', '.git'), { recursive: true })
+    mkdirSync(at('m8b', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m8b', '.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ name: 'm', plugins: [{ name: 'p', source: './p' }] }),
+    )
+    const root = at('m8b', 'p')
+    mkdirSync(path.join(root, 'agents'), { recursive: true })
+    expect(classifyAgentFile(path.join(root, 'agents', 'a.md'))).toEqual({ plugin: true, root })
+    expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
+  })
+
+  // The entry replaces a default location, so the check cannot see the plugin.
+  it('gives UNREADABLE for a listed root whose entry has a replacing key', () => {
+    mkdirSync(at('m8c', '.git'), { recursive: true })
+    mkdirSync(at('m8c', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m8c', '.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ name: 'm', plugins: [{ name: 'p', source: './p', themes: './t' }] }),
+    )
+    const root = at('m8c', 'p')
+    mkdirSync(path.join(root, 'agents'), { recursive: true })
+    expect(agentFileOf(path.join(root, 'agents', 'a.md'))).toBe(UNREADABLE)
+    expect(agentFileOf(path.join(root, 'custom', 'a.md'))).toBe(UNREADABLE)
   })
 
   it('uses the plugin root nearest to the file', () => {
