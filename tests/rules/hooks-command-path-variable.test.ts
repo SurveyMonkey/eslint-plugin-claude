@@ -77,6 +77,9 @@ describe(`${name}: the report`, () => {
       './scripts/a.sh --flag',
       'FOO=1 ./scripts/a.sh',
       'exec ./scripts/a.sh',
+      '/usr/bin/env FOO=1 ./scripts/a.sh',
+      './scripts/env --flag',
+      'scripts/nohup',
       'echo hi && ./scripts/a.sh',
       '"./scripts/a.sh"',
     ]) {

@@ -1,12 +1,12 @@
 // A hook command that runs `claude` with a flag that Claude Code deprecated
 // (docs/rules/hooks-command-deprecated-cli-flag.md). The CLI reference, "CLI flags", calls `--remote`
 // a deprecated alias for `--cloud`. The rule reads exec form (`args`) and shell form, and it splits a
-// shell line with `claudeArguments`. In exec form, this rule does not skip a wrapper such as `env`,
-// or a `NAME=value` item. The rule `hooks-command-removed-cli-flag` skips both.
+// shell line with `claudeArguments`. In exec form, it skips a wrapper such as `env` and a `NAME=value`
+// item, as `hooks-command-removed-cli-flag` does.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import { HOOKS_TARGET, handlersOf, hooksListener, memberOf, stringOf } from '../hooks-config.ts'
-import { claudeArguments, isClaude } from '../shell-words.ts'
+import { claudeArguments, commandWordAt, isClaude } from '../shell-words.ts'
 
 const name = 'hooks-command-deprecated-cli-flag' as const
 
@@ -35,10 +35,19 @@ const rule: Rule.RuleModule = {
         }
         const args = memberOf(handler, 'args')?.value
         if (args?.kind === 'array') {
-          // Exec form: `command` is the executable, and each item of `args` is one argument.
-          for (const item of args.items) {
-            if (isClaude(command.value) && item.kind === 'string' && isFlag(item.value)) {
-              context.report({ loc: item.loc, messageId: 'remote' })
+          // Exec form: `command` is the executable, and each item of `args` is one argument. The
+          // rule skips the wrappers and the `NAME=value` items, as in shell form, to find the
+          // executable. An item that is not a string stops the skip.
+          const words = [
+            command.value,
+            ...args.items.map((item) => (item.kind === 'string' ? item.value : '')),
+          ]
+          const start = commandWordAt(words)
+          if (isClaude(words[start] ?? '')) {
+            for (const item of args.items.slice(start)) {
+              if (item.kind === 'string' && isFlag(item.value)) {
+                context.report({ loc: item.loc, messageId: 'remote' })
+              }
             }
           }
         } else if (claudeArguments(command.value).some((words) => words.some(isFlag))) {

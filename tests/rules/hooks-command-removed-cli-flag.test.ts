@@ -68,6 +68,14 @@ describe(`${name}: shell form`, () => {
     }
   })
 
+  it(`reports the flag after a \${...} expansion with a substitution and a # in it`, () => {
+    // bash 5.3 prints `#y`, then runs `claude`. The `#` is in the expansion.
+    expect(shell(`echo \${a:-$(true) #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+    expect(shell(`echo \${a:-\`true\` #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+    // bash 5.3 prints `x #y`, then runs `claude`.
+    expect(shell(`echo \${a:-x\n #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+  })
+
   it('joins a line that ends in a backslash with the next line', () => {
     expect(shell('claude \\\n  --enable-auto-mode')).toEqual(['removed'])
     expect(shell('claude \\\n--enable-auto-mode')).toEqual(['removed'])
@@ -167,6 +175,23 @@ describe(`${name}: exec form`, () => {
     // The shell form does not skip an option of env, so the exec form does not.
     expect(exec('env', ['-i', 'claude', '--enable-auto-mode'])).toEqual([])
     expect(shell('env -i claude --enable-auto-mode')).toEqual([])
+  })
+
+  it('reads past an absolute path to a wrapper, and not past another path', () => {
+    expect(exec('/usr/bin/env', ['FOO=1', 'claude', 'remote-control', '--sandbox'])).toEqual([
+      'removedFromSubcommand',
+    ])
+    expect(shell('/usr/bin/env FOO=1 claude remote-control --sandbox')).toEqual([
+      'removedFromSubcommand',
+    ])
+    expect(shell('/usr/bin/env FOO=1 claude --enable-auto-mode')).toEqual(['removed'])
+    expect(
+      exec('C:\\Program Files\\Git\\usr\\bin\\env.exe', ['claude', '--enable-auto-mode']),
+    ).toEqual(['removed'])
+    expect(shell('./scripts/env claude --enable-auto-mode')).toEqual([])
+    expect(shell('/usr/bin/envx claude --enable-auto-mode')).toEqual([])
+    expect(exec('/usr/bin/envx', ['claude', '--enable-auto-mode'])).toEqual([])
+    expect(exec('/usr/bin/env', ['FOO=1'])).toEqual([])
   })
 
   it('reads a Windows path with backslashes to claude', () => {
