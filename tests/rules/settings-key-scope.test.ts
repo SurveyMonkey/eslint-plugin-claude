@@ -277,6 +277,16 @@ jsonTester.run('settings-key-scope (message text)', rule, {
       ],
     },
     {
+      code: obj({ sandbox: { allowNestedUserNamespaces: true } }),
+      filename: project,
+      errors: [
+        {
+          message:
+            'Claude Code reads "sandbox.allowNestedUserNamespaces" from user and managed settings. It ignores the key in this file.',
+        },
+      ],
+    },
+    {
       code: obj({ sandbox: { ripgrep: {} } }),
       filename: local,
       errors: [

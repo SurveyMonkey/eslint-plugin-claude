@@ -1,6 +1,6 @@
 // The types of `src/data/sandbox-keys.ts` and the keys of `src/data/settings-keys.ts` must stay
 // the same set. The expected key count is the number of `sandbox.*` entries in the settings index
-// of https://code.claude.com/docs/en/settings-reference#sandbox-settings: 12 keys of `sandbox`,
+// of https://code.claude.com/docs/en/settings-reference#sandbox-settings: 13 keys of `sandbox`,
 // 6 of `filesystem`, 11 of `network` and 5 of `credentials`, and the 3 objects.
 import { describe, expect, it } from 'vitest'
 import { ENV_NAME, SANDBOX_SHAPES, WITHHELD_BY } from '../src/data/sandbox-keys.ts'

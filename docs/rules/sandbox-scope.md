@@ -36,7 +36,7 @@ managed file keeps the entry, so the rule does not read it.
 
 The scope of a key is for [`settings-key-scope`](settings-key-scope.md). It reports each key that the settings index limits to
 managed settings (`sandbox.bwrapPath`, `socatPath`, `filesystem.allowManagedReadPathsOnly`, `network.allowManagedDomainsOnly`)
-or to user and managed settings (`allowAppleEvents`, `ripgrep`, `filesystem.disabled`, `network.strictAllowlist`,
+or to user and managed settings (`allowAppleEvents`, `allowNestedUserNamespaces`, `ripgrep`, `filesystem.disabled`, `network.strictAllowlist`,
 `network.tlsTerminate`, `credentials.allowPlaintextInject`, `awsPairs` and `sigv4`). This rule reads the value of `mode`, which
 that rule cannot see. So no line gets two reports.
 

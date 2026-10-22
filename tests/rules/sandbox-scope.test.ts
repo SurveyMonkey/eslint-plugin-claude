@@ -97,6 +97,7 @@ describe(`${name}: the scope of a key is for settings-key-scope`, () => {
         bwrapPath: '/opt/bwrap',
         socatPath: '/opt/socat',
         allowAppleEvents: true,
+        allowNestedUserNamespaces: true,
         ripgrep: { command: 'rg' },
         filesystem: { allowManagedReadPathsOnly: true, disabled: true },
         network: { allowManagedDomainsOnly: true, strictAllowlist: true, tlsTerminate: {} },
