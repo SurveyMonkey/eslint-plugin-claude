@@ -179,8 +179,8 @@ function matches(rest: string, forms: Set<string>, allowRule: boolean): boolean 
 
 /** The tool name to write in place of `mcp__<rest>`, or undefined when the rule knows none. The
  *  fixed name has `_` for each character outside `A-Za-z0-9_-` in the server part. The hint is
- *  the fixed name when it matches. Else it is the wildcard form of a declared name that starts
- *  with the fixed name and `__`. */
+ *  the fixed name when it matches. Else it is the wildcard form of a declared name that is the
+ *  fixed name, or starts with it and `__`. */
 function hintOf(rest: string, forms: Set<string>, allowRule: boolean): string | undefined {
   const server = rest.split(MCP_SEPARATOR, 1)[0] as string
   const fixed = `${sanitizeName(server)}${rest.slice(server.length)}`
