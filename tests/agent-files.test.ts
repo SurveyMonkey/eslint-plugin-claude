@@ -223,6 +223,20 @@ describe('the manifest key agents', () => {
     expect(classifyAgentFile(path.join(root, 'custom', 'a.md'))).toBeNull()
   })
 
+  // The entry replaces a default location, so the check cannot see the plugin.
+  it('gives UNREADABLE for a listed root whose entry has a replacing key', () => {
+    mkdirSync(at('m8c', '.git'), { recursive: true })
+    mkdirSync(at('m8c', '.claude-plugin'), { recursive: true })
+    writeFileSync(
+      at('m8c', '.claude-plugin', 'marketplace.json'),
+      JSON.stringify({ name: 'm', plugins: [{ name: 'p', source: './p', themes: './t' }] }),
+    )
+    const root = at('m8c', 'p')
+    mkdirSync(path.join(root, 'agents'), { recursive: true })
+    expect(agentFileOf(path.join(root, 'agents', 'a.md'))).toBe(UNREADABLE)
+    expect(agentFileOf(path.join(root, 'custom', 'a.md'))).toBe(UNREADABLE)
+  })
+
   it('uses the plugin root nearest to the file', () => {
     const outer = manifested('m9', { agents: ['./inner/custom/a.md'] })
     mkdirSync(path.join(outer, 'inner', '.claude-plugin'), { recursive: true })

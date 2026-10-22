@@ -260,6 +260,9 @@ describe('a directory that a marketplace lists with no manifest', () => {
     expect(isPluginRoot(repo('in', 'p'))).toBe(UNREADABLE)
     market('.', [{ name: 'c', source: './in/p' }])
     expect(isPluginRoot(repo('in', 'p'))).toBe(true)
+    // An outer marketplace that lists another directory does not undo the inner listing.
+    market('.', [{ name: 'o', source: './other' }])
+    expect(isPluginRoot(repo('in', 'p'))).toBe(true)
   })
 
   it('is unseen when an inner marketplace has the replacing entry, and an outer one lists the directory', () => {
