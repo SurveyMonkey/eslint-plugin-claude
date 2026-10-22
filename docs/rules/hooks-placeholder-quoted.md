@@ -7,7 +7,7 @@ related_issues: [10]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-22T00:00:00Z
 ---
 
 # claude/hooks-placeholder-quoted
@@ -49,6 +49,7 @@ and of a project subagent.
   reads the quote rules of PowerShell.
 - A line with a command substitution (`$(...)` or a backtick). Quotes nest inside it, and the rule cannot tell
   which quote closes which.
+- A placeholder in a shell comment. The shell does not run a comment.
 - A `command` that is not a string, and a handler that is not a `command` hook.
 
 [`hooks-prefer-exec-form`](hooks-prefer-exec-form.md) reports a placeholder in shell form, quoted or not. A hook

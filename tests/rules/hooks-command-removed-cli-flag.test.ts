@@ -68,6 +68,14 @@ describe(`${name}: shell form`, () => {
     }
   })
 
+  it(`reports the flag after a \${...} expansion with a substitution and a # in it`, () => {
+    // bash 5.3 prints `#y`, then runs `claude`. The `#` is in the expansion.
+    expect(shell(`echo \${a:-$(true) #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+    expect(shell(`echo \${a:-\`true\` #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+    // bash 5.3 prints `x #y`, then runs `claude`.
+    expect(shell(`echo \${a:-x\n #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+  })
+
   it('joins a line that ends in a backslash with the next line', () => {
     expect(shell('claude \\\n  --enable-auto-mode')).toEqual(['removed'])
     expect(shell('claude \\\n--enable-auto-mode')).toEqual(['removed'])

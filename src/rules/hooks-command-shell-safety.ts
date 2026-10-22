@@ -50,11 +50,16 @@ function quoteEnd(text: string, start: number): number {
 }
 
 /** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A
- *  parenthesis in quotes, after a backslash or in a comment does not count. */
+ *  parenthesis in quotes, after a backslash or in a comment does not count. In a `${...}` expansion,
+ *  only a parenthesis that starts a command or process substitution counts. Each parenthesis level
+ *  and each backtick substitution has its own count of open `${` expansions, as in
+ *  `src/shell-words.ts`. */
 function closingParen(text: string, open: number): number {
   let depth = 0
-  // The open `${` expansions, and if a backtick substitution is open.
+  // The open `${` expansions at this level, the counts of the outer levels, and if a backtick
+  // substitution is open.
   let braces = 0
+  const outer: number[] = []
   let tick = false
   // True when the next character starts a word. The shell removes each backslash and new line
   // pair first, so a pair does not change `boundary`. A backslash in a comment joins no lines.
@@ -83,19 +88,32 @@ function closingParen(text: string, open: number): number {
       // ends one, it stays in the word, as in `src/shell-words.ts`.
       tick = !tick
       boundary = tick
+      if (tick) {
+        outer.push(braces)
+        braces = 0
+      } else {
+        braces = outer.pop() as number
+      }
     } else if (char === '#' && braces === 0 && before) {
       // A `#` that starts a word, or that follows a redirect operator, starts a comment. A quote
       // in it is plain text. The comment ends before the next new line. In a backtick
       // substitution, it also ends before the backtick that ends the substitution.
       const length = text.slice(i).search(tick ? /[\n`]/ : /\n/)
       i = length === -1 ? text.length : i + length - 1
-    } else if (char === '(') {
+    } else if (char === '(' && (braces === 0 || /[$<>]/.test(text.charAt(i - 1)))) {
+      // In an expansion, a parenthesis is plain text, unless it starts a command or process
+      // substitution.
       depth++
+      outer.push(braces)
+      braces = 0
       boundary = true
-    } else if (char === ')' && --depth === 0) {
-      return i
-    } else {
+    } else if (char === ')' && braces === 0) {
       // A `#` after a `)` starts no comment, as in `src/shell-words.ts`.
+      if (--depth === 0) {
+        return i
+      }
+      braces = outer.pop() as number
+    } else {
       boundary = /[\s;|&<>]/.test(char)
     }
   }

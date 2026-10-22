@@ -251,6 +251,42 @@ describe(`${name}: an unquoted variable in the command`, () => {
     ])
   })
 
+  it(`keeps the \${...} count of each substitution level apart`, () => {
+    // bash 5.3 prints `} #`. The `}` in the inner substitution or in backticks does not end the
+    // expansion, so the `#` starts no comment, and `$F` is out of the quotes.
+    expect(line(`echo "$(echo \${@:-$(echo }) #})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-\`echo }\` #})" $F`)).toEqual(['unquoted'])
+    // bash 5.3 prints `y`. In the inner substitution, the `#` starts a comment.
+    expect(line(`echo "$(echo \${@:-$(true #c ')\n)y})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-\`true #c '\`y})" $F`)).toEqual(['unquoted'])
+    // bash 5.3 prints `#y`. The expansion goes on after a substitution in it.
+    expect(line(`echo "$(echo \${@:-$(true) #y})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-\`true\` #y})" $F`)).toEqual(['unquoted'])
+  })
+
+  it(`reads a comment after a \${...} expansion that ends in a substitution`, () => {
+    // bash 5.3 reads `#y ')` as a comment, so the `)` on the next line ends the substitution.
+    expect(line(`echo "$(echo \${@:-$(true)} #y ')\n)" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-\`true\`} #y ')\n)" $F`)).toEqual(['unquoted'])
+  })
+
+  it(`reads a parenthesis in a \${...} expansion in a substitution as plain text`, () => {
+    // bash 5.3 prints `( #a)`, then `a` and `b`. The `#` is in the expansion, so `$F` is out
+    // of the quotes.
+    expect(line(`echo "$(echo \${@:-( #a)})" $F`)).toEqual(['unquoted'])
+    // A lone parenthesis in the expansion does not change the level. bash 5.3 prints `(` or `)`,
+    // then `a` and `b`.
+    expect(line(`echo "$(echo \${@:-(})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:-)} #c"\n)" $F`)).toEqual(['unquoted'])
+  })
+
+  it(`reads a process substitution in a \${...} expansion in a substitution as a new level`, () => {
+    // bash 5.3 prints `/dev/fd/63`, then `a` and `b`. `#x ")` is a comment, so `$F` is out of
+    // the quotes.
+    expect(line(`echo "$(echo \${@:-<(true #x ")\n)})" $F`)).toEqual(['unquoted'])
+    expect(line(`echo "$(echo \${@:->(true #x ")\n)})" $F`)).toEqual(['unquoted'])
+  })
+
   it('reads a comment after a redirect, as after a space', () => {
     // bash reads `#x ')` as a comment, so the `)` on the next line ends the substitution.
     for (const text of [
