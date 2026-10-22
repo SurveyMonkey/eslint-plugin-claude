@@ -1,6 +1,7 @@
 // Where a subagent file or an output style file sits decides what it is. A
 // plugin root is found by its manifest, on disk. A root that the check cannot
-// see gives null, or `UNREADABLE` from `agentFileOf`, and the walk does not go on to an `agents/` directory above it.
+// see gives null from `classifyAgentFile`, and `UNREADABLE` from `agentFileOf`.
+// The walk does not go on to an `agents/` directory above it.
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'

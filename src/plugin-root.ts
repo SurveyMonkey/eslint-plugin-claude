@@ -73,7 +73,10 @@ export function hasManifest(dir: string): boolean | Unreadable {
  *  the two apart, so `skills` is here for each entry. The keys
  *  `experimental.themes` and `experimental.monitors` replace the folders
  *  `themes/` and `monitors/`. The top-level `themes` and `monitors` keys still
- *  load, so they are here too (Fields table, `experimental.themes`).
+ *  load, so they are here too (Fields table, `experimental.themes` and
+ *  `experimental.monitors`). The check matches the whole `experimental` key.
+ *  So an entry with only `experimental.evals` also gives `UNREADABLE`, though
+ *  that key replaces no default.
  *  (https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location,
  *  https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json,
  *  https://code.claude.com/docs/en/plugins/manifest-reference#fields) */

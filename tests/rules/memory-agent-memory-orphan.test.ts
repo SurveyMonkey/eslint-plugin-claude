@@ -99,7 +99,8 @@ describe(`${RULE}: the option allow`, () => {
 })
 
 describe(`${RULE}: what the rule cannot read`, () => {
-  // A plugin manifest that does not say which files load can name any file as an agent.
+  // A plugin manifest that does not say which files load can name files that the check does
+  // not see.
   it('makes no report when a plugin manifest does not say which files load', () => {
     for (const manifest of ['{', '{"agents":5}', '{"agents":["./custom/a.md",5]}']) {
       const files = { 'plugins/p/.claude-plugin/plugin.json': manifest }

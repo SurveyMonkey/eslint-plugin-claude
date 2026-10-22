@@ -79,7 +79,7 @@ describe('agent-name-kebab-case', () => {
 
   // With no `plugin.json`, the entry is the manifest. The check cannot model the plugin of an
   // entry with a key that replaces a default location. So no report rests on its files. This is
-  // true for any entry of the directory.
+  // true for any entry whose source is the directory, in any marketplace of the walk.
   describe('for a plugin that a marketplace lists', () => {
     const bad = '---\nname: My_Agent\ndescription: d\n---\n\nBody.\n'
     const listed = (...plugins: object[]) => ({
@@ -106,7 +106,7 @@ describe('agent-name-kebab-case', () => {
     })
   })
 
-  // A manifest that does not say which files load can name other files than `agents/`.
+  // A manifest that does not say which files load can name files outside `agents/`.
   it('stays silent when the plugin manifest does not say which files load', () => {
     const bad = '---\nname: My_Agent\ndescription: d\n---\n\nBody.\n'
     const at = (manifest: string) =>
