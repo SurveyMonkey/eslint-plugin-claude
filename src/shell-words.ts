@@ -124,9 +124,9 @@ export interface Command {
  *  comment. The reader skips it to the next new line, or, in backticks, to the one that ends them. A
  *  backslash in a comment joins no lines. A quote or a backslash joins characters into one word. A
  *  quote is not part of the word. A command substitution in double quotes is part of the word, and
- *  holds quotes of its own. A `${...}` expansion is part of the word, with its spaces, new lines,
- *  operators and parentheses. A command substitution in it gives its own commands. After the
- *  substitution, the expansion goes on in a new word. */
+ *  holds quotes of its own. A `${...}` expansion is part of the word, with its spaces, operators,
+ *  parentheses, and each new line that comes before a `}`. A command substitution in it gives its
+ *  own commands. After the substitution, the expansion goes on in a new word. */
 export function scanCommands(line: string): Command[] {
   const commands: Command[] = []
   let words: string[] = []
