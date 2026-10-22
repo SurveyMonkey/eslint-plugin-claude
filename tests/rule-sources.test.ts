@@ -9,6 +9,7 @@ import {
   readdirSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -341,6 +342,23 @@ describe('seed script', () => {
       process.argv = [process.execPath, SCRIPT, '--stdout', root]
       // The query makes a new module, so the entry check runs again.
       await import(`${SCRIPT}?entry`)
+      expect(write).toHaveBeenCalledWith(seed(root))
+    })
+
+    it('runs main when the entry file is a symbolic link to the script', async () => {
+      const root = makeRoot({
+        'a-rule': footnotes('[^a]: [Hooks: X](https://code.claude.com/docs/en/hooks#x)'),
+      })
+      const write = vi.spyOn(process.stdout, 'write').mockReturnValue(true)
+      const dir = mkdtempSync(path.join(tmpdir(), 'seed-link-'))
+      try {
+        const link = path.join(dir, 'seed-rule-sources.ts')
+        symlinkSync(SCRIPT, link)
+        process.argv = [process.execPath, link, '--stdout', root]
+        await import(`${SCRIPT}?link`)
+      } finally {
+        rmSync(dir, { recursive: true })
+      }
       expect(write).toHaveBeenCalledWith(seed(root))
     })
 
