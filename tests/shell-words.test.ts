@@ -471,8 +471,9 @@ describe('scanCommands', () => {
     }
   })
 
-  it(`ends a \${...} expansion at a new line`, () => {
-    // bash reads the body of a quoted here-document as text, then runs `rm`.
+  it(`ends a \${...} expansion at a new line when no } comes after it`, () => {
+    // bash reads the body of a quoted here-document as text, then runs `rm`. The reader does not
+    // know a here-document. Out of one, bash refuses a `${` with no `}`.
     expect(commandsOf("cat <<'E'\n${x\nE\nrm -rf $T")).toEqual([
       ['cat', '<<E'],
       ['${x'],
@@ -485,6 +486,79 @@ describe('scanCommands', () => {
     expect(commandsOf(`x="$(echo \${@:-\${@} #*})" && rm -rf $T`)).toEqual([
       [`x=$(echo \${@:-\${@} #*})`],
       ['rm', '-rf', '$T'],
+    ])
+  })
+
+  it(`keeps the \${...} count of each substitution level apart`, () => {
+    // bash 5.3 prints `} #`, then `SECOND`. The `}` in the inner substitution does not end the
+    // expansion, so the `#` stays in it.
+    expect(streams(`echo "$(echo \${x:-$(echo }) #})"; echo SECOND`)).toEqual([
+      `echo $(echo \${x:-$(echo }) #}):out`,
+      'echo SECOND:out',
+    ])
+    expect(streams(`echo $(echo \${x:-$(echo }) #}); echo SECOND`)).toEqual([
+      'echo $:out',
+      `echo \${x:-$:taken`,
+      'echo }:taken',
+      ' #}:taken',
+      'echo SECOND:out',
+    ])
+    // bash 5.3 prints `} #`, then `SECOND`. A `}` in backticks does not end the expansion.
+    expect(commandsOf(`echo "$(echo \${@:-\`echo }\` #})"; echo SECOND`)).toEqual([
+      ['echo', `$(echo \${@:-\`echo }\` #})`],
+      ['echo', 'SECOND'],
+    ])
+  })
+
+  it(`goes on with a \${...} expansion after a substitution in it`, () => {
+    // bash 5.3 prints `#y`, then `hi`.
+    expect(streams(`echo \${a:-$(true) #y}; echo hi`)).toEqual([
+      `echo \${a:-$:out`,
+      'true:taken',
+      ' #y}:out',
+      'echo hi:out',
+    ])
+    expect(streams(`echo \${a:-\`true\` #y}; echo hi`)).toEqual([
+      `echo \${a:-:out`,
+      'true:taken',
+      ' #y}:out',
+      'echo hi:out',
+    ])
+    // In double quotes too. bash 5.3 prints `#y`, then `hi`.
+    expect(commandsOf(`echo "$(echo \${a:-$(true) #y})"; echo hi`)).toEqual([
+      ['echo', `$(echo \${a:-$(true) #y})`],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`goes on with a \${...} expansion after a new line in it`, () => {
+    // bash 5.3 prints `x #y`, then `hi`.
+    expect(commandsOf(`echo \${a:-x\n #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-x\n #y}`],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo "$(echo \${a:-x\n #y})"; echo hi`)).toEqual([
+      ['echo', `$(echo \${a:-x\n #y})`],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`reads a comment after a \${...} expansion or a substitution that ends`, () => {
+    // bash 5.3 prints an empty line, then `hi`.
+    expect(commandsOf(`echo \${x} #y\necho hi`)).toEqual([
+      ['echo', `\${x}`],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf('echo $(true) #y\necho hi')).toEqual([
+      ['echo', '$'],
+      ['true'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-$(true)} #y\necho hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      ['}'],
+      ['echo', 'hi'],
     ])
   })
 
