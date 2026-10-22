@@ -129,7 +129,27 @@ describe('agent-plugin-scoped-name-unique', () => {
     expect(lint(root, 'agents/a.md', agent('', 'dup'))).toEqual([])
   })
 
+  it('reports in the agents/ folder of a listed plugin root with no manifest', () => {
+    const root = repo({
+      '.claude-plugin/marketplace.json': JSON.stringify({
+        name: 'm',
+        plugins: [{ name: 'p', source: './p' }],
+      }),
+      'p/agents/b.md': bare,
+    })
+    expect(lint(root, 'p/agents/a.md', agent('', 'b'))).toHaveLength(1)
+  })
+
   describe('the manifest key agents', () => {
+    // The text in the editor is the agent. The file need not be on disk, as in `agents/`.
+    it('reports a listed file that is not on disk yet', () => {
+      const root = repo({
+        ...manifest(['./custom/a.md', './more/b.md']),
+        'more/b.md': agent('', 'a'),
+      })
+      expect(lint(root, 'custom/a.md')).toMatchObject([{ messageId: 'duplicate' }])
+    })
+
     it('replaces the scan, so a file that the key does not list gives no report', () => {
       const root = repo({
         ...manifest(['./agents/b.md']),

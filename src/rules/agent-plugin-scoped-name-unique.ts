@@ -41,13 +41,10 @@ function entryOf(file: string, subfolders: string[]): Entry | null {
 }
 
 /** The files that the manifest value `value` of `agents` lists: `.md` files
- *  inside the plugin root `root`. The result is null when the value is neither a
- *  path nor a list, so the rule cannot tell what loads. */
-function listedFiles(value: unknown, root: string): string[] | null {
-  const paths = typeof value === 'string' ? [value] : Array.isArray(value) ? value : null
-  if (paths === null) {
-    return null
-  }
+ *  inside the plugin root `root`. `classifyLinted` gives no scope when the value
+ *  is neither a path nor a list of paths. */
+function listedFiles(value: unknown, root: string): string[] {
+  const paths: unknown[] = Array.isArray(value) ? value : [value]
   const base = realDirectory(root)
   return paths
     .filter((entry): entry is string => typeof entry === 'string' && entry.endsWith('.md'))
@@ -79,17 +76,13 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     const self = path.resolve(context.filename)
     const bound = repositoryRoot(scope.root)
     const manifest = readManifest(scope.root, bound)
-    // A manifest that the rule cannot read can set `agents`.
-    if (manifest === UNREADABLE) {
-      return {}
-    }
+    // `classifyLinted` gives a plugin scope only when the manifest says which files load. Then
+    // `self` is in `agents/` with no key, or the key names it. A root with no manifest has no key.
+    const agents = manifest === UNREADABLE || manifest === null ? undefined : manifest.agents
     const agentsDir = path.join(scope.root, 'agents')
-    const sets = manifest !== null && 'agents' in manifest
-    const listed = sets ? listedFiles(manifest.agents, scope.root) : null
-    // The key replaces the `agents/` scan, so a file that it does not list does not load.
-    if (sets && !listed?.includes(self)) {
-      return {}
-    }
+    const sets = agents !== undefined
+    // The key replaces the `agents/` scan.
+    const listed = sets ? listedFiles(agents, scope.root) : null
     // The subfolders of `file` below `agents/`. A file that the key lists has none.
     const subfoldersOf = (file: string) =>
       sets ? [] : path.relative(agentsDir, path.dirname(file)).split(path.sep).filter(Boolean)
