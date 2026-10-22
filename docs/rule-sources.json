@@ -905,6 +905,11 @@
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "--sandbox or --no-sandbox is not supported by claude remote-control",
       "hash": "847bd5d2d5610b3acd1e5371e0ec98a33a792b863818f0606e3c5c69c97acee4"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "What the sandbox restricts",
+      "hash": "721d542ca02dc6f2b1a765a131b12ec3270d5ebd073c8472def3725d27377b2c"
     }
   ],
   "hooks-command-shell-safety": [

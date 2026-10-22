@@ -106,6 +106,9 @@ export type Outcome = {
   reason: Reason | string
 }
 
+// An outcome of `decide`: it always has a probability and a known reason.
+type Decided = { kind: OutcomeKind; rule: string | null; probability: number; reason: Reason }
+
 export type Result = {
   page: string
   heading: string
@@ -392,8 +395,8 @@ const band = (p: number, { yes, no }: { yes: number; no: number }) =>
 export function decide(
   item: Pick<Item, 'rules' | 'askRequirement'>,
   answers: Answers | undefined,
-): Outcome[] {
-  const outcomes: Outcome[] = []
+): Decided[] {
+  const outcomes: Decided[] = []
   item.rules.forEach((rule, i) => {
     const obsolete = noul(answers, `obsolete_${i}`)
     const alters = noul(answers, `alters_${i}`)
@@ -421,7 +424,7 @@ export function decide(
   return outcomes
 }
 
-const REASONS: Record<string, (rule: string | null, p: number) => string> = {
+const REASONS: Record<Reason, (rule: string | null, p: number) => string> = {
   alters: (rule, p) => `Jev gives ${p} that the change alters what ${rule} checks`,
   obsolete: (rule, p) => `Jev gives ${p} that the change leaves ${rule} with no purpose`,
   requirement: (_, p) =>
@@ -431,8 +434,8 @@ const REASONS: Record<string, (rule: string | null, p: number) => string> = {
 // Joins the outcomes of one block into findings: one for each kind. The kind
 // no-change gives no finding. With `diffOnly`, each reason ends with a note
 // that says Jev judged the changed lines.
-function findingsOf(item: ItemBase, outcomes: Outcome[], diffOnly: boolean): Finding[] {
-  const byKind = new Map<Kind, Outcome[]>()
+function findingsOf(item: ItemBase, outcomes: Decided[], diffOnly: boolean): Finding[] {
+  const byKind = new Map<Kind, Decided[]>()
   for (const outcome of outcomes) {
     if (outcome.kind === 'no-change') continue
     const list = byKind.get(outcome.kind) ?? []
@@ -440,18 +443,13 @@ function findingsOf(item: ItemBase, outcomes: Outcome[], diffOnly: boolean): Fin
     byKind.set(outcome.kind, list)
   }
   return [...byKind].map(([kind, list]) => {
-    const probability = Math.max(...list.map((outcome) => outcome.probability ?? 0))
+    const probability = Math.max(...list.map((outcome) => outcome.probability))
     return finding(item, kind, {
       rules: list.flatMap((outcome) => (outcome.rule ? [outcome.rule] : [])),
       probability: round(probability),
       confidence: confidenceOf(probability),
       reason: list
-        .map((outcome) =>
-          (REASONS[outcome.reason] ?? REASONS.alters)?.(
-            outcome.rule,
-            round(outcome.probability ?? 0),
-          ),
-        )
+        .map((outcome) => REASONS[outcome.reason](outcome.rule, round(outcome.probability)))
         .join('; ')
         .concat(diffOnly ? '. Jev judged the changed lines, not the whole block.' : ''),
     })
@@ -559,7 +557,7 @@ export function loadInventory(root: string): Inventory {
     }
     const rule = /^\|\s*`([a-z0-9-]+)`\s*\|/.exec(line)?.[1]
     if (inGroups && ruleTable && section !== undefined && rule !== undefined) {
-      const ids = [...line.matchAll(/\[\^([^\]]+)\](?!:)/g)].map((m) => m[1] ?? '')
+      const ids = [...line.matchAll(/\[\^([^\]]+)\](?!:)/g)].map((m) => m[1] as string)
       rows.push({ section, rule, ids })
     }
   }
@@ -978,7 +976,7 @@ async function classifyItem(item: Item, rules: Map<string, string>, jev: Jev): P
       return triage('The block is too large for one Jev request. No model call.')
     }
   }
-  let outcomes: Outcome[]
+  let outcomes: Decided[]
   try {
     outcomes = decide(item, (await askJev(body, jev)).answers)
   } catch (error) {
@@ -1019,7 +1017,7 @@ export async function classify({
   for (const url of pages.keys()) {
     const planned = planPage({
       url,
-      citations: citations.get(url) ?? new Map(),
+      citations: citations.get(url) as Map<string, string[]>,
       inventory: inventory.get(url),
       pageText: await fetchText(`${url}.md`),
       stored: snapshots.get(snapshotName(url)),

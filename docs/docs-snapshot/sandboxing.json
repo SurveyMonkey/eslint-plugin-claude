@@ -305,6 +305,12 @@
   ],
   "sources": [
     {
+      "heading": "What the sandbox restricts",
+      "id": "what-the-sandbox-restricts",
+      "hash": "721d542ca02dc6f2b1a765a131b12ec3270d5ebd073c8472def3725d27377b2c",
+      "text": "## What the sandbox restricts\n\nWhile the sandbox is on, the shell commands Claude runs start inside its boundary, and so do the processes they start. The sandbox is off by default. To turn it on, run `/sandbox` in a session, as [Get started](#get-started) shows, or set [`sandbox.enabled`](/docs/en/settings-reference#sandbox-enabled) to `true` in a [settings file](/docs/en/settings) such as `~/.claude/settings.json`.\n\nThe table shows what a sandboxed command can reach by default and the settings that change each default.\n\n| Access | Default | Change it with |\n| :- | :- | :- |\n| Writes | The working directory, a per-user temp directory, and [directories you've added](/docs/en/permissions#additional-directories-grant-file-access-not-configuration). [Protected paths](#protected-paths) stay write-denied | [`filesystem.allowWrite`](/docs/en/settings-reference#sandbox-filesystem-allowwrite), [`filesystem.denyWrite`](/docs/en/settings-reference#sandbox-filesystem-denywrite) |\n| Reads | Most of the machine, including credential files such as `~/.ssh` and `~/.aws/credentials` | [`filesystem.denyRead`](/docs/en/settings-reference#sandbox-filesystem-denyread), [`credentials`](#protect-credentials) |\n| Network | No direct route out. Connections go through a proxy on your machine that checks each host against your allowed domains, which start empty. Your permission mode decides [what happens to other hosts](#hosts-outside-your-allowed-domains) | [`network.allowedDomains`](/docs/en/settings-reference#sandbox-network-alloweddomains), [`network.deniedDomains`](/docs/en/settings-reference#sandbox-network-denieddomains) |\n| Environment variables | Inherited from Claude Code, including any secrets in its environment | [`credentials`](#protect-credentials), [`CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`](/docs/en/env-vars) |\n\nClaude Code builds the sandbox on the open source [`@anthropic-ai/sandbox-runtime`](https://github.com/anthropics/sandbox-runtime) package."
+    },
+    {
       "heading": "Protected paths",
       "id": "protected-paths",
       "hash": "880632f45fd7bc03f173f03ff9e58ea5733bd1777d57c0f4b4322e00d0441390",

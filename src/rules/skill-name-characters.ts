@@ -7,6 +7,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
+import { escapeName, firstFault } from '../skill-names.ts'
 
 const name = 'skill-name-characters' as const
 
@@ -19,46 +20,6 @@ const NAME_LIMIT = 256
 function overLimit(text: string): number | null {
   const length = [...text].length
   return length > NAME_LIMIT ? length : null
-}
-
-/** Each class of characters in the docs, with the text of the message.
- *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so the rule counts it
- *  as a zero-width space. `kindAt` checks a plain space before it reads the classes. */
-const CLASSES: [RegExp, string][] = [
-  [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
-  [/\p{Cc}/u, 'a control character'],
-  [/\p{Co}/u, 'a private-use character'],
-  [/\p{Cn}/u, 'an unassigned character'],
-  [/\p{Bidi_Control}/u, 'a character that changes the text direction'],
-  [/\p{Z}/u, 'a blank that is not a plain space'],
-  [/[<>]/u, 'an angle bracket'],
-]
-
-/** The text of the class of the character at `index` of `chars`, or
- *  undefined when Claude Code takes the character. A plain space is a fault
- *  at the start or the end, or before another space. */
-function kindAt(chars: string[], index: number): string | undefined {
-  const char = chars[index] as string
-  if (char !== ' ') {
-    return CLASSES.find(([pattern]) => pattern.test(char))?.[1]
-  }
-  return index === 0 || index === chars.length - 1 || chars[index + 1] === ' '
-    ? 'a space at the start or end, or next to another space'
-    : undefined
-}
-
-/** The first character of `text` that Claude Code refuses, as its code point
- *  and the text of its class, or null. */
-function firstFault(text: string): { code: string; kind: string } | null {
-  const chars = [...text]
-  for (const [index, char] of chars.entries()) {
-    const kind = kindAt(chars, index)
-    if (kind !== undefined) {
-      const point = (char.codePointAt(0) as number).toString(16).toUpperCase()
-      return { code: `U+${point.padStart(4, '0')}`, kind }
-    }
-  }
-  return null
 }
 
 const rule: MarkdownRuleDefinition<{
@@ -102,7 +63,7 @@ const rule: MarkdownRuleDefinition<{
             context.report({
               loc: first,
               messageId,
-              data: { name: part, code: fault.code, kind: fault.kind },
+              data: { name: escapeName(part), code: fault.code, kind: fault.kind },
             })
           }
         }
@@ -131,7 +92,7 @@ const rule: MarkdownRuleDefinition<{
           context.report({
             loc: fm.at(field.valueStart, field.valueEnd),
             messageId: 'name',
-            data: { name: value, code: fault.code, kind: fault.kind },
+            data: { name: escapeName(value), code: fault.code, kind: fault.kind },
           })
         }
         const length = overLimit(value)

@@ -673,6 +673,40 @@ describe('fetchMarkdown', () => {
       'https://x.test/a.md: fetch failed',
     )
   })
+
+  it('names the URL and the status of a response that is not ok', async () => {
+    vi.stubGlobal('fetch', async () => new Response('gone', { status: 404 }))
+    await expect(api.fetchMarkdown('https://x.test/a.md')).rejects.toThrow(
+      'https://x.test/a.md: HTTP 404',
+    )
+  })
+
+  it('returns the text of an ok response', async () => {
+    vi.stubGlobal('fetch', async () => new Response('# Title\n'))
+    await expect(api.fetchMarkdown('https://x.test/a.md')).resolves.toBe('# Title\n')
+  })
+
+  it('gives fetch a signal that times out', async () => {
+    let signal: AbortSignal | null | undefined
+    vi.stubGlobal('fetch', async (_url: string, init?: RequestInit) => {
+      signal = init?.signal
+      return new Response('# Title\n')
+    })
+    await api.fetchMarkdown('https://x.test/a.md')
+    expect(signal).toBeInstanceOf(AbortSignal)
+  })
+})
+
+describe('main with no root', () => {
+  it('checks this repository, and exits 0 when each page equals its snapshot', async () => {
+    const pages = [...api.loadSnapshots(ROOT).values()]
+    const fetchText = async (url: string) =>
+      pages.find((page) => `${page.url}.md` === url)?.text ?? ''
+    let output = ''
+    const code = await api.main([], {}, fetchText, { write: (chunk) => (output += chunk) })
+    expect(code).toBe(0)
+    expect(JSON.parse(output).changed).toBe(0)
+  })
 })
 
 describe('renderMarkdown', () => {

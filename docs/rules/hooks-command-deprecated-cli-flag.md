@@ -3,11 +3,11 @@ type: Reference
 description: The ESLint rule claude/hooks-command-deprecated-cli-flag, which reports a hook command that runs claude with --remote, a deprecated alias for --cloud.
 owner: brianespinosa
 created: 2026-10-10
-related_issues: [10]
+related_issues: [10, 381]
 stale_after: 2027-04-10
 generated:
   by: claude-code
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-20T04:00:00Z
 ---
 
 # claude/hooks-command-deprecated-cli-flag
@@ -26,14 +26,15 @@ generated:
 
 A hook can start Claude Code, for example to start a cloud session. The CLI reference calls `--remote` a
 deprecated alias for `--cloud`.[^flags] The rule reports a `command` hook that runs `claude` with `--remote`
-or `--remote=value`. It reads a command as [`hooks-command-removed-cli-flag`](hooks-command-removed-cli-flag.md)
-does, in exec form and in shell form.
+or `--remote=value`. It reads exec form and shell form. In exec form, it does not skip a wrapper such as
+`env`, or a `NAME=value` item. [`hooks-command-removed-cli-flag`](hooks-command-removed-cli-flag.md) skips both.
 
 The rule does not report `--remote-control`, `--rc` or the `claude remote-control` command. These are other
 flags and commands.
 
 - **Exec form** (the handler sets `args`). The executable is `claude`, a path that ends in `claude`, or
-  `claude.exe`. The rule reports an item of `args` that is the flag, at the item.
+  `claude.exe`. A `/` or a `\` separates the directories of the path. The rule reports an item of `args` that is
+  the flag, at the item.
 - **Shell form** (no `args`). The rule splits the line into simple commands and reads quotes and backslashes.
   It skips `NAME=value` words before the command and the wrappers `exec`, `env`, `command` and `nohup`.
   It reports at the string. The command word must be `claude`, or a path that ends in it. A later word must be
