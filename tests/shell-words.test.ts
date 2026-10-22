@@ -68,11 +68,13 @@ describe('commandWordAt', () => {
     expect(commandWordAt(['C:\\bin\\env\\', 'claude'])).toBe(0)
     expect(commandWordAt(['/usr/bin/', 'claude'])).toBe(0)
     expect(commandWordAt(['/usr/bin/env.exe.sh', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/.exeenv', 'claude'])).toBe(0)
+    expect(commandWordAt(['/usr/bin/envxexe', 'claude'])).toBe(0)
     expect(commandWordAt(['/usr/bin/ENV', 'claude'])).toBe(0)
   })
 
-  it('does not read a script of the hook that has the name of a wrapper', () => {
-    // bash runs the file at a relative path, and never the wrapper. No `exec` program exists.
+  it('does not read a script of the hook that has the name of a wrapper, or a path to exec', () => {
+    // bash runs the file of the hook, and never the wrapper. No `exec` program exists.
     for (const word of ['./exec', './scripts/env', 'scripts/nohup', '~/bin/env', '/bin/exec']) {
       expect(commandWordAt([word, 'claude']), word).toBe(0)
     }
@@ -80,6 +82,8 @@ describe('commandWordAt', () => {
     expect(commandWordAt(['$HOME/bin/command', 'claude'])).toBe(0)
     // A drive letter with no separator after it starts a relative path on Windows.
     expect(commandWordAt(['C:tools\\env', 'claude'])).toBe(0)
+    // A relative path can hold a drive letter after its start.
+    expect(commandWordAt(['./c:/env', 'claude'])).toBe(0)
   })
 
   it('gives the length when only assignments and wrappers are left', () => {
