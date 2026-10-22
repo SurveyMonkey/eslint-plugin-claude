@@ -303,20 +303,20 @@ describe(`${name}: an unquoted variable in the command`, () => {
     // Each case is bash 5.3 with F="a b": `set -x` shows `$F` split in two words. The rule reports
     // no name in `\${1...}`, so only `$F` can give the report.
     for (const text of [
-      // The `#` is in the expansion, and the expansion goes on after a substitution, a nested
+      // The `#` is in the expansion. The expansion continues after a substitution, a nested
       // expansion, a lone parenthesis or a process substitution in it.
       `echo \${1% #*} $F`,
       `echo \${1:-$(true) #y}; echo $F`,
-      `echo \${1:-\${b} #y} $F`,
+      `echo \${1:-\${2} #y} $F`,
       `echo \${1:-(x #y} $F`,
       `echo \${1:-x) #y} $F`,
       `echo \${1:-<(echo }) #y} $F`,
       `echo \${1:->(echo }) #y} $F`,
       // A process substitution in an expansion starts a level, so its `#` starts a comment.
       `echo \${1:-<(true #'\n)} $F`,
-      // The rule skips `CLAUDE_PROJECT_DIR`. A quote or a nested `\${` in its expansion does not
-      // end it.
-      `echo \${CLAUDE_PROJECT_DIR:-\${b} #y} $F`,
+      // In the command, the rule skips `CLAUDE_PROJECT_DIR`. A quote or a nested `\${` in its
+      // expansion does not end it.
+      `echo \${CLAUDE_PROJECT_DIR:-\${2} #y} $F`,
       `echo \${CLAUDE_PROJECT_DIR:-"}" #y} $F`,
       // The scan reads a variable in the expansion too.
       `echo \${CLAUDE_PROJECT_DIR:-$F}`,
@@ -327,6 +327,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       // comment. The new line ends it.
       `echo \${| true #'\n}; echo $F`,
       `echo \${ true #'\n}; echo $F`,
+      `echo \${\ttrue #'\n}; echo $F`,
       // A comment ends at the new line, and the next line starts a word.
       `echo x #'\necho $F`,
       `(#'\necho $F)`,
@@ -335,12 +336,39 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo a#b $F',
       // A backslash and a new line join the lines, so the `#` is in the word `a#b`.
       'echo a\\\n#b $F',
+      // A `#` after a special parameter or an escaped blank is in the word.
+      'echo $# $F',
+      'echo \\ #x $F',
     ]) {
       expect(line(text), text).toEqual(['unquoted'])
     }
   })
 
-  it('opens no expansion level at the parenthesis of a case pattern', () => {
+  it('reads a blank and a [[ in an expansion as text', () => {
+    // bash 5.3 with F="a b" and T="c d". In an expansion, a blank ends no word, so an assignment
+    // value stays one word: `set -x` shows `x='a_bc d'`, `A='x ya b'` and `A='/dev/fd/63a b'`.
+    for (const text of [
+      `x=\${F// /_}$T`,
+      `A=\${b:-x y}$F true`,
+      `A=\${b:-<(true)}$F`,
+      // The `]]` of the array index does not end the test.
+      `[[ \${a[b[0]]} == $T ]]`,
+    ]) {
+      expect(line(text), text).toEqual([])
+    }
+    // bash 5.3 splits `$F` in each of these. `A=` and `[[` in an expansion are text.
+    for (const text of [
+      `echo \${1:-x A=}$F`,
+      `echo \${1:- X=$F}`,
+      `out=\${T//[[:space:]-]/_}; echo $F`,
+      `echo \${CLAUDE_PROJECT_DIR//[[:space:]-]/_} $F`,
+    ]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+    expect(line(`out=\${F//[[:space:]-]/_}; rm -rf $T`)).toEqual(['destructive'])
+  })
+
+  it('closes no level at the parenthesis of a case pattern', () => {
     // bash 5.3 runs `echo a b`, and the `#` after `true` starts a comment.
     expect(line('case a in a) echo $F;; esac')).toEqual(['unquoted'])
     expect(line('case x in x) true # $F\n;; esac')).toEqual([])
@@ -351,6 +379,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
     // `<#c`, the redirect has no target, so bash gives a syntax error. The other two readers also
     // read that `#` as a comment (ruling 11 on #336).
     for (const text of [
+      '# $F',
+      '{ true; } # $F',
       'echo \\\n#b $F',
       'echo hi >#x $F',
       'echo a <#c $F',

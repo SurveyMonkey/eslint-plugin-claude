@@ -140,6 +140,9 @@ function unquotedVariables(text: string): string[] {
     const char = text.charAt(i)
     const before: boolean = boundary
     boundary = false
+    // True when no `${...}` expansion holds the scan, also through a process substitution in one.
+    // In an expansion, a blank ends no word, and `[[` starts no test.
+    const bare = braces === 0 && outer.every((count) => count === 0)
     if (quote === "'") {
       quote = char === "'" ? '' : quote
     } else if (char === '$' && text.startsWith('(', i + 1)) {
@@ -159,7 +162,7 @@ function unquotedVariables(text: string): string[] {
       i = end === -1 ? text.length : end - 1
     } else if (char === '}' && braces > 0) {
       braces--
-    } else if (text.startsWith('[[', i) || text.startsWith(']]', i)) {
+    } else if (bare && (text.startsWith('[[', i) || text.startsWith(']]', i))) {
       test = char === '['
       i++
     } else if (char === '$' && text.charAt(i + 1) === '$') {
@@ -180,7 +183,7 @@ function unquotedVariables(text: string): string[] {
       }
     } else {
       boundary = /[\s;|&<>]/.test(char)
-      if (/[\s;&|()]/.test(char)) {
+      if (bare && /[\s;&|()]/.test(char)) {
         wordStart = i + 1
       }
       if (char === '(' && (braces === 0 || /[<>]/.test(text.charAt(i - 1)))) {
