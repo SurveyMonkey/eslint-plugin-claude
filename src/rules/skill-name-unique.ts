@@ -5,7 +5,7 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
-import { escapeName, firstFault } from '../skill-names.ts'
+import { escapeName, firstFault, hyphenate } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
@@ -38,10 +38,11 @@ function shownPath(relative: string): string {
 }
 
 /** True when Claude Code refuses a part of a skill or command name. Claude Code does not
- *  load such a skill or command, and `skill-name-characters` reports it. So the rule
- *  compares no such name. The check is for each part alone: a space at the edge of one
- *  part is a fault. A plugin skill folder is the exception: Claude Code loads it with
- *  hyphens in place of the refused characters, and `skill-name-characters` does not report it. */
+ *  load such a skill or command, and `skill-name-characters` reports it. The rule compares
+ *  no such name. The check is for each part alone: a space at the edge of one part is a
+ *  fault. A plugin skill folder is the exception. Claude Code loads it with hyphens in place
+ *  of the refused characters, and `skill-name-characters` does not report it. When such a
+ *  folder has no loaded `name`, `skillName` gives it its name with hyphens. */
 function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
@@ -54,8 +55,10 @@ function loadedName(value: unknown): string | null {
 }
 
 /** The name that Claude Code gives a skill, or null when the rule compares no name for it.
- *  A skill folder that Claude Code refuses means no load, unless the folder is in a plugin.
- *  Else the name is the field `name` when it is loaded, or the folder name. */
+ *  A project skill folder that Claude Code refuses means no load, so the result is null.
+ *  Else the name is the field `name` when it is loaded, or the folder name. In a plugin
+ *  folder name, each refused character becomes a hyphen. This step comes before `fold`,
+ *  because `fold` removes some of these characters. The result holds no refused character. */
 function skillName(
   fields: Record<string, unknown> | null,
   folder: string,
@@ -64,8 +67,7 @@ function skillName(
   if (!plugin && refused([folder])) {
     return null
   }
-  const given = loadedName(fields?.name) ?? folder
-  return refused([given]) ? null : given
+  return loadedName(fields?.name) ?? hyphenate(folder)
 }
 
 interface Entry {
@@ -86,8 +88,9 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
 
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
- *  entry. A skill or command with a refused folder or file name has no entry. A plugin
- *  skill with a refused folder name and a loaded `name` has an entry. */
+ *  entry. A project skill or a command with a refused folder or file name has no entry. A
+ *  plugin skill with a refused folder name has an entry: its loaded `name`, else its folder
+ *  name with hyphens. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
@@ -165,7 +168,8 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             : refused(file.names)
               ? null
               : file.names.join(':')
-        // Claude Code gives a refused skill or command no name, so there is nothing to share.
+        // Claude Code loads no project skill or command with a refused folder or file name. It has
+        // no name to share.
         if (own === null) {
           return
         }

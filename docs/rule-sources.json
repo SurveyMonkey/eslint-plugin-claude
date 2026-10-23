@@ -7422,6 +7422,11 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "When a synced skill name matches another command",
       "hash": "e52b0b9777fea5a905b6397ebe3a4e300301f581392a2ab91a608823628f4416"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Characters a skill name can't hold",
+      "hash": "24d0258e9ff5055831a908adedff75ca85478a946dd14ecdd1810611b12599f6"
     }
   ],
   "skill-no-bom": [

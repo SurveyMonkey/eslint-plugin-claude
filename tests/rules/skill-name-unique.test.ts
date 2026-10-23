@@ -58,8 +58,8 @@ const SAME: [string, string, string][] = [
   ['dash', 'my\u{fe63}app', 'my-app'],
 ]
 // A refused name, and a second name that it would fold to. The second name can be refused too.
-// Claude Code loads no skill or command under a refused folder or file name. It ignores a
-// refused `name` field. So the rule compares neither file.
+// Claude Code loads no project skill or command under a refused folder or file name. It ignores
+// a refused `name` field. Neither file gives a report.
 const REFUSED: [string, string, string][] = [
   ['no-break space', 'deploy\u{a0}', 'deploy'],
   ['ideographic space', 'dep\u{3000}loy', 'deploy'],
@@ -94,6 +94,20 @@ put('edge4/.claude/skills/a .md/SKILL.md', bare)
 // A refused `name` is ignored, and the skill loads under its folder name.
 put('ignored/.claude/skills/deploy/SKILL.md', named(quote('dep\u{200b}loy')))
 put('ignored/.claude/skills/other/SKILL.md', named('deploy'))
+// Plugin roots for the tests of plugin skill folder names with hyphens.
+for (const tree of [
+  'hyph',
+  'hyphzw',
+  'hyphnb',
+  'hyphcmd',
+  'hyphname',
+  'hyphdot',
+  'hyphsp',
+  'hyphmix',
+  'hyphrn',
+]) {
+  put(`${tree}/.claude-plugin/plugin.json`, `{"name":"${tree}"}`)
+}
 // The `commands` key of a plugin is read instead of `commands/`.
 put('ckey/.claude-plugin/plugin.json', '{"name":"c","commands":"./cmds"}')
 put('ckey/commands/review.md', bare)
@@ -183,9 +197,28 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
       code: named('deploy'),
       filename: put('projname/.claude/skills/deploy/SKILL.md', named('deploy')),
     },
-    // A plugin skill folder with a refused name loads with hyphens. The rule does not compare it.
+    // A plugin skill folder with a refused name loads with hyphens. The rule puts the hyphens in
+    // before it folds the name. `a<U+200B>b` is `a-b`, not `ab`. `a<U+00A0>c` is `a-c`, not `ac`.
     { code: bare, filename: put('plug/skills/a\u{200b}b/SKILL.md', bare) },
+    { code: bare, filename: put('plug/skills/a\u{a0}c/SKILL.md', bare) },
     { code: bare, filename: put('plug/skills/ab/SKILL.md', bare) },
+    { code: bare, filename: put('plug/skills/ac/SKILL.md', bare) },
+    // A plugin skill folder with a refused name and a loaded `name` goes by the `name`, not by
+    // the folder name with hyphens.
+    { code: named('ship'), filename: put('hyphname/skills/a<b/SKILL.md', named('ship')) },
+    { code: bare, filename: put('hyphname/skills/a-b/SKILL.md', bare) },
+    // A project skill folder with a refused name does not load, so it has no name with hyphens.
+    { code: bare, filename: put('hyphproj/.claude/skills/a<b/SKILL.md', bare) },
+    { code: bare, filename: put('hyphproj/.claude/skills/a-b/SKILL.md', bare) },
+    // The docs do not name a dot, so a dot in a plugin skill folder stays a dot.
+    { code: bare, filename: put('hyphdot/skills/a.b/SKILL.md', bare) },
+    { code: bare, filename: put('hyphdot/skills/a-b/SKILL.md', bare) },
+    // Each space of a run in a plugin skill folder becomes a hyphen. `a  b` is `a--b`, not `a-b`.
+    { code: bare, filename: put('hyphsp/skills/a-b/SKILL.md', bare) },
+    // A plain space next to a no-break space becomes a hyphen too, so `a<U+00A0><U+0020>b` is
+    // `a--b`, not `a-b`.
+    { code: bare, filename: put('hyphmix/skills/a-b/SKILL.md', bare) },
+    // A command file name with a space at the end is refused. Neither file gives a report.
     { code: bare, filename: put('edge2/.claude/commands/a.md', bare) },
     { code: bare, filename: put('edge2/.claude/commands/a .md', bare) },
     // Two scopes may share a name: nested `.claude/` directories, two plugins, a plugin and the project.
@@ -435,6 +468,160 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
             others: '`skills/deploy/SKILL.md`, `skills/x<U+202E>y/SKILL.md`',
           },
           line: 2,
+        },
+      ],
+    },
+    // A plugin skill folder with a refused name and no loaded `name` goes by its folder name. Each
+    // refused character becomes a hyphen. The message prints that name.
+    {
+      code: bare,
+      filename: put('hyph/skills/a<b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a-b/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyph/skills/a-b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a<U+003C>b/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
+    // A zero-width space and a no-break space become hyphens too. The rule then folds the result,
+    // so `a-b` and `A-B` are one name.
+    {
+      code: bare,
+      filename: put('hyphzw/skills/a\u{200b}b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/A-B/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphzw/skills/A-B/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'A-B', others: '`skills/a<U+200B>b/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphnb/skills/a\u{a0}b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/A-B/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphnb/skills/A-B/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'A-B', others: '`skills/a<U+00A0>b/SKILL.md`' },
+        },
+      ],
+    },
+    // A plugin skill folder name with hyphens meets a command name.
+    {
+      code: bare,
+      filename: put('hyphcmd/skills/a<b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`commands/a-b.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphcmd/commands/a-b.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a<U+003C>b/SKILL.md`' },
+        },
+      ],
+    },
+    // Two spaces in a row in a plugin skill folder become two hyphens.
+    {
+      code: bare,
+      filename: put('hyphsp/skills/a  b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a--b', others: '`skills/a--b/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphsp/skills/a--b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a--b', others: '`skills/a<U+0020> b/SKILL.md`' },
+        },
+      ],
+    },
+    // A no-break space and a plain space in a row in a plugin skill folder become two hyphens.
+    {
+      code: bare,
+      filename: put('hyphmix/skills/a\u{a0} b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a--b', others: '`skills/a--b/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphmix/skills/a--b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a--b', others: '`skills/a<U+00A0> b/SKILL.md`' },
+        },
+      ],
+    },
+    // A plugin skill folder with a refused name and a refused `name` goes by its folder name with
+    // hyphens, because Claude Code ignores a refused `name`.
+    {
+      code: named(quote('dep\u{200b}loy')),
+      filename: put('hyphrn/skills/a<b/SKILL.md', named(quote('dep\u{200b}loy'))),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a-b/SKILL.md`' },
+          line: 1,
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphrn/skills/a-b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a<U+003C>b/SKILL.md`' },
         },
       ],
     },

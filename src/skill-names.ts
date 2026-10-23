@@ -55,3 +55,29 @@ export function escapeName(text: string): string {
     .map((char, index) => (kindAt(chars, index) === undefined ? char : `<${codeOf(char)}>`))
     .join('')
 }
+
+/** True when the character at `index` of `chars` is a plain space next to a blank. A blank is a
+ *  plain space or another `\p{Z}` character. `hyphenate` asks only about a space that `kindAt`
+ *  takes, and such a space is not at the start or the end. */
+function besideBlank(chars: string[], index: number): boolean {
+  const blank = /\p{Z}/u
+  return (
+    chars[index] === ' ' &&
+    (blank.test(chars[index - 1] as string) || blank.test(chars[index + 1] as string))
+  )
+}
+
+/** `text` with each character that `CLASSES` and `kindAt` refuse as one `-`. The docs say that
+ *  these characters become hyphens in the command name of a plugin skill folder. The docs refuse
+ *  a blank other than one plain space between words. The rule reads this as: a plain space next
+ *  to another blank becomes a hyphen too. `kindAt` takes such a space in two cases. The blank is
+ *  before it, or the blank after it is not a plain space. The function does not join a run of
+ *  hyphens. Each other character that `kindAt` takes stays. */
+export function hyphenate(text: string): string {
+  const chars = [...text]
+  return chars
+    .map((char, index) =>
+      kindAt(chars, index) === undefined && !besideBlank(chars, index) ? char : '-',
+    )
+    .join('')
+}

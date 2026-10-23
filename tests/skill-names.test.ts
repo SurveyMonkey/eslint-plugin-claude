@@ -1,6 +1,6 @@
 // The name faults and the escaped text. Two rules share the faults. Every rule that prints a name shares the text.
 import { describe, expect, it } from 'vitest'
-import { escapeName, firstFault } from '../src/skill-names.ts'
+import { escapeName, firstFault, hyphenate } from '../src/skill-names.ts'
 
 describe('escapeName', () => {
   it.each([
@@ -32,5 +32,41 @@ describe('firstFault', () => {
 
   it('gives null for a plain name', () => {
     expect(firstFault('my deploy')).toBeNull()
+  })
+})
+
+// The docs say that the refused characters of a plugin skill folder become hyphens. `hyphenate`
+// changes each one to one hyphen. It also changes a plain space next to another blank. Other
+// characters stay.
+describe('hyphenate', () => {
+  it.each([
+    ['deploy', 'deploy'],
+    ['', ''],
+    ['a<b', 'a-b'],
+    ['a>b', 'a-b'],
+    ['a<<b', 'a--b'],
+    ['a\u{200B}b', 'a-b'],
+    ['a\u{A0}b', 'a-b'],
+    ['a\u{202E}b', 'a-b'],
+    ['a\tb', 'a-b'],
+    // A private-use character above U+FFFF is one character, so it gives one hyphen.
+    ['a\u{F0000}b', 'a-b'],
+    [' a', '-a'],
+    ['a ', 'a-'],
+    ['a b', 'a b'],
+    // The docs refuse a blank other than one plain space between words. The rule reads this as:
+    // each space of a run of blanks becomes a hyphen.
+    ['a  b', 'a--b'],
+    ['a   b', 'a---b'],
+    ['a  ', 'a--'],
+    ['  a', '--a'],
+    ['a\u{A0} b', 'a--b'],
+    ['a \u{A0}b', 'a--b'],
+    // An angle bracket is not a blank. A plain space next to it stays.
+    ['a< b', 'a- b'],
+    // The docs do not name a dot, so it stays.
+    ['a.b', 'a.b'],
+  ])('gives %j as %j', (text, loaded) => {
+    expect(hyphenate(text)).toBe(loaded)
   })
 })
