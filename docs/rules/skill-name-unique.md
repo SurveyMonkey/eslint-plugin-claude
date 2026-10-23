@@ -61,12 +61,13 @@ folder name. So the rule compares that folder name.
 A folder in the `skills/` directory of a plugin is an exception. Claude Code loads it, and the
 refused characters become hyphens in the command name.[^characters] `skill-name-characters` does
 not report it. A plugin skill with a loaded `name` has that name. Without a loaded `name`, the rule
-compares the folder name with one hyphen in place of each refused character. The docs refuse two
-spaces in a row, so each space of a run becomes a hyphen. The rule puts in the hyphens before it
-removes the differences above. A plugin folder `a<b` and a plugin folder `a-b` give a report in
-each file. A plugin folder `a<U+0020><U+0020>b` is `a--b`. The rule changes only the characters
-that `skill-name-characters` refuses. The docs give no other mapping, so a plugin folder `a.b` and
-a plugin folder `a-b` give no report.
+compares the folder name with one hyphen in place of each refused character. The docs refuse a
+blank other than one plain space between words. The rule reads this as: a plain space next to
+another blank becomes a hyphen too. The rule puts in the hyphens before it removes the differences
+above. A plugin folder `a<b` and a plugin folder `a-b` give a report in each file. A plugin folder
+`a<U+0020><U+0020>b` or `a<U+00A0><U+0020>b` is `a--b`. The rule changes only the characters that
+`skill-name-characters` refuses, and each plain space next to another blank. The docs give no other
+mapping, so a plugin folder `a.b` and a plugin folder `a-b` give no report.
 
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.

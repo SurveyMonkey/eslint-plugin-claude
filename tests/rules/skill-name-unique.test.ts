@@ -59,7 +59,7 @@ const SAME: [string, string, string][] = [
 ]
 // A refused name, and a second name that it would fold to. The second name can be refused too.
 // Claude Code loads no project skill or command under a refused folder or file name. It ignores
-// a refused `name` field. The rule compares neither file.
+// a refused `name` field. Neither file gives a report.
 const REFUSED: [string, string, string][] = [
   ['no-break space', 'deploy\u{a0}', 'deploy'],
   ['ideographic space', 'dep\u{3000}loy', 'deploy'],
@@ -213,12 +213,12 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // The docs do not name a dot, so a dot in a plugin skill folder stays a dot.
     { code: bare, filename: put('hyphdot/skills/a.b/SKILL.md', bare) },
     { code: bare, filename: put('hyphdot/skills/a-b/SKILL.md', bare) },
-    // Each space of a run in a plugin skill folder becomes a hyphen, so `a  b` is `a--b`, not `a-b`.
+    // Each space of a run in a plugin skill folder becomes a hyphen. `a  b` is `a--b`, not `a-b`.
     { code: bare, filename: put('hyphsp/skills/a-b/SKILL.md', bare) },
     // A plain space next to a no-break space becomes a hyphen too, so `a<U+00A0><U+0020>b` is
     // `a--b`, not `a-b`.
     { code: bare, filename: put('hyphmix/skills/a-b/SKILL.md', bare) },
-    // A command file name with a space at the end is refused. The rule compares neither file.
+    // A command file name with a space at the end is refused. Neither file gives a report.
     { code: bare, filename: put('edge2/.claude/commands/a.md', bare) },
     { code: bare, filename: put('edge2/.claude/commands/a .md', bare) },
     // Two scopes may share a name: nested `.claude/` directories, two plugins, a plugin and the project.
