@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.11.1](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.11.0...v0.11.1) (2026-10-23)
+
+
+### Bug Fixes
+
+* **ci:** find the entry file through a symlink, and check block hashes on the live path ([#547](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/547)) ([034a4a3](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/034a4a3f2251d2064566aa1fcacad788fa0c3386)), closes [#464](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/464) [#465](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/465)
+* **hooks:** read past a wrapper given by a path, and past env in the deprecated flag rule ([#551](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/551)) ([a046af2](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/a046af271dd0ab47fc80edc2e95eec0ffbd9d867)), closes [#457](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/457) [#456](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/456)
+* **mcp:** pin the plugin root exemption, trim bundle paths as validate 2.1.307 does, and resolve sanitized server names ([#546](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/546)) ([f6a0ae4](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/f6a0ae44ecf81c2bf9b20b56d415f87d4cd13133)), closes [#461](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/461) [#463](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/463) [#366](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/366)
+* **plugins:** leave a plugin root unseen for themes, monitors, a second entry and an unreadable agents key ([#550](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/550)) ([d707c83](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/d707c83570c9853df0623a618233f1919407bb0f)), closes [#454](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/454) [#455](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/455) [#466](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/466)
+* **settings-env:** accept the k and M suffix of CLAUDE_CODE_AUTO_COMPACT_WINDOW ([#552](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/552)) ([81bfd9c](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/81bfd9c34bf1fbf9b82381ed0a2c4915b914c86a)), closes [#447](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/447)
+* **settings:** match the settings key, sandbox and env var data to the 2026-10-22 docs ([#557](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/557)) ([f231176](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/f23117672588f9049fabb43dd8adcb65e428b6f2)), closes [#497](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/497) [#498](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/498) [#505](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/505)
+* **skills:** compare a refused plugin skill folder under its loaded name ([#574](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/574)) ([886bad2](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/886bad215686f18d2a6893b5bffdd1f3c9a70d2f)), closes [#459](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/459)
+* **skills:** escape names in five more skill messages, and drop the trust clause for a plugin skill ([#549](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/549)) ([bba8dae](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/bba8daead91efa828606599c20d9f4e6ba13e745)), closes [#460](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/460) [#271](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/271)
+
 ## [0.11.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.10.0...v0.11.0) (2026-10-21)
 
 
