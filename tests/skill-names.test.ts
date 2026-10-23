@@ -62,7 +62,7 @@ describe('hyphenate', () => {
     ['  a', '--a'],
     ['a\u{A0} b', 'a--b'],
     ['a \u{A0}b', 'a--b'],
-    // A space next to an angle bracket is one plain space, so it stays.
+    // An angle bracket is not a blank. A plain space next to it stays.
     ['a< b', 'a- b'],
     // The docs do not name a dot, so it stays.
     ['a.b', 'a.b'],
