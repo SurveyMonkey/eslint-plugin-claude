@@ -1,10 +1,11 @@
 // Claude Code skips a local subagent file with bad frontmatter, with no error
 // (docs/rules/agent-frontmatter-valid.md). It also skips a local file whose
 // `name` has more than 256 characters. A plugin agent with no name or bad YAML
-// still loads. The docs say that Claude Code ignores a plugin agent `name` of
-// more than 256 characters, and names the agent after its file. So in a plugin
-// agent the rule checks the `name` length only. The option `nameMax` sets a
-// lower limit.
+// still loads. Claude Code ignores a plugin agent `name` of more than 256
+// characters. It names the agent after its file. The docs do not say what
+// Claude Code does for the other faults of a plugin agent. So in a plugin agent
+// the rule checks the `name` length only. The option `nameMax` sets a lower
+// limit.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted } from '../agent-files.ts'
 import { AGENT_FIELDS } from '../data/agent-fields.ts'
@@ -153,7 +154,6 @@ const rule: MarkdownRuleDefinition<{
             const field = fm.fields.get('name') as { valueStart: number; valueEnd: number }
             context.report({
               loc: fm.at(field.valueStart, field.valueEnd),
-              // At another value, the message names the configured limit and claims no skip.
               messageId: nameMessage(nameMax, isPlugin),
               data: { length: String(length), max: String(nameMax) },
             })

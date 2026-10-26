@@ -123,7 +123,7 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
     ...PROJECT_ONLY.flatMap((name) =>
       MANAGED_FILES.map((filename) => ({ code: env({ [name]: 'x' }), filename })),
     ),
-    // The section no longer names the two AFK timers, so a settings file may set them.
+    // The settings reference names no AFK variable, so a settings file may set them (#499).
     ...ALL.map((filename) => ({
       code: env({ CLAUDE_AFK_TIMEOUT_MS: '1', CLAUDE_AFK_COUNTDOWN_MS: '1' }),
       filename,

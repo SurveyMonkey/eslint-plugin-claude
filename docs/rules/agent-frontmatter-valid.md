@@ -49,8 +49,8 @@ then checks no field, because it cannot read them.
 
 A plugin agent with no `name`, or with YAML that does not parse, still loads. Claude Code gives it
 the name of its file, and a placeholder description for YAML that does not parse. The docs say
-what a plugin agent with a long `name` does, but not what it does for the other faults. So the rule
-checks no other field of a plugin agent. For a plugin agent, `claude plugin validate` reports
+what a plugin agent with a long `name` does. They do not say what it does for the other faults. So
+the rule checks no other field of a plugin agent. For a plugin agent, `claude plugin validate` reports
 frontmatter that does not parse.[^plugin]
 
 The rule does check the `name` of a plugin agent for length. Claude Code ignores a `name` of more than 256 characters
