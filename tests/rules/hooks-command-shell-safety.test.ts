@@ -416,7 +416,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
   })
 
   it('reads the inside of a backtick substitution on its own', () => {
-    // Each case is bash 5.3.9 with F="a b". `set -x` shows `$F` split in two words.
+    // bash 5.3.9 runs each case with F="a b". `set -x` shows `$F` split in two words.
     for (const text of [
       // The `#` starts a comment in the substitution, and the comment ends at the backtick.
       'echo `true #x` $F',
@@ -428,6 +428,19 @@ describe(`${name}: an unquoted variable in the command`, () => {
       `echo \${1:-\`echo }\` #y} $F`,
       // The shell removes the backslash before `$`, so the substitution reads `$F`.
       'echo `echo \\$F`',
+      // In double quotes too, the shell removes the backslash before `$`.
+      'echo "`echo \\$F`"',
+      // The shell removes the backslash before each inner backtick, so the `#` starts a comment
+      // in the inner pair only.
+      'echo `echo \\`true #x\\` $F`',
+      // The shell makes each `\\` one `\`, so the inner `echo` gets `\\$F` and prints `\a b`.
+      'echo `echo \\\\\\\\$F`',
+      // Out of double quotes, the shell keeps the backslash before a double quote.
+      'echo `echo \\"$F\\"`',
+      // The `#` after the closing backtick is in the word, and starts no comment.
+      'echo `true`#x $F',
+      // bash 5.3.9 shows `[[ -n 5 a b ]]`: the substitution splits `$F` in the test too.
+      '[[ -n `echo 5 $F` ]]',
     ]) {
       expect(line(text), text).toEqual(['unquoted'])
     }
@@ -436,12 +449,17 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line('echo "`echo "$F"`"')).toEqual([])
     // bash 5.3.9 reads no `$F`, because the comment holds it.
     expect(line('echo `# $F`')).toEqual([])
+    // bash 5.3.9 shows `echo`. The shell removes the backslash before each inner backtick, so the
+    // comment in the inner pair holds `$F`.
+    expect(line('echo `echo \\`# $F\\``')).toEqual([])
+    // bash 5.3.9 shows `echo ' a b'`. The double quote after the pair holds `$F`.
+    expect(line('echo "`true` $F"')).toEqual([])
   })
 
-  it('reads a backtick substitution as before where bash agrees', () => {
-    // bash 5.3.9 with F="a b" splits `$F` in each case.
+  it('reads a nested, escaped or open backtick substitution', () => {
+    // bash 5.3.9 with F="a b" splits `$F` in each case but the last.
     for (const text of [
-      // The `#` after the backtick is in the word, and starts no comment.
+      // The `#` starts a comment only in the substitution, so the comment does not hold `$F`.
       'echo `#x` $F',
       // The escaped backtick in single quotes does not end the substitution.
       "echo `echo '\\`'` $F",
@@ -464,6 +482,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {
     // bash 5.3.9 prints `#y`, then runs `rm` on the split `$T`.
     expect(line(`echo \${1:-$(true) $(false) #y}; rm -rf $T`)).toEqual(['destructive'])
+    // bash 5.3.9 prints `) #y`, then runs `rm`. The quoted `)` does not end the expansion.
+    expect(line(`echo \${1:-$(true) ")" #y}; rm -rf $T`)).toEqual(['destructive'])
   })
 
   it(`reads a # after two substitutions in a \${...} expansion in the variable reader`, () => {
