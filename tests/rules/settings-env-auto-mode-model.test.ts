@@ -100,15 +100,13 @@ jsonTester.run('settings-env-auto-mode-model (invalid)', rule, {
       errors: [{ messageId: 'ignored' as const }],
     })),
     // The local file and the managed files.
-    ...[
-      '.claude/settings.local.json',
-      'managed-settings.json',
-      'managed-settings.d/10-a.json',
-    ].map((filename) => ({
-      code: env('claude-opus-5'),
-      filename,
-      errors: [{ messageId: 'ignored' as const }],
-    })),
+    ...['.claude/settings.local.json', 'managed-settings.json', 'managed-settings.d/10-a.json'].map(
+      (filename) => ({
+        code: env('claude-opus-5'),
+        filename,
+        errors: [{ messageId: 'ignored' as const }],
+      }),
+    ),
     // The report is on the value.
     {
       code: '{\n  "env": {\n    "CLAUDE_CODE_AUTO_MODE_MODEL": "sonnet"\n  }\n}',
