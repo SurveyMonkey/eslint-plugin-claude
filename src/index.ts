@@ -364,6 +364,7 @@ import * as settingsEnabledPluginsEntryExists from './rules/settings-enabled-plu
 import * as settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
 import * as settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
 import * as settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import * as settingsEnvAutoModeModel from './rules/settings-env-auto-mode-model.ts'
 import * as settingsEnvContextCost from './rules/settings-env-context-cost.ts'
 import * as settingsEnvCredential from './rules/settings-env-credential.ts'
 import * as settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
@@ -977,6 +978,7 @@ const modules = [
     target: settingsDefaultshellPowershellTool.target,
     default: settingsDefaultshellPowershellTool.default,
   },
+  { target: settingsEnvAutoModeModel.target, default: settingsEnvAutoModeModel.default },
   { target: settingsEnvContextCost.target, default: settingsEnvContextCost.default },
   { target: settingsEnvFormatHeuristic.target, default: settingsEnvFormatHeuristic.default },
   { target: settingsEnvSecretHeuristic.target, default: settingsEnvSecretHeuristic.default },
@@ -1487,6 +1489,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-paths-no-match': 'off',
   'settings-agent-exists': 'off',
   'settings-defaultshell-powershell-tool': 'off',
+  'settings-env-auto-mode-model': 'off',
   'settings-env-context-cost': 'off',
   'settings-env-format-heuristic': 'off',
   'settings-env-secret-heuristic': 'off',
