@@ -622,7 +622,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "claude-md-guardrail-to-hook": [
@@ -2535,7 +2535,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -2581,7 +2581,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -4357,7 +4357,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "plugin-evals-case-yaml": [
@@ -5747,7 +5747,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-deprecated-key": [
@@ -5879,7 +5879,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -5901,7 +5901,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-env-credential": [
@@ -5918,7 +5918,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -5930,7 +5930,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -5957,7 +5957,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-env-ignored-var": [
@@ -5969,7 +5969,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/chrome",
@@ -5981,7 +5981,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-env-prompt-caching-off": [
@@ -5998,7 +5998,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-env-routing": [
@@ -6020,7 +6020,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
@@ -6037,7 +6037,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-env-shadowed": [
@@ -6086,7 +6086,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -6545,7 +6545,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     }
   ],
   "settings-model-list": [
@@ -7394,7 +7394,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "9bba25278ac18b05fd6003cd777caf9a0c3691ef1a10fdef10d8ce23a99b61bf"
+      "hash": "e934101cd61d119e632875c90506af35f3452d8c76d1707229503c1cc132c28e"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
