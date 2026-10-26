@@ -69,6 +69,15 @@ above. A plugin folder `a<b` and a plugin folder `a-b` give a report in each fil
 `skill-name-characters` refuses, and each plain space next to another blank. The docs give no other
 mapping, so a plugin folder `a.b` and a plugin folder `a-b` give no report.
 
+The rule compares no name that is empty after it removes the differences above. Such a name holds
+only characters such as soft hyphens. Claude Code 2.1.310 refuses a project skill folder of one or
+two soft hyphens, and loads no skill from it. It loads a plugin skill folder of soft hyphens, with
+one hyphen in place of each, so `/plugin:-` and `/plugin:--` are two names.
+`skill-name-characters` does not refuse a soft hyphen, so the rule cannot put in those hyphens. It
+gives such a folder no name. So a plugin folder of one soft hyphen and a plugin folder `-` give no
+report. A `name` field that is empty after the fold is not a loaded name, and the skill goes by its
+folder name. A command file name that is empty after the fold has no name to compare.
+
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
 

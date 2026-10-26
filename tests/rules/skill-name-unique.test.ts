@@ -841,3 +841,46 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
     expect(lintMarkdown('skill-name-unique', bare, file)).toHaveLength(1)
   })
 })
+
+// Claude Code 2.1.310 refuses a project skill folder of soft hyphens only. A plugin skill folder of
+// soft hyphens loads with one hyphen for each, so `\u{ad}` is `-` and `\u{ad}\u{ad}` is `--`. The
+// rule gives no entry to a name that folds to an empty string, so neither tree reports.
+describe('a name of format characters only', () => {
+  const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
+  const shy = '\u{ad}'
+
+  it.each([
+    ['a project', 'shy-proj/.claude/skills'],
+    ['a plugin', 'shy-plug/skills'],
+  ])('gives no report for two such folders in %s', (_name, dir) => {
+    put('shy-plug/.claude-plugin/plugin.json', '{"name":"shy"}')
+    const one = put(`${dir}/${shy}/SKILL.md`, bare)
+    const two = put(`${dir}/${shy}${shy}/SKILL.md`, bare)
+    expect(lint(one, bare)).toEqual([])
+    expect(lint(two, bare)).toEqual([])
+  })
+
+  it('takes a `name` of format characters only as no name, and compares the folder name', () => {
+    const code = named(quote(shy))
+    const one = put(`shy-name/.claude/skills/one/SKILL.md`, code)
+    const two = put(`shy-name/.claude/skills/two/SKILL.md`, code)
+    expect(lint(one, code)).toEqual([])
+    expect(lint(two, code)).toEqual([])
+    put(`shy-name/.claude/skills/three/SKILL.md`, named('one'))
+    expect(lint(one, code)).toHaveLength(1)
+  })
+
+  it('gives no report for two command files of format characters only', () => {
+    const one = put(`shy-cmd/.claude/commands/${shy}.md`, bare)
+    put(`shy-cmd/.claude/commands/${shy}${shy}.md`, bare)
+    expect(lint(one, bare)).toEqual([])
+  })
+
+  it('keeps the plugin folders `-` and `--` apart', () => {
+    put('dash-plug/.claude-plugin/plugin.json', '{"name":"dash"}')
+    const one = put('dash-plug/skills/-/SKILL.md', bare)
+    const two = put('dash-plug/skills/--/SKILL.md', bare)
+    expect(lint(one, bare)).toEqual([])
+    expect(lint(two, bare)).toEqual([])
+  })
+})

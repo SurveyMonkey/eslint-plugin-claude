@@ -30,6 +30,14 @@ function fold(text: string): string {
     .replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, '')
 }
 
+/** `name`, or null when it folds to an empty string. Such a name holds only characters that
+ *  `fold` removes, such as soft hyphens. Claude Code 2.1.310 refuses a project skill folder of
+ *  soft hyphens only. `skill-name-characters` does not refuse these characters, so the rule
+ *  compares no such name. */
+function comparable(name: string): string | null {
+  return fold(name) === '' ? null : name
+}
+
 /** The relative path of a file for a message. This function escapes each part
  *  of the path alone. A space is a fault at the edge of one name. A plugin skill
  *  folder can hold a refused character. No other part of a listed path can. */
@@ -47,18 +55,19 @@ function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
 
-/** The value of the field `name` when it is a non-empty string with no refused character,
- *  else null. The rule does not check the length. The docs say Claude Code ignores a refused
- *  `name`, and the rule reads that as: the skill goes by its folder name. */
+/** The value of the field `name` when it is a string with no refused character, that does not
+ *  fold to an empty string, else null. The rule does not check the length. The docs say Claude
+ *  Code ignores a refused `name`, and the rule reads that as: the skill goes by its folder name. */
 function loadedName(value: unknown): string | null {
-  return typeof value === 'string' && value !== '' && firstFault(value) === null ? value : null
+  return typeof value === 'string' && firstFault(value) === null ? comparable(value) : null
 }
 
 /** The name that Claude Code gives a skill, or null when the rule compares no name for it.
  *  A project skill folder that Claude Code refuses means no load, so the result is null.
  *  Else the name is the field `name` when it is loaded, or the folder name. In a plugin
  *  folder name, each refused character becomes a hyphen. This step comes before `fold`,
- *  because `fold` removes some of these characters. The result holds no refused character. */
+ *  because `fold` removes some of these characters. The result holds no refused character.
+ *  A folder name that folds to an empty string gives null (see `comparable`). */
 function skillName(
   fields: Record<string, unknown> | null,
   folder: string,
@@ -67,7 +76,7 @@ function skillName(
   if (!plugin && refused([folder])) {
     return null
   }
-  return loadedName(fields?.name) ?? hyphenate(folder)
+  return loadedName(fields?.name) ?? comparable(hyphenate(folder))
 }
 
 interface Entry {
@@ -90,7 +99,7 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. A project skill or a command with a refused folder or file name has no entry. A
  *  plugin skill with a refused folder name has an entry: its loaded `name`, else its folder
- *  name with hyphens. */
+ *  name with hyphens. A name that folds to an empty string has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
@@ -109,7 +118,8 @@ function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
     setsCommands(root, plugin, bound) ? [] : markdownFiles(commandsDir, bound).files
   ).flatMap((file) => {
     const parts = path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep)
-    return refused(parts) ? [] : [{ file, name: parts.join(':') }]
+    const given = refused(parts) ? null : comparable(parts.join(':'))
+    return given === null ? [] : [{ file, name: given }]
   })
   return [...skills, ...commands]
 }
@@ -167,9 +177,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             ? skillName(given, file.names[0] as string, file.plugin)
             : refused(file.names)
               ? null
-              : file.names.join(':')
+              : comparable(file.names.join(':'))
         // Claude Code loads no project skill or command with a refused folder or file name. It has
-        // no name to share.
+        // no name to share. Nor has a name that folds to an empty string.
         if (own === null) {
           return
         }
