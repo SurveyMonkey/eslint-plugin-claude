@@ -135,9 +135,9 @@ function tickEnd(text: string, start: number): number {
 }
 
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
- *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a command substitution or a
- *  backtick pair on its own, so a quote in it starts a new quote level. In a backtick pair, a comment
- *  ends at the closing backtick. A `#` starts a comment only at the start of a word, and not in a
+ *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a substitution or a
+ *  backtick pair on its own, with a new quote level. In a backtick pair, a comment ends at the
+ *  closing backtick. A `#` starts a comment only at the start of a word, and not in a
  *  `${...}` expansion. As in `closingParen`, each parenthesis level has its own count of open `${`
  *  expansions. */
 function unquotedVariables(text: string): string[] {

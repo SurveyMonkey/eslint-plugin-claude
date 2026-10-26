@@ -687,7 +687,7 @@ describe('scanCommands', () => {
     ])
   })
 
-  it(`keeps the \${...} expansion open after a substitution and a quote or an escape`, () => {
+  it(`keeps the \${...} expansion open after a substitution and a quote, an escape or a level`, () => {
     // bash 5.3.9 prints the last word, then `hi`, in each case. A quote, a backslash or
     // a plain parenthesis pair in the expansion does not end it.
     for (const [text, rest] of [
