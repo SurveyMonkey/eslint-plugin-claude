@@ -670,6 +670,16 @@ describe('scanCommands', () => {
       [' #y}'],
       ['echo', 'hi'],
     ])
+    // bash 5.3.9 prints `#y`, then `hi`. The `)` in the comment of the backtick pair does not end
+    // the level.
+    expect(commandsOf(`echo \${a:-$(true) \`: # )\` #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' '],
+      [':'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
     // In double quotes, `closingParen` reads the substitution and keeps the expansion open.
     // bash 5.3.9 sets `x='#y z'`, then runs `w`.
     expect(commandsOf(`x="$(echo \${a:-$(true) $(false) #y}) z" w`)).toEqual([
