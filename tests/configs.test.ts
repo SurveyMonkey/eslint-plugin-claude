@@ -6505,7 +6505,7 @@ describe('configs', () => {
     }
   })
 
-  it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
+  it('gives each hooks rule its blocks, in JSON or Markdown by their files', () => {
     // `hooks-skill-source-limit` reads skills only, so its one block is Markdown.
     for (const { name, blocks, strictOnly } of HOOKS_RULES) {
       const found = (strictOnly ? plugin.configs.strict : plugin.configs.recommended).filter(

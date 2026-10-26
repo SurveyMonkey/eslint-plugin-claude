@@ -80,7 +80,8 @@ put('split/plugin/skills/c/SKILL.md', skill(25))
 put('plugin/.claude-plugin/plugin.json', '{"name":"p"}')
 put('plugin/skills/a/SKILL.md', skill(1000))
 put('plugin/skills/b/SKILL.md', skill(25))
-// A plugin-root skill. It loads only when the plugin has no `skills/` directory.
+// A plugin-root skill. It loads only when the plugin has no `skills/` directory and no `skills`
+// key.
 put('root/.claude-plugin/plugin.json', '{"name":"p"}')
 put('root/SKILL.md', skill(1025))
 // A skill on disk whose frontmatter does not parse registers no hooks.
@@ -110,7 +111,7 @@ put('zero/.claude/skills/b/SKILL.md', skill(1))
 put('link/.claude/skills/a/SKILL.md', skill(600))
 symlinkSync('a', at('link/.claude/skills/b'))
 symlinkSync('a', at('link/.claude/skills/c'))
-// A plugin folder link to a skill of 600 hooks. The rule counts each folder of a plugin.
+// A plugin folder link to a skill of 600 hooks. Claude Code 2.1.310 loads that skill once.
 put('plugin-link/.claude-plugin/plugin.json', '{"name":"p"}')
 put('plugin-link/skills/a/SKILL.md', skill(600))
 symlinkSync('a', at('plugin-link/skills/b'))
@@ -150,6 +151,7 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
     { code: skill(1000), filename: at('bad/.claude/skills/a/SKILL.md') },
     // Hooks of the wrong shape count no hook and no matcher characters.
     { code: skill(1024), filename: at('shape/.claude/skills/b/SKILL.md') },
+    { code: skill(1, 16384), filename: at('shape/.claude/skills/b/SKILL.md') },
     // The plugin-root skill, and files that are no skill.
     { code: skill(1025), filename: at('root/SKILL.md') },
     { code: skill(1025), filename: 'README.md' },
@@ -171,12 +173,20 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
     // Three folders that are one skill of 600 hooks, by the target and by a link.
     { code: skill(600), filename: at('link/.claude/skills/a/SKILL.md') },
     { code: skill(600), filename: at('link/.claude/skills/b/SKILL.md') },
-    // A lower limit in the options, at that limit.
+    // A lower limit in the options, at that limit: 1,023 hooks, and 16,383 characters.
     {
-      code: skill(24),
+      code: skill(23),
       filename: at('at/.claude/skills/b/SKILL.md'),
-      options: [{ maxHooks: 1024, maxMatcherChars: 16384 }],
+      options: [{ maxHooks: 1023 }],
     },
+    {
+      code: skill(1, 8191),
+      filename: at('chars-at/.claude/skills/b/SKILL.md'),
+      options: [{ maxMatcherChars: 16383 }],
+    },
+    // A plugin folder link to one skill counts that skill once: 600 hooks.
+    { code: skill(600), filename: at('plugin-link/skills/a/SKILL.md') },
+    { code: skill(600), filename: at('plugin-link/skills/b/SKILL.md') },
   ],
   invalid: [
     // 1,025 hooks: one over the limit. Each skill of the source with a hook reports.
@@ -206,6 +216,12 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
       code: skill(5, 3277),
       filename: at('per-hook/.claude/skills/a/SKILL.md'),
       errors: [matchersError(16385, 16385)],
+    },
+    // A file that is not on disk yet adds its editor text to the skills on disk: 1,050.
+    {
+      code: skill(25),
+      filename: at('over/.claude/skills/new/SKILL.md'),
+      errors: [hooksError(1050, 25)],
     },
     // A plugin is one source.
     {
@@ -273,12 +289,6 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
       filename: at('zero/.claude/skills/a/SKILL.md'),
       errors: [matchersError(16385, 16385)],
     },
-    // A plugin counts each folder, so a link adds the 600 hooks a second time.
-    {
-      code: skill(600),
-      filename: at('plugin-link/skills/a/SKILL.md'),
-      errors: [hooksError(1200, 600)],
-    },
   ],
 })
 
@@ -288,7 +298,7 @@ it.skipIf(chmodCannotBlock)('adds no hooks for a skill that it cannot read', () 
     lintMarkdown('hooks-skill-source-limit', skill(1000), file),
   )
   expect(messages.map(({ message }) => message)).toEqual([
-    'The skills of this source declare 1025 hooks, and this skill declares 1000. A source can register at most 1024. A skill past the limit registers none of its hooks.',
+    'The skills of this source declare 1025 hooks, 1000 of them in this skill. A source can register at most 1024 hooks. A skill past the limit registers none of its hooks.',
   ])
 })
 
@@ -304,12 +314,33 @@ it('stays silent when the real path of this file is unreadable', () => {
   expect(lintMarkdown('hooks-skill-source-limit', skill(25), file)).toHaveLength(1)
 })
 
-it('reads no real path for a plugin skill, because a plugin counts each folder', () => {
+it('stays silent when the real path of a plugin skill is unreadable', () => {
   const file = at('plugin/skills/b/SKILL.md')
   realpathFails.path = file
   try {
-    expect(lintMarkdown('hooks-skill-source-limit', skill(25), file)).toHaveLength(1)
+    expect(lintMarkdown('hooks-skill-source-limit', skill(25), file)).toEqual([])
   } finally {
     realpathFails.path = null
   }
+  expect(lintMarkdown('hooks-skill-source-limit', skill(25), file)).toHaveLength(1)
+})
+
+it('names the configured limit in the message at a value that is not the default', () => {
+  expect(
+    lintMarkdown('hooks-skill-source-limit', skill(24), at('at/.claude/skills/b/SKILL.md'), [
+      { maxHooks: 1023 },
+    ]).map(({ message }) => message),
+  ).toEqual([
+    'The skills of this source declare 1024 hooks, 24 of them in this skill. The configured limit is 1023 hooks.',
+  ])
+  expect(
+    lintMarkdown(
+      'hooks-skill-source-limit',
+      skill(1, 8192),
+      at('chars-at/.claude/skills/b/SKILL.md'),
+      [{ maxMatcherChars: 16383 }],
+    ).map(({ message }) => message),
+  ).toEqual([
+    'The matchers of the skill hooks of this source total 16384 characters, 8192 of them in this skill. The configured limit is 16383 characters.',
+  ])
 })
