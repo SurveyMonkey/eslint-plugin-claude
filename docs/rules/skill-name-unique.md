@@ -58,7 +58,17 @@ A skill name is the `name` field, or the folder name when the field is not a loa
 say that Claude Code ignores a refused `name`. The rule reads this as: the skill goes by its
 folder name. So the rule compares that folder name.
 
-A folder in the `skills/` directory of a plugin is an exception. Claude Code loads it, and the
+A plugin manifest can list more skill folders in its `skills` key. The key adds to `skills/`.[^manifest]
+A path of the key names one skill folder that holds a `SKILL.md`, or a folder of skill folders.
+The rule reads each path, and compares the skills there with the other skills and commands of the
+plugin. A path that is not there, or that leads out of the plugin, gives no skill. The rule reads
+a skill one time, when two paths give it, or when a path names `skills/`. A manifest that the rule
+cannot read gives no paths. The rule then compares the skills in `skills/` only. For a `SKILL.md`
+outside `skills/`, the rule looks for a plugin root above it whose manifest lists its folder. The
+search stops at the repository root. With no `.git`, the rule reads the directory above the skill
+folder only.
+
+A folder in the `skills/` directory of a plugin, or in a manifest `skills` path, is an exception. Claude Code loads it, and the
 refused characters become hyphens in the command name.[^characters] `skill-name-characters` does
 not report it. A plugin skill with a loaded `name` has that name. Without a loaded `name`, the rule
 compares the folder name with one hyphen in place of each refused character. The docs refuse a
@@ -73,8 +83,8 @@ The rule compares no name that is empty after it removes the differences above. 
 only characters such as soft hyphens. Claude Code 2.1.310 refuses a project skill folder of one or
 two soft hyphens, and loads no skill from it. It loads a plugin skill folder of soft hyphens, with
 one hyphen in place of each, so `/plugin:-` and `/plugin:--` are two names.
-`skill-name-characters` does not refuse a soft hyphen, so the rule cannot put in those hyphens. It
-gives such a folder no name. So a plugin folder of one soft hyphen and a plugin folder `-` give no
+The rule puts in a hyphen only for a character that `skill-name-characters` refuses, and that rule
+does not refuse a soft hyphen. So the rule gives such a folder no name. So a plugin folder of one soft hyphen and a plugin folder `-` give no
 report. A `name` field that is empty after the fold is not a loaded name, and the skill goes by its
 folder name. A command file name that is empty after the fold has no name to compare.
 
@@ -106,8 +116,8 @@ The rule does not check these cases:
 - A skill whose folder name is the name of another skill. The docs say that the folder name also
   invokes the skill. The rule compares the effective name only.
 - A skill `name` in a plugin that has the plugin prefix, such as `my-plugin:review`.
-- A directory that a `skills` key of a plugin lists. The key adds to `skills/`, and the rule
-  reads `skills/` only.
+- A `skills` path of a manifest that names the plugin root, such as `.`. The plugin-root
+  `SKILL.md` has no folder name.
 - A name that matches a bundled skill, a built-in command, an MCP prompt, or a skill in `~/.claude/`.
   The rule cannot see them.
 - A skill folder that is a link out of the repository. Claude Code can load it, but the rule reads
@@ -151,3 +161,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^name]: [Extend Claude with skills: How a skill gets its command name](https://code.claude.com/docs/en/skills#how-a-skill-gets-its-command-name)
 [^fold]: [Extend Claude with skills: When a synced skill name matches another command](https://code.claude.com/docs/en/skills#when-a-synced-skill-name-matches-another-command)
 [^characters]: [Extend Claude with skills: Characters a skill name can't hold](https://code.claude.com/docs/en/skills#characters-a-skill-name-cant-hold)
+[^manifest]: [Plugin manifest reference: Fields](https://code.claude.com/docs/en/plugins/manifest-reference#fields)
