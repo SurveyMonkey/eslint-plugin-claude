@@ -35,7 +35,7 @@ An entry is one of these:
 - `Agent`, or `Agent(type, type)` in `tools`. `Task` is the old name of `Agent`.[^spawn] The type list limits the
   subagents of an agent that runs as the main thread with `claude --agent`. In a subagent definition, Claude Code
   ignores it.[^spawn]
-- `mcp__<server>__*` or `mcp__<server>__<tool>`. In `tools`, the first grants every tool of a server. In
+- `mcp__<server>__*` or `mcp__<server>__<tool>`. In `tools`, `mcp__<server>__*` grants every tool of a server. In
   `disallowedTools`, `mcp__<server>` or `mcp__<server>__*` removes every tool of a server.[^restrict]
 - `mcp__*`, in `disallowedTools` only. It removes every MCP tool of any server.[^restrict]
 - an entry with a specifier, such as `Bash(git push *)`, in `disallowedTools` only. It removes the whole tool, not only the commands that
