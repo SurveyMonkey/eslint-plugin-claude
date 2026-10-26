@@ -20,13 +20,13 @@ pre-commit:
       run: pnpm exec tsc -p tsconfig.json
     - name: vitest-staged
       glob: '*.ts'
-      # Maps each staged path to one test file. It does not use the import
-      # graph, because src/index.ts imports every rule.
+      # This job maps each staged path to one test file. It does not use the
+      # import graph, because src/index.ts imports every rule.
       #   src/rules/<name>.ts              -> tests/rules/<name>.test.ts
       #   src/<name>.ts, scripts/<name>.ts -> tests/<name>.test.ts
       #   a staged *.test.ts               -> itself
-      # A path with no test file runs no test. So does a file in a folder of
-      # src/ other than rules/.
+      # A path with no test file runs no test. A file in a src/ folder other
+      # than rules/ also runs no test.
       run: |
         tests=""
         for f in {staged_files}; do
