@@ -120,9 +120,23 @@ function closingParen(text: string, open: number): number {
   return text.length
 }
 
+/** The index of the backtick that closes the one at `start` in `text`, or the length of `text`. A
+ *  backslash escapes the next character, as in `closingTick` in `src/shell-words.ts`. */
+function tickEnd(text: string, start: number): number {
+  for (let i = start + 1; i < text.length; i++) {
+    if (text.charAt(i) === '\\') {
+      i++
+    } else if (text.charAt(i) === '`') {
+      return i
+    }
+  }
+  return text.length
+}
+
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
- *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a command substitution on its own,
- *  because a quote in it starts a new quote level. A `#` starts a comment only at the start of a word, and
+ *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a command substitution, and of a
+ *  backtick pair, on its own, as `scanCommands` in `src/shell-words.ts` does. A quote in it starts a new quote
+ *  level, and a comment in it ends at its end. A `#` starts a comment only at the start of a word, and
  *  not in a `${...}` expansion. As in `closingParen`, each parenthesis level has its own count of open
  *  `${` expansions. */
 function unquotedVariables(text: string): string[] {
@@ -148,6 +162,13 @@ function unquotedVariables(text: string): string[] {
     } else if (char === '$' && text.startsWith('(', i + 1)) {
       const end = closingParen(text, i + 1)
       names.push(...unquotedVariables(text.slice(i + 2, end)))
+      i = end
+    } else if (char === '`') {
+      const end = tickEnd(text, i)
+      // In backticks, the shell removes a backslash before `$`, a backtick or a backslash, and in
+      // double quotes also before a double quote.
+      const escaped = quote === '"' ? /\\([$`\\"])/g : /\\([$`\\])/g
+      names.push(...unquotedVariables(text.slice(i + 1, end).replace(escaped, '$1')))
       i = end
     } else if (char === '\\') {
       i++

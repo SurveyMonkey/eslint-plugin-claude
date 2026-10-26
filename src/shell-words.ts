@@ -112,6 +112,24 @@ function closingTick(line: string, start: number): number {
   return line.length - 1
 }
 
+/** True when a `}` comes after `from` in `line`, before a `)` that ends the level. The scan skips
+ *  each command or process substitution and each backtick pair. So a `${...}` expansion with two
+ *  substitutions in it stays open, as in `closingParen`. */
+function braceBeforeParen(line: string, from: number): boolean {
+  for (let i = from; i < line.length; i++) {
+    const char = line.charAt(i)
+    if (char === '}' || char === ')') {
+      return char === '}'
+    }
+    if (char === '`') {
+      i = closingTick(line, i)
+    } else if (char === '(' && /[$<>]/.test(line.charAt(i - 1))) {
+      i = closingParen(line, i)
+    }
+  }
+  return false
+}
+
 /** A simple command: its words, and whether its standard output is the output of the line. It is not when a
  *  pipe takes it, or when a command substitution captures it. */
 export interface Command {
@@ -151,7 +169,7 @@ export function scanCommands(line: string): Command[] {
   // The open `${` expansions at this level. A parenthesis or a backtick starts a new level, and
   // keeps the count of the outer level until it ends. The reader cannot tell the `)` of a `case`
   // pattern from the `)` that ends a substitution. So after a `)`, the outer count comes back only
-  // when a `}` comes before the next `)`. A new line ends each expansion when the next line has no
+  // when a `}` comes before the next `)` that ends the level (`braceBeforeParen`). A new line ends each expansion when the next line has no
   // `}`, as in the body of a here-document. bash refuses such a `${` out of a here-document.
   let braces = 0
   const outer: number[] = []
@@ -247,7 +265,7 @@ export function scanCommands(line: string): Command[] {
       substitutions -= before === '$' ? 1 : 0
       closed = before === '$' || before === '<' || before === '>'
       const frame = outer.pop() ?? 0
-      braces = /^[^)]*\}/.test(line.slice(i + 1)) ? frame : 0
+      braces = braceBeforeParen(line, i + 1) ? frame : 0
     } else if (char === '`') {
       endCommand()
       ticks = !ticks
