@@ -3,13 +3,15 @@
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import { classifySkillFile } from '../skill-files.ts'
+import { listedSkills, listingPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { classifySkillFile, type SkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 import { escapeName, firstFault, hyphenate } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
   readManifest,
+  realOf,
   repositoryRoot,
   scopeRoot,
   skillFiles,
@@ -95,15 +97,30 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
   return manifest === UNREADABLE || (manifest !== null && 'commands' in manifest)
 }
 
+/** The skill files of the scope at `root`: each `SKILL.md` in `skills/`, then, in a plugin, each
+ *  skill that the paths of the manifest `skills` key give. A file with the real path of a file
+ *  before it is left out, as when the key names `skills/`. A manifest that the rule cannot read
+ *  gives no paths. */
+function skillFilesOf(root: string, plugin: boolean, bound: string): string[] {
+  const listing = plugin ? readPluginAt(root) : undefined
+  const listed = listing === undefined ? [] : listedSkills(listing).map((skill) => skill.file)
+  const seen = new Set<string | null | symbol>()
+  return [...skillFiles(path.join(root, 'skills'), bound), ...listed].filter((file) => {
+    const real = realOf(file)
+    const fresh = !seen.has(real)
+    seen.add(real)
+    return fresh
+  })
+}
+
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. A project skill or a command with a refused folder or file name has no entry. A
  *  plugin skill with a refused folder name has an entry: its loaded `name`, else its folder
  *  name with hyphens. A name that folds to an empty string has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
-  const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
-  const skills = skillFiles(skillsDir, bound).flatMap((file) => {
+  const skills = skillFilesOf(root, plugin, bound).flatMap((file) => {
     const fields = frontmatterOfFile(file)
     if (fields === UNREADABLE) {
       return []
@@ -138,13 +155,21 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     },
   },
   create(context) {
-    const file = classifySkillFile(context.filename)
+    const self = path.resolve(context.filename)
+    const classified = classifySkillFile(context.filename)
+    // A skill folder that a manifest `skills` path gives is not in `skills/`, so the
+    // classification does not know it.
+    const listing =
+      classified === null && path.basename(self) === 'SKILL.md' ? listingPlugin(self) : undefined
+    const file: SkillFile | null =
+      listing === undefined
+        ? classified
+        : { kind: 'skill', plugin: true, names: [listing.skill.folder] }
     // The plugin-root skill has no name from a folder or a path.
     if (file === null || file.names.length === 0) {
       return {}
     }
-    const self = path.resolve(context.filename)
-    const root = scopeRoot(self, file)
+    const root = listing === undefined ? scopeRoot(self, file) : listing.plugin.root
     const bound = repositoryRoot(root)
     // A file in `commands/` is not a command when the key replaces the folder.
     if (file.kind === 'command' && setsCommands(root, file.plugin, bound)) {

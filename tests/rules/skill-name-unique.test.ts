@@ -884,3 +884,112 @@ describe('a name of format characters only', () => {
     expect(lint(two, bare)).toEqual([])
   })
 })
+
+// The paths of the manifest `skills` key add to `skills/` (manifest reference, Fields table). A path
+// names a folder of skill folders, or one skill folder. Each tree has a `.git`, so the plugin root
+// is in the repository.
+describe('the skill folders of the manifest skills paths', () => {
+  const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
+  const tree = (name: string, manifest: string) => {
+    put(`${name}/.git/HEAD`, '')
+    put(`${name}/.claude-plugin/plugin.json`, manifest)
+    return (file: string, text = bare) => put(`${name}/${file}`, text)
+  }
+
+  it('reports a listed skill and a skills/ skill with one name, in each file', () => {
+    const add = tree('lst', '{"name":"l","skills":["./extra"]}')
+    const listed = add('extra/a-b/SKILL.md')
+    const shipped = add('skills/a-b/SKILL.md')
+    expect(lint(listed, bare)).toMatchObject([
+      { messageId: 'duplicate', message: expect.stringContaining('`skills/a-b/SKILL.md`') },
+    ])
+    expect(lint(shipped, bare)).toMatchObject([
+      { messageId: 'duplicate', message: expect.stringContaining('`extra/a-b/SKILL.md`') },
+    ])
+  })
+
+  it('reads a path that names one skill folder, and a path given as a string', () => {
+    const add = tree('lst-one', '{"name":"l","skills":"./one"}')
+    const listed = add('one/SKILL.md', named('deploy'))
+    const shipped = add('skills/deploy/SKILL.md')
+    expect(lint(listed, named('deploy'))).toHaveLength(1)
+    expect(lint(shipped, bare)).toMatchObject([
+      { message: expect.stringContaining('`one/SKILL.md`') },
+    ])
+  })
+
+  it('compares the listed folder name with hyphens, as for a folder in skills/', () => {
+    const add = tree('lst-hyph', '{"name":"l","skills":["./extra"]}')
+    const listed = add('extra/a<b/SKILL.md')
+    add('skills/a-b/SKILL.md')
+    expect(lint(listed, bare)).toMatchObject([
+      { message: expect.stringContaining('`a-b` is also the command name of') },
+    ])
+  })
+
+  it('adds no entry for a manifest that does not parse', () => {
+    const add = tree('lst-bad', '{"name":"l","skills":["./extra"]')
+    const listed = add('extra/a-b/SKILL.md')
+    const shipped = add('skills/a-b/SKILL.md')
+    expect(lint(listed, bare)).toEqual([])
+    expect(lint(shipped, bare)).toEqual([])
+  })
+
+  it('reads no skill twice, and skips a path that gives no skill folder', () => {
+    const add = tree(
+      'lst-skip',
+      '{"name":"l","skills":["./skills","./skills/",3,"./missing","../out",".","./README.md"]}',
+    )
+    add('README.md', '# Plugin\n')
+    add('SKILL.md', named('x'))
+    mkdirSync(path.join(scratch, 'lst-skip/skills/empty'), { recursive: true })
+    const shipped = add('skills/x/SKILL.md')
+    expect(lint(shipped, bare)).toEqual([])
+  })
+
+  it('reads no `SKILL.md` that leads out of the plugin', () => {
+    put('lst-out/.git/HEAD', '')
+    put('lst-out/p/.claude-plugin/plugin.json', '{"name":"l","skills":["./extra"]}')
+    put('lst-out/outside.md', bare)
+    mkdirSync(path.join(scratch, 'lst-out/p/extra/x'), { recursive: true })
+    symlinkSync('../../../outside.md', path.join(scratch, 'lst-out/p/extra/x/SKILL.md'))
+    const shipped = put('lst-out/p/skills/x/SKILL.md', bare)
+    expect(lint(shipped, bare)).toEqual([])
+    expect(lint(path.join(scratch, 'lst-out/p/extra/x/SKILL.md'), bare)).toEqual([])
+  })
+
+  it('walks past a plugin root that does not list the skill', () => {
+    const add = tree('lst-nest', '{"name":"n","skills":["./inner/a"]}')
+    add('inner/.claude-plugin/plugin.json', '{"name":"i"}')
+    const listed = add('inner/a/x/SKILL.md')
+    add('skills/x/SKILL.md')
+    expect(lint(listed, bare)).toMatchObject([
+      { message: expect.stringContaining('`skills/x/SKILL.md`') },
+    ])
+  })
+
+  it('stops at a plugin root that it cannot see', () => {
+    const add = tree('lst-unseen', '{"name":"u","skills":["./sub/extra"]}')
+    put('lst-unseen-target/plugin.json', '{"name":"t"}')
+    mkdirSync(path.join(scratch, 'lst-unseen/sub'), { recursive: true })
+    symlinkSync('../../lst-unseen-target', path.join(scratch, 'lst-unseen/sub/.claude-plugin'))
+    const listed = add('sub/extra/x/SKILL.md')
+    add('skills/x/SKILL.md')
+    expect(lint(listed, bare)).toEqual([])
+  })
+
+  it('reads no plugin root above a skill folder that is a repository of its own', () => {
+    const add = tree('lst-repo', '{"name":"r","skills":["./g"]}')
+    add('g/x/.git/HEAD', '')
+    const listed = add('g/x/SKILL.md')
+    add('skills/x/SKILL.md')
+    expect(lint(listed, bare)).toEqual([])
+  })
+
+  it('gives no report for a SKILL.md that no plugin lists', () => {
+    const add = tree('lst-none', '{"name":"l"}')
+    const loose = add('docs/x/SKILL.md')
+    add('skills/x/SKILL.md')
+    expect(lint(loose, bare)).toEqual([])
+  })
+})

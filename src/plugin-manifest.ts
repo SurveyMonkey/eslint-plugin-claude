@@ -6,11 +6,13 @@ import { Stats } from 'node:fs'
 import path from 'node:path'
 import type { ValueNode } from './marketplace-json.ts'
 import { realSource } from './marketplace-source.ts'
-import { isPluginRoot } from './plugin-root.ts'
+import { hasManifest, isPluginRoot } from './plugin-root.ts'
 import {
+  entriesOf,
   isInside,
   readManifest,
   realDirectory,
+  realOf,
   repositoryRoot,
   statOf,
   UNREADABLE,
@@ -155,4 +157,77 @@ export function pathNodes(value: ValueNode | undefined): StringNode[] {
   return value.elements.flatMap((element) =>
     element.value.type === 'String' ? [element.value] : [],
   )
+}
+
+/** A skill that a path of the manifest `skills` key gives. `file` is its `SKILL.md`, spelled
+ *  from the plugin root and the path text. `folder` is the name of its folder. */
+export interface ListedSkill {
+  readonly file: string
+  readonly folder: string
+}
+
+/** The `SKILL.md` at `file` when its real path is in the plugin, else undefined. */
+function skillAt(plugin: Plugin, file: string, folder: string): ListedSkill | undefined {
+  const real = realOf(file)
+  return typeof real === 'string' && isInside(real, plugin.realRoot) ? { file, folder } : undefined
+}
+
+/** The skills that the paths of the manifest `skills` key of `plugin` give. The key takes a
+ *  path or a list of paths. A path names one skill folder that holds a `SKILL.md`, or a folder
+ *  of skill folders (manifest reference, Fields table). The result has no skill for a path that
+ *  names the plugin root, that is not there, that leaves the plugin, or that the rule cannot
+ *  see. It also has none for a `SKILL.md` that the rule cannot see, or that leads out of the
+ *  plugin. The paths add to `skills/`, and a path can name `skills/`, so a skill can occur two
+ *  times. */
+export function listedSkills(plugin: Plugin): ListedSkill[] {
+  const { skills } = plugin.fields
+  const texts = (Array.isArray(skills) ? skills : [skills]).filter(
+    (item): item is string => typeof item === 'string',
+  )
+  return texts.flatMap((text) => {
+    const real = lookup(plugin, text)
+    if (typeof real !== 'string' || real === plugin.realRoot) {
+      return []
+    }
+    const dir = path.resolve(plugin.root, text)
+    const own = skillAt(plugin, path.join(dir, 'SKILL.md'), path.basename(dir))
+    if (own !== undefined) {
+      return [own]
+    }
+    const entries = entriesOf(real)
+    return (Array.isArray(entries) ? entries : [])
+      .map((entry) => entry.name)
+      .sort((a, b) => a.localeCompare(b, 'en'))
+      .flatMap((name) => skillAt(plugin, path.join(dir, name, 'SKILL.md'), name) ?? [])
+  })
+}
+
+/** The plugin whose manifest `skills` key lists the skill at `file`, a `SKILL.md`, and the
+ *  skill. The walk starts at the directory above the skill folder, because a plugin root that is
+ *  the skill folder lists no path for it. The walk stops at the first plugin root that lists the
+ *  skill, at a root that it cannot see, and at the repository root. The result is undefined when
+ *  no plugin lists the skill. */
+export function listingPlugin(file: string): { plugin: Plugin; skill: ListedSkill } | undefined {
+  const folder = path.dirname(path.resolve(file))
+  const self = realOf(file)
+  // `repositoryRoot` gives the real path of a directory at or above `folder`, so the walk meets it.
+  // A skill folder that is the repository root has no plugin root in the repository.
+  const bound = repositoryRoot(folder)
+  if (realDirectory(folder) === bound) {
+    return undefined
+  }
+  for (let at = path.dirname(folder); ; at = path.dirname(at)) {
+    const manifest = hasManifest(at)
+    if (manifest === UNREADABLE) {
+      return undefined
+    }
+    const plugin = manifest ? readPluginAt(at) : undefined
+    const skill = plugin && listedSkills(plugin).find((item) => realOf(item.file) === self)
+    if (skill !== undefined) {
+      return { plugin: plugin as Plugin, skill }
+    }
+    if (realDirectory(at) === bound) {
+      return undefined
+    }
+  }
 }
