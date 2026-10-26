@@ -494,6 +494,25 @@ export async function updateState({
   return { pages: current.length }
 }
 
+// The target of a Markdown link to an English docs page, as an absolute URL. The `.md`
+// suffix is optional, and so is the anchor. A link with no `/en/` segment is not in this
+// form: the stored page `mcp-quickstart` has `https://code.claude.com/docs/mcp`.
+const ABSOLUTE_DOCS_LINK =
+  /\]\(https:\/\/code\.claude\.com(\/docs\/en\/[^)\s#]*?)(?:\.md)?(#[^)\s]*)?\)/g
+
+// Gives each Markdown link to an English docs page in its relative form,
+// `/docs/en/<path>#<anchor>`.
+// Since 2026-10-23, the live `.md` render gives these links as absolute URLs, often with
+// `.md`. The snapshot stores the relative form of the render before. So a block that
+// changed only in the link form keeps its stored hash.
+export function relativeDocsLinks(text: string): string {
+  return text.replace(
+    ABSOLUTE_DOCS_LINK,
+    (_link, page: string, anchor = '') => `](${page}${anchor})`,
+  )
+}
+
+// Fetches the `.md` render of a docs page. Each docs link comes back in its relative form.
 export async function fetchMarkdown(url: string): Promise<string> {
   let response: Response
   try {
@@ -503,7 +522,7 @@ export async function fetchMarkdown(url: string): Promise<string> {
     throw new Error(`${url}: ${(reason as Error).message}`, { cause: error })
   }
   if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`)
-  return response.text()
+  return relativeDocsLinks(await response.text())
 }
 
 export async function main(
