@@ -59,7 +59,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       appleEvents:
         '"allowAppleEvents" removes code-execution isolation: sandboxed commands can launch other applications unsandboxed with no user prompt. Add the one tool to "excludedCommands" instead.',
       nestedUserNamespaces:
-        '"allowNestedUserNamespaces" turns off a security boundary: code from a sandboxed command can end up running outside the sandbox. Do not rely on the sandbox restrictions while it is on.',
+        '"allowNestedUserNamespaces" turns off a security boundary: code from a sandboxed command can then run outside the sandbox. Do not rely on the sandbox restrictions while it is on.',
       plaintextInject:
         '"allowPlaintextInject" sends a credential in cleartext on plain HTTP, to an upstream with no verified identity. Use it only on trusted test networks.',
       filesystemDisabled:

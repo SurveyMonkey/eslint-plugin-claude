@@ -132,6 +132,13 @@ describe(`${name}: the options for user and managed settings`, () => {
     }
   })
 
+  it('says what allowNestedUserNamespaces turns off', () => {
+    const [report] = at(repo({}), MANAGED, sandbox({ allowNestedUserNamespaces: true }))
+    expect(report?.message).toBe(
+      '"allowNestedUserNamespaces" turns off a security boundary: code from a sandboxed command can then run outside the sandbox. Do not rely on the sandbox restrictions while it is on.',
+    )
+  })
+
   it('is silent for false', () => {
     expect(
       ids(

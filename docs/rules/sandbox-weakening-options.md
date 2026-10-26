@@ -36,7 +36,7 @@ The rule reports each of these in a settings file. A quoted `"true"` counts as `
 | `network.allowUnixSockets` with a `docker.sock` entry | Access to the Docker socket gives control of the host.[^unix] [^limits] The rule matches an entry whose last path part is `docker.sock`. |
 | `network.allowMachLookup` with the entry `"*"` | A lone `*` matches every XPC and Mach service.[^mach] |
 | `allowAppleEvents: true` | It removes code-execution isolation.[^apple] |
-| `allowNestedUserNamespaces: true` | It turns off a security boundary. Code from a sandboxed command can end up running outside the sandbox.[^userns] [^limits] |
+| `allowNestedUserNamespaces: true` | It turns off a security boundary. Code from a sandboxed command can then run outside the sandbox.[^userns] [^limits] |
 | `credentials.allowPlaintextInject: true` | The credential travels in cleartext on plain HTTP.[^plaintext] |
 | `filesystem.disabled: true` with `autoAllowBashIfSandboxed` not `false` | Commands get unrestricted read and write access, and run with no prompt.[^disable] |
 
