@@ -1,7 +1,8 @@
 // A single-segment directory pattern in an `if` condition, such as `Edit(src/**)`, matches only the directory in the
 // working directory since v2.1.214 (docs/rules/hooks-if-dir-glob-depth.md). Before that version it matched a directory of
-// that name at any depth. The hooks reference states both behaviors, but a repository file does not say which version runs
-// it. So the rule reports only with the option `minVersion` at v2.1.214 or later, and nothing when it is unset.
+// that name at any depth. The hooks reference states the current behavior only. The changelog entry 2.1.214 states the
+// change. A repository file does not say which version runs it. So the rule reports only with the option `minVersion` at
+// v2.1.214 or later, and nothing when it is unset.
 // `hooks-if-condition` owns an `if` that is no rule, and an `if` on an event that is no tool event.
 import type { Rule } from 'eslint'
 import { TOOL_EVENTS } from '../data/hook-events.ts'

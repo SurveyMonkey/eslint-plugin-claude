@@ -135,4 +135,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^localhost]: [RFC 6761, section 6.3: Domain Name Reservations, "localhost."](https://www.rfc-editor.org/rfc/rfc6761#section-6.3)
 [^mapped]: [RFC 4291, section 2.5.5.2: IPv4-Mapped IPv6 Address](https://www.rfc-editor.org/rfc/rfc4291#section-2.5.5.2)
 [^unspecified]: [RFC 1122, section 3.2.1.3: Addressing](https://www.rfc-editor.org/rfc/rfc1122#section-3.2.1.3)
-[^loading]: [Plugin loading reference: Plugins shared through a repository](https://code.claude.com/docs/en/plugins/loading#plugins-shared-through-a-repository)
+[^loading]: [Plugin loading reference: Trust check and component limits for repository plugins](https://code.claude.com/docs/en/plugins/loading#trust-check-and-component-limits-for-repository-plugins)

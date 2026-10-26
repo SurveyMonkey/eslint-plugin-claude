@@ -25,16 +25,16 @@ generated:
 ## Rule details
 
 The `disallowedTools` field removes tools from the subagent. A specifier does not narrow the removal. An entry such as
-`Bash(git push *)` "still removes the whole tool from the subagent, not only the matching commands".[^available]
+`Bash(git push *)` "still removes the whole tool from the subagent, not only the matching commands".[^restrict]
 The subagent then has no `Bash` tool. To keep `Bash` and block some commands, add a deny rule to `permissions.deny` in
-the settings. That rule applies to the main conversation and to subagents.[^available]
+the settings. That rule applies to the main conversation and to subagents.[^restrict]
 
 The rule reports two cases:
 
 - **A specifier.** A `disallowedTools` entry has parentheses, as in `Bash(git push *)` or `Read(.env)`. The report is
   on the entry.
 - **A tool in both lists.** The docs apply `disallowedTools` first, and then resolve `tools` against the tools that
-  remain. A tool in both lists is removed.[^available] So the entry in `tools` has no effect. The report is on the
+  remain. A tool in both lists is removed.[^restrict] So the entry in `tools` has no effect. The report is on the
   `tools` entry. The rule compares the tool names, so `Bash` in `tools` and `Bash(git push *)` in `disallowedTools`
   give both reports.
 
@@ -73,4 +73,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^available]: [Create custom subagents: Available tools](https://code.claude.com/docs/en/sub-agents#available-tools)
+[^restrict]: [Create custom subagents: Restrict which tools a subagent can use](https://code.claude.com/docs/en/sub-agents#restrict-which-tools-a-subagent-can-use)

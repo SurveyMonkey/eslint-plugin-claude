@@ -193,10 +193,10 @@
       "text": "### Entry name and manifest name\n\nA marketplace plugin has two names, and they can differ:\n\n* **The entry name in `marketplace.json`**: the install and enable key. It's what you write in `enabledPlugins`, what the cache directory is named after, and what `claude plugin list` shows\n* **The `name` in the manifest**: what the plugin's components are namespaced under, and what [name conflicts](#name-conflicts) compare"
     },
     {
-      "heading": "Plugins shared through a repository",
-      "id": "plugins-shared-through-a-repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2",
-      "text": "### Plugins shared through a repository\n\nTo share a plugin through a repository, list it under `enabledPlugins` in `.claude/settings.json` or place it under `.claude/skills/`. Claude Code doesn't scan a project's `.claude/plugins/` directory.\n\nA cloud session doesn't add the marketplaces a repository lists under [`extraKnownMarketplaces`](/docs/en/settings-reference#extraknownmarketplaces), because that requires the workspace trust dialog, which a cloud session never shows."
+      "heading": "Trust check and component limits for repository plugins",
+      "id": "trust-check-and-component-limits-for-repository-plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351",
+      "text": "#### Trust check and component limits for repository plugins\n\nA project-scope plugin is checked into the repository and reaches every collaborator who clones it. Because that content comes from the repository rather than from you, it loads only after the same trust check that applies to project allow rules in `.claude/settings.json`. Trusting a parent folder or running with `-p` isn't enough. Components that run code are restricted further:\n\n* MCP servers it declares go through the [same per-server approval](/docs/en/mcp) as a project `.mcp.json`\n* MCP servers it declares as an [MCP bundle](/docs/en/plugins/manifest-reference#mcpservers), a `.mcpb` or `.dxt` file, or from a file outside the plugin directory are skipped. Declare them inline or in a `.mcp.json` inside the plugin directory\n* [Background monitors](/docs/en/plugins/components#monitors) do not load\n\nNeither the trust check nor these component limits apply to a plugin under your own `~/.claude/skills/`.\n\nFor how to write `--plugin-dir` and skills-directory plugins, see [Create plugins](/docs/en/plugins/create)."
     },
     {
       "heading": "Paths that escape the plugin directory",
@@ -209,6 +209,12 @@
       "id": "in-place-and-copied-plugins",
       "hash": "9a8dc22cfc8cb724f680dda6996b144d37fc53701ab8a4316c2acb9d50bb65ff",
       "text": "### In-place and copied plugins\n\nClaude Code loads some plugins in place from where you keep them and copies the rest into the cache, according to their origin:\n\n* **`--plugin-dir` and skills-directory plugins**: the directory loads in place and is never copied. A `--plugin-url` archive or a `--plugin-dir` `.zip` is extracted into a session temp directory first\n* **Relative-path plugins in a marketplace you added from a local path**: the plugin loads in place from its path inside the marketplace folder. Your edits to the source directory take effect at the next session start or `/reload-plugins`, and you don't need to increase the version. The plugin's hook processes and MCP and LSP servers receive a `CLAUDE_PLUGIN_ROOT` that points at the source directory. For its Node.js package dependencies, see [When the dependency install runs](#when-the-dependency-install-runs)\n* **`command`-source plugins in [link mode](/docs/en/plugins/marketplace-reference#command-plugin-source)**: the directory the command printed loads in place, through links in the cache entry\n* **Every other marketplace plugin**: Claude Code copies the plugin into `cache/<marketplace>/<plugin>/<version>/` at install and loads that copy. Files outside the plugin directory aren't copied, so when a script inside a copied plugin reads a path above the plugin root, such as `../shared`, it doesn't find them"
+    },
+    {
+      "heading": "Plugins shared through a repository",
+      "id": "plugins-shared-through-a-repository",
+      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2",
+      "text": "### Plugins shared through a repository\n\nTo share a plugin through a repository, list it under `enabledPlugins` in `.claude/settings.json` or place it under `.claude/skills/`. Claude Code doesn't scan a project's `.claude/plugins/` directory.\n\nA cloud session doesn't add the marketplaces a repository lists under [`extraKnownMarketplaces`](/docs/en/settings-reference#extraknownmarketplaces), because that requires the workspace trust dialog, which a cloud session never shows."
     },
     {
       "heading": "When the dependency install runs",
@@ -227,6 +233,12 @@
       "id": "when-the-dependency-install-fails-or-is-skipped",
       "hash": "e9e73986d749ac68cdfca5e3baa46cbd4316c2cba3354985113f8d61bd78638f",
       "text": "#### When the dependency install fails or is skipped\n\nIf the install fails or is skipped, the plugin still loads, but the parts of it that need the missing packages may not work.\n\n`/plugin` and `claude plugin list` show a note on an enabled plugin whose cached copy has a lockfile and a `package.json` that lists runtime dependencies, but no `node_modules` directory. The note says whether the install didn't finish or can't run for this plugin. See [the troubleshooting entry](/docs/en/plugins/troubleshooting#the-packages-it-lists-are-not-installed) for what to do about each.\n\nWhen the automatic install can't provide a dependency, install it from a hook into the [persistent data directory](/docs/en/plugins/components#path-variables-and-persistent-data). That includes packages that need their lifecycle scripts to build, Python dependencies, plugins locked with Yarn or pnpm, and dependencies that aren't registry packages, such as git dependencies."
+    },
+    {
+      "heading": "Check why a repository plugin didn't load",
+      "id": "check-why-a-repository-plugin-didnt-load",
+      "hash": "799ddee365c73061f5c626ddfaadbbc70c8eed5e7f1ff3291c56b9a1e9b3c474",
+      "text": "#### Check why a repository plugin didn't load\n\nIf a plugin in your repository's `.claude/skills/` doesn't load, check for these causes:\n\n* **In a subdirectory**: a plugin at the repository root doesn't load. Claude Code reads the `.claude/skills/` of the session's [primary working directory](/docs/en/permissions#working-directories) and, unlike plain skills and commands, doesn't [search parent directories](/docs/en/skills#discovery-from-parent-and-nested-directories) for plugins. Launch from the repository root instead, or [move the session there with `/cd`](/docs/en/permissions#move-the-session-to-another-directory) on v2.1.246 or later\n* **From the desktop app, in a worktree**: the plugin loads from the main checkout's `.claude/skills/` rather than the worktree's. See [What worktrees share with the main checkout](/docs/en/worktrees#what-worktrees-share-with-the-main-checkout)\n* **In a folder you haven't trusted**: the plugin loads only after you accept the [workspace trust dialog](/docs/en/permissions#what-runs-before-you-trust-a-folder) for that folder\n* **In an organization that manages Claude Code**: see [Skills-directory plugins blocked by managed settings](#skills-directory-plugins-blocked-by-managed-settings)"
     },
     {
       "heading": "Enabled in project settings but not installed",

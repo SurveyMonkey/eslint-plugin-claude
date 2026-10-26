@@ -58,7 +58,7 @@ The rule does not report a `.claude/skills/` directory that is not at the reposi
 in the rule inventory names this case. The docs say that such a plugin loads only from the
 `.claude/skills/` of the primary directory of the session, and not from a parent directory. The
 rule cannot see that directory. A session that starts there loads the plugin. So the rule cannot
-tell a wrong place from a place that a team chose.[^repository]
+tell a wrong place from a place that a team chose.[^primary]
 
 A plugin in `~/.claude/skills/` has none of these restrictions. The rule judges the files of a
 repository only, so it does not see such a plugin.
@@ -78,6 +78,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^repository]: [Plugin loading reference: Plugins shared through a repository](https://code.claude.com/docs/en/plugins/loading#plugins-shared-through-a-repository)
+[^repository]: [Plugin loading reference: Trust check and component limits for repository plugins](https://code.claude.com/docs/en/plugins/loading#trust-check-and-component-limits-for-repository-plugins)
+[^primary]: [Plugin loading reference: Check why a repository plugin didn't load](https://code.claude.com/docs/en/plugins/loading#check-why-a-repository-plugin-didnt-load)
 [^mcp]: [Plugin manifest reference: mcpServers](https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers)
 [^monitors]: [Plugin manifest reference: monitors](https://code.claude.com/docs/en/plugins/manifest-reference#monitors)
