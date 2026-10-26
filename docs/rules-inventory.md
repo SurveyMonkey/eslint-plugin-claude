@@ -23,14 +23,14 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **456 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
+- **457 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
   and not-built rows. 340 rules go in `recommended`: 204 at `error` and 136 at
-  `warn`. 116 rules ship `off`, and `strict` turns them on at `warn`.
-- **Silent failure is the largest category.** 142 rules have the category `no-op`. The file loads,
+  `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
+- **Silent failure is the largest category.** 143 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 440 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 441 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -120,7 +120,7 @@ It is in the Subagents and output styles group.
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 77 |
-| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 142 |
+| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 143 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
@@ -174,13 +174,13 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Plugin manifest and layout | 26 | 19 | 9 | 54 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
 | CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
-| Settings | 18 | 19 | 14 | 51 |
+| Settings | 18 | 19 | 15 | 52 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **204** | **136** | **116** | **456** |
+| **Total** | **204** | **136** | **117** | **457** |
 
-By severity, 204 rules are `error` and 252 are `warn`: the 136 `recommended` `warn` rules and
-the 116 `off` rules that `strict` turns on at `warn`.
+By severity, 204 rules are `error` and 253 are `warn`: the 136 `recommended` `warn` rules and
+the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
 of the check for plugins (`partial`) or none of it (`–`).
@@ -687,7 +687,7 @@ Rules for instruction files: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`
 
 ### Settings
 
-Covers `.claude/settings.json`, `.claude/settings.local.json`, committed `managed-settings.json` and `managed-settings.d/*.json`, files passed to `--settings`, the `env` block, model and output-style selection keys, and statusline config; a repository `keybindings.json` is left to `settings-global-only-file`: 51 rules: 18 error and 19 warn in `recommended`, and 14 `off`. The ten `keybindings-` rows and two other rows are dropped (round 12) and are not counted. Keys owned by the permissions, sandbox, hooks, MCP, marketplace, and memory groups are checked there, except for scope (`settings-key-scope`) and unknown-key detection (`settings-schema`).
+Covers `.claude/settings.json`, `.claude/settings.local.json`, committed `managed-settings.json` and `managed-settings.d/*.json`, files passed to `--settings`, the `env` block, model and output-style selection keys, and statusline config; a repository `keybindings.json` is left to `settings-global-only-file`: 52 rules: 18 error and 19 warn in `recommended`, and 15 `off`. The ten `keybindings-` rows and two other rows are dropped (round 12) and are not counted. Keys owned by the permissions, sandbox, hooks, MCP, marketplace, and memory groups are checked there, except for scope (`settings-key-scope`) and unknown-key detection (`settings-schema`).
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -728,6 +728,7 @@ Covers `.claude/settings.json`, `.claude/settings.local.json`, committed `manage
 | `settings-env-routing` | Shared `.claude/settings.json` `env` sets a variable that sends the traffic of every user elsewhere: `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`; `ANTHROPIC_BASE_URL` with a host other than `api.anthropic.com`; `CLAUDE_CODE_USE_{BEDROCK,MANTLE,VERTEX,FOUNDRY,ANTHROPIC_AWS}` with an on value (`1`, `true`, `yes`, `on`, with any letter case). A provider variable or a non-default base URL bypasses server-managed settings. Files: `.claude/settings.json` only. One report for each variable, on the variable name. No option. Not checked: `OTEL_EXPORTER_OTLP_ENDPOINT`, which Claude Code ignores in a project file, so `settings-env-ignored-var` reports it; a blank value; a value that is not a string; `.claude/settings.local.json`; a managed file. | recommended | warn | security | – | [^server-managed-settings-environment-variables-and-the-approval-dialog] [^server-managed-settings-security-considerations] [^server-managed-settings-fetch-and-caching-behavior] [^env-vars-variables] |
 | `settings-env-prompt-caching-off` | Shared `.claude/settings.json` `env` sets `DISABLE_PROMPT_CACHING`, `DISABLE_PROMPT_CACHING_FABLE`, `DISABLE_PROMPT_CACHING_HAIKU`, `DISABLE_PROMPT_CACHING_OPUS` or `DISABLE_PROMPT_CACHING_SONNET` to an on value (`1`, `true`, `yes`, `on`, with any letter case), which raises cost and latency for everyone. Files: `.claude/settings.json` only. One report for each variable, on the variable name. No option. Not checked: an off or blank value; a value that is not a string; `.claude/settings.local.json`; a managed file, which the prompt caching page names for a policy across an organization. | recommended | warn | practice | – | [^prompt-caching-disable-prompt-caching] [^env-vars-variables] |
 | `settings-env-context-cost` | (heuristic) Shared `.claude/settings.json` `env` sets the debug override `FORCE_PROMPT_CACHING_5M` to an on value (`1`, `true`, `yes`, `on`), or `ENABLE_TOOL_SEARCH` to a false value (`false`, `0`, `no`, `off`), which loads every MCP tool definition upfront. One report for each variable, on the variable name. Files: `.claude/settings.json` only. No threshold option: the rule compares no number. Not checked: the variables that turn prompt caching off, which `settings-env-prompt-caching-off` owns; a value that is not a string; the local file and the managed files. | off | warn | limit | – | [^prompt-caching-choose-the-ttl-yourself] [^prompt-caching-connecting-or-removing-an-mcp-server] |
+| `settings-env-auto-mode-model` | `env.CLAUDE_CODE_AUTO_MODE_MODEL` (Claude Code v2.1.302 or later) is a full model ID, not an alias of the "Model aliases" table or `default` (`opus`, `sonnet`, `haiku`, `fable`, `best`, `opusplan`, `default`, and the `[1m]` spellings), and is not a model that the classifier ignores: Claude Opus 5, Sonnet 5.5 or Opus 5.5, where the default classifier model reviews. The list is in `src/data/auto-mode-model.ts`, checked on Claude Code 2.1.310. The rule reads the family and the version of an ID, so a dated ID, an ID with `[1m]` and a provider ID that embeds an ignored model report. Any other value is accepted as text, because the docs say that the full IDs of a cloud provider work. One report on the value. Files: the project files and the managed files; a hidden drop-in gets no report. No option: a client before v2.1.302 ignores the variable, and the fault is the same on each client that reads it. Not checked: a value that is not a string, which `settings-env-value-format` owns; the `availableModels` policy exclusion, which is in managed settings out of the repository; a provider that cannot serve the model and the server-side review, which are run-time state; the user file `~/.claude/settings.json`, which is out of the repository. Validate `–`: `claude plugin validate` 2.1.310 passes a plugin whose `settings.json` sets the variable to `claude-opus-5` and whose `.claude/settings.json` sets `sonnet`, and names neither file. `off`, not `recommended`: see the Settings notes. | off | warn | no-op | – | [^permission-modes-choose-the-classifier-model] [^env-vars-variables] [^model-config-model-aliases] |
 | `settings-env-numeric-spelling` | Numeric `env` value in scientific or digit-separator form (`1e6`, `64_000`); versions before v2.1.211 misparse it. Fails only on older clients, so the rule has the option `minVersion` and reports nothing when it is unset; it reports when `minVersion` is below 2.1.211. No report for a variable that needs v2.1.211 or later (list in `src/data/settings-env.ts`): an older client ignores it. The rule reads the shape of the value, not the variable name, because the docs name no list of numeric variables. A variable that has a form in `settings-env-value-format` and rejects the value is left to that rule (one report). No report for a credential variable. | recommended | warn | portability | – | [^env-vars-variables] |
 | `settings-env-format-heuristic` | (heuristic) `MAX_MCP_OUTPUT_TOKENS` is a positive whole number; `MCP_TIMEOUT`, `MCP_TOOL_TIMEOUT`, `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT` and `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` are whole numbers of milliseconds (`0` is valid, and turns the last two off). A scientific spelling such as `2e3` and a spelling with digit separators such as `64_000` pass, because the Variables text allows them where a row does not say plain digits only; `CLAUDE_CODE_USE_POWERSHELL_TOOL` is `0` or `1`. The forms are in `heuristicEnvForm`, not in the forms of `settings-env-value-format`, so no value gets two reports. One report on the value. Files: the project files and the managed files; a hidden drop-in gets no report. No option. Not checked: an empty value; a value that is not a string. | off | warn | load | – | [^mcp-mcp-output-limits-and-warnings] [^tools-reference-enable-the-powershell-tool] [^env-vars-variables] |
 | `settings-env-subprocess-scrub` | **Dropped (round 12).** No page recommends the variable for every project. The env-vars page describes `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` as an option ("Set to `1` to strip credentials") and says "use it as one layer", and to leave it unset if a subprocess needs a removed variable. A report on a file that omits it has no docs basis (round 12 ruling 12). A report on a set value that is not on has none either: the docs do not call an off value a fault. Was: `env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` is an on value. | off | warn | security | – | [^env-vars-variables] [^env-vars-what-the-subprocess-environment-scrub-removes] |
@@ -816,6 +817,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 - Legacy aliases accepted (the dropped rule `keybindings-deprecated-action` flagged them): messageSelector:up, messageSelector:down, messageSelector:top, messageSelector:bottom, messageSelector:select, diff:viewDetails. No-op (the dropped rule `keybindings-removed-action` flagged it): footer:dismiss.
 
 #### Settings: notes
+- **`settings-env-auto-mode-model` ships `off`.** The table puts a `no-op` in `recommended`. The list of models that the classifier ignores changes with each model release, so the rule can go out of date between plugin releases. `strict` turns it on at `warn` [^permission-modes-choose-the-classifier-model].
 - **No `claude plugin validate` overlap.** No page says validate reads settings, env, statusline, or keybindings files. Every rule here has Validate `–`. The runtime reports some of these at startup (Settings Error, Settings Warning, `/status`, `claude doctor`, keybindings load warnings) [^settings-fix-a-broken-settings-file] [^keybindings-validation].
 - **Own key catalog.** The SchemaStore schema "can lag behind the newest CLI releases", so `settings-schema` uses Appendix A.1, not the schema alone [^settings-edit-a-settings-file].
 - **Scope needs per-key value exceptions.** `bashEditDiffEnabled` is `User or managed`, but a project `false` still applies. `autoContinueAtUsageLimit` is `User or managed`, but a project value turns the feature off, so it has its own warn rule. `syncClaudeAiSkills`, `syncClaudeAiPlugins`, and `useAutoModeDuringPlan` honor only `false` [^settings-exceptions-to-managed-settings-precedence] [^settings-reference-basheditdiffenabled] [^settings-reference-autocontinueatusagelimit].
@@ -1620,6 +1622,7 @@ Other names a rule may contain:
 [^large-codebases-block-reads-of-generated-and-vendored-code]: [Set up Claude Code in a monorepo or large codebase: Block reads of generated and vendored code](https://code.claude.com/docs/en/large-codebases#block-reads-of-generated-and-vendored-code)
 [^auto-mode-config-add-a-human-checkpoint]: [Configure auto mode: Add a human checkpoint](https://code.claude.com/docs/en/auto-mode-config#add-a-human-checkpoint)
 [^permission-modes-what-the-classifier-blocks-by-default]: [Choose a permission mode: What the classifier blocks by default](https://code.claude.com/docs/en/permission-modes#what-the-classifier-blocks-by-default)
+[^permission-modes-choose-the-classifier-model]: [Choose a permission mode: Choose the classifier model](https://code.claude.com/docs/en/permission-modes#choose-the-classifier-model)
 [^settings-reference-sandbox-enabled]: [All settings: sandbox.enabled](https://code.claude.com/docs/en/settings-reference#sandboxenabled)
 [^settings-reference-sandbox-failifunavailable]: [All settings: sandbox.failIfUnavailable](https://code.claude.com/docs/en/settings-reference#sandbox-failifunavailable)
 [^settings-reference-sandbox-allowunsandboxedcommands]: [All settings: sandbox.allowUnsandboxedCommands](https://code.claude.com/docs/en/settings-reference#sandboxallowunsandboxedcommands)

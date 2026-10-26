@@ -484,6 +484,7 @@ default if it has one.
 | [settings-managed-version-floor](docs/rules/settings-managed-version-floor.md)               | Set requiredMinimumVersion with deniedModels or availableModelsMatch                   |      | ✅ 🔒 |    |
 | [statusline-windows-path](docs/rules/statusline-windows-path.md)                             | Write a path in the statusLine command with forward slashes                            |      | ✅ 🔒 |    |
 | [settings-agent-exists](docs/rules/settings-agent-exists.md)                                 | Name an agent that the repository defines or Claude Code ships in the agent setting    |      | 🔒   | ⚙️ |
+| [settings-env-auto-mode-model](docs/rules/settings-env-auto-mode-model.md)                   | Set CLAUDE_CODE_AUTO_MODE_MODEL to a full model ID that the classifier uses            |      | 🔒   |    |
 | [settings-env-context-cost](docs/rules/settings-env-context-cost.md)                         | Do not set an env variable that raises the context cost in the shared settings file    |      | 🔒   |    |
 | [settings-env-format-heuristic](docs/rules/settings-env-format-heuristic.md)                 | Write the MCP and PowerShell env variables in the form that the docs give              |      | 🔒   |    |
 | [settings-env-secret-heuristic](docs/rules/settings-env-secret-heuristic.md)                 | Do not commit an env variable that looks like a secret                                 |      | 🔒   |    |

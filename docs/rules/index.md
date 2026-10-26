@@ -7,6 +7,7 @@ okf_version: "0.2"
 | Doc | Description |
 |-----|-------------|
 | [settings-agent-exists.md](settings-agent-exists.md) | The ESLint rule claude/settings-agent-exists, which reports an agent value in a project or local settings file that is no built-in agent and no agent in .claude/agents/. It is off in recommended. |
+| [settings-env-auto-mode-model.md](settings-env-auto-mode-model.md) | The ESLint rule claude/settings-env-auto-mode-model, which reports a CLAUDE_CODE_AUTO_MODE_MODEL value in a settings file that is an alias and not a full model ID, or that names a model the auto mode classifier ignores. It is off in recommended. |
 | [settings-env-context-cost.md](settings-env-context-cost.md) | The ESLint rule claude/settings-env-context-cost, which reports FORCE_PROMPT_CACHING_5M set on, and ENABLE_TOOL_SEARCH set to a false value, in the shared project settings file. It is off in recommended. |
 | [settings-env-format-heuristic.md](settings-env-format-heuristic.md) | The ESLint rule claude/settings-env-format-heuristic, which reports an env value for MAX_MCP_OUTPUT_TOKENS, the MCP timeout variables or CLAUDE_CODE_USE_POWERSHELL_TOOL that is not in the form the docs give. It is off in recommended. |
 | [settings-env-secret-heuristic.md](settings-env-secret-heuristic.md) | The ESLint rule claude/settings-env-secret-heuristic, which reports an env variable in the shared project settings file whose name ends in _KEY, _TOKEN, _SECRET or _PASSWORD, or whose value has the shape of a credential. It is off in recommended. |

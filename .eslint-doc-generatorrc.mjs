@@ -347,6 +347,7 @@ const GROUPS = [
       'settings-managed-version-floor',
       'statusline-windows-path',
       'settings-agent-exists',
+      'settings-env-auto-mode-model',
       'settings-env-context-cost',
       'settings-env-format-heuristic',
       'settings-env-secret-heuristic',
