@@ -71,8 +71,10 @@ describe(`${name} (silent)`, () => {
     expect(idsAt(files, allow(github))).toEqual([])
   })
 
-  it('is silent when a file of the source locks a type with strictPluginOnlyCustomization', () => {
-    for (const locked of [true, ['skills'], ['hooks', 'mcp']]) {
+  it('is silent when a file of the source locks a kind with strictPluginOnlyCustomization', () => {
+    // The managed settings page, "Keys that fail closed": a value that is neither a boolean nor an
+    // array reads as `true`. An array locks the kinds that it names.
+    for (const locked of [true, ['skills'], ['hooks', 'mcp'], ['foo', 'agents'], 'true', {}, 1]) {
       const lock = { strictPluginOnlyCustomization: locked }
       expect(idsAt({}, { ...allow(github), ...lock }), json(locked)).toEqual([])
       const files = { [`${DROP}/20-b.json`]: json(lock) }
@@ -184,7 +186,8 @@ describe(`${name} (reports)`, () => {
   })
 
   it('reports when strictPluginOnlyCustomization locks nothing', () => {
-    for (const unlocked of [[], false, 'true', null, {}]) {
+    // A `null` removes the key, and an array entry that is not a kind locks nothing.
+    for (const unlocked of [[], false, null, ['foo'], ['Skills'], [1, null]]) {
       const lock = { strictPluginOnlyCustomization: unlocked }
       expect(idsAt({}, { ...allow(github), ...lock }), json(unlocked)).toEqual(['missing'])
       const files = { [`${DROP}/20-b.json`]: json(lock) }

@@ -46,9 +46,12 @@ in these cases:
   there stops the plugins, so the author chose it.[^org]
 - A file of the source sets `managedSourcesBehavior` to `merge`. Claude Code then adds the lists
   of other managed sources, which the repository does not hold.[^merge]
-- A file of the source sets `strictPluginOnlyCustomization` to `true`, or to an array with one type or more. Claude Code
-  then skips skills-directory plugins whether or not the entry is there, so the entry does nothing.[^org][^locked] An empty
-  array locks nothing, so the rule still reports. The rule does not check the names in the array.
+- A file of the source locks a kind of customization with `strictPluginOnlyCustomization`. Claude Code
+  then skips skills-directory plugins whether or not the entry is there, so the entry does
+  nothing.[^org][^locked] The value `true` locks all four kinds. An array locks the kinds that it
+  names: `skills`, `agents`, `hooks` or `mcp`.[^strict] A value that is not a boolean, an array or
+  `null`, such as `"true"` or `{}`, reads as `true`.[^closed] The rule still reports for `false`,
+  `null`, an empty array, and an array with no kind, such as `["foo"]`.
 - The rule cannot read a sibling file, or the `managed-settings.d` directory.
 - The linted file is a hidden file in `managed-settings.d`.
 - The text of the linted file does not parse as JSON.
@@ -92,3 +95,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^aliases]: [All settings: Marketplace key aliases](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases)
 [^split]: [Deploy managed settings: Split a file-based policy across teams](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams)
 [^merge]: [All settings: managedSourcesBehavior](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior)
+[^strict]: [All settings: strictPluginOnlyCustomization](https://code.claude.com/docs/en/settings-reference#strictpluginonlycustomization)
+[^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)

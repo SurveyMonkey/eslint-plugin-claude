@@ -6997,6 +6997,16 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "managedSourcesBehavior",
       "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "strictPluginOnlyCustomization",
+      "hash": "664e0c69e3af1763d6cffbb113acf96ff5e7508cd9dbe71db224ed923e51751b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
     }
   ],
   "settings-sync-claude-ai-plugins": [
