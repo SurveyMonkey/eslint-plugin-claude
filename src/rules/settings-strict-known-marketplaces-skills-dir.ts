@@ -1,7 +1,8 @@
 // A `strictKnownMarketplaces` list needs `{ "source": "skills-dir" }`, or skills-directory plugins
 // do not load (docs/rules/settings-strict-known-marketplaces-skills-dir.md). The managed settings
 // page merges `managed-settings.json` and each `managed-settings.d/*.json` drop-in into one source,
-// and combines the lists. The rule reads the text of the linted file, and the sibling files through
+// and combines the lists. A file that locks a type with `strictPluginOnlyCustomization` stops the
+// plugins whether or not the entry is there, so the rule makes no report. The rule reads the text of the linted file, and the sibling files through
 // `readManagedSource`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { UNLOADED_MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
@@ -33,6 +34,14 @@ function listsSkillsDir(fields: Fields): boolean {
           (entry as Fields).source === UNLOADED_MARKETPLACE_SOURCE_TYPES.skillsDir,
       ),
   )
+}
+
+/** True when `fields` locks a type of customization: `true`, or an array with one type or more.
+ *  Claude Code then skips skills-directory plugins, with or without the entry. An empty array
+ *  locks nothing. */
+function locksCustomization(fields: Fields): boolean {
+  const lock = fields.strictPluginOnlyCustomization
+  return lock === true || (Array.isArray(lock) && lock.length > 0)
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
@@ -78,7 +87,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
         if (source.some((fields) => fields.managedSourcesBehavior === 'merge')) {
           return
         }
-        if (!source.some(listsSkillsDir)) {
+        // The entry does not help when a lock is set, so a report would ask for no gain.
+        if (!source.some(listsSkillsDir) && !source.some(locksCustomization)) {
           context.report({
             node: member.name,
             messageId: 'missing',

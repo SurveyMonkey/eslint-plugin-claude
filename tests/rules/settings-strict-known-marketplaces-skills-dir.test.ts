@@ -71,6 +71,16 @@ describe(`${name} (silent)`, () => {
     expect(idsAt(files, allow(github))).toEqual([])
   })
 
+  it('is silent when a file of the source locks a type with strictPluginOnlyCustomization', () => {
+    for (const locked of [true, ['skills'], ['hooks', 'mcp']]) {
+      const lock = { strictPluginOnlyCustomization: locked }
+      expect(idsAt({}, { ...allow(github), ...lock }), json(locked)).toEqual([])
+      const files = { [`${DROP}/20-b.json`]: json(lock) }
+      expect(idsAt(files, allow(github)), json(locked)).toEqual([])
+      expect(idsAt({ [MAIN]: json(lock) }, allow(github), `${DROP}/10-a.json`)).toEqual([])
+    }
+  })
+
   it('is silent when the source sets managedSourcesBehavior merge', () => {
     expect(idsAt({}, { ...allow(github), managedSourcesBehavior: 'merge' })).toEqual([])
     const files = { [`${DROP}/20-b.json`]: json({ managedSourcesBehavior: 'merge' }) }
@@ -170,6 +180,15 @@ describe(`${name} (reports)`, () => {
       const sibling = { strictKnownMarketplaces: value, allowedMarketplaces: [skillsDir] }
       const files = { [`${DROP}/20-b.json`]: json(sibling) }
       expect(idsAt(files, allow(github))).toEqual(['missing'])
+    }
+  })
+
+  it('reports when strictPluginOnlyCustomization locks nothing', () => {
+    for (const unlocked of [[], false, 'true', null, {}]) {
+      const lock = { strictPluginOnlyCustomization: unlocked }
+      expect(idsAt({}, { ...allow(github), ...lock }), json(unlocked)).toEqual(['missing'])
+      const files = { [`${DROP}/20-b.json`]: json(lock) }
+      expect(idsAt(files, allow(github)), json(unlocked)).toEqual(['missing'])
     }
   })
 

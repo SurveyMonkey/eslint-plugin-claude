@@ -46,6 +46,9 @@ in these cases:
   there stops the plugins, so the author chose it.[^org]
 - A file of the source sets `managedSourcesBehavior` to `merge`. Claude Code then adds the lists
   of other managed sources, which the repository does not hold.[^merge]
+- A file of the source sets `strictPluginOnlyCustomization` to `true`, or to an array with one type or more. Claude Code
+  then skips skills-directory plugins whether or not the entry is there, so the entry does nothing.[^org][^locked] An empty
+  array locks nothing, so the rule still reports. The rule does not check the names in the array.
 - The rule cannot read a sibling file, or the `managed-settings.d` directory.
 - The linted file is a hidden file in `managed-settings.d`.
 - The text of the linted file does not parse as JSON.
@@ -83,6 +86,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^org]: [Manage Claude Code plugins for your organization: Keep skills-directory plugins loading](https://code.claude.com/docs/en/plugins/org#keep-skills-directory-plugins-loading)
+[^locked]: [Plugin loading reference: Skills-directory plugins blocked by managed settings](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings)
 [^policy]: [Marketplace reference: Source values valid only in policy lists](https://code.claude.com/docs/en/plugins/marketplace-reference#source-values-valid-only-in-policy-lists)
 [^types]: [All settings: Allowed source types](https://code.claude.com/docs/en/settings-reference#allowed-source-types)
 [^aliases]: [All settings: Marketplace key aliases](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases)
