@@ -26,9 +26,10 @@ generated:
 
 In an `if` condition for a file tool, a single-segment directory pattern such as `Edit(src/**)` matches only the
 `src` directory in the working directory and the files under it. To match a directory named `src` at any depth,
-write `Edit(**/src/**)`. Before v2.1.214, `Edit(src/**)` matched a directory named `src` at any depth.[^common]
+write `Edit(**/src/**)`.[^common] Before v2.1.214, `Edit(src/**)` matched a directory named `src` at any depth. The
+[changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) states this in entry 2.1.214.
 
-The docs state both behaviors. A repository file does not say which Claude Code version runs it. So the rule makes
+A repository file does not say which Claude Code version runs it. So the rule makes
 no report unless you set the option `minVersion` to v2.1.214 or later. With a lower `minVersion`, the old
 behavior can apply, and the rule makes no report.
 
