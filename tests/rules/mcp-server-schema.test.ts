@@ -660,3 +660,115 @@ it('reports each fault case of a plugin .mcp.json that a marketplace lists with 
   const bare = JSON.stringify(JSON.parse(FAULTS).mcpServers)
   expect(ids(lintListedPluginFile('mcp-server-schema', bare))).toEqual(FAULT_IDS)
 })
+
+// #462: `claude mcp list` 2.1.310 skips a stdio entry whose `env` has a member value that is not a
+// string, and a remote entry whose `headers` has one ("env.A: expected string, received number").
+// It reads `env` in a stdio entry and `headers` in a remote entry only. A `sdk` entry has its own
+// message. Validate 2.1.310 reports the same value in a plugin, so a plugin with a manifest is
+// silent here, as for each other fault.
+const NOT_STRINGS = ['1', 'true', 'null', '{}', '[]']
+const envEntry = (value: string) => `{"command": "x", "env": {"A": ${value}}}`
+const headersEntry = (type: string, value: string) =>
+  `{"type": "${type}", "url": "https://x.test", "headers": {"H": ${value}}}`
+
+jsonTester.run('mcp-server-schema (member values)', rule, {
+  valid: [
+    { name: 'a string env value', code: wrap(envEntry('"1"')), filename: project },
+    {
+      name: 'a string headers value',
+      code: wrap(headersEntry('http', '"1"')),
+      filename: project,
+    },
+    {
+      name: 'an env member that a later member of the same name replaces',
+      code: wrap('{"command": "x", "env": {"A": 1, "A": "1"}}'),
+      filename: project,
+    },
+    {
+      name: 'an env in a remote entry, which Claude Code does not read',
+      code: wrap('{"type": "http", "url": "https://x.test", "env": {"A": 1}}'),
+      filename: project,
+    },
+    {
+      name: 'headers in a stdio entry, which Claude Code does not read',
+      code: wrap('{"command": "x", "headers": {"H": 1}}'),
+      filename: project,
+    },
+    {
+      name: 'env in a sdk entry, which has its own message',
+      code: wrap('{"type": "sdk", "name": "x", "env": {"A": 1}}'),
+      filename: project,
+    },
+  ],
+  invalid: [
+    ...NOT_STRINGS.flatMap((value) =>
+      ['.mcp.json', 'managed-mcp.json'].flatMap((filename) => [
+        {
+          name: `env value ${value} in ${filename}`,
+          code: wrap(envEntry(value)),
+          filename,
+          errors: [{ messageId: 'envValueType' as const, data: { server: 'a', member: 'A' } }],
+        },
+        ...['http', 'streamable-http', 'sse', 'ws'].map((type) => ({
+          name: `${type} headers value ${value} in ${filename}`,
+          code: wrap(headersEntry(type, value)),
+          filename,
+          errors: [{ messageId: 'headersValueType' as const, data: { server: 'a', member: 'H' } }],
+        })),
+      ]),
+    ),
+    {
+      name: 'a typed stdio entry, on the member value',
+      code: wrap('{"type": "stdio", "command": "x", "env": {"A": 1}}'),
+      filename: project,
+      errors: [
+        {
+          messageId: 'envValueType',
+          column: col(wrap('{"type": "stdio", "command": "x", "env": {"A": 1}}'), '1'),
+        },
+      ],
+    },
+    {
+      name: 'each member value that is not a string, with its name',
+      code: wrap('{"command": "x", "env": {"A": 1, "B": "x", "C": true}}'),
+      filename: project,
+      errors: [
+        { messageId: 'envValueType', data: { server: 'a', member: 'A' } },
+        { messageId: 'envValueType', data: { server: 'a', member: 'C' } },
+      ],
+    },
+    {
+      name: 'the last of two members of the same name',
+      code: wrap('{"command": "x", "env": {"A": "1", "A": 2}}'),
+      filename: project,
+      errors: [{ messageId: 'envValueType', data: { server: 'a', member: 'A' } }],
+    },
+    {
+      name: 'an env that is not an object gets the object report only',
+      code: wrap('{"command": "x", "env": [1]}'),
+      filename: project,
+      errors: [{ messageId: 'envType' }],
+    },
+  ],
+})
+
+it('stays silent in a plugin on a member value that is not a string', () => {
+  const entries = [
+    { command: 'x', env: { A: 1 } },
+    { type: 'http', url: URL, headers: { H: true } },
+    { command: 'x', env: { A: 1 }, url: URL },
+  ]
+  for (const entry of entries) {
+    const code = JSON.stringify({ mcpServers: { a: entry } })
+    expect(ids(lintPluginFile('mcp-server-schema', code))).toEqual([])
+    expect(
+      ids(lintManifest('mcp-server-schema', JSON.stringify({ name: 'p', ...JSON.parse(code) }))),
+    ).toEqual([])
+    expect(ids(lintRootPluginFile('mcp-server-schema', code))).toEqual([])
+  }
+})
+it('reports a member value that is not a string in a plugin file with no manifest', () => {
+  const code = '{"mcpServers": {"a": {"command": "x", "env": {"A": 1}}}}'
+  expect(ids(lintListedPluginFile('mcp-server-schema', code))).toEqual(['envValueType'])
+  expect(ids(lintRootListedFile('mcp-server-schema', code))).toEqual(['envValueType'])
+})
