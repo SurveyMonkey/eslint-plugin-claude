@@ -680,6 +680,11 @@ jsonTester.run('mcp-server-schema (member values)', rule, {
       filename: project,
     },
     {
+      name: 'an env object that a later env object of the same entry replaces',
+      code: wrap('{"command": "x", "env": {"A": 1}, "env": {"A": "1"}}'),
+      filename: project,
+    },
+    {
       name: 'an env member that a later member of the same name replaces',
       code: wrap('{"command": "x", "env": {"A": 1, "A": "1"}}'),
       filename: project,
@@ -744,6 +749,23 @@ jsonTester.run('mcp-server-schema (member values)', rule, {
       errors: [{ messageId: 'envValueType', data: { server: 'a', member: 'A' } }],
     },
     {
+      name: 'the last of two env objects of one entry',
+      code: wrap('{"command": "x", "env": {"A": "1"}, "env": {"A": 2}}'),
+      filename: project,
+      errors: [{ messageId: 'envValueType', data: { server: 'a', member: 'A' } }],
+    },
+    {
+      name: 'a headers value, on the member value',
+      code: wrap('{"type": "http", "url": "https://x.test", "headers": {"H": 7}}'),
+      filename: project,
+      errors: [
+        {
+          messageId: 'headersValueType',
+          column: col(wrap('{"type": "http", "url": "https://x.test", "headers": {"H": 7}}'), '7'),
+        },
+      ],
+    },
+    {
       name: 'an env that is not an object gets the object report only',
       code: wrap('{"command": "x", "env": [1]}'),
       filename: project,
@@ -767,8 +789,13 @@ it('stays silent in a plugin on a member value that is not a string', () => {
     expect(ids(lintRootPluginFile('mcp-server-schema', code))).toEqual([])
   }
 })
+
 it('reports a member value that is not a string in a plugin file with no manifest', () => {
-  const code = '{"mcpServers": {"a": {"command": "x", "env": {"A": 1}}}}'
-  expect(ids(lintListedPluginFile('mcp-server-schema', code))).toEqual(['envValueType'])
-  expect(ids(lintRootListedFile('mcp-server-schema', code))).toEqual(['envValueType'])
+  const env = '{"mcpServers": {"a": {"command": "x", "env": {"A": 1}}}}'
+  const headers =
+    '{"mcpServers": {"a": {"type": "http", "url": "https://x.test", "headers": {"H": 1}}}}'
+  expect(ids(lintListedPluginFile('mcp-server-schema', env))).toEqual(['envValueType'])
+  expect(ids(lintRootListedFile('mcp-server-schema', env))).toEqual(['envValueType'])
+  expect(ids(lintListedPluginFile('mcp-server-schema', headers))).toEqual(['headersValueType'])
+  expect(ids(lintRootListedFile('mcp-server-schema', headers))).toEqual(['headersValueType'])
 })
