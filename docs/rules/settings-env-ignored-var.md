@@ -68,8 +68,7 @@ can set them, so the rule makes no report in a managed file.[^ignored]
 - Variables that change how Claude Code starts or syncs: `CLAUDE_CODE_PROCESS_WRAPPER`,
   `CLAUDE_CODE_SYNC_SKILLS`, `CLAUDE_CODE_SYNC_PLUGINS`, `CLAUDE_CODE_PLUGIN_CACHE_DIR` and
   `CLAUDE_CODE_PLUGIN_SEED_DIR`.
-- The dialog timers `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS`, `CLAUDE_AFK_TIMEOUT_MS` and
-  `CLAUDE_AFK_COUNTDOWN_MS`, `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and
+- The dialog timer `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS`, `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and
   `CLAUDE_CODE_DISABLE_FILE_MENTIONS`.
 
 A few values that turn telemetry off still apply from a project or local file. The rule makes
