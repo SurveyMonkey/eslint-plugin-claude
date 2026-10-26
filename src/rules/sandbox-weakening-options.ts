@@ -2,8 +2,9 @@
 // (docs/rules/sandbox-weakening-options.md). The rule reads one file, except for
 // `autoAllowBashIfSandboxed`: a file of the source that sets it to false removes that fault, so
 // the rule reads the source there, and makes no report when it cannot read a file. A project or
-// local file cannot set `allowAppleEvents`, `allowPlaintextInject` or `filesystem.disabled`, and
-// `settings-key-scope` reports the key there, so the rule leaves those keys alone in those files.
+// local file cannot set `allowAppleEvents`, `allowNestedUserNamespaces`, `allowPlaintextInject` or
+// `filesystem.disabled`. `settings-key-scope` reports the key there, so the rule leaves those keys
+// alone in those files.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { isIgnoredInRepoFile } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -22,6 +23,7 @@ type MessageId =
   | 'dockerSocket'
   | 'machLookupAll'
   | 'appleEvents'
+  | 'nestedUserNamespaces'
   | 'plaintextInject'
   | 'filesystemDisabled'
 
@@ -31,6 +33,7 @@ const FLAGS: readonly (readonly [readonly string[], MessageId])[] = [
   [['sandbox', 'enableWeakerNetworkIsolation'], 'weakerNetwork'],
   [['sandbox', 'network', 'allowAllUnixSockets'], 'allUnixSockets'],
   [['sandbox', 'allowAppleEvents'], 'appleEvents'],
+  [['sandbox', 'allowNestedUserNamespaces'], 'nestedUserNamespaces'],
   [['sandbox', 'credentials', 'allowPlaintextInject'], 'plaintextInject'],
 ]
 
@@ -55,6 +58,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         '"*" in "allowMachLookup" allows every XPC and Mach service. List the services that a tool needs, or a prefix such as `com.apple.coresimulator.*`.',
       appleEvents:
         '"allowAppleEvents" removes code-execution isolation: sandboxed commands can launch other applications unsandboxed with no user prompt. Add the one tool to "excludedCommands" instead.',
+      nestedUserNamespaces:
+        '"allowNestedUserNamespaces" turns off a security boundary: code from a sandboxed command can end up running outside the sandbox. Do not rely on the sandbox restrictions while it is on.',
       plaintextInject:
         '"allowPlaintextInject" sends a credential in cleartext on plain HTTP, to an upstream with no verified identity. Use it only on trusted test networks.',
       filesystemDisabled:

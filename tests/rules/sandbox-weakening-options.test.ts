@@ -112,6 +112,7 @@ describe(`${name}: the options that any file can set`, () => {
 describe(`${name}: the options for user and managed settings`, () => {
   const CASES: [string, string][] = [
     ['appleEvents', sandbox({ allowAppleEvents: true })],
+    ['nestedUserNamespaces', sandbox({ allowNestedUserNamespaces: true })],
     ['plaintextInject', sandbox({ credentials: { allowPlaintextInject: true } })],
   ]
 
@@ -134,7 +135,11 @@ describe(`${name}: the options for user and managed settings`, () => {
   it('is silent for false', () => {
     expect(
       ids(
-        sandbox({ allowAppleEvents: false, credentials: { allowPlaintextInject: false } }),
+        sandbox({
+          allowAppleEvents: false,
+          allowNestedUserNamespaces: false,
+          credentials: { allowPlaintextInject: false },
+        }),
         MANAGED,
       ),
     ).toEqual([])
@@ -142,6 +147,9 @@ describe(`${name}: the options for user and managed settings`, () => {
 
   it('counts a quoted true in a managed file', () => {
     expect(ids(sandbox({ allowAppleEvents: 'true' }), MANAGED)).toEqual(['appleEvents'])
+    expect(ids(sandbox({ allowNestedUserNamespaces: 'true' }), MANAGED)).toEqual([
+      'nestedUserNamespaces',
+    ])
   })
 })
 

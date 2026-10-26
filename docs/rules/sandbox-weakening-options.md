@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/sandbox-weakening-options, which reports a sandbox option that the docs say reduces security or removes isolation, such as enableWeakerNestedSandbox, allowAllUnixSockets, a docker.sock entry, allowMachLookup with *, allowAppleEvents, allowPlaintextInject, or filesystem.disabled while autoAllowBashIfSandboxed is not false.
+description: The ESLint rule claude/sandbox-weakening-options, which reports a sandbox option that the docs say reduces security or removes isolation, such as enableWeakerNestedSandbox, allowAllUnixSockets, a docker.sock entry, allowMachLookup with *, allowAppleEvents, allowNestedUserNamespaces, allowPlaintextInject, or filesystem.disabled while autoAllowBashIfSandboxed is not false.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -36,6 +36,7 @@ The rule reports each of these in a settings file. A quoted `"true"` counts as `
 | `network.allowUnixSockets` with a `docker.sock` entry | Access to the Docker socket gives control of the host.[^unix] [^limits] The rule matches an entry whose last path part is `docker.sock`. |
 | `network.allowMachLookup` with the entry `"*"` | A lone `*` matches every XPC and Mach service.[^mach] |
 | `allowAppleEvents: true` | It removes code-execution isolation.[^apple] |
+| `allowNestedUserNamespaces: true` | It turns off a security boundary. Code from a sandboxed command can end up running outside the sandbox.[^userns] [^limits] |
 | `credentials.allowPlaintextInject: true` | The credential travels in cleartext on plain HTTP.[^plaintext] |
 | `filesystem.disabled: true` with `autoAllowBashIfSandboxed` not `false` | Commands get unrestricted read and write access, and run with no prompt.[^disable] |
 
@@ -44,8 +45,8 @@ The rule reports each of these in a settings file. A quoted `"true"` counts as `
 - The rule reads one file, except for `autoAllowBashIfSandboxed`. A file of the source that sets it to `false` removes the
   fault of `filesystem.disabled`. So that part reads the source, as `src/permission-source.ts` defines it, and gives no report
   when it cannot read a file of the source.
-- Claude Code honors `allowAppleEvents`, `credentials.allowPlaintextInject` and `filesystem.disabled` from user and managed
-  settings only. `settings-key-scope` reports each in a project or local file, so this rule does not read them there. In
+- Claude Code honors `allowAppleEvents`, `allowNestedUserNamespaces`, `credentials.allowPlaintextInject` and
+  `filesystem.disabled` from user and managed settings only. `settings-key-scope` reports each in a project or local file, so this rule does not read them there. In
   practice, `filesystem.disabled` is a managed file check.
 - `sandbox-filesystem-disabled-conflict` reports `filesystem.disabled` with `denyRead` or `deny` entries that it switches off.
   This rule reports a different fault on the same value: commands run with no prompt. Both can report it.
@@ -80,6 +81,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^unix]: [All settings: sandbox.network.allowUnixSockets](https://code.claude.com/docs/en/settings-reference#sandbox-network-allowunixsockets)
 [^mach]: [All settings: sandbox.network.allowMachLookup](https://code.claude.com/docs/en/settings-reference#sandbox-network-allowmachlookup)
 [^apple]: [All settings: sandbox.allowAppleEvents](https://code.claude.com/docs/en/settings-reference#sandbox-allowappleevents)
+[^userns]: [All settings: sandbox.allowNestedUserNamespaces](https://code.claude.com/docs/en/settings-reference#sandbox-allownestedusernamespaces)
 [^plaintext]: [All settings: sandbox.credentials.allowPlaintextInject](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-allowplaintextinject)
 [^disable]: [Configure the sandboxed Bash tool: Disable filesystem isolation](https://code.claude.com/docs/en/sandboxing#disable-filesystem-isolation)
 [^limits]: [Configure the sandboxed Bash tool: Security limitations](https://code.claude.com/docs/en/sandboxing#security-limitations)
