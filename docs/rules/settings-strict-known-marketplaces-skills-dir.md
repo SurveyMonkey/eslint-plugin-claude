@@ -49,9 +49,12 @@ in these cases:
 - A file of the source locks a kind of customization with `strictPluginOnlyCustomization`. Claude Code
   then skips skills-directory plugins whether or not the entry is there, so the entry does
   nothing.[^org][^locked] The value `true` locks all four kinds. An array locks the kinds that it
-  names: `skills`, `agents`, `hooks` or `mcp`.[^strict] A value that is not a boolean, an array or
-  `null`, such as `"true"` or `{}`, reads as `true`.[^closed] The rule still reports for `false`,
-  `null`, an empty array, and an array with no kind, such as `["foo"]`.
+  names: `skills`, `agents`, `hooks` or `mcp`.[^strict] A value that is not a Boolean, an array or
+  `null`, such as `"true"`, `"false"` or `{}`, reads as `true`.[^closed] The table row of the key
+  says so. The rule follows that row, and not the general rule for a quoted Boolean. The rule
+  still reports for `false`, `null`, an empty array, and an array with no kind, such as `["foo"]`.
+  Claude Code reads a value that is not valid in this way from v2.1.282. An earlier version drops
+  the key, so such a value locks nothing there. The rule does not check the version.
 - The rule cannot read a sibling file, or the `managed-settings.d` directory.
 - The linted file is a hidden file in `managed-settings.d`.
 - The text of the linted file does not parse as JSON.

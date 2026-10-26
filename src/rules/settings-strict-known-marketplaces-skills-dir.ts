@@ -1,9 +1,9 @@
 // A `strictKnownMarketplaces` list needs `{ "source": "skills-dir" }`, or skills-directory plugins
 // do not load (docs/rules/settings-strict-known-marketplaces-skills-dir.md). The managed settings
 // page merges `managed-settings.json` and each `managed-settings.d/*.json` drop-in into one source,
-// and combines the lists. A file that locks a kind of customization with
-// `strictPluginOnlyCustomization` stops the plugins whether or not the entry is there, so the rule
-// makes no report. The rule reads the text of the linted file, and the sibling files through
+// and combines the lists. A file can lock a kind of customization with
+// `strictPluginOnlyCustomization`. Such a lock stops the plugins whether or not the entry is there,
+// so the rule makes no report. The rule reads the text of the linted file, and the sibling files through
 // `readManagedSource`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { UNLOADED_MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
@@ -43,8 +43,8 @@ const LOCKABLE_KINDS: readonly unknown[] = ['skills', 'agents', 'hooks', 'mcp']
 
 /** True when `fields` locks a kind of customization. Claude Code then skips skills-directory
  *  plugins, with or without the entry. An array locks the kinds that it names, and an entry that is
- *  not a kind locks nothing. A value that is not a boolean, an array or `null` reads as `true`
- *  (managed settings, "Keys that fail closed"). */
+ *  not a kind locks nothing. A value that is not a Boolean, an array or `null` reads as `true`
+ *  (managed settings, "Keys that fail closed"), a quoted `"false"` too. */
 function locksCustomization(fields: Fields): boolean {
   const lock = fields.strictPluginOnlyCustomization
   if (Array.isArray(lock)) {
