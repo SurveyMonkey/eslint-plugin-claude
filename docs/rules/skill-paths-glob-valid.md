@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/skill-paths-glob-valid, which reports a paths glob in a SKILL.md that has a [ with no bracket expression, and brace groups in the paths list that expand past 1,000 patterns or 4 MiB.
+description: The ESLint rule claude/skill-paths-glob-valid, which reports a paths glob in a SKILL.md that has a [ with no bracket expression or a .. segment that leads out of the working directory, and brace groups in the paths list that expand past 1,000 patterns or 4 MiB.
 owner: brianespinosa
 created: 2026-09-30
 related_issues: [8]
@@ -29,7 +29,7 @@ globs, in the same format as the `paths` of a rules file.[^field][^memory] A glo
 cannot use matches nothing. The skill then does not load for the files that the glob was for.
 Claude Code shows no error.
 
-The rule reports two faults that the docs name:
+The rule reports three faults that the docs name:
 
 - `bracket`: a `[` that starts no bracket expression, such as `photos [2024/**`. The glob is
   invalid and matches nothing. The other globs of the list keep working.[^memory] Escape the `[`
@@ -40,6 +40,10 @@ The rule reports two faults that the docs name:
   their braces match no file.
   A glob with no comma group does not count against the budget. The rule reports once for the
   list, with the total count and the total bytes.
+- `parent`: a `..` segment that leads above the start of the glob, such as `../shared/**` or
+  `a/../../x`. A skill glob is relative to the working directory of Claude, and no file outside
+  that directory matches.[^field] The rule reports each such glob. `a/../b/**` stays in the
+  working directory, so the rule does not report it.
 
 The rule counts the groups that hold a comma, such as `{ts,tsx}`. A group in a group multiplies
 its own alternatives, so `{a,{b,c}}` is three patterns. It does not count a group with no comma,
@@ -47,6 +51,13 @@ a `{` with no `}`, or a brace after a backslash. It treats a group nested more t
 text. The docs do not say if Claude Code expands a range such as `{1..5}`, so the rule does not
 expand it. The count can then be lower than the count of Claude Code. The rule is then silent
 where Claude Code reports. It does not report a list that Claude Code accepts.
+
+For `parent`, the rule splits a glob at each `/`. A `.` segment and an empty segment stay at the
+same level. Each other segment, such as `*` or `**`, goes down one level. A `**` can stand for no
+folder, but the rule does not report `**/../x`. The rule does not expand brace groups for this
+check, so `{../a,b}/*.ts` gives no report. It does not check a glob that starts with `/`. The docs
+do not say that an absolute path never matches. `claude plugin validate` 2.1.310 passes a plugin
+skill with `paths: ["../x/**"]`, so the rule checks plugin skills too.
 
 The rule splits a string at each comma that is not in a brace group, because a brace group holds
 commas. It does not split a list item. The docs do not give the splitting rule of Claude Code.

@@ -43,8 +43,8 @@
   "agent-disallowed-tools-scope": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
-      "heading": "Available tools",
-      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
+      "heading": "Restrict which tools a subagent can use",
+      "hash": "313dc419605b33ad72de6920478e21d3ffe5cde54778035683b42c5a6c5461b6"
     }
   ],
   "agent-field-min-version": [
@@ -470,8 +470,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
-      "heading": "Available tools",
-      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
+      "heading": "Restrict which tools a subagent can use",
+      "hash": "313dc419605b33ad72de6920478e21d3ffe5cde54778035683b42c5a6c5461b6"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -2635,8 +2635,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
-      "heading": "Plugins shared through a repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2"
+      "heading": "Trust check and component limits for repository plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351"
     }
   ],
   "mcp-json-file-size": [
@@ -2852,8 +2852,8 @@
   "mcp-project-plugin-bundle": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
-      "heading": "Plugins shared through a repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2"
+      "heading": "Trust check and component limits for repository plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -4754,8 +4754,13 @@
   "plugin-project-skills-dir-limits": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
-      "heading": "Plugins shared through a repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2"
+      "heading": "Trust check and component limits for repository plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Check why a repository plugin didn't load",
+      "hash": "799ddee365c73061f5c626ddfaadbbc70c8eed5e7f1ff3291c56b9a1e9b3c474"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -5290,6 +5295,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.excludedCommands",
       "hash": "3b559f2105cc014bf9422a1f9152d52a822dad80b0721d40d949b4197b7a074f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "heading": "Chromium or rootless Podman fails inside the sandbox on Linux",
+      "hash": "96853d6a2650f5a4337d24a248b5ca48ff460f2982c4347e8be7275a53ad184c"
     }
   ],
   "sandbox-filesystem-disabled-conflict": [
@@ -5556,6 +5566,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.allowAppleEvents",
       "hash": "6ed4f16f93536fff514247ddac50fd3d6820138611b381664c4e127452dfe771"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "sandbox.allowNestedUserNamespaces",
+      "hash": "398968883e26ea75b6573ffd26498217c4aa09a996315dcfe831f594a28f10cd"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -6981,6 +6996,11 @@
       "hash": "9c930239678d6390686821ed8c3ee861ca7d0e0747395e8b1a179c34865158fd"
     },
     {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Skills-directory plugins blocked by managed settings",
+      "hash": "026efa4b015c333b361555feec8beefe349c9a71fdfa6e02f3d6dfe13ea14b4c"
+    },
+    {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Source values valid only in policy lists",
       "hash": "e5552be7491f85b5736deb02e47d917ad64ca230346f1d61ddc74afc5d099b80"
@@ -7004,6 +7024,16 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "managedSourcesBehavior",
       "hash": "b4d8f24f752649b25bc6af8113df5a301edb20750e16da37bccff1ef48aa52f3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "strictPluginOnlyCustomization",
+      "hash": "664e0c69e3af1763d6cffbb113acf96ff5e7508cd9dbe71db224ed923e51751b"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Keys that fail closed",
+      "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"
     }
   ],
   "settings-sync-claude-ai-plugins": [
@@ -7449,6 +7479,11 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Characters a skill name can't hold",
       "hash": "24d0258e9ff5055831a908adedff75ca85478a946dd14ecdd1810611b12599f6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
     }
   ],
   "skill-no-bom": [

@@ -88,8 +88,6 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
-  'CLAUDE_AFK_TIMEOUT_MS',
-  'CLAUDE_AFK_COUNTDOWN_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
 ]
@@ -125,6 +123,11 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
     ...PROJECT_ONLY.flatMap((name) =>
       MANAGED_FILES.map((filename) => ({ code: env({ [name]: 'x' }), filename })),
     ),
+    // The settings reference names no AFK variable, so a settings file may set them (#499).
+    ...ALL.map((filename) => ({
+      code: env({ CLAUDE_AFK_TIMEOUT_MS: '1', CLAUDE_AFK_COUNTDOWN_MS: '1' }),
+      filename,
+    })),
     // `OTEL_LOG_MANAGED_SETTINGS` is "Set to 1" to turn it on and "a value in project or local
     // settings doesn't turn it on". The rule lets an off value pass, which is a choice of the
     // plugin, because the value changes nothing.

@@ -619,6 +619,129 @@ describe('scanCommands', () => {
     ])
   })
 
+  it(`goes on with a \${...} expansion after two or more substitutions in it`, () => {
+    // bash 5.3.9 prints `#y z`. The `#` starts no comment.
+    expect(commandsOf(`echo \${a:-$(true) $(false) #y} z`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' $'],
+      ['false'],
+      [' #y}', 'z'],
+    ])
+    // bash 5.3.9 prints `#y`, then `hi`.
+    expect(commandsOf(`echo \${a:-$(true) $(false) $(true) #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' $'],
+      ['false'],
+      [' $'],
+      ['true'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `/dev/fd/63 #y`, then `hi`. A process substitution after the first
+    // substitution keeps the expansion open too.
+    expect(commandsOf(`echo \${a:-$(true) <(false) #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' <'],
+      ['false'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `) #y`, then `hi`. The `)` in the backtick pair does not end the level.
+    expect(commandsOf(`echo \${a:-$(true) \`echo ")"\` #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' '],
+      ['echo', ')'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`keeps the \${...} expansion open after a substitution and a backtick pair`, () => {
+    // bash 5.3.9 prints `#y`, then `hi`.
+    expect(commandsOf(`echo \${a:-$(true) \`false\` #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' '],
+      ['false'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `#y`, then `hi`. The `)` in the comment of the backtick pair does not end
+    // the level.
+    expect(commandsOf(`echo \${a:-$(true) \`: # )\` #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' '],
+      [':'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
+    // In double quotes, `closingParen` reads the substitution and keeps the expansion open.
+    // bash 5.3.9 sets `x='#y z'`, then runs `w`.
+    expect(commandsOf(`x="$(echo \${a:-$(true) $(false) #y}) z" w`)).toEqual([
+      [`x=$(echo \${a:-$(true) $(false) #y}) z`, 'w'],
+    ])
+  })
+
+  it(`keeps the \${...} expansion open after a substitution and a quote, an escape or a level`, () => {
+    // bash 5.3.9 prints the last word, then `hi`, in each case. A quote, a backslash or
+    // a plain parenthesis pair in the expansion does not end it.
+    for (const [text, rest] of [
+      [`'\`'`, ' ` #y}'],
+      ['\\`', ' ` #y}'],
+      [`'$('`, ' $( #y}'],
+      ['")"', ' ) #y}'],
+      ['\\)', ' ) #y}'],
+      ['"}"', ' } #y}'],
+    ]) {
+      expect(commandsOf(`echo \${a:-$(true) ${text} #y}; echo hi`), text).toEqual([
+        ['echo', `\${a:-$`],
+        ['true'],
+        [rest],
+        ['echo', 'hi'],
+      ])
+    }
+    // bash 5.3.9 prints `a(b) #y`, then `hi`.
+    expect(commandsOf(`echo \${a:-$(echo a)(b) #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['echo', 'a'],
+      ['(b) #y}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `#y`, or `/dev/fd/63 #y`, then `hi`. The `)` in the comment of the
+    // command or process substitution does not end it.
+    for (const open of ['$', '<', '>']) {
+      expect(commandsOf(`echo \${a:-$(true) ${open}(: # )\n) #y}; echo hi`), open).toEqual([
+        ['echo', `\${a:-$`],
+        ['true'],
+        [` ${open}`],
+        [':'],
+        [' #y}'],
+        ['echo', 'hi'],
+      ])
+    }
+    // A single quote that does not close: bash gives a syntax error. The scan reads to the end.
+    expect(commandsOf(`echo \${a:-$(true) '#y}`)).toEqual([['echo', `\${a:-$`], ['true'], [`#y}`]])
+  })
+
+  it(`keeps the \${...} expansion open after a substitution and a nested expansion`, () => {
+    // bash 5.3.9 prints `) #y`, then `hi`, in each case. A `)` in or after a nested expansion is
+    // text, so it does not end the outer one.
+    for (const text of [`$(true) \${b:-)}`, `$(true)\${b:-)}`, `$(true) \${b} )`]) {
+      expect(commandsOf(`echo \${a:-${text} #y}; echo hi`).at(-1), text).toEqual(['echo', 'hi'])
+    }
+  })
+
+  it('reads a line of many substitutions out of an expansion in linear time', () => {
+    const start = Date.now()
+    expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)
+    expect(Date.now() - start).toBeLessThan(5000)
+  })
+
   it(`goes on with a \${...} expansion after a new line in it`, () => {
     // bash 5.3 prints `x #y`, then `hi`.
     expect(commandsOf(`echo \${a:-x\n #y}; echo hi`)).toEqual([

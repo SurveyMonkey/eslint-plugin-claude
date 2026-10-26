@@ -35,11 +35,11 @@ An entry is one of these:
 - `Agent`, or `Agent(type, type)` in `tools`. `Task` is the old name of `Agent`.[^spawn] The type list limits the
   subagents of an agent that runs as the main thread with `claude --agent`. In a subagent definition, Claude Code
   ignores it.[^spawn]
-- `mcp__<server>`, `mcp__<server>__*` or `mcp__<server>__<tool>`. The first two grant or remove every tool of a
-  server.[^available]
-- `mcp__*`, in `disallowedTools` only. It removes every MCP tool of any server.[^available]
+- `mcp__<server>__*` or `mcp__<server>__<tool>`. In `tools`, `mcp__<server>__*` grants every tool of a server. In
+  `disallowedTools`, `mcp__<server>` or `mcp__<server>__*` removes every tool of a server.[^restrict]
+- `mcp__*`, in `disallowedTools` only. It removes every MCP tool of any server.[^restrict]
 - an entry with a specifier, such as `Bash(git push *)`, in `disallowedTools` only. It removes the whole tool, not only the commands that
-  match.[^available]
+  match.[^restrict]
 
 The rule parses each entry with the same parser as the permission rules. It reports an entry that:
 
@@ -95,6 +95,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^fields]: [Create custom subagents: Frontmatter reference](https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields)
-[^available]: [Create custom subagents: Available tools](https://code.claude.com/docs/en/sub-agents#available-tools)
+[^restrict]: [Create custom subagents: Restrict which tools a subagent can use](https://code.claude.com/docs/en/sub-agents#restrict-which-tools-a-subagent-can-use)
 [^spawn]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)
 [^zero]: [Error reference: Agent would be spawned with zero tools](https://code.claude.com/docs/en/errors#agent-would-be-spawned-with-zero-tools)
