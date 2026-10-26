@@ -326,7 +326,7 @@ that it did not post before on each open group issue (`GROUP_ISSUES`). Each comm
 60,000 characters, so a run can post more than one comment on an issue.
 While a group issue of a block is open, a finding of the block that names no rule opens no issue.
 `--dry-run` prints each issue and each comment, and opens and posts none. A manual run of the
-workflow takes a `dry_run` input.
+workflow takes a `dry_run` input, and a `max_issues` input that it gives to `--max`.
 
 To triage the issues and the comments, follow the
 [docs watch triage runbook](docs/runbooks/docs-watch-triage.md).
