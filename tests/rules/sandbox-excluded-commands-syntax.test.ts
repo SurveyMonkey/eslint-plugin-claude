@@ -30,6 +30,10 @@ describe(`${name}: an entry in the syntax of the docs`, () => {
     expect(ids(excluded('sudoku', 'evaluate', 'xargs2 x', 'cdk deploy', 'popdir'))).toEqual([])
   })
 
+  it('is silent for unshare after the first word, and for a word that starts with it', () => {
+    expect(ids(excluded('make unshare', 'unsharex *', 'npm run unshare'))).toEqual([])
+  })
+
   it('is silent for the bare word Bash, which is a command name here', () => {
     expect(ids(excluded('Bash'))).toEqual([])
   })
@@ -69,10 +73,10 @@ describe(`${name}: the Bash wrapper`, () => {
 })
 
 describe(`${name}: a command that never leaves the sandbox`, () => {
-  it('reports each of the six words, in every file', () => {
+  it('reports each of the seven words, in every file', () => {
     for (const file of EVERY_FILE) {
-      const code = excluded('sudo x', 'eval x', 'xargs rm', 'cd build', 'pushd x', 'popd')
-      expect(ids(code, file), file).toEqual(Array(6).fill('neverExcluded'))
+      const code = excluded('sudo x', 'eval x', 'xargs rm', 'unshare *', 'cd build', 'pushd x', 'popd')
+      expect(ids(code, file), file).toEqual(Array(7).fill('neverExcluded'))
     }
   })
 
