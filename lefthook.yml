@@ -18,6 +18,26 @@ pre-commit:
     - name: types
       glob: '{*.ts,tsconfig*.json}'
       run: pnpm exec tsc -p tsconfig.json
-    - name: vitest-related
+    - name: vitest-staged
       glob: '*.ts'
-      run: pnpm exec vitest related --run --passWithNoTests {staged_files}
+      # Maps each staged path to one test file. It does not use the import
+      # graph, because src/index.ts imports every rule.
+      #   src/rules/<name>.ts              -> tests/rules/<name>.test.ts
+      #   src/<name>.ts, scripts/<name>.ts -> tests/<name>.test.ts
+      #   a staged *.test.ts               -> itself
+      # A path with no test file runs no test. So does a file in a folder of
+      # src/ other than rules/.
+      run: |
+        tests=""
+        for f in {staged_files}; do
+          name=$(basename "$f" .ts)
+          case "$f" in
+            src/rules/*.ts) t="tests/rules/$name.test.ts" ;;
+            src/*/*) t="" ;;
+            src/*.ts | scripts/*.ts) t="tests/$name.test.ts" ;;
+            tests/*.test.ts) t="$f" ;;
+            *) t="" ;;
+          esac
+          if [ -n "$t" ] && [ -f "$t" ]; then tests="$tests $t"; fi
+        done
+        if [ -n "$tests" ]; then pnpm exec vitest run $tests; fi

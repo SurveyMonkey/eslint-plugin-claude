@@ -40,8 +40,12 @@ If a module does not, the lint finds no rule in it, and checks nothing
 (`tests/rule-export-last.test.ts`).
 
 The pre-commit hooks (`lefthook.yml`) sort a staged `package.json`, then run Biome, tsc and the
-Vitest tests related to the staged files. CI runs every check again, and the "Require CI" and
-"Require CodeQL" rulesets require each one on `main`.
+Vitest tests of the staged files only. A staged `src/rules/<rule>.ts` runs
+`tests/rules/<rule>.test.ts`. A staged `src/<module>.ts` or `scripts/<script>.ts` runs
+`tests/<module>.test.ts` or `tests/<script>.test.ts`, when that file exists. A staged test file
+runs itself. Other staged files run no test. The hook does not follow imports, so a change to a
+shared module does not run the tests of the rules that use it. CI runs every check again, and
+the "Require CI" and "Require CodeQL" rulesets require each one on `main`.
 
 ## Design docs
 
