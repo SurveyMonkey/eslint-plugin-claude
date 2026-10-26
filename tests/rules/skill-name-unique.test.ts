@@ -4,7 +4,7 @@
 // differ only by case, spacing, invisible characters, fullwidth letters and
 // dash variants are built at run time, because a committed file would hide
 // the characters.
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
@@ -1093,6 +1093,95 @@ describe('the skill folders of the manifest skills paths', () => {
     symlinkSync('missing.md', path.join(scratch, 'lst-dead/one/SKILL.md'))
     add('one/sub/SKILL.md')
     expect(lint(add('skills/sub/SKILL.md'), bare)).toEqual([])
+  })
+
+  it('names a listed skill one time when two listed paths give it', () => {
+    const add = tree('lst-dup', '{"name":"l","skills":["./extra","./extra/"]}')
+    add('extra/a/SKILL.md')
+    const other = add('skills/b/SKILL.md', named('a'))
+    expect(lint(other, named('a')).map((report) => report.message)).toEqual([
+      '`a` is also the command name of `extra/a/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
+    ])
+  })
+
+  it('leaves out a listed skill with the real path of a skill in skills/', () => {
+    const add = tree('lst-same', '{"name":"l","skills":["./extra"]}')
+    add('extra/x/SKILL.md')
+    mkdirSync(path.join(scratch, 'lst-same/skills'), { recursive: true })
+    symlinkSync('../extra/x', path.join(scratch, 'lst-same/skills/x'))
+    const other = add('skills/y/SKILL.md', named('x'))
+    expect(lint(other, named('x')).map((report) => report.message)).toEqual([
+      '`x` is also the command name of `skills/x/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
+    ])
+  })
+
+  it('names the linted skill by the listed folder, not by its real folder', () => {
+    const add = tree('lst-target', '{"name":"l","skills":"./alias"}')
+    const target = add('target/SKILL.md')
+    symlinkSync('target', path.join(scratch, 'lst-target/alias'))
+    add('skills/alias/SKILL.md')
+    expect(lint(target, bare)).toMatchObject([
+      { message: expect.stringContaining('`skills/alias/SKILL.md`') },
+    ])
+  })
+})
+
+// The docs say that Claude Code loads a skill one time when several skill folders link to one
+// target. So two links to one folder do not report each other. Each other skill with the name
+// compares with both paths, because the docs do not say which folder name the skill gets.
+describe('two skill folders with one real path', () => {
+  it('report each other in no file, and both compare with a third skill', () => {
+    put('twin-skill/.git/HEAD', '')
+    const first = put('twin-skill/.claude/skills/a/SKILL.md', named('z'))
+    symlinkSync('a', path.join(scratch, 'twin-skill/.claude/skills/b'))
+    const third = put('twin-skill/.claude/skills/c/SKILL.md', named('z'))
+    expect(
+      lintMarkdown('skill-name-unique', named('z'), first).map((report) => report.message),
+    ).toEqual([
+      '`z` is also the command name of `skills/c/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
+    ])
+    expect(lintMarkdown('skill-name-unique', named('z'), third)).toMatchObject([
+      { message: expect.stringContaining('`skills/a/SKILL.md`, `skills/b/SKILL.md`') },
+    ])
+  })
+})
+
+// A path through a linked directory is not the real path. The walk compares real paths, so it
+// meets the repository root.
+describe('a listed skill below a linked directory', () => {
+  it('reports through the link, and stops at a skill folder that is a repository', () => {
+    put('lp-real/.git/HEAD', '')
+    put('lp-real/.claude-plugin/plugin.json', '{"name":"l","skills":["./extra","./g"]}')
+    put('lp-real/extra/a/SKILL.md', bare)
+    put('lp-real/skills/a/SKILL.md', bare)
+    put('lp-real/g/x/.git/HEAD', '')
+    put('lp-real/g/x/SKILL.md', bare)
+    put('lp-real/skills/x/SKILL.md', bare)
+    put('lp-real/docs/b/SKILL.md', bare)
+    symlinkSync('lp-real', path.join(scratch, 'lp'))
+    const lint = (file: string) =>
+      lintMarkdown('skill-name-unique', bare, path.join(scratch, 'lp', file))
+    expect(lint('extra/a/SKILL.md')).toHaveLength(1)
+    expect(lint('g/x/SKILL.md')).toEqual([])
+    expect(lint('docs/b/SKILL.md')).toEqual([])
+  })
+})
+
+// A listed folder that the rule can enter but not list. Its `SKILL.md` is not there, so the rule
+// lists the folder, and the list fails.
+describe.skipIf(chmodCannotBlock)('a listed folder that the rule cannot list', () => {
+  it('gives no skill', () => {
+    put('lst-deny/.git/HEAD', '')
+    put('lst-deny/.claude-plugin/plugin.json', '{"name":"l","skills":["./extra"]}')
+    put('lst-deny/extra/a/SKILL.md', bare)
+    const shipped = put('lst-deny/skills/a/SKILL.md', bare)
+    const extra = path.join(scratch, 'lst-deny/extra')
+    chmodSync(extra, 0o300)
+    try {
+      expect(lintMarkdown('skill-name-unique', bare, shipped)).toEqual([])
+    } finally {
+      chmodSync(extra, 0o755)
+    }
   })
 })
 
