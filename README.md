@@ -189,7 +189,7 @@ default if it has one.
 
 | Name                                                                                           | Description                                                                                                  | 💼   | ⚠️   | ⚙️ |
 | :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- | :--- | :--- | :- |
-| [agent-frontmatter-valid](docs/rules/agent-frontmatter-valid.md)                               | Give a local subagent file frontmatter that Claude Code can load                                             | ✅ 🔒 |      | ⚙️ |
+| [agent-frontmatter-valid](docs/rules/agent-frontmatter-valid.md)                               | Give a subagent file frontmatter that Claude Code can load                                                   | ✅ 🔒 |      | ⚙️ |
 | [agent-frontmatter-schema](docs/rules/agent-frontmatter-schema.md)                             | Use the frontmatter fields of a subagent, with the right types and values                                    | ✅ 🔒 |      |    |
 | [agent-plugin-ignored-fields](docs/rules/agent-plugin-ignored-fields.md)                       | Leave out the frontmatter fields that Claude Code ignores in a plugin agent                                  | ✅ 🔒 |      |    |
 | [agent-mcp-servers-schema](docs/rules/agent-mcp-servers-schema.md)                             | Write the mcpServers field of a local subagent as a list of servers                                          | ✅ 🔒 |      |    |

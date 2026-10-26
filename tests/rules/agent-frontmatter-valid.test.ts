@@ -1,5 +1,5 @@
-// The rule checks local agents only. The docs say a plugin agent with no name
-// or bad YAML still loads, so the rule stays silent there.
+// The rule checks every field of a local agent. The docs say a plugin agent with no name
+// or bad YAML still loads, so in a plugin agent the rule checks the `name` length only.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -46,6 +46,7 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
     file('name: "-x:y"\n', pluginAgent()),
     file('- a\n- b\n', pluginAgent()),
     file('~\n', pluginAgent()),
+    file('name: 123\ndescription: d\n', pluginAgent()),
     { code: '# Notes\n\n---\nname: x\ndescription: d\n---\n', filename: pluginAgent() },
     // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`. The rule
     // cannot read the fields, so it reports no absent field either.
