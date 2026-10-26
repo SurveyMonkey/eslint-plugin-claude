@@ -87,6 +87,7 @@ const USER_OR_MANAGED: readonly string[] = [
   'autoContinueAtUsageLimit',
   'autoMode',
   'autoMode.classifyAllShell',
+  'axScreenReader',
   'bashEditDiffEnabled',
   'desktopSessionCleanupPeriodDays',
   'dialogExpiry',
@@ -109,6 +110,7 @@ const USER_OR_MANAGED: readonly string[] = [
   'skipAutoPermissionPrompt',
   'spellcheck',
   'sshConfigs',
+  'sshHostCommands',
   'vimInsertModeRemaps',
 ]
 
@@ -159,7 +161,6 @@ const ANY_FILE: readonly string[] = [
   'awaySummaryEnabled',
   'awsAuthRefresh',
   'awsCredentialExport',
-  'axScreenReader',
   'bashOutputMaxChars',
   'claudeMdExcludes',
   'cleanupPeriodDays',

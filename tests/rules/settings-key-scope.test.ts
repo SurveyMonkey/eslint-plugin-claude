@@ -42,6 +42,11 @@ jsonTester.run('settings-key-scope (valid)', rule, {
       code: obj({ [USER_OR_MANAGED_KEY]: [] }),
       filename,
     })),
+    // `axScreenReader` and `sshHostCommands` are User or managed keys (#606).
+    ...['axScreenReader', 'sshHostCommands'].map((key) => ({
+      code: obj({ [key]: key === 'axScreenReader' ? true : [] }),
+      filename: managed,
+    })),
     // A User key is for the user file. The rule makes no report in a managed file.
     ...[managed, dropIn].map((filename) => ({
       code: obj({ worktree: { location: 'remote' } }),
@@ -135,6 +140,14 @@ jsonTester.run('settings-key-scope (invalid)', rule, {
       filename,
       errors: [{ messageId: 'userOrManaged' as const, line: 1, column: 2 }],
     })),
+    // `axScreenReader` and `sshHostCommands` are faults in the project files (#606).
+    ...['axScreenReader', 'sshHostCommands'].flatMap((key) =>
+      [project, local].map((filename) => ({
+        code: obj({ [key]: key === 'axScreenReader' ? true : [] }),
+        filename,
+        errors: [{ messageId: 'userOrManaged' as const, line: 1, column: 2 }],
+      })),
+    ),
     // A User key is a fault in the project files. The report is on the nested key.
     ...[project, local].map((filename) => ({
       code: obj({ worktree: { location: 'remote' } }),

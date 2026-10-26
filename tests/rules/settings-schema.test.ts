@@ -96,6 +96,10 @@ jsonTester.run('settings-schema (valid)', rule, {
         sshConfigs: [
           { id: 'a', name: 'b', sshHost: 'c', sshPort: 22, sshIdentityFile: '~/.ssh/x' },
         ],
+        sshHostCommands: [
+          { id: 'devbox', name: 'Dev box', command: 'acme-dev create' },
+          { id: 'b', name: 'B', command: 'c', sshIdentityFile: '~/.ssh/x', startDirectory: '~' },
+        ],
         remote: { defaultEnvironmentId: 'env_1' },
         companyAnnouncements: ['hello'],
         autoCompactWindow: 100000,
@@ -592,6 +596,10 @@ jsonTester.run('settings-schema (types)', rule, {
     ),
     bad({ footerLinksRegexes: {} }, type('footerLinksRegexes', 'an array')),
     bad({ sshConfigs: ['a'] }, type('sshConfigs[0]', 'an object')),
+    bad(
+      { sshHostCommands: [{ id: 5, name: 'n', command: 'c' }] },
+      type('sshHostCommands[0].id', 'a string'),
+    ),
     bad(
       { worktree: { symlinkDirectories: 'a', sparsePaths: [1] } },
       type('worktree.symlinkDirectories', 'an array'),
@@ -1114,6 +1122,7 @@ jsonTester.run('settings-schema (shapes)', rule, {
       missing('modelPricing.overrides.m', 'input'),
     ),
     bad({ sshConfigs: [{ name: 'n', sshHost: 'h' }] }, missing('sshConfigs[0]', 'id')),
+    bad({ sshHostCommands: [{ id: 'a', name: 'n' }] }, missing('sshHostCommands[0]', 'command')),
     // The whole value must fit the form, not a part of it.
     bad(
       { remote: { defaultEnvironmentId: 'xenv_1' } },
