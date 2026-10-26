@@ -75,7 +75,15 @@ describe(`${name}: the Bash wrapper`, () => {
 describe(`${name}: a command that never leaves the sandbox`, () => {
   it('reports each of the seven words, in every file', () => {
     for (const file of EVERY_FILE) {
-      const code = excluded('sudo x', 'eval x', 'xargs rm', 'unshare *', 'cd build', 'pushd x', 'popd')
+      const code = excluded(
+        'sudo x',
+        'eval x',
+        'xargs rm',
+        'unshare *',
+        'cd build',
+        'pushd x',
+        'popd',
+      )
       expect(ids(code, file), file).toEqual(Array(7).fill('neverExcluded'))
     }
   })
