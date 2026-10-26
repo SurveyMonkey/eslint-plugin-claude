@@ -59,6 +59,7 @@ describe('the matcher data', () => {
         'quota_auto_resume_fired',
         'quota_auto_resume_stale',
         'quota_auto_resume_disabled',
+        'plugin_notification',
       ],
       PreCompact: ['manual', 'auto'],
       PostCompact: ['manual', 'auto'],

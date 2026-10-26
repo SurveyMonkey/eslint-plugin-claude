@@ -395,10 +395,8 @@ const IGNORED_IN_PROJECT_FILES: readonly (string | RegExp)[] = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
-  // The timers of an unanswered dialog, the attachment switch, and the file mention switch.
+  // The timer of an unanswered dialog, the attachment switch, and the file mention switch.
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
-  'CLAUDE_AFK_TIMEOUT_MS',
-  'CLAUDE_AFK_COUNTDOWN_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
 ]
