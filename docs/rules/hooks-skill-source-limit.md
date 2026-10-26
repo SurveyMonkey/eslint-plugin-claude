@@ -20,7 +20,7 @@ generated:
 
 | Category | Files |
 |----------|-------|
-| no-op | `**/SKILL.md` |
+| limit | `**/SKILL.md` |
 
 ## Rule details
 

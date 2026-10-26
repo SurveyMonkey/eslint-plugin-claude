@@ -1724,6 +1724,13 @@
       "hash": "bed960cefefcef7d2719e381b396bfcc435bacc9308cfe296130ea2c1b27c145"
     }
   ],
+  "hooks-skill-source-limit": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Limits on skill hooks",
+      "hash": "94ee4452ebb487bdd6b39ce6147cc15f541f866394aebd0d04fdb6e8d0df64bc"
+    }
+  ],
   "hooks-stop-loop-guard": [
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",

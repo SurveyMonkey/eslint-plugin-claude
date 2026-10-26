@@ -23,14 +23,14 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **457 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
-  and not-built rows. 340 rules go in `recommended`: 204 at `error` and 136 at
+- **458 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
+  and not-built rows. 341 rules go in `recommended`: 204 at `error` and 137 at
   `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 143 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 441 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 442 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -124,7 +124,7 @@ It is in the Subagents and output styles group.
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
-| `limit` | `problem` | A size, count or length limit, or a truncation. | 21 |
+| `limit` | `problem` | A size, count or length limit, or a truncation. | 22 |
 | `deprecated` | `suggestion` | A legacy or renamed form that still works. | 12 |
 | `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 84 |
 
@@ -170,16 +170,16 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 |-------|--------------------:|-------------------:|------:|------:|
 | Skills and commands | 16 | 13 | 9 | 38 |
 | Subagents and output styles | 17 | 16 | 11 | 44 |
-| Hooks | 19 | 16 | 21 | 56 |
+| Hooks | 19 | 17 | 21 | 57 |
 | Plugin manifest and layout | 26 | 19 | 9 | 54 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
 | CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
 | Settings | 18 | 19 | 15 | 52 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **204** | **136** | **117** | **457** |
+| **Total** | **204** | **137** | **117** | **458** |
 
-By severity, 204 rules are `error` and 253 are `warn`: the 136 `recommended` `warn` rules and
+By severity, 204 rules are `error` and 254 are `warn`: the 137 `recommended` `warn` rules and
 the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -385,7 +385,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 
 ### Hooks
 
-These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 56 rules: 19 error and 16 warn in `recommended`, and 21 `off`.
+These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 57 rules: 19 error and 17 warn in `recommended`, and 21 `off`.
 
 Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *handler* is one object in a group's inner `hooks` array. *Shell form* is a `command` handler with no `args`. *Exec form* is a handler with `args`. *Placeholder* means `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}` or `${CLAUDE_PROJECT_DIR}`. Unless a row says otherwise, a rule applies to all five sources.
 
@@ -423,6 +423,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 | `hooks-disable-all-override` | Committed `.claude/settings.json` does not set `disableAllHooks: false`. It overrides a user's `true` and turns the user's hooks back on. | recommended | warn | security | – | [^hooks-disable-or-remove-hooks] [^permissions-what-runs-before-you-trust-a-folder] |
 | `hooks-committed-command-review` | Reports each command hook that a repository commits, as a prompt to review: it runs with full user permissions [^hooks-disclaimer], outside the sandbox [^plugins-security-understand-what-a-plugin-can-do]. The rule reads `.claude/settings.json`, the frontmatter of a project skill, a plugin `hooks/hooks.json` with the skills of a plugin, and the frontmatter of a project subagent. It skips `.claude/settings.local.json` (nobody commits it) and managed settings (an administrator sets them). The "no trust dialog in `-p`" reason holds for settings files and project skills only [^hooks-workspace-trust] [^permissions-what-runs-before-you-trust-a-folder]. The permissions page says that a project subagent hook is not used in a `-p` session, so the agent message names the trust dialog and not the `-p` case. A review prompt is no fault, so the rule is `off` in `recommended`. | off | warn | security | – | [^hooks-workspace-trust] [^hooks-disclaimer] [^plugins-security-understand-what-a-plugin-can-do] [^permissions-what-runs-before-you-trust-a-folder] |
 | `hooks-sessionend-default-timeout` | A non-plugin `SessionEnd` handler sets `timeout`. Without it the handler is cancelled after the 1.5 s default. No threshold option: the rule checks that `timeout` is set and compares no number. It skips a `prompt` or `agent` handler (SessionEnd does not run them) and a `command` hook in the background (`timeout` has no effect). | recommended | warn | limit | – | [^hooks-sessionend-input] |
+| `hooks-skill-source-limit` | (cross-file) The frontmatter hooks of the skills of one source total at most 1,024, and their matchers at most 16,384 characters (Claude Code v2.1.304 or later). A matcher counts once for each hook under it. A skill past a limit registers none of its hooks, and Claude Code shows no error [^hooks-limits-on-skill-hooks]. A source is one `.claude/` directory or one plugin, each with its `skills/` folder. A hook is a handler object of a well-formed group. A matcher counts its JavaScript string length. The comparison is exact: 1,024 hooks and 16,384 characters make no report. The order in which a session invokes the skills decides which one goes past the limit, so the rule reports on each skill of the source that has at least one hook. A `SKILL.md` that the rule cannot read, or whose frontmatter does not parse, adds nothing. Not checked: the personal folder `~/.claude/skills/`, which is out of the repository; the plugin-root `SKILL.md`; the folders that a `skills` key of `plugin.json` adds; a nested `.claude/skills/` as part of the project source, which the docs do not state; the plugin-only lock of `strictPluginOnlyCustomization`, a managed setting at run time. Validate `–`: `claude plugin validate` 2.1.310 passes a plugin whose two skills declare 1,000 and 25 hooks, a plugin whose one skill declares 1,025, and a plugin whose two skills have matchers of 8,192 and 8,193 characters. | recommended | warn | limit | – | [^hooks-limits-on-skill-hooks] |
 | `hooks-duplicate-handler` | (cross-file) No identical handler (same event, matcher and every handler field) in two sources of one plugin. The sources are its `hooks/hooks.json` and its `plugin.json` `hooks`. Nor in both `.claude/settings*.json` and a plugin (`hooks/hooks.json` or the inline `hooks` of `plugin.json`). The plugin reference says that both plugin sources load [^plugins-components-hooks]. The plugin guide says that a hook in a settings file and in `hooks/hooks.json` runs twice [^plugins-create-convert-an-existing-claude-setup]. The hooks reference says that a handler in two settings files runs once. So the rule never pairs two settings files [^hooks-hook-handler-fields]. One pair gets one report, on the later source: settings, then `hooks/hooks.json`, then `plugin.json`. The rule reads the inline event maps of `plugin.json`, and not a hooks file that a path names. It reads settings files in the plugin folder and the folders above it, up to the repository root. A missing matcher, `""` and `"*"` count as one matcher, but not on `FileChanged`, where `"*"` joins the watch list as a file name (the hooks reference, "FileChanged"). `disableAllHooks` merges across the settings files, and a merged `true` adds no settings handler. A file that it cannot read gives no report. A settings file that it cannot read stops every settings pair, because that file can set `disableAllHooks`. | recommended | warn | consistency | – | [^plugins-components-hooks] [^plugins-create-convert-an-existing-claude-setup] [^hooks-hook-handler-fields] |
 | `hooks-worktree-create-without-remove` | A file with a `WorktreeCreate` hook also has a `WorktreeRemove` hook. Without one, Claude Code falls back to `git worktree remove --force`. It does this when it removes the worktree at the end of a worktree session, on the path that the create hook returned. A worktree that git does not know stays on disk, and a hook-created branch stays [^hooks-worktreeremove]. The source is one file: a `WorktreeRemove` hook in another file is not seen. | recommended | warn | practice | – | [^hooks-worktreeremove] |
 | `hooks-agent-stop-event` | Agent `.md` frontmatter uses `SubagentStop`, not `Stop`. Claude Code converts `Stop` to `SubagentStop` when the agent runs as a subagent [^hooks-hooks-in-skills-and-agents]. The docs state the conversion for a subagent only [^sub-agents-hooks-in-subagent-frontmatter]. The sub-agents page shows `Stop` in frontmatter as a pattern that works, so the rule is `off` in `recommended` (ruling 12). The rule reads the frontmatter of a project subagent only, and a skill and a plugin agent get no report. | off | warn | practice | – | [^hooks-hooks-in-skills-and-agents] [^sub-agents-hooks-in-subagent-frontmatter] |
@@ -1216,6 +1217,7 @@ Other names a rule may contain:
 [^plugins-create-convert-an-existing-claude-setup]: [Create a Claude Code plugin: Convert an existing .claude/ setup](https://code.claude.com/docs/en/plugins/create#convert-an-existing-claude-setup)
 [^hooks-worktreeremove]: [Hooks reference: WorktreeRemove](https://code.claude.com/docs/en/hooks#worktreeremove)
 [^hooks-hooks-in-skills-and-agents]: [Hooks reference: Hooks in skills and agents](https://code.claude.com/docs/en/hooks#hooks-in-skills-and-agents)
+[^hooks-limits-on-skill-hooks]: [Hooks reference: Limits on skill hooks](https://code.claude.com/docs/en/hooks#limits-on-skill-hooks)
 [^sub-agents-hooks-in-subagent-frontmatter]: [Create custom subagents: Hooks in subagent frontmatter](https://code.claude.com/docs/en/sub-agents#hooks-in-subagent-frontmatter)
 [^hooks-agent-based-hooks]: [Hooks reference: Agent-based hooks](https://code.claude.com/docs/en/hooks#agent-based-hooks)
 [^cli-reference-cli-flags]: [CLI reference: CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags)
