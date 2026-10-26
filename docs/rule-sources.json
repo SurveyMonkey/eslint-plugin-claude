@@ -43,8 +43,8 @@
   "agent-disallowed-tools-scope": [
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
-      "heading": "Available tools",
-      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
+      "heading": "Restrict which tools a subagent can use",
+      "hash": "313dc419605b33ad72de6920478e21d3ffe5cde54778035683b42c5a6c5461b6"
     }
   ],
   "agent-field-min-version": [
@@ -470,8 +470,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
-      "heading": "Available tools",
-      "hash": "f3b3f16e26b77572bb48ef634dcccba9f9d68f875328f318b7592a4479f46f64"
+      "heading": "Restrict which tools a subagent can use",
+      "hash": "313dc419605b33ad72de6920478e21d3ffe5cde54778035683b42c5a6c5461b6"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -2635,8 +2635,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
-      "heading": "Plugins shared through a repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2"
+      "heading": "Trust check and component limits for repository plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351"
     }
   ],
   "mcp-json-file-size": [
@@ -2852,8 +2852,8 @@
   "mcp-project-plugin-bundle": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
-      "heading": "Plugins shared through a repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2"
+      "heading": "Trust check and component limits for repository plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -4754,8 +4754,13 @@
   "plugin-project-skills-dir-limits": [
     {
       "url": "https://code.claude.com/docs/en/plugins/loading",
-      "heading": "Plugins shared through a repository",
-      "hash": "c8552d34a164ede354938754890ecbfe1684e7c5d0972820ded7ff631b76b5d2"
+      "heading": "Trust check and component limits for repository plugins",
+      "hash": "1c93f00bdd78b695945680e9d11ee110e61fb55bd896835edab1b170d8a6c351"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/loading",
+      "heading": "Check why a repository plugin didn't load",
+      "hash": "799ddee365c73061f5c626ddfaadbbc70c8eed5e7f1ff3291c56b9a1e9b3c474"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",

@@ -106,7 +106,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^loading]: [Plugin loading reference: Plugins shared through a repository](https://code.claude.com/docs/en/plugins/loading#plugins-shared-through-a-repository)
+[^loading]: [Plugin loading reference: Trust check and component limits for repository plugins](https://code.claude.com/docs/en/plugins/loading#trust-check-and-component-limits-for-repository-plugins)
 [^manifest]: [Plugin manifest reference: mcpServers](https://code.claude.com/docs/en/plugins/manifest-reference#mcpservers)
 [^escape]: [Plugin loading reference: Paths that escape the plugin directory](https://code.claude.com/docs/en/plugins/loading#paths-that-escape-the-plugin-directory)
 [^containment]: [Plugin manifest reference: Containment and existence](https://code.claude.com/docs/en/plugins/manifest-reference#containment-and-existence)
