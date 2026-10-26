@@ -173,6 +173,8 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
     // Three folders that are one skill of 600 hooks, by the target and by a link.
     { code: skill(600), filename: at('link/.claude/skills/a/SKILL.md') },
     { code: skill(600), filename: at('link/.claude/skills/b/SKILL.md') },
+    // A fourth skill, not on disk: the three folders add 600 hooks once, for 1,024 in all.
+    { code: skill(424), filename: at('link/.claude/skills/d/SKILL.md') },
     // A lower limit in the options, at that limit: 1,023 hooks, and 16,383 characters.
     {
       code: skill(23),
