@@ -43,6 +43,10 @@ The rule reports when the source has more than 1,024 hooks, or more than 16,384 
 characters. A source at exactly 1,024 hooks and 16,384 characters gets no report. Each limit
 has its own message, and a skill past both gets two reports.
 
+A probe on Claude Code 2.1.310 agrees with the limit. A project skill with 1,024 hooks gives
+`Registered 1024 hooks` in the debug log. A skill with 1,025 hooks gives `registers none of its
+hooks and grants no tools`.
+
 Claude Code adds the hooks of a skill when you or Claude invoke it, so both totals build up skill
 by skill.[^limits] The order of invocation decides which skill goes past the limit, and the
 files do not show that order. So the rule reports on each skill of the source that declares at
