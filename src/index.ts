@@ -117,6 +117,7 @@ import * as hooksScriptExists from './rules/hooks-script-exists.ts'
 import * as hooksScriptShebang from './rules/hooks-script-shebang.ts'
 import * as hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
 import * as hooksSessionstartStaticContext from './rules/hooks-sessionstart-static-context.ts'
+import * as hooksSkillSourceLimit from './rules/hooks-skill-source-limit.ts'
 import * as hooksStopLoopGuard from './rules/hooks-stop-loop-guard.ts'
 import * as hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
 import * as hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
@@ -537,6 +538,7 @@ const modules = [
     target: hooksSessionstartStaticContext.target,
     default: hooksSessionstartStaticContext.default,
   },
+  { target: hooksSkillSourceLimit.target, default: hooksSkillSourceLimit.default },
   { target: hooksStopLoopGuard.target, default: hooksStopLoopGuard.default },
   { target: hooksTimeoutUnits.target, default: hooksTimeoutUnits.default },
   {
@@ -1213,6 +1215,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-script-shebang': 'off',
   'hooks-sessionend-default-timeout': 'warn',
   'hooks-sessionstart-static-context': 'off',
+  'hooks-skill-source-limit': 'warn',
   'hooks-stop-loop-guard': 'off',
   'hooks-timeout-units': 'off',
   'hooks-worktree-create-without-remove': 'warn',
