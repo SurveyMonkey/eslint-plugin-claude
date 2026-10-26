@@ -39,7 +39,7 @@ string.
 
 - `unquoted`: a variable (`$NAME`, `${NAME}`, `$1`, `$@`) outside quotes. The scan skips a variable in a word that starts with `NAME=` (`A=$B`, and also `make CC=$CC`), a `[[ ... ]]` test, a comment, a special parameter such as
   `$?`, and a variable in single or double quotes. It scans the inside of a command substitution
-  (`$(...)` or a backtick pair) on its own, so a quote in it starts a new quote level. A quote or a parenthesis inside a
+  (`$(...)` or a backtick pair) on its own. So a quote in it starts a new quote level. A quote or a parenthesis inside a
   substitution does not end it early.
 - `destructive`: `rm` with a recursive flag (`-r`, `-R`, `-rf`, `--recursive`) and an operand that holds a variable
   when the text has the variable name outside quotes, or the variable gets its value from hook input. The match is by name, and not by position. A variable holds hook input when the text

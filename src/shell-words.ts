@@ -169,7 +169,7 @@ export function scanCommands(line: string): Command[] {
   // The open `${` expansions at this level. A parenthesis or a backtick starts a new level, and
   // keeps the count of the outer level until it ends. The reader cannot tell the `)` of a `case`
   // pattern from the `)` that ends a substitution. So after a `)`, the outer count comes back only
-  // when a `}` comes before the next `)` that ends the level (`braceBeforeParen`). A new line ends each expansion when the next line has no
+  // when a `}` comes before the next `)`. `braceBeforeParen` skips a nested level. A new line ends each expansion when the next line has no
   // `}`, as in the body of a here-document. bash refuses such a `${` out of a here-document.
   let braces = 0
   const outer: number[] = []
