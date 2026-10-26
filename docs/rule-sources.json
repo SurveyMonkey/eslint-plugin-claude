@@ -1729,6 +1729,16 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Limits on skill hooks",
       "hash": "94ee4452ebb487bdd6b39ce6147cc15f541f866394aebd0d04fdb6e8d0df64bc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Hook lifecycle",
+      "hash": "31edc11e57c764d5af3a839379f88cebb8b7be91a1042e5079dc84219995f278"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "heading": "Choose where skills load",
+      "hash": "89a55a6cdaca173362a6ea53534dca7ffbde8d8fdd7240f69ac26606792e7998"
     }
   ],
   "hooks-stop-loop-guard": [
