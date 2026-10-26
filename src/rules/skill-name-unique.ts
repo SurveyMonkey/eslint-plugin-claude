@@ -33,9 +33,11 @@ function fold(text: string): string {
 }
 
 /** `name`, or null when it folds to an empty string. Such a name holds only characters that
- *  `fold` removes, such as soft hyphens. Claude Code 2.1.310 refuses a project skill folder of
- *  soft hyphens only. `skill-name-characters` does not refuse these characters, so the rule
- *  compares no such name. */
+ *  `fold` removes, such as soft hyphens. `hyphenate` changes only the characters that
+ *  `skill-name-characters` refuses, and that rule does not refuse a soft hyphen. So the rule
+ *  compares no such name. Claude Code 2.1.310 refuses a project skill folder of soft hyphens. It
+ *  loads a plugin skill folder of soft hyphens with one hyphen for each. The rule misses that
+ *  name. */
 function comparable(name: string): string | null {
   return fold(name) === '' ? null : name
 }
@@ -212,11 +214,10 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         if (own === null) {
           return
         }
-        // A link can give the file another spelling, so the rule compares real paths too.
+        // A link can give the file another spelling, so the rule compares real paths.
         const real = realOf(self)
         const others = scopeEntries(root, file.plugin, bound).filter(
-          (entry) =>
-            entry.file !== self && realOf(entry.file) !== real && fold(entry.name) === fold(own),
+          (entry) => realOf(entry.file) !== real && fold(entry.name) === fold(own),
         )
         if (others.length > 0) {
           context.report({
