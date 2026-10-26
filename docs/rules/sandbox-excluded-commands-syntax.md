@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/sandbox-excluded-commands-syntax, which reports a sandbox.excludedCommands entry that has the Bash( wrapper of a permission rule, or that starts with sudo, eval, xargs, cd, pushd or popd, which Claude Code never takes out of the sandbox.
+description: The ESLint rule claude/sandbox-excluded-commands-syntax, which reports a sandbox.excludedCommands entry that has the Bash( wrapper of a permission rule, or that starts with sudo, eval, xargs, unshare, cd, pushd or popd, which Claude Code never takes out of the sandbox.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -35,8 +35,9 @@ The rule makes one report for an entry, for the first fault in this order:
 1. **The `Bash(` wrapper.** The entry parses as a permission rule for the tool `Bash` with a specifier, as `Bash(npm test)`.
    The message gives the text inside the parentheses. A bare `Bash` is a command name, and the rule does not read it.
 2. **A first word that keeps a call sandboxed.** Claude Code keeps a Bash call in the sandbox when it starts with `sudo`,
-   `eval` or `xargs`.[^entry] A `cd`, `pushd` or `popd` keeps the call in the sandbox wherever it stands in the call. So an
-   entry that starts with one of these six words takes no call out of the sandbox.
+   `eval` or `xargs`.[^entry] It does the same for `unshare`, because `unshare` can start any other program.[^unshare] A `cd`,
+   `pushd` or `popd` keeps the call in the sandbox wherever it stands in the call. So an entry that starts with one of these
+   seven words takes no call out of the sandbox.
 
 An entry is a pattern for the whole call. So the rule reads the first word of the entry only. It reads the `:*` form at the end
 of an entry as a final ` *`. It does not read a `cd` that stands later in an entry.
@@ -44,7 +45,8 @@ of an entry as a final ` *`. It does not read a `cd` that stands later in an ent
 The rule is silent in these cases:
 
 - The entry is an exact command, a prefix or a wildcard: `npm test`, `docker *`, `*`.
-- The first word only starts like one of the six words: `sudoku`, `cdk deploy`.
+- The first word only starts like one of the seven words: `sudoku`, `cdk deploy`.
+- The word `unshare` stands after the first word: `make unshare`.
 - The entry is not a string, or `excludedCommands` is not an array. `sandbox-schema` reports the type.
 - The entry is empty.
 
@@ -79,3 +81,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^entry]: [All settings: sandbox.excludedCommands](https://code.claude.com/docs/en/settings-reference#sandbox-excludedcommands)
+[^unshare]: [Configure the sandboxed Bash tool: Chromium or rootless Podman fails inside the sandbox on Linux](https://code.claude.com/docs/en/sandboxing#chromium-or-rootless-podman-fails-inside-the-sandbox-on-linux)

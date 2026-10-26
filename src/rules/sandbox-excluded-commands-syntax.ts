@@ -18,7 +18,7 @@ type MessageId = 'wrapper' | 'neverExcluded'
 /** The first words of a call that Claude Code keeps sandboxed. A `cd`, `pushd` or `popd` does so
  *  wherever it stands in the call. An entry is a pattern for the whole call, so the rule reads the
  *  first word only. */
-const NEVER_EXCLUDED = ['sudo', 'eval', 'xargs', 'cd', 'pushd', 'popd']
+const NEVER_EXCLUDED = ['sudo', 'eval', 'xargs', 'unshare', 'cd', 'pushd', 'popd']
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {

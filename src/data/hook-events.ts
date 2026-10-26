@@ -43,8 +43,8 @@ export const HOOK_EVENTS: readonly string[] = [
 ]
 
 // The matcher facts per event. Source: the hooks reference, "Matcher patterns"
-// (https://code.claude.com/docs/en/hooks#matcher-patterns), checked on 2026-10-10.
-// Review this section on or before 2027-04-10.
+// (https://code.claude.com/docs/en/hooks#matcher-patterns), checked on 2026-10-25.
+// Review this section on or before 2027-04-25.
 
 /** The events that run a hook for every occurrence and ignore a `matcher`. */
 export const NO_MATCHER_EVENTS: readonly string[] = [
@@ -89,6 +89,7 @@ export const MATCHER_VALUES: ReadonlyMap<string, readonly string[]> = new Map([
       'quota_auto_resume_fired',
       'quota_auto_resume_stale',
       'quota_auto_resume_disabled',
+      'plugin_notification',
     ],
   ],
   ['PreCompact', ['manual', 'auto']],
