@@ -112,17 +112,21 @@ function closingTick(line: string, start: number): number {
   return line.length - 1
 }
 
-/** True when a `}` comes after `from` in `line`, before a `)` that ends the level. The scan skips
- *  each command or process substitution, each backtick pair, each quote, each escaped character
- *  and each plain parenthesis pair. So a `${...}` expansion with two substitutions in it stays
- *  open, as in `closingParen`. */
+/** True when a `}` or a nested `${` comes after `from` in `line`, before a `)` that ends the
+ *  level. The scan skips each substitution, backtick pair, quote and escaped character. A `)` that
+ *  closes a plain `(` does not end the level. So a `${...}` expansion with two substitutions in it
+ *  stays open, as in `closingParen`. */
 function braceBeforeParen(line: string, from: number): boolean {
   // The open plain parentheses. In an expansion, a plain parenthesis is text.
   let depth = 0
   for (let i = from; i < line.length; i++) {
     const char = line.charAt(i)
-    if (char === '}' || (char === ')' && depth === 0)) {
-      return char === '}'
+    if (char === '}' || (char === '$' && opensExpansion(line, i))) {
+      // A nested `${` ends at its own `}`, before the outer one. A `)` in it or after it is text.
+      return true
+    }
+    if (char === ')' && depth === 0) {
+      return false
     }
     if (char === '\\') {
       i++
@@ -180,10 +184,10 @@ export function scanCommands(line: string): Command[] {
   let redirect = false
   // The open `${` expansions at this level. A parenthesis or a backtick starts a new level, and
   // keeps the count of the outer level until it ends. The reader cannot tell the `)` of a `case`
-  // pattern from the `)` that ends a substitution. So after a `)`, the outer count comes back only
-  // when a `}` comes before the next `)` of this level. `braceBeforeParen` skips each nested
-  // substitution and backtick pair. A new line ends each expansion when the next line has no `}`,
-  // as in the body of a here-document. bash refuses such a `${` out of a here-document.
+  // pattern from the `)` that ends a substitution. So after a `)`, `braceBeforeParen` looks for a
+  // `}` or a nested `${` before the next `)` of this level. Only then the outer count comes back.
+  // A new line ends each expansion when the next line has no `}`, as in the body of a
+  // here-document. bash refuses such a `${` out of a here-document.
   let braces = 0
   const outer: number[] = []
   let tickBraces = 0
@@ -278,7 +282,8 @@ export function scanCommands(line: string): Command[] {
       substitutions -= before === '$' ? 1 : 0
       closed = before === '$' || before === '<' || before === '>'
       const frame = outer.pop() ?? 0
-      // The scan after the `)` reads to the end of the level, so it runs only for an open expansion.
+      // When `frame` is 0, the result is 0. So only a `)` in an open expansion starts the scan, which
+      // can read to the end of the line.
       braces = frame > 0 && braceBeforeParen(line, i + 1) ? frame : 0
     } else if (char === '`') {
       endCommand()

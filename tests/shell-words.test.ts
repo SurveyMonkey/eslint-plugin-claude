@@ -728,6 +728,14 @@ describe('scanCommands', () => {
     expect(commandsOf(`echo \${a:-$(true) '#y}`)).toEqual([['echo', `\${a:-$`], ['true'], [`#y}`]])
   })
 
+  it(`keeps the \${...} expansion open after a substitution and a nested expansion`, () => {
+    // bash 5.3.9 prints `) #y`, then `hi`, in each case. A `)` in or after a nested expansion is
+    // text, so it does not end the outer one.
+    for (const text of [`$(true) \${b:-)}`, `$(true)\${b:-)}`, `$(true) \${b} )`]) {
+      expect(commandsOf(`echo \${a:-${text} #y}; echo hi`).at(-1), text).toEqual(['echo', 'hi'])
+    }
+  })
+
   it('reads a line of many substitutions out of an expansion in linear time', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)

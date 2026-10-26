@@ -490,6 +490,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line(`echo \${1:-$(true) $(false) #y}; rm -rf $T`)).toEqual(['destructive'])
     // bash 5.3.9 prints `) #y`, then runs `rm`. The quoted `)` does not end the expansion.
     expect(line(`echo \${1:-$(true) ")" #y}; rm -rf $T`)).toEqual(['destructive'])
+    // bash 5.3.9 prints `) #y`, then runs `rm`. The `)` in the nested expansion is text.
+    expect(line(`echo \${1:-$(true) \${b:-)} #y}; rm -rf $T`)).toEqual(['destructive'])
   })
 
   it(`reads a # after two substitutions in a \${...} expansion in the variable reader`, () => {
