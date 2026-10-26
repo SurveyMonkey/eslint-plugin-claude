@@ -702,15 +702,18 @@ describe('scanCommands', () => {
       ['(b) #y}'],
       ['echo', 'hi'],
     ])
-    // bash 5.3.9 prints `/dev/fd/63 #y`, then `hi`.
-    expect(commandsOf(`echo \${a:-$(true) >(false) #y}; echo hi`)).toEqual([
-      ['echo', `\${a:-$`],
-      ['true'],
-      [' >'],
-      ['false'],
-      [' #y}'],
-      ['echo', 'hi'],
-    ])
+    // bash 5.3.9 prints `#y`, or `/dev/fd/63 #y`, then `hi`. The `)` in the comment of the
+    // command or process substitution does not end it.
+    for (const open of ['$', '<', '>']) {
+      expect(commandsOf(`echo \${a:-$(true) ${open}(: # )\n) #y}; echo hi`), open).toEqual([
+        ['echo', `\${a:-$`],
+        ['true'],
+        [` ${open}`],
+        [':'],
+        [' #y}'],
+        ['echo', 'hi'],
+      ])
+    }
     // A single quote that does not close: bash gives a syntax error. The scan reads to the end.
     expect(commandsOf(`echo \${a:-$(true) '#y}`)).toEqual([['echo', `\${a:-$`], ['true'], [`#y}`]])
   })
