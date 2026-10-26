@@ -23,6 +23,7 @@ const budget = (count: number, bytes: number) => ({
   data: { count: String(count), bytes: String(bytes) },
 })
 const bracket = (pattern: string) => ({ messageId: 'bracket' as const, data: { pattern } })
+const parent = (pattern: string) => ({ messageId: 'parent' as const, data: { pattern } })
 
 markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
   valid: [
@@ -69,6 +70,10 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
     { ...text('src/**/*.{ts,tsx}'), filename: pluginSkill() },
     { ...text('src/**/*.{ts,tsx}'), filename: pluginSkill('other') },
     { ...text('[unclosed'), filename: pluginCommand() },
+    // A `..` that stays at or below the start of the pattern, an absolute path, and a name that
+    // only holds dots. The docs do not say that an absolute path never matches.
+    list('a/../b/**', 'a/b/../../c', './a/..', '/abs/**', '/../x', '...', '..a/**', 'a../b'),
+    text('{../a,b}/*.ts'),
   ],
   invalid: [
     {
@@ -149,6 +154,22 @@ markdownTester.run('skill-paths-glob-valid', ruleOf('skill-paths-glob-valid'), {
       ...text('{a,b}'.repeat(60)),
       errors: [budget(1e12, 1e12)],
     },
+    // A `..` that leads above the start of the pattern, so out of the working directory.
+    {
+      ...list('../shared/**', 'a/../../x', 'src/**', './../x', '..', 'a//../..', '**/../../y'),
+      errors: [
+        { ...parent('../shared/**'), line: 4, column: 3 },
+        parent('a/../../x'),
+        parent('./../x'),
+        parent('..'),
+        parent('a//../..'),
+        parent('**/../../y'),
+      ],
+    },
+    { ...text('src/*.ts, ../lib/*.ts'), errors: [parent('../lib/*.ts')] },
+    { ...text('../x/**'), filename: pluginSkill(), errors: [parent('../x/**')] },
+    // A bad `[` and the `..` fault are two reports for one pattern.
+    { ...text('../['), errors: [bracket('../['), parent('../[')] },
     // A bad `[` and the budget are two reports.
     {
       ...text(`${group(11)}/${group(10)}/${group(10)}/[`),
