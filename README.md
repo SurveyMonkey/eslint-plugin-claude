@@ -291,6 +291,7 @@ default if it has one.
 | [hooks-script-exists](docs/rules/hooks-script-exists.md)                                     | Name a hook script that exists                                                                          | ✅ 🔒 |      |    |
 | [hooks-script-executable](docs/rules/hooks-script-executable.md)                             | Give a hook script the executable bit                                                                   | ✅ 🔒 |      |    |
 | [hooks-sessionstart-static-context](docs/rules/hooks-sessionstart-static-context.md)         | Put static SessionStart context in CLAUDE.md, and do not print AGENTS.md                                |      | 🔒   |    |
+| [hooks-skill-source-limit](docs/rules/hooks-skill-source-limit.md)                           | Keep the skill hooks of one source within the limits of Claude Code                                     |      | ✅ 🔒 | ⚙️ |
 | [hooks-stop-loop-guard](docs/rules/hooks-stop-loop-guard.md)                                 | Read stop_hook_active in a Stop hook that blocks                                                        |      | 🔒   |    |
 | [hooks-timeout-units](docs/rules/hooks-timeout-units.md)                                     | Write the timeout of a hook in seconds, not in milliseconds                                             |      | 🔒   | ⚙️ |
 | [hooks-worktree-create-without-remove](docs/rules/hooks-worktree-create-without-remove.md)   | Pair a WorktreeCreate hook with a WorktreeRemove hook in the same file                                  |      | ✅ 🔒 |    |
@@ -484,6 +485,7 @@ default if it has one.
 | [settings-managed-version-floor](docs/rules/settings-managed-version-floor.md)               | Set requiredMinimumVersion with deniedModels or availableModelsMatch                   |      | ✅ 🔒 |    |
 | [statusline-windows-path](docs/rules/statusline-windows-path.md)                             | Write a path in the statusLine command with forward slashes                            |      | ✅ 🔒 |    |
 | [settings-agent-exists](docs/rules/settings-agent-exists.md)                                 | Name an agent that the repository defines or Claude Code ships in the agent setting    |      | 🔒   | ⚙️ |
+| [settings-env-auto-mode-model](docs/rules/settings-env-auto-mode-model.md)                   | Set CLAUDE_CODE_AUTO_MODE_MODEL to a full model ID that the classifier uses            |      | 🔒   |    |
 | [settings-env-context-cost](docs/rules/settings-env-context-cost.md)                         | Do not set an env variable that raises the context cost in the shared settings file    |      | 🔒   |    |
 | [settings-env-format-heuristic](docs/rules/settings-env-format-heuristic.md)                 | Write the MCP and PowerShell env variables in the form that the docs give              |      | 🔒   |    |
 | [settings-env-secret-heuristic](docs/rules/settings-env-secret-heuristic.md)                 | Do not commit an env variable that looks like a secret                                 |      | 🔒   |    |

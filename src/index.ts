@@ -117,6 +117,7 @@ import * as hooksScriptExists from './rules/hooks-script-exists.ts'
 import * as hooksScriptShebang from './rules/hooks-script-shebang.ts'
 import * as hooksSessionendDefaultTimeout from './rules/hooks-sessionend-default-timeout.ts'
 import * as hooksSessionstartStaticContext from './rules/hooks-sessionstart-static-context.ts'
+import * as hooksSkillSourceLimit from './rules/hooks-skill-source-limit.ts'
 import * as hooksStopLoopGuard from './rules/hooks-stop-loop-guard.ts'
 import * as hooksTimeoutUnits from './rules/hooks-timeout-units.ts'
 import * as hooksWorktreeCreateWithoutRemove from './rules/hooks-worktree-create-without-remove.ts'
@@ -364,6 +365,7 @@ import * as settingsEnabledPluginsEntryExists from './rules/settings-enabled-plu
 import * as settingsEnabledPluginsExternalSource from './rules/settings-enabled-plugins-external-source.ts'
 import * as settingsEnabledPluginsMarketplaceDeclared from './rules/settings-enabled-plugins-marketplace-declared.ts'
 import * as settingsEnabledPluginsSchema from './rules/settings-enabled-plugins-schema.ts'
+import * as settingsEnvAutoModeModel from './rules/settings-env-auto-mode-model.ts'
 import * as settingsEnvContextCost from './rules/settings-env-context-cost.ts'
 import * as settingsEnvCredential from './rules/settings-env-credential.ts'
 import * as settingsEnvDeprecatedVar from './rules/settings-env-deprecated-var.ts'
@@ -536,6 +538,7 @@ const modules = [
     target: hooksSessionstartStaticContext.target,
     default: hooksSessionstartStaticContext.default,
   },
+  { target: hooksSkillSourceLimit.target, default: hooksSkillSourceLimit.default },
   { target: hooksStopLoopGuard.target, default: hooksStopLoopGuard.default },
   { target: hooksTimeoutUnits.target, default: hooksTimeoutUnits.default },
   {
@@ -977,6 +980,7 @@ const modules = [
     target: settingsDefaultshellPowershellTool.target,
     default: settingsDefaultshellPowershellTool.default,
   },
+  { target: settingsEnvAutoModeModel.target, default: settingsEnvAutoModeModel.default },
   { target: settingsEnvContextCost.target, default: settingsEnvContextCost.default },
   { target: settingsEnvFormatHeuristic.target, default: settingsEnvFormatHeuristic.default },
   { target: settingsEnvSecretHeuristic.target, default: settingsEnvSecretHeuristic.default },
@@ -1211,6 +1215,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-script-shebang': 'off',
   'hooks-sessionend-default-timeout': 'warn',
   'hooks-sessionstart-static-context': 'off',
+  'hooks-skill-source-limit': 'warn',
   'hooks-stop-loop-guard': 'off',
   'hooks-timeout-units': 'off',
   'hooks-worktree-create-without-remove': 'warn',
@@ -1487,6 +1492,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-paths-no-match': 'off',
   'settings-agent-exists': 'off',
   'settings-defaultshell-powershell-tool': 'off',
+  'settings-env-auto-mode-model': 'off',
   'settings-env-context-cost': 'off',
   'settings-env-format-heuristic': 'off',
   'settings-env-secret-heuristic': 'off',

@@ -563,6 +563,12 @@ function settingsFiles(dir: string, content: object): Record<string, string> {
   )
 }
 
+/** A skill whose frontmatter declares one prompt hook under a `PreToolUse` matcher of 8,194
+ *  characters: `Read`, and 1,638 more `|Read`. A prompt hook runs no command, so no command rule
+ *  reports it. One hook keeps the cost of the other hooks rules low. */
+const limitSkill = () =>
+  `---\ndescription: Hooks.\nhooks: {PreToolUse: [{matcher: "Read${'|Read'.repeat(1638)}", hooks: [{type: prompt, prompt: "Check the work."}]}]}\n---\n`
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -1981,6 +1987,18 @@ const TREE: Record<string, string> = {
     '{"availableModels": ["opus"], "model": "claude-opus-5-5", "alwaysThinkingEnabled": false}',
   'packages/oa-secret/.claude/settings.json': '{"env": {"MY_TOKEN": "abc"}}',
   'packages/oa-secret/.claude/settings.local.json': '{"env": {"MY_TOKEN": "abc"}}',
+  // `settings-env-auto-mode-model` reads the project and managed files. An alias and an ignored
+  // model report. A full ID that the classifier uses does not.
+  'packages/oa-auto/.claude/settings.json': '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "sonnet"}}',
+  'packages/oa-auto/.claude/settings.local.json':
+    '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-sonnet-4-6"}}',
+  'packages/oa-auto/managed-settings.json':
+    '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-opus-5"}}',
+  // `hooks-skill-source-limit`: the matchers of the skills of one `.claude/` total 16,388
+  // characters. Each skill with a hook reports. The skill with no hook does not.
+  'packages/sl/.claude/skills/a/SKILL.md': limitSkill(),
+  'packages/sl/.claude/skills/b/SKILL.md': limitSkill(),
+  'packages/sl/.claude/skills/c/SKILL.md': '---\ndescription: No hooks.\n---\n',
   'packages/oa-cost/.claude/settings.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-cost/.claude/settings.local.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-format/.claude/settings.json': '{"env": {"MCP_TIMEOUT": "30s"}}',
@@ -3240,6 +3258,7 @@ const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
 const SETTINGS_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'settings-agent-exists', files: PROJECT_FILES },
   { name: 'settings-defaultshell-powershell-tool', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-auto-mode-model', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-context-cost', files: SHARED_FILE },
   { name: 'settings-env-format-heuristic', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-secret-heuristic', files: SHARED_FILE },
@@ -5161,6 +5180,8 @@ const EXPECTED = [
   'packages/wmf/managed-settings.json: claude/sandbox-credentials-mask-fallback@1',
   'packages/wmf/managed-settings.d/10-a.json: claude/sandbox-credentials-mask-fallback@1',
   'packages/wmf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/sl/.claude/skills/a/SKILL.md: claude/hooks-skill-source-limit@1',
+  'packages/sl/.claude/skills/b/SKILL.md: claude/hooks-skill-source-limit@1',
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
@@ -5267,6 +5288,8 @@ const STRICT_ONLY = [
   // The `off` settings rules read only the files of their own glob, so the decoy files report
   // nowhere.
   'packages/oa-agent/.claude/settings.json: claude/settings-agent-exists@1',
+  'packages/oa-auto/.claude/settings.json: claude/settings-env-auto-mode-model@1',
+  'packages/oa-auto/managed-settings.json: claude/settings-env-auto-mode-model@1',
   'packages/oa-cost/.claude/settings.json: claude/settings-env-context-cost@1',
   'packages/oa-format/.claude/settings.json: claude/settings-env-format-heuristic@1',
   'packages/oa-format/managed-settings.json: claude/settings-env-format-heuristic@1',
@@ -5767,6 +5790,7 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     severity: 'warn',
     strictOnly: true,
   },
+  { name: 'hooks-skill-source-limit', blocks: [['**/SKILL.md']], severity: 'warn' },
   {
     name: 'hooks-stop-loop-guard',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
@@ -6481,14 +6505,15 @@ describe('configs', () => {
     }
   })
 
-  it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
+  it('gives each hooks rule its blocks, in JSON or Markdown by their files', () => {
+    // `hooks-skill-source-limit` reads skills only, so its one block is Markdown.
     for (const { name, blocks, strictOnly } of HOOKS_RULES) {
       const found = (strictOnly ? plugin.configs.strict : plugin.configs.recommended).filter(
         (c) => c.name === `claude/${strictOnly ? 'strict' : 'recommended'}/${name}`,
       )
       expect(found.map((c) => c.files)).toEqual(blocks)
       expect(found.map((c) => c.language)).toEqual(
-        blocks.map((_, i) => (i === 0 ? 'json/json' : 'markdown/gfm')),
+        blocks.map((files) => (files.includes('**/SKILL.md') ? 'markdown/gfm' : 'json/json')),
       )
     }
   })
