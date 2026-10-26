@@ -1981,6 +1981,13 @@ const TREE: Record<string, string> = {
     '{"availableModels": ["opus"], "model": "claude-opus-5-5", "alwaysThinkingEnabled": false}',
   'packages/oa-secret/.claude/settings.json': '{"env": {"MY_TOKEN": "abc"}}',
   'packages/oa-secret/.claude/settings.local.json': '{"env": {"MY_TOKEN": "abc"}}',
+  // `settings-env-auto-mode-model` reads the project and managed files. An alias and an ignored
+  // model report. A full ID that the classifier uses does not.
+  'packages/oa-auto/.claude/settings.json': '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "sonnet"}}',
+  'packages/oa-auto/.claude/settings.local.json':
+    '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-sonnet-4-6"}}',
+  'packages/oa-auto/managed-settings.json':
+    '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-opus-5"}}',
   'packages/oa-cost/.claude/settings.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-cost/.claude/settings.local.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-format/.claude/settings.json': '{"env": {"MCP_TIMEOUT": "30s"}}',
@@ -3240,6 +3247,7 @@ const MEMORY_OFF_RULES = Object.keys(MEMORY_OFF_BLOCKS).sort()
 const SETTINGS_OFF_RULES: { name: string; files: string[] }[] = [
   { name: 'settings-agent-exists', files: PROJECT_FILES },
   { name: 'settings-defaultshell-powershell-tool', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'settings-env-auto-mode-model', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-context-cost', files: SHARED_FILE },
   { name: 'settings-env-format-heuristic', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'settings-env-secret-heuristic', files: SHARED_FILE },
@@ -5267,6 +5275,8 @@ const STRICT_ONLY = [
   // The `off` settings rules read only the files of their own glob, so the decoy files report
   // nowhere.
   'packages/oa-agent/.claude/settings.json: claude/settings-agent-exists@1',
+  'packages/oa-auto/.claude/settings.json: claude/settings-env-auto-mode-model@1',
+  'packages/oa-auto/managed-settings.json: claude/settings-env-auto-mode-model@1',
   'packages/oa-cost/.claude/settings.json: claude/settings-env-context-cost@1',
   'packages/oa-format/.claude/settings.json: claude/settings-env-format-heuristic@1',
   'packages/oa-format/managed-settings.json: claude/settings-env-format-heuristic@1',

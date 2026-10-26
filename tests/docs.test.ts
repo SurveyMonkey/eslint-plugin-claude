@@ -382,6 +382,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'settings-enabled-plugins-external-source',
     'settings-enabled-plugins-marketplace-declared',
     'settings-enabled-plugins-schema',
+    'settings-env-auto-mode-model',
     'settings-env-context-cost',
     'settings-env-credential',
     'settings-env-deprecated-var',
