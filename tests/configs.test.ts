@@ -563,6 +563,11 @@ function settingsFiles(dir: string, content: object): Record<string, string> {
   )
 }
 
+/** A skill whose frontmatter declares `count` prompt hooks under one `Stop` group. A prompt hook
+ *  runs no command, so no command rule reports it. */
+const limitSkill = (count: number) =>
+  `---\ndescription: Hooks.\nhooks: {Stop: [{hooks: [${Array.from({ length: count }, () => '{type: prompt, prompt: "Check the work."}').join(', ')}]}]}\n---\n`
+
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
   'plugins/p/skills/s/SKILL.md': `---\nname: s\ndescription: ${long}\n---\n`,
@@ -1988,6 +1993,11 @@ const TREE: Record<string, string> = {
     '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-sonnet-4-6"}}',
   'packages/oa-auto/managed-settings.json':
     '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-opus-5"}}',
+  // `hooks-skill-source-limit`: the skills of one `.claude/` declare 1,025 hooks. Each skill with
+  // a hook reports. The skill with no hook does not.
+  'packages/sl/.claude/skills/a/SKILL.md': limitSkill(1024),
+  'packages/sl/.claude/skills/b/SKILL.md': limitSkill(1),
+  'packages/sl/.claude/skills/c/SKILL.md': '---\ndescription: No hooks.\n---\n',
   'packages/oa-cost/.claude/settings.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-cost/.claude/settings.local.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-format/.claude/settings.json': '{"env": {"MCP_TIMEOUT": "30s"}}',
@@ -5169,6 +5179,8 @@ const EXPECTED = [
   'packages/wmf/managed-settings.json: claude/sandbox-credentials-mask-fallback@1',
   'packages/wmf/managed-settings.d/10-a.json: claude/sandbox-credentials-mask-fallback@1',
   'packages/wmf/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
+  'packages/sl/.claude/skills/a/SKILL.md: claude/hooks-skill-source-limit@1',
+  'packages/sl/.claude/skills/b/SKILL.md: claude/hooks-skill-source-limit@1',
 ].sort()
 
 // The reports of the `off` agent and marketplace rules. They appear in `strict` only, at `warn`.
@@ -5777,6 +5789,7 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
     severity: 'warn',
     strictOnly: true,
   },
+  { name: 'hooks-skill-source-limit', blocks: [['**/SKILL.md']], severity: 'warn' },
   {
     name: 'hooks-stop-loop-guard',
     blocks: [HOOKS_JSON, HOOKS_MARKDOWN],
@@ -6492,13 +6505,14 @@ describe('configs', () => {
   })
 
   it('gives each hooks rule a JSON block, and a Markdown block for the config rules', () => {
+    // `hooks-skill-source-limit` reads skills only, so its one block is Markdown.
     for (const { name, blocks, strictOnly } of HOOKS_RULES) {
       const found = (strictOnly ? plugin.configs.strict : plugin.configs.recommended).filter(
         (c) => c.name === `claude/${strictOnly ? 'strict' : 'recommended'}/${name}`,
       )
       expect(found.map((c) => c.files)).toEqual(blocks)
       expect(found.map((c) => c.language)).toEqual(
-        blocks.map((_, i) => (i === 0 ? 'json/json' : 'markdown/gfm')),
+        blocks.map((files) => (files.includes('**/SKILL.md') ? 'markdown/gfm' : 'json/json')),
       )
     }
   })

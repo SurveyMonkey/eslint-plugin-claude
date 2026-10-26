@@ -154,6 +154,7 @@ const GROUPS = [
       'hooks-script-exists',
       'hooks-script-executable',
       'hooks-sessionstart-static-context',
+      'hooks-skill-source-limit',
       'hooks-stop-loop-guard',
       'hooks-timeout-units',
       'hooks-worktree-create-without-remove',
