@@ -670,10 +670,55 @@ describe('scanCommands', () => {
       [' #y}'],
       ['echo', 'hi'],
     ])
-    // In double quotes, `closingParen` reads the same. bash 5.3.9 sets `x='#y z'`, then runs `w`.
+    // In double quotes, `closingParen` reads the substitution and keeps the expansion open.
+    // bash 5.3.9 sets `x='#y z'`, then runs `w`.
     expect(commandsOf(`x="$(echo \${a:-$(true) $(false) #y}) z" w`)).toEqual([
       [`x=$(echo \${a:-$(true) $(false) #y}) z`, 'w'],
     ])
+  })
+
+  it(`keeps the \${...} expansion open after a substitution and a quote or an escape`, () => {
+    // bash 5.3.9 prints the last word, then `hi`, in each case. A quote, a backslash or
+    // a plain parenthesis pair in the expansion does not end it.
+    for (const [text, rest] of [
+      [`'\`'`, ' ` #y}'],
+      ['\\`', ' ` #y}'],
+      [`'$('`, ' $( #y}'],
+      ['")"', ' ) #y}'],
+      ['\\)', ' ) #y}'],
+      ['"}"', ' } #y}'],
+    ]) {
+      expect(commandsOf(`echo \${a:-$(true) ${text} #y}; echo hi`), text).toEqual([
+        ['echo', `\${a:-$`],
+        ['true'],
+        [rest],
+        ['echo', 'hi'],
+      ])
+    }
+    // bash 5.3.9 prints `a(b) #y`, then `hi`.
+    expect(commandsOf(`echo \${a:-$(echo a)(b) #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['echo', 'a'],
+      ['(b) #y}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `/dev/fd/63 #y`, then `hi`.
+    expect(commandsOf(`echo \${a:-$(true) >(false) #y}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['true'],
+      [' >'],
+      ['false'],
+      [' #y}'],
+      ['echo', 'hi'],
+    ])
+    // A single quote that does not close: bash gives a syntax error. The scan reads to the end.
+    expect(commandsOf(`echo \${a:-$(true) '#y}`)).toEqual([['echo', `\${a:-$`], ['true'], [`#y}`]])
+  })
+
+  it('reads a line of many substitutions in linear time', () => {
+    const start = Date.now()
+    expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)
+    expect(Date.now() - start).toBeLessThan(5000)
   })
 
   it(`goes on with a \${...} expansion after a new line in it`, () => {
