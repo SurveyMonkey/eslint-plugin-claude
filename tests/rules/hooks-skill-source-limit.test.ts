@@ -306,3 +306,13 @@ it('stays silent when the real path of this file is unreadable', () => {
   // With a readable real path, the same file reports.
   expect(lintMarkdown('hooks-skill-source-limit', skill(25), file)).toHaveLength(1)
 })
+
+it('reads no real path for a plugin skill, because a plugin counts each folder', () => {
+  const file = at('plugin/skills/b/SKILL.md')
+  realpathFails.path = file
+  try {
+    expect(lintMarkdown('hooks-skill-source-limit', skill(25), file)).toHaveLength(1)
+  } finally {
+    realpathFails.path = null
+  }
+})
