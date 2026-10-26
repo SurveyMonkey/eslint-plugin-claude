@@ -54,11 +54,10 @@ where Claude Code reports. It does not report a list that Claude Code accepts.
 
 For `parent`, the rule splits a glob at each `/`. A `.` segment and an empty segment stay at the
 same level. Each other segment, such as `*` or `**`, goes down one level. A `**` can stand for no
-folder, but the rule does not report `**/../x`. The rule does not
-expand brace groups for this check, so `{../a,b}/*.ts` gives no report. It does not check a glob
-that starts with `/`. The docs do not say that an absolute path never matches.
-`claude plugin validate` 2.1.310 passes a plugin skill with `paths: ["../x/**"]`, so the rule
-checks plugin skills too.
+folder, but the rule does not report `**/../x`. The rule does not expand brace groups for this
+check, so `{../a,b}/*.ts` gives no report. It does not check a glob that starts with `/`. The docs
+do not say that an absolute path never matches. `claude plugin validate` 2.1.310 passes a plugin
+skill with `paths: ["../x/**"]`, so the rule checks plugin skills too.
 
 The rule splits a string at each comma that is not in a brace group, because a brace group holds
 commas. It does not split a list item. The docs do not give the splitting rule of Claude Code.

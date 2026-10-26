@@ -161,8 +161,8 @@ export function pathNodes(value: ValueNode | undefined): StringNode[] {
 }
 
 /** A skill that a path of the manifest `skills` key gives. `file` is its `SKILL.md`, spelled
- *  from the plugin root, the path text and, in a folder of skill folders, the folder name.
- *  `folder` is the name of its folder. */
+ *  from the plugin root and the path text. In a folder of skill folders, the spelling also holds
+ *  the folder name. `folder` is the name of its folder. */
 export interface ListedSkill {
   readonly file: string
   readonly folder: string

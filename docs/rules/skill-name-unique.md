@@ -58,38 +58,42 @@ A skill name is the `name` field, or the folder name when the field is not a loa
 say that Claude Code ignores a refused `name`. The rule reads this as: the skill goes by its
 folder name. So the rule compares that folder name.
 
-A plugin manifest can list more skill folders in its `skills` key. The key adds to `skills/`.[^manifest]
-A path of the key names one skill folder that holds a `SKILL.md`, or a folder of skill folders.
-The rule reads each path, and compares the skills there with the other skills and commands of the
-plugin. A path that is not there, or that leads out of the plugin, gives no skill. A folder with
-a `SKILL.md` is one skill. When the rule cannot see that file, or it leads out of the plugin, the
-folder gives no skill. The rule reads a skill one time, when two paths give it, or when a path
-names `skills/`. A manifest that the rule cannot read gives no paths. The rule then compares the
-skills in `skills/` only. For a `SKILL.md` outside `skills/`, the rule looks for a plugin root
-above it whose manifest lists its folder. The search stops at the repository root, and at a
-plugin root whose `.claude-plugin` the rule cannot see. With no `.git`, the rule reads no
-directory above the skill folder, so such a `SKILL.md` gets no report. The skills in `skills/`
-still compare with it.
+A plugin manifest can list more skill folders in its `skills` key. The key adds to
+`skills/`.[^manifest] A path of the key names one skill folder that holds a `SKILL.md`, or a folder
+of skill folders. The rule reads each path, and compares the skills there with the other skills and
+commands of the plugin. A path that is not there, or that leads out of the plugin, gives no skill.
 
-A folder in the `skills/` directory of a plugin, or in a manifest `skills` path, is an exception. Claude Code loads it, and the
-refused characters become hyphens in the command name.[^characters] `skill-name-characters` does
-not report it. A plugin skill with a loaded `name` has that name. Without a loaded `name`, the rule
-compares the folder name with one hyphen in place of each refused character. The docs refuse a
-blank other than one plain space between words. The rule reads this as: a plain space next to
-another blank becomes a hyphen too. The rule puts in the hyphens before it removes the differences
-above. A plugin folder `a<b` and a plugin folder `a-b` give a report in each file. A plugin folder
-`a<U+0020><U+0020>b` or `a<U+00A0><U+0020>b` is `a--b`. The rule changes only the characters that
-`skill-name-characters` refuses, and each plain space next to another blank. The docs give no other
-mapping, so a plugin folder `a.b` and a plugin folder `a-b` give no report.
+A folder with a `SKILL.md` is one skill. When the rule cannot see that file, or it leads out of the
+plugin, the folder gives no skill. The rule reads a skill one time, when two paths give it, or when
+a path names `skills/`. A manifest that the rule cannot read gives no paths. The rule then compares
+the skills in `skills/` only.
+
+For a `SKILL.md` outside `skills/`, the rule looks for a plugin root above it whose manifest
+`skills` paths give it. The search stops at the repository root, and at a plugin root whose
+`.claude-plugin` the rule cannot see. With no `.git`, the rule reads no directory above the skill
+folder, so such a `SKILL.md` gets no report. The skills in `skills/` still compare with it.
+
+A folder in the `skills/` directory of a plugin, or a folder that a manifest `skills` path gives, is
+an exception. Claude Code loads it, and the refused characters become hyphens in the command
+name.[^characters] `skill-name-characters` does not report it. A plugin skill with a loaded `name`
+has that name. Without a loaded `name`, the rule compares the folder name with one hyphen in place
+of each refused character. The docs refuse a blank other than one plain space between words. The
+rule reads this as: a plain space next to another blank becomes a hyphen too. The rule puts in the
+hyphens before it removes the differences above. A plugin folder `a<b` and a plugin folder `a-b`
+give a report in each file. A plugin folder `a<U+0020><U+0020>b` or `a<U+00A0><U+0020>b` is `a--b`.
+The rule changes only the characters that `skill-name-characters` refuses, and each plain space next
+to another blank. The docs give no other mapping, so a plugin folder `a.b` and a plugin folder `a-b`
+give no report.
 
 The rule compares no name that is empty after it removes the differences above. Such a name holds
 only characters such as soft hyphens. Claude Code 2.1.310 refuses a project skill folder of one or
 two soft hyphens, and loads no skill from it. It loads a plugin skill folder of soft hyphens. Each
-soft hyphen becomes one hyphen, so `/plugin:-` and `/plugin:--` are two names. The rule puts in a
-hyphen only for a character that `skill-name-characters` refuses. That rule does not refuse a soft
-hyphen, so the rule gives such a folder no name. A `name` field that is empty after the fold is
-not a loaded name. The skill then goes by its folder name. A command name, with its folders
-joined by `:`, has no name to compare when it is empty after the fold.
+soft hyphen becomes one hyphen, so `/plugin:-` and `/plugin:--` are two names.
+
+The rule does not change a soft hyphen to a hyphen, because `skill-name-characters` does not refuse
+it. So the rule gives such a folder no name. A `name` field that is empty after the fold is not a
+loaded name. The skill then goes by its folder name. A command name, with its folders joined by `:`,
+has no name to compare when it is empty after the fold.
 
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
