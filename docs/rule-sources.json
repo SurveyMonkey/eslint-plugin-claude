@@ -7457,6 +7457,11 @@
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Characters a skill name can't hold",
       "hash": "24d0258e9ff5055831a908adedff75ca85478a946dd14ecdd1810611b12599f6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "Fields",
+      "hash": "774a17da028049ec655994469775f964749fff169d58ca10b3b623175226e228"
     }
   ],
   "skill-no-bom": [
