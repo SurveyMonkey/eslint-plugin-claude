@@ -32,7 +32,7 @@ runs. The rule reports at the `matcher` value, once for each value that is not i
 | `SessionStart` | `startup`, `resume`, `clear`, `compact`, `fork` |
 | `Setup` | `init`, `maintenance` |
 | `SessionEnd` | `clear`, `resume`, `logout`, `prompt_input_exit`, `other` |
-| `Notification` | `permission_prompt`, `idle_prompt`, `auth_success`, `elicitation_dialog`, `elicitation_url_dialog`, `elicitation_complete`, `elicitation_response`, `agent_needs_input`, `agent_completed`, `quota_auto_resume_fired`, `quota_auto_resume_stale`, `quota_auto_resume_disabled` |
+| `Notification` | `permission_prompt`, `idle_prompt`, `auth_success`, `elicitation_dialog`, `elicitation_url_dialog`, `elicitation_complete`, `elicitation_response`, `agent_needs_input`, `agent_completed`, `quota_auto_resume_fired`, `quota_auto_resume_stale`, `quota_auto_resume_disabled`, `plugin_notification` |
 | `PreCompact`, `PostCompact` | `manual`, `auto` |
 | `ConfigChange` | `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills` |
 | `DirectoryAdded` | `slash_command`, `register_repo_root` |

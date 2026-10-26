@@ -3,13 +3,15 @@
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import { classifySkillFile } from '../skill-files.ts'
+import { listedSkills, listingPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { classifySkillFile, type SkillFile } from '../skill-files.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 import { escapeName, firstFault, hyphenate } from '../skill-names.ts'
 import {
   frontmatterOfFile,
   markdownFiles,
   readManifest,
+  realOf,
   repositoryRoot,
   scopeRoot,
   skillFiles,
@@ -30,6 +32,16 @@ function fold(text: string): string {
     .replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, '')
 }
 
+/** `name`, or null when it folds to an empty string. Such a name holds only characters that
+ *  `fold` removes, such as soft hyphens. The rule compares no such name: a `name` field, a folder
+ *  name or a command name. In a plugin folder name, `hyphenate` keeps a soft hyphen, because
+ *  `skill-name-characters` does not refuse it. Claude Code 2.1.310 refuses a project skill folder
+ *  of soft hyphens. It loads a plugin skill folder of soft hyphens with one hyphen for each. The
+ *  rule misses that name. */
+function comparable(name: string): string | null {
+  return fold(name) === '' ? null : name
+}
+
 /** The relative path of a file for a message. This function escapes each part
  *  of the path alone. A space is a fault at the edge of one name. A plugin skill
  *  folder can hold a refused character. No other part of a listed path can. */
@@ -47,18 +59,19 @@ function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
 
-/** The value of the field `name` when it is a non-empty string with no refused character,
- *  else null. The rule does not check the length. The docs say Claude Code ignores a refused
- *  `name`, and the rule reads that as: the skill goes by its folder name. */
+/** The value of the field `name` when it is a string with no refused character, that does not
+ *  fold to an empty string, else null. The rule does not check the length. The docs say Claude
+ *  Code ignores a refused `name`, and the rule reads that as: the skill goes by its folder name. */
 function loadedName(value: unknown): string | null {
-  return typeof value === 'string' && value !== '' && firstFault(value) === null ? value : null
+  return typeof value === 'string' && firstFault(value) === null ? comparable(value) : null
 }
 
 /** The name that Claude Code gives a skill, or null when the rule compares no name for it.
  *  A project skill folder that Claude Code refuses means no load, so the result is null.
  *  Else the name is the field `name` when it is loaded, or the folder name. In a plugin
  *  folder name, each refused character becomes a hyphen. This step comes before `fold`,
- *  because `fold` removes some of these characters. The result holds no refused character. */
+ *  because `fold` removes some of these characters. The result holds no refused character.
+ *  A folder name that folds to an empty string gives null (see `comparable`). */
 function skillName(
   fields: Record<string, unknown> | null,
   folder: string,
@@ -67,7 +80,7 @@ function skillName(
   if (!plugin && refused([folder])) {
     return null
   }
-  return loadedName(fields?.name) ?? hyphenate(folder)
+  return loadedName(fields?.name) ?? comparable(hyphenate(folder))
 }
 
 interface Entry {
@@ -86,15 +99,34 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
   return manifest === UNREADABLE || (manifest !== null && 'commands' in manifest)
 }
 
+/** The skill files of the scope at `root`: each `SKILL.md` in `skills/`, then, in a plugin, each
+ *  skill that the paths of the manifest `skills` key give. A listed file with the real path of a
+ *  file before it is left out, as when the key names `skills/`. A manifest that the rule cannot
+ *  read gives no paths. */
+function skillFilesOf(root: string, plugin: boolean, bound: string): string[] {
+  const shipped = skillFiles(path.join(root, 'skills'), bound)
+  const listing = plugin ? readPluginAt(root) : undefined
+  const listed = listing === undefined ? [] : listedSkills(listing).map((skill) => skill.file)
+  const seen = new Set(shipped.map((file) => realOf(file)))
+  const fresh = listed.filter((file) => {
+    const real = realOf(file)
+    if (seen.has(real)) {
+      return false
+    }
+    seen.add(real)
+    return true
+  })
+  return [...shipped, ...fresh]
+}
+
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. A project skill or a command with a refused folder or file name has no entry. A
  *  plugin skill with a refused folder name has an entry: its loaded `name`, else its folder
- *  name with hyphens. */
+ *  name with hyphens. A skill name that folds to an empty string has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
-  const skillsDir = path.join(root, 'skills')
   // A skill file that the rule cannot read has no name to compare.
-  const skills = skillFiles(skillsDir, bound).flatMap((file) => {
+  const skills = skillFilesOf(root, plugin, bound).flatMap((file) => {
     const fields = frontmatterOfFile(file)
     if (fields === UNREADABLE) {
       return []
@@ -109,6 +141,7 @@ function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
     setsCommands(root, plugin, bound) ? [] : markdownFiles(commandsDir, bound).files
   ).flatMap((file) => {
     const parts = path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep)
+    // A command name that folds to an empty string matches no name that `create` compares.
     return refused(parts) ? [] : [{ file, name: parts.join(':') }]
   })
   return [...skills, ...commands]
@@ -128,13 +161,21 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
     },
   },
   create(context) {
-    const file = classifySkillFile(context.filename)
+    const self = path.resolve(context.filename)
+    const classified = classifySkillFile(context.filename)
+    // A skill folder that a manifest `skills` path gives is not in `skills/`, so the
+    // classification does not know it.
+    const listing =
+      classified === null && path.basename(self) === 'SKILL.md' ? listingPlugin(self) : undefined
+    const file: SkillFile | null =
+      listing === undefined
+        ? classified
+        : { kind: 'skill', plugin: true, names: [listing.skill.folder] }
     // The plugin-root skill has no name from a folder or a path.
     if (file === null || file.names.length === 0) {
       return {}
     }
-    const self = path.resolve(context.filename)
-    const root = scopeRoot(self, file)
+    const root = listing === undefined ? scopeRoot(self, file) : listing.plugin.root
     const bound = repositoryRoot(root)
     // A file in `commands/` is not a command when the key replaces the folder.
     if (file.kind === 'command' && setsCommands(root, file.plugin, bound)) {
@@ -167,14 +208,16 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
             ? skillName(given, file.names[0] as string, file.plugin)
             : refused(file.names)
               ? null
-              : file.names.join(':')
+              : comparable(file.names.join(':'))
         // Claude Code loads no project skill or command with a refused folder or file name. It has
-        // no name to share.
+        // no name to share. Nor has a name that folds to an empty string.
         if (own === null) {
           return
         }
+        // A link can give the file another spelling, so the rule compares real paths.
+        const real = realOf(self)
         const others = scopeEntries(root, file.plugin, bound).filter(
-          (entry) => entry.file !== self && fold(entry.name) === fold(own),
+          (entry) => realOf(entry.file) !== real && fold(entry.name) === fold(own),
         )
         if (others.length > 0) {
           context.report({

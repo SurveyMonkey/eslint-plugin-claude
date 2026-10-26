@@ -112,6 +112,7 @@ describe(`${name}: the options that any file can set`, () => {
 describe(`${name}: the options for user and managed settings`, () => {
   const CASES: [string, string][] = [
     ['appleEvents', sandbox({ allowAppleEvents: true })],
+    ['nestedUserNamespaces', sandbox({ allowNestedUserNamespaces: true })],
     ['plaintextInject', sandbox({ credentials: { allowPlaintextInject: true } })],
   ]
 
@@ -131,10 +132,21 @@ describe(`${name}: the options for user and managed settings`, () => {
     }
   })
 
+  it('says what allowNestedUserNamespaces turns off', () => {
+    const [report] = at(repo({}), MANAGED, sandbox({ allowNestedUserNamespaces: true }))
+    expect(report?.message).toBe(
+      '"allowNestedUserNamespaces" turns off a security boundary: code from a sandboxed command can then run outside the sandbox. Do not rely on the sandbox restrictions while it is on.',
+    )
+  })
+
   it('is silent for false', () => {
     expect(
       ids(
-        sandbox({ allowAppleEvents: false, credentials: { allowPlaintextInject: false } }),
+        sandbox({
+          allowAppleEvents: false,
+          allowNestedUserNamespaces: false,
+          credentials: { allowPlaintextInject: false },
+        }),
         MANAGED,
       ),
     ).toEqual([])
@@ -142,6 +154,9 @@ describe(`${name}: the options for user and managed settings`, () => {
 
   it('counts a quoted true in a managed file', () => {
     expect(ids(sandbox({ allowAppleEvents: 'true' }), MANAGED)).toEqual(['appleEvents'])
+    expect(ids(sandbox({ allowNestedUserNamespaces: 'true' }), MANAGED)).toEqual([
+      'nestedUserNamespaces',
+    ])
   })
 })
 
