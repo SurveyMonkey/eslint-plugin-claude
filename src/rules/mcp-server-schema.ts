@@ -54,7 +54,7 @@ function objectFault(
   return value !== undefined && value.type !== 'Object' ? [{ node: value, messageId }] : []
 }
 
-/** The fault of each member of the `env` or `headers` object of `entry` whose value is not a
+/** The faults for each member of the `env` or `headers` object of `entry` whose value is not a
  *  string. A later member of the same name replaces an earlier one. */
 function memberFaults(entry: ValueNode, key: 'env' | 'headers', messageId: MessageIds): Fault[] {
   const object = lastMember(entry, key)?.value
