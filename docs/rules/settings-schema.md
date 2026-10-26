@@ -90,8 +90,8 @@ last review. The kinds of value are below.
   `fileSuggestion` need `type: "command"` and `command`. `modelPicker` rows need `model`.
   `modelPricing` rows need `input`, `output`, `cacheRead` and `cacheWrite`.
   `footerLinksRegexes` rows need `type`, `pattern` and `url`. `sshConfigs` rows need `id`, `name`
-  and `sshHost`. `allowedChannelPlugins` rows are `{marketplace, plugin}`, or a
-  `plugin@marketplace` string. `strictPluginOnlyCustomization` is `true` or an array of strings,
+  and `sshHost`. `sshHostCommands` rows need `id`, `name` and `command`. `allowedChannelPlugins`
+  rows are `{marketplace, plugin}`, or a `plugin@marketplace` string. `strictPluginOnlyCustomization` is `true` or an array of strings,
   because Claude Code ignores a name that it does not know. `policyHelper` needs `path`.
   `forceLoginOrgUUID` is a UUID or an array of UUIDs. `appendPlugins`, `prependPlugins` and the
   string rows of `allowedChannelPlugins` fit `plugin@marketplace`. `gatewayInternalNetworks` has
