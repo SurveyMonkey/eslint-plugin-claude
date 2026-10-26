@@ -51,6 +51,21 @@ jsonTester.run('mcp-project-plugin-bundle (valid)', rule, {
     // after the extension makes the string no bundle.
     { name: 'a path with a query', code: plugin('./a.mcpb?x=1'), filename: manifest },
     { name: 'a path with a trailing space', code: plugin('./a.mcpb '), filename: manifest },
+    // Validate 2.1.310 treats only a string that starts with "./", or that parses as a URL, as a
+    // bundle. It gives "must start with ./" for each of these strings, so none is a bundle. The
+    // rule leaves a path with `..` to validate, so the last string gets no report at all.
+    ...[' ./db.mcpb', '\t./db.mcpb\n', 'db.mcpb', '.\\db.mcpb', '../shared/server.mcpb'].map(
+      (path) => ({
+        name: `validate 2.1.310, no bundle: ${shown(path)}`,
+        code: plugin(path),
+        filename: manifest,
+      }),
+    ),
+    {
+      name: 'validate 2.1.310, no bundle: an absolute path inside the plugin',
+      code: plugin(path.resolve('.claude/skills/p/db.mcpb')),
+      filename: manifest,
+    },
     {
       name: 'a bundle URL with a query after the extension',
       code: plugin('https://x.test/db.mcpb?x=1'),
@@ -237,23 +252,19 @@ jsonTester.run('mcp-project-plugin-bundle (invalid)', rule, {
       ],
     },
     {
-      name: 'a bundle outside the plugin',
-      code: plugin('../shared/server.mcpb'),
-      filename: manifest,
-      errors: [{ messageId: 'skipped' }],
-    },
-    {
       name: 'duplicate key, the last is a bundle',
       code: '{"mcpServers": "./a.json", "mcpServers": "./a.mcpb"}',
       filename: manifest,
       errors: [{ messageId: 'skipped', data: { bundle: './a.mcpb' } }],
     },
-    {
-      name: 'an absolute bundle is a bundle',
-      code: plugin('/opt/server.mcpb'),
+    // Validate 2.1.310 gives "must start with ./" and "must end with .json" for an absolute path
+    // with a bundle extension, so it is no bundle. It is an absolute path out of the plugin.
+    ...['/opt/server.mcpb', '/opt/server.dxt', '//host/s.mcpb', '\\\\host\\s.mcpb'].map((path) => ({
+      name: `validate 2.1.310, an absolute path is no bundle: ${path}`,
+      code: plugin(path),
       filename: manifest,
-      errors: [{ messageId: 'skipped', data: { bundle: '/opt/server.mcpb' } }],
-    },
+      errors: [{ messageId: 'outside' as const, data: { path } }],
+    })),
     {
       name: 'an absolute path, a drive path and a network path',
       code: plugin([

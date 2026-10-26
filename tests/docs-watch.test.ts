@@ -51,6 +51,73 @@ describe('slugify', () => {
   })
 })
 
+describe('relativeDocsLinks', () => {
+  // The live render of 2026-10-26 gives each docs link as an absolute URL. The snapshot
+  // stores the relative form of the render before it.
+  it.each([
+    [
+      'a page with .md and an anchor',
+      '[s](https://code.claude.com/docs/en/settings.md#where-settings-live)',
+      '[s](/docs/en/settings#where-settings-live)',
+    ],
+    [
+      'a page with .md and no anchor',
+      '[w](https://code.claude.com/docs/en/worktrees.md)',
+      '[w](/docs/en/worktrees)',
+    ],
+    [
+      'a page with an anchor and no .md',
+      '[f](https://code.claude.com/docs/en/settings-reference#footerlinksregexes)',
+      '[f](/docs/en/settings-reference#footerlinksregexes)',
+    ],
+    [
+      'a nested page',
+      '[p](https://code.claude.com/docs/en/plugins/loading.md#check-why)',
+      '[p](/docs/en/plugins/loading#check-why)',
+    ],
+    ['a relative link', '[r](/docs/en/settings#where)', '[r](/docs/en/settings#where)'],
+    [
+      'a link to another site',
+      '[g](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)',
+      '[g](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)',
+    ],
+    [
+      'a docs URL that is not a link target',
+      'Fetch https://code.claude.com/docs/en/settings.md directly.',
+      'Fetch https://code.claude.com/docs/en/settings.md directly.',
+    ],
+    [
+      'a site link out of /docs/',
+      '[h](https://code.claude.com/pricing)',
+      '[h](https://code.claude.com/pricing)',
+    ],
+    [
+      'a docs link with no /en/ segment',
+      '[m](https://code.claude.com/docs/mcp)',
+      '[m](https://code.claude.com/docs/mcp)',
+    ],
+  ])('reads %s', (_name, live, stored) => {
+    expect(api.relativeDocsLinks(live)).toBe(stored)
+  })
+
+  it('changes each link of a line', () => {
+    expect(
+      api.relativeDocsLinks(
+        '[a](https://code.claude.com/docs/en/a.md) and [b](https://code.claude.com/docs/en/b#c)',
+      ),
+    ).toBe('[a](/docs/en/a) and [b](/docs/en/b#c)')
+  })
+
+  it('gives the stored block hash for a live page that differs only in the link form', () => {
+    const stored = '# Title\n\n## Part\n\nSee [s](/docs/en/settings#where).\n'
+    const live =
+      '# Title\n\n## Part\n\nSee [s](https://code.claude.com/docs/en/settings.md#where).\n'
+    expect(api.splitBlocks(api.relativeDocsLinks(live)).map((block) => block.hash)).toEqual(
+      api.splitBlocks(stored).map((block) => block.hash),
+    )
+  })
+})
+
 describe('splitBlocks', () => {
   const blocks = api.splitBlocks(FIXTURE)
 
@@ -727,6 +794,16 @@ describe('fetchMarkdown', () => {
   it('returns the text of an ok response', async () => {
     vi.stubGlobal('fetch', async () => new Response('# Title\n'))
     await expect(api.fetchMarkdown('https://x.test/a.md')).resolves.toBe('# Title\n')
+  })
+
+  it('returns each absolute docs link of the response as a relative link', async () => {
+    vi.stubGlobal(
+      'fetch',
+      async () => new Response('See [s](https://code.claude.com/docs/en/settings.md#where).\n'),
+    )
+    await expect(api.fetchMarkdown('https://x.test/a.md')).resolves.toBe(
+      'See [s](/docs/en/settings#where).\n',
+    )
   })
 
   it('gives fetch a signal that times out', async () => {

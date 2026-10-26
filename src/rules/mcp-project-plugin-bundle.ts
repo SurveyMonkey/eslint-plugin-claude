@@ -16,12 +16,15 @@ import { pathFault } from './marketplace-relative-source-format.ts'
 
 const name = 'mcp-project-plugin-bundle' as const
 
-// `claude plugin validate` 2.1.307 checks the end of the string. A query or fragment after the
+// `claude plugin validate` 2.1.310 checks the end of the string. A query or fragment after the
 // extension makes the string no bundle. A string that ends in the extension is a bundle, also when
-// the extension is in the query or fragment. The extension match is in lower case. Validate
+// the extension is in the query or fragment, if it parses as a URL or starts with `./`. The
+// extension match is in lower case. Validate
 // removes the white space at the two ends of a string that parses as a URL. A scheme of one
 // letter, such as `D:`, also parses, so `D:/db.mcpb\t` and `https://x.test/db.mcpb\n` are bundles.
 // It keeps the white space of a path that does not parse, so `./db.mcpb ` is no bundle.
+// A string that does not parse as a URL is a bundle only if it starts with `./`. So
+// `/opt/server.mcpb`, `db.mcpb`, `.\db.mcpb` and ` ./db.mcpb` are no bundle.
 const BUNDLE_EXTENSIONS = ['.mcpb', '.dxt']
 
 // For the file check, a URL has a scheme and two slashes. The bundle check above uses
@@ -55,10 +58,14 @@ const rule: JSONRuleDefinition<{ MessageIds: 'skipped' | 'outside' | 'escapes' }
         for (const declared of declaredMcpStrings(node.body)) {
           const text = declared.value
           // Validate removes the white space at the two ends, as `String.trim` does, when the result
-          // parses as a URL.
+          // parses as a URL. A string that does not parse is a bundle only if it starts with `./`.
           const trimmed = text.trim()
-          const end = URL.canParse(trimmed) ? trimmed : text
-          if (BUNDLE_EXTENSIONS.some((extension) => end.endsWith(extension))) {
+          const parses = URL.canParse(trimmed)
+          const end = parses ? trimmed : text
+          if (
+            (parses || text.startsWith('./')) &&
+            BUNDLE_EXTENSIONS.some((extension) => end.endsWith(extension))
+          ) {
             context.report({ node: declared, messageId: 'skipped', data: { bundle: text } })
             continue
           }
