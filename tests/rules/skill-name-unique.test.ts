@@ -1086,6 +1086,14 @@ describe('the skill folders of the manifest skills paths', () => {
       '`x` is also the command name of `skills/x/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
     ])
   })
+
+  it('reads no skill folder below a listed folder whose SKILL.md is a dangling link', () => {
+    const add = tree('lst-dead', '{"name":"l","skills":["./one"]}')
+    mkdirSync(path.join(scratch, 'lst-dead/one'), { recursive: true })
+    symlinkSync('missing.md', path.join(scratch, 'lst-dead/one/SKILL.md'))
+    add('one/sub/SKILL.md')
+    expect(lint(add('skills/sub/SKILL.md'), bare)).toEqual([])
+  })
 })
 
 // With no `.git`, the rule reads no directory above a skill folder. So a listed skill outside

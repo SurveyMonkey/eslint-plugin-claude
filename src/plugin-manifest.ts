@@ -8,6 +8,7 @@ import type { ValueNode } from './marketplace-json.ts'
 import { realSource } from './marketplace-source.ts'
 import { hasManifest, isPluginRoot } from './plugin-root.ts'
 import {
+  danglingOf,
   entriesOf,
   isInside,
   readManifest,
@@ -160,18 +161,20 @@ export function pathNodes(value: ValueNode | undefined): StringNode[] {
 }
 
 /** A skill that a path of the manifest `skills` key gives. `file` is its `SKILL.md`, spelled
- *  from the plugin root and the path text. `folder` is the name of its folder. */
+ *  from the plugin root, the path text and, in a folder of skill folders, the folder name.
+ *  `folder` is the name of its folder. */
 export interface ListedSkill {
   readonly file: string
   readonly folder: string
 }
 
 /** The `SKILL.md` at `file` when its real path is in the plugin. The result is null when no
- *  `SKILL.md` is there, and undefined when it leads out of the plugin or the rule cannot see it. */
+ *  `SKILL.md` is there, and undefined when it leads out of the plugin or the rule cannot see it.
+ *  A dangling link is a `SKILL.md` that the rule cannot see. */
 function skillAt(plugin: Plugin, file: string, folder: string): ListedSkill | null | undefined {
   const real = realOf(file)
   if (real === null) {
-    return null
+    return danglingOf(file) === null ? null : undefined
   }
   return typeof real === 'string' && isInside(real, plugin.realRoot) ? { file, folder } : undefined
 }
