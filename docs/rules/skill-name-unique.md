@@ -65,8 +65,8 @@ plugin. A path that is not there, or that leads out of the plugin, gives no skil
 a skill one time, when two paths give it, or when a path names `skills/`. A manifest that the rule
 cannot read gives no paths. The rule then compares the skills in `skills/` only. For a `SKILL.md`
 outside `skills/`, the rule looks for a plugin root above it whose manifest lists its folder. The
-search stops at the repository root. With no `.git`, the rule reads the directory above the skill
-folder only.
+search stops at the repository root. With no `.git`, the rule reads no directory above the skill
+folder, so such a `SKILL.md` gets no report. The skills in `skills/` still compare with it.
 
 A folder in the `skills/` directory of a plugin, or in a manifest `skills` path, is an exception. Claude Code loads it, and the
 refused characters become hyphens in the command name.[^characters] `skill-name-characters` does
@@ -116,8 +116,8 @@ The rule does not check these cases:
 - A skill whose folder name is the name of another skill. The docs say that the folder name also
   invokes the skill. The rule compares the effective name only.
 - A skill `name` in a plugin that has the plugin prefix, such as `my-plugin:review`.
-- A `skills` path of a manifest that names the plugin root, such as `.`. The plugin-root
-  `SKILL.md` has no folder name.
+- A `skills` path of a manifest that names the plugin root, such as `.`. The rule reads no such
+  path, whether the root holds a `SKILL.md` or skill folders.
 - A name that matches a bundled skill, a built-in command, an MCP prompt, or a skill in `~/.claude/`.
   The rule cannot see them.
 - A skill folder that is a link out of the repository. Claude Code can load it, but the rule reads

@@ -98,19 +98,23 @@ function setsCommands(root: string, plugin: boolean, bound: string): boolean {
 }
 
 /** The skill files of the scope at `root`: each `SKILL.md` in `skills/`, then, in a plugin, each
- *  skill that the paths of the manifest `skills` key give. A file with the real path of a file
- *  before it is left out, as when the key names `skills/`. A manifest that the rule cannot read
- *  gives no paths. */
+ *  skill that the paths of the manifest `skills` key give. A listed file with the real path of a
+ *  file before it is left out, as when the key names `skills/`. A manifest that the rule cannot
+ *  read gives no paths. */
 function skillFilesOf(root: string, plugin: boolean, bound: string): string[] {
+  const shipped = skillFiles(path.join(root, 'skills'), bound)
   const listing = plugin ? readPluginAt(root) : undefined
   const listed = listing === undefined ? [] : listedSkills(listing).map((skill) => skill.file)
-  const seen = new Set<string | null | symbol>()
-  return [...skillFiles(path.join(root, 'skills'), bound), ...listed].filter((file) => {
+  const seen = new Set(shipped.map((file) => realOf(file)))
+  const fresh = listed.filter((file) => {
     const real = realOf(file)
-    const fresh = !seen.has(real)
+    if (seen.has(real)) {
+      return false
+    }
     seen.add(real)
-    return fresh
+    return true
   })
+  return [...shipped, ...fresh]
 }
 
 /** The command name of each skill and command file in the scope at `root`,
