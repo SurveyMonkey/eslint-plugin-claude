@@ -9,6 +9,10 @@ on:
         description: Print each issue that would open, and open none.
         type: boolean
         default: false
+      max_issues:
+        description: The most new issues a live run opens. Empty gives the limit of 20.
+        type: number
+        required: false
 
 permissions:
   contents: read
@@ -20,7 +24,8 @@ permissions:
 # cites, and that no map heading of a section cites, also gets a comment on
 # its group issue, while that issue is open. Then a finding of the block that
 # names no rule opens no issue. A scheduled run opens issues and posts
-# comments. A manual run does too, unless `dry_run` is set. See
+# comments. A manual run does too, unless `dry_run` is set. A manual run
+# can set `max_issues` to change the limit of new issues (20). See
 # CONTRIBUTING.md and the triage runbook.
 jobs:
   check-docs:
@@ -83,9 +88,14 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           DRY_RUN: ${{ inputs.dry_run }}
+          MAX_ISSUES: ${{ inputs.max_issues }}
+        # A scheduled run has no inputs, so it uses the limit of the script.
         run: |
+          args=("$RUNNER_TEMP/docs-findings.json")
           if [ "$DRY_RUN" = "true" ]; then
-            node scripts/docs-issues.ts "$RUNNER_TEMP/docs-findings.json" --dry-run
-          else
-            node scripts/docs-issues.ts "$RUNNER_TEMP/docs-findings.json"
+            args+=(--dry-run)
           fi
+          if [ -n "$MAX_ISSUES" ]; then
+            args+=(--max "$MAX_ISSUES")
+          fi
+          node scripts/docs-issues.ts "${args[@]}"

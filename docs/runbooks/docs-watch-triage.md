@@ -264,7 +264,9 @@ page that a rule cites as a whole, for example the skills page.
   - A block needs a Jev call, and the `TYPESAFE_API_KEY` secret is not set.
 - The issue step stops when a live run would open more than 20 issues. Run the workflow by hand
   with `dry_run` set, read the issues that would open, and triage them in groups. A dry run has
-  no limit. A digest issue counts as one issue. Comments do not count toward the limit.
+  no limit. To open all of the issues, run the workflow by hand with `max_issues` set to a
+  larger number: `gh workflow run docs-watch.yml -f max_issues=<n>`. A digest issue counts as
+  one issue. Comments do not count toward the limit.
 - The issue step stops before it writes for a tracked block in a section with no group issue.
   Add the section and its group issue to `GROUP_ISSUES` in `scripts/docs-issues.ts`.
 - A manual run with `dry_run` set prints each issue that would open and each comment that would
