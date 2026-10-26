@@ -43,6 +43,10 @@ describe(`${name}: the value sets`, () => {
     }
   })
 
+  it('is silent for plugin_notification on Notification', () => {
+    expect(ids('Notification', 'plugin_notification')).toEqual([])
+  })
+
   it('reports a value that the event does not send', () => {
     for (const event of MATCHER_VALUES.keys()) {
       expect(ids(event, 'bogus'), event).toEqual(['unknown'])

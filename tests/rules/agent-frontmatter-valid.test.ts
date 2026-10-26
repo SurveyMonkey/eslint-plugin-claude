@@ -1,5 +1,5 @@
-// The rule checks local agents only. The docs say a plugin agent with no name
-// or bad YAML still loads, so the rule stays silent there.
+// The rule checks each fault of a local agent. The docs say that a plugin agent with no
+// name or bad YAML still loads. So in a plugin agent the rule checks the `name` length only.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -44,6 +44,10 @@ markdownTester.run('agent-frontmatter-valid', ruleOf('agent-frontmatter-valid'),
     file('description: No name.\n', pluginAgent()),
     file('name: [unclosed\n', pluginAgent()),
     file('name: "-x:y"\n', pluginAgent()),
+    file('- a\n- b\n', pluginAgent()),
+    file('~\n', pluginAgent()),
+    file('name: 123\ndescription: d\n', pluginAgent()),
+    { code: '# Notes\n\n---\nname: x\ndescription: d\n---\n', filename: pluginAgent() },
     // YAML that the strict parser cannot read is for `frontmatter-yaml-portable`. The rule
     // cannot read the fields, so it reports no absent field either.
     file('name: [unclosed\ndescription: d\n'),
@@ -218,7 +222,24 @@ describe('a name of more than 256 characters', () => {
     const reports = lintName(`-${'a'.repeat(256)}`, local)
     expect(reports.map((report) => report.messageId).toSorted()).toEqual(['badName', 'nameTooLong'])
   })
-  it('is silent for a plugin agent', () => {
-    expect(lintName('a'.repeat(300), pluginAgent())).toEqual([])
+  it('is silent at 256 characters in a plugin agent, and reports at 257', () => {
+    expect(lintName('a'.repeat(256), pluginAgent())).toEqual([])
+    const [report, ...rest] = lintName('a'.repeat(257), pluginAgent())
+    expect(rest).toEqual([])
+    expect(report?.messageId).toBe('pluginNameTooLong')
+    expect(report?.message).toBe(
+      '`name` has 257 characters. Claude Code ignores a `name` of more than 256, and names the agent after its file.',
+    )
+    expect([report?.line, report?.column, report?.endColumn]).toEqual([2, 7, 264])
+  })
+  it('moves with the option in a plugin agent, and names the configured limit', () => {
+    expect(lintName('abcdef', pluginAgent(), [{ nameMax: 6 }])).toEqual([])
+    const [report, ...rest] = lintName('abcdefg', pluginAgent(), [{ nameMax: 6 }])
+    expect(rest).toEqual([])
+    expect(report?.messageId).toBe('nameOverConfiguredLimit')
+  })
+  it('makes no other check of a plugin agent with a long name', () => {
+    const reports = lintName(`-:${'a'.repeat(300)}`, pluginAgent())
+    expect(reports.map((report) => report.messageId)).toEqual(['pluginNameTooLong'])
   })
 })

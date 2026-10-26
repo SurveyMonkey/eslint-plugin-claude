@@ -48,13 +48,20 @@ The rule reports these faults of a server entry:
   `command` of spaces is not empty. The rule `mcp-hidden-whitespace` reports it.
 - The `env` of a stdio entry is not an object. The report is on the `env` value.
 - The `headers` of a remote entry is not an object. The report is on the `headers` value.
+- A member value of the `env` of a stdio entry is not a string. The report is on that value, and
+  names the member.
+- A member value of the `headers` of a remote entry is not a string. The report is on that value,
+  and names the member.
 - The `oauth` of an `http`, `streamable-http` or `sse` entry is not an object. The report is on
   the `oauth` value.
 
-For the `env`, `headers` and `oauth` faults, a `null` value is a fault too. Claude Code 2.1.304
-skips each of these entries in a project `.mcp.json`, and names the field in
-`claude mcp list`.[^quickstart] It does not check `env` in a remote entry, or `headers` and `oauth`
-in a stdio entry. It does not check `oauth` in a `ws` entry. So the rule does not check them there.
+For the `env`, `headers` and `oauth` faults, a `null` value is a fault too. A member value that is
+a number, a boolean, `null`, an object or an array is a fault. Of two `env` members with one name,
+the last one counts. An `env` or `headers` that is not an object gets the object report only.
+
+Claude Code 2.1.310 skips each of these entries in a project `.mcp.json`. It names the field in
+`claude mcp list`, such as `env.A: expected string, received number`.[^quickstart] It does not
+check `env` in a remote entry, or `headers` and `oauth` in a stdio entry. It does not check `oauth` in a `ws` entry. So the rule does not check them there.
 
 A stdio entry has the `type` `stdio`, or no `type`. A remote entry has the `type` `http`,
 `streamable-http`, `sse` or `ws`. An entry with no `type` and a `url` gets one report only.
@@ -68,7 +75,9 @@ name, the last one counts, as `JSON.parse` keeps it.
 In a plugin with a manifest, the rule reports one fault only. That fault is a `url` with no `type`,
 in an entry with a good stdio shape. That entry has a `command` that is not empty, `args` of
 strings, and no `env` fault. `claude plugin validate` 2.1.302 passes that entry, but Claude Code
-skips it.[^http] Validate 2.1.304 passes that entry with an `env` object.
+skips it.[^http] Validate 2.1.304 passes that entry with an `env` object. Validate 2.1.310 reports a
+member value of `env` or `headers` that is not a string. It does so in a plugin `.mcp.json` and in
+the inline servers of `plugin.json`. So the rule is silent on it there.
 Validate reports each other fault that makes Claude Code drop a plugin entry at load. It also
 reports a remote `url` that is not a valid absolute URL.[^validate] [^plugin] The rule reads a
 plugin `.mcp.json`, and the inline servers of `plugin.json`. It also reads the servers of each
