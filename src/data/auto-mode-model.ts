@@ -1,6 +1,6 @@
 // The models that the auto mode classifier does not use when `CLAUDE_CODE_AUTO_MODE_MODEL` names
 // them. Source: the table "When your model doesn't review" under "Choose the classifier model"
-// (https://code.claude.com/docs/en/permission-modes#choose-the-classifier-model). The table says
+// (https://code.claude.com/docs/en/permission-modes#when-your-model-doesnt-review). The table says
 // that the default classifier model reviews when you set Claude Opus 5, Sonnet 5.5 or Opus 5.5.
 // Claude Code owns this list, and it can change with each model release.
 // Checked on Claude Code 2.1.310 on 2026-10-25. Review the list on or before 2027-04-25, the

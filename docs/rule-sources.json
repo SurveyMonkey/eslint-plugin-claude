@@ -5840,6 +5840,11 @@
       "hash": "c366bf2de44f964a62f2d3e6b8ab1cc609eb60e5021114f24c0107c1f50aed6c"
     },
     {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "When your model doesn't review",
+      "hash": "b5397125d085ec2c5bbe90146b0ac4e4e9341c39316058cb4dcf733576623572"
+    },
+    {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
       "hash": "5b305b7d00107cbd3c433876d2ed4003759064e8e0cf70371b32a68c1d13b43e"

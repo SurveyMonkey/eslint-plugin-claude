@@ -1,8 +1,10 @@
 // The expected values are written by hand from two pages. "Choose the classifier model" says to
 // set `CLAUDE_CODE_AUTO_MODE_MODEL` to a full model ID, gives `claude-sonnet-4-6` as the example,
-// says that the full model IDs of a cloud provider work too, and says that the default classifier
-// model reviews when you set Claude Opus 5, Sonnet 5.5 or Opus 5.5
-// (https://code.claude.com/docs/en/permission-modes#choose-the-classifier-model). The "Model
+// and says that the full model IDs of a cloud provider work too
+// (https://code.claude.com/docs/en/permission-modes#choose-the-classifier-model). Its table "When
+// your model doesn't review" says that the default classifier model reviews when you set Claude
+// Opus 5, Sonnet 5.5 or Opus 5.5
+// (https://code.claude.com/docs/en/permission-modes#when-your-model-doesnt-review). The "Model
 // aliases" table gives the aliases (https://code.claude.com/docs/en/model-config#model-aliases).
 // The file globs are in `tests/configs.test.ts`.
 import { describe, expect, it } from 'vitest'

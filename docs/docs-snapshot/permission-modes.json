@@ -283,6 +283,12 @@
       "id": "choose-the-classifier-model",
       "hash": "c366bf2de44f964a62f2d3e6b8ab1cc609eb60e5021114f24c0107c1f50aed6c",
       "text": "### Choose the classifier model\n\nWith Claude Code v2.1.302 or later, set [`CLAUDE_CODE_AUTO_MODE_MODEL`](/docs/en/env-vars) to a full model ID to run the classifier on a model other than the [default](#default-classifier-model). Your cloud provider's own full model IDs work too. This `~/.claude/settings.json` example sets Claude Sonnet 4.6:\n\n```json theme={null}\n{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_MODE_MODEL\": \"claude-sonnet-4-6\"\n  }\n}\n```"
+    },
+    {
+      "heading": "When your model doesn't review",
+      "id": "when-your-model-doesnt-review",
+      "hash": "b5397125d085ec2c5bbe90146b0ac4e4e9341c39316058cb4dcf733576623572",
+      "text": "#### When your model doesn't review\n\n| Situation | What happens | What to do |\n| - | - | - |\n| The [debug log](#classifier-model-check) reports an Anthropic-configured classifier model | That model reviews | None needed |\n| You set Claude Opus 5, Sonnet 5.5, Opus 5.5 or one your organization's [model policy](/docs/en/model-config#restrict-model-selection) excludes | The [default classifier model](#default-classifier-model) reviews | Set another model |\n| Your provider can't serve the model | Classifier checks fail, so Claude Code [denies each action it checks](/docs/en/errors#auto-mode-cannot-determine-the-safety-of-an-action) | Set a model it serves, or remove the variable |\n| In a session, `/status` shows [`Auto mode server`](#server-side-classifier-review) as `Enabled` | The server reviews without your model | None needed |\n\nIf several situations apply, go by the first listed."
     }
   ]
 }
