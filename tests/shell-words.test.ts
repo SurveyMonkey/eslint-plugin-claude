@@ -728,7 +728,7 @@ describe('scanCommands', () => {
     expect(commandsOf(`echo \${a:-$(true) '#y}`)).toEqual([['echo', `\${a:-$`], ['true'], [`#y}`]])
   })
 
-  it('reads a line of many substitutions in linear time', () => {
+  it('reads a line of many substitutions out of an expansion in linear time', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)
     expect(Date.now() - start).toBeLessThan(5000)

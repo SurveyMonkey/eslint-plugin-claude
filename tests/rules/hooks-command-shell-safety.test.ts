@@ -439,7 +439,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo `echo \\"$F\\"`',
       // The `#` after the closing backtick is in the word, and starts no comment.
       'echo `true`#x $F',
-      // bash 5.3.9 shows `[[ -n 5 a b ]]`: the substitution splits `$F` in the test too.
+      // bash 5.3.9 shows `[[ -n 5 a b ]]`: the inner `echo` gets `$F` split, also in a test.
       '[[ -n `echo 5 $F` ]]',
     ]) {
       expect(line(text), text).toEqual(['unquoted'])
