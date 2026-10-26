@@ -3,8 +3,8 @@
 // page merges `managed-settings.json` and each `managed-settings.d/*.json` drop-in into one source,
 // and combines the lists. A file can lock a kind of customization with
 // `strictPluginOnlyCustomization`. Such a lock stops the plugins whether or not the entry is there,
-// so the rule makes no report. The rule reads the text of the linted file, and the sibling files through
-// `readManagedSource`.
+// so the rule makes no report. The rule reads the text of the linted file, and the sibling files
+// through `readManagedSource`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { UNLOADED_MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
