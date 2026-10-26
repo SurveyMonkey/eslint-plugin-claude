@@ -992,4 +992,110 @@ describe('the skill folders of the manifest skills paths', () => {
     add('skills/x/SKILL.md')
     expect(lint(loose, bare)).toEqual([])
   })
+
+  it('gives no report for an unlisted SKILL.md beside a listed duplicate', () => {
+    const add = tree('lst-beside', '{"name":"l","skills":["./extra"]}')
+    add('extra/a/SKILL.md')
+    add('skills/a/SKILL.md')
+    expect(lint(add('docs/a/SKILL.md'), bare)).toEqual([])
+  })
+
+  it('names a skill one time when two paths give it', () => {
+    const add = tree('lst-twice', '{"name":"l","skills":["./skills","./skills/"]}')
+    add('skills/a/SKILL.md')
+    const other = add('skills/b/SKILL.md', named('a'))
+    expect(lint(other, named('a')).map((report) => report.message)).toEqual([
+      '`a` is also the command name of `skills/a/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
+    ])
+  })
+
+  it('reads each path of the key', () => {
+    const add = tree('lst-two', '{"name":"l","skills":["./a","./b"]}')
+    const first = add('a/x/SKILL.md')
+    const second = add('b/x/SKILL.md')
+    expect(lint(first, bare)).toMatchObject([
+      { message: expect.stringContaining('`b/x/SKILL.md`') },
+    ])
+    expect(lint(second, bare)).toMatchObject([
+      { message: expect.stringContaining('`a/x/SKILL.md`') },
+    ])
+  })
+
+  it('names a listed skill folder by its own folder name', () => {
+    const add = tree('lst-own', '{"name":"l","skills":"./one"}')
+    const listed = add('one/SKILL.md')
+    const shipped = add('skills/one/SKILL.md')
+    expect(lint(listed, bare)).toMatchObject([
+      { message: expect.stringContaining('`skills/one/SKILL.md`') },
+    ])
+    expect(lint(shipped, bare)).toMatchObject([
+      { message: expect.stringContaining('`one/SKILL.md`') },
+    ])
+  })
+
+  it('reads no skill folder below a listed skill folder', () => {
+    const add = tree('lst-below', '{"name":"l","skills":"./one"}')
+    add('one/SKILL.md')
+    add('one/refs/SKILL.md')
+    expect(lint(add('skills/refs/SKILL.md'), bare)).toEqual([])
+  })
+
+  it('reads no skill folder below a listed folder whose SKILL.md leads out of the plugin', () => {
+    put('lst-out-one/.git/HEAD', '')
+    put('lst-out-one/p/.claude-plugin/plugin.json', '{"name":"l","skills":["./extra/x"]}')
+    put('lst-out-one/outside.md', bare)
+    put('lst-out-one/p/extra/x/sub/SKILL.md', bare)
+    symlinkSync('../../../outside.md', path.join(scratch, 'lst-out-one/p/extra/x/SKILL.md'))
+    expect(lint(put('lst-out-one/p/skills/sub/SKILL.md', bare), bare)).toEqual([])
+  })
+
+  it('reads no listed SKILL.md whose real path the rule cannot get', () => {
+    const add = tree('lst-loop', '{"name":"l","skills":["./extra","./one"]}')
+    mkdirSync(path.join(scratch, 'lst-loop/extra/x'), { recursive: true })
+    symlinkSync('SKILL.md', path.join(scratch, 'lst-loop/extra/x/SKILL.md'))
+    mkdirSync(path.join(scratch, 'lst-loop/one'), { recursive: true })
+    symlinkSync('SKILL.md', path.join(scratch, 'lst-loop/one/SKILL.md'))
+    add('one/sub/SKILL.md')
+    expect(lint(add('skills/x/SKILL.md'), bare)).toEqual([])
+    expect(lint(add('skills/sub/SKILL.md'), bare)).toEqual([])
+  })
+
+  it('lists the listed skills in name order', () => {
+    const add = tree('lst-order', '{"name":"l","skills":["./extra"]}')
+    add('extra/B/SKILL.md', named('z'))
+    add('extra/a/SKILL.md', named('z'))
+    expect(lint(add('skills/z/SKILL.md'), bare)).toMatchObject([
+      { message: expect.stringContaining('`extra/a/SKILL.md`, `extra/B/SKILL.md`') },
+    ])
+  })
+
+  it('compares no listed skill with itself through a link', () => {
+    const add = tree('lst-link', '{"name":"l","skills":["./extra"]}')
+    const listed = add('extra/x/SKILL.md')
+    mkdirSync(path.join(scratch, 'lst-link/skills'), { recursive: true })
+    symlinkSync('../extra/x', path.join(scratch, 'lst-link/skills/x'))
+    expect(lint(listed, bare)).toEqual([])
+  })
+
+  it('compares no listed skill with its spelling through a manifest path link', () => {
+    const add = tree('lst-alias', '{"name":"l","skills":["./ln"]}')
+    const listed = add('real/x/SKILL.md')
+    symlinkSync('real', path.join(scratch, 'lst-alias/ln'))
+    add('skills/x/SKILL.md')
+    expect(lint(listed, bare).map((report) => report.message)).toEqual([
+      '`x` is also the command name of `skills/x/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
+    ])
+  })
+})
+
+// With no `.git`, the rule reads no directory above a skill folder. So a listed skill outside
+// `skills/` gets no report, and a skill in `skills/` still compares with it.
+describe('a listed skill with no repository', () => {
+  it('reports in the skills/ file only', () => {
+    put('lst-nogit/.claude-plugin/plugin.json', '{"name":"l","skills":["./extra"]}')
+    const listed = put('lst-nogit/extra/a-b/SKILL.md', bare)
+    const shipped = put('lst-nogit/skills/a-b/SKILL.md', bare)
+    expect(lintMarkdown('skill-name-unique', bare, listed)).toEqual([])
+    expect(lintMarkdown('skill-name-unique', bare, shipped)).toHaveLength(1)
+  })
 })

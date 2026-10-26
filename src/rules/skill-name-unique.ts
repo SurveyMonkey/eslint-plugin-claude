@@ -121,7 +121,7 @@ function skillFilesOf(root: string, plugin: boolean, bound: string): string[] {
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. A project skill or a command with a refused folder or file name has no entry. A
  *  plugin skill with a refused folder name has an entry: its loaded `name`, else its folder
- *  name with hyphens. A name that folds to an empty string has no entry. */
+ *  name with hyphens. A skill name that folds to an empty string has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   // A skill file that the rule cannot read has no name to compare.
   const skills = skillFilesOf(root, plugin, bound).flatMap((file) => {
@@ -139,8 +139,8 @@ function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
     setsCommands(root, plugin, bound) ? [] : markdownFiles(commandsDir, bound).files
   ).flatMap((file) => {
     const parts = path.relative(commandsDir, file).replace(/\.md$/, '').split(path.sep)
-    const given = refused(parts) ? null : comparable(parts.join(':'))
-    return given === null ? [] : [{ file, name: given }]
+    // A command name that folds to an empty string matches no name that `create` compares.
+    return refused(parts) ? [] : [{ file, name: parts.join(':') }]
   })
   return [...skills, ...commands]
 }
@@ -212,8 +212,11 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         if (own === null) {
           return
         }
+        // A link can give the file another spelling, so the rule compares real paths too.
+        const real = realOf(self)
         const others = scopeEntries(root, file.plugin, bound).filter(
-          (entry) => entry.file !== self && fold(entry.name) === fold(own),
+          (entry) =>
+            entry.file !== self && realOf(entry.file) !== real && fold(entry.name) === fold(own),
         )
         if (others.length > 0) {
           context.report({

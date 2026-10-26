@@ -166,9 +166,13 @@ export interface ListedSkill {
   readonly folder: string
 }
 
-/** The `SKILL.md` at `file` when its real path is in the plugin, else undefined. */
-function skillAt(plugin: Plugin, file: string, folder: string): ListedSkill | undefined {
+/** The `SKILL.md` at `file` when its real path is in the plugin. The result is null when no
+ *  `SKILL.md` is there, and undefined when it leads out of the plugin or the rule cannot see it. */
+function skillAt(plugin: Plugin, file: string, folder: string): ListedSkill | null | undefined {
   const real = realOf(file)
+  if (real === null) {
+    return null
+  }
   return typeof real === 'string' && isInside(real, plugin.realRoot) ? { file, folder } : undefined
 }
 
@@ -190,9 +194,10 @@ export function listedSkills(plugin: Plugin): ListedSkill[] {
       return []
     }
     const dir = path.resolve(plugin.root, text)
+    // A folder with a `SKILL.md` is one skill, also when the rule cannot see the file.
     const own = skillAt(plugin, path.join(dir, 'SKILL.md'), path.basename(dir))
-    if (own !== undefined) {
-      return [own]
+    if (own !== null) {
+      return own === undefined ? [] : [own]
     }
     const entries = entriesOf(real)
     return (Array.isArray(entries) ? entries : [])
@@ -223,8 +228,8 @@ export function listingPlugin(file: string): { plugin: Plugin; skill: ListedSkil
     }
     const plugin = manifest ? readPluginAt(at) : undefined
     const skill = plugin && listedSkills(plugin).find((item) => realOf(item.file) === self)
-    if (skill !== undefined) {
-      return { plugin: plugin as Plugin, skill }
+    if (plugin !== undefined && skill !== undefined) {
+      return { plugin, skill }
     }
     if (realDirectory(at) === bound) {
       return undefined
