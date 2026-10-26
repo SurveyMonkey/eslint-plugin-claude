@@ -441,6 +441,11 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo `true`#x $F',
       // bash 5.3.9 shows `[[ -n 5 a b ]]`: the inner `echo` gets `$F` split, also in a test.
       '[[ -n `echo 5 $F` ]]',
+      // In double quotes too, the shell removes the backslash before each inner backtick. bash
+      // 5.3.9 shows `echo a b`.
+      'echo "`echo \\`true #x\\` $F`"',
+      // In double quotes too, the shell makes each `\\` one `\`. bash 5.3.9 shows `echo '\a' b`.
+      'echo "`echo \\\\\\\\$F`"',
     ]) {
       expect(line(text), text).toEqual(['unquoted'])
     }
@@ -457,7 +462,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
   })
 
   it('reads a nested, escaped or open backtick substitution', () => {
-    // bash 5.3.9 with F="a b" splits `$F` in each case but the last.
+    // bash 5.3.9 with F="a b" splits `$F` in the first four cases of the loop. It gives a syntax
+    // error for the fifth.
     for (const text of [
       // The `#` starts a comment only in the substitution, so the comment does not hold `$F`.
       'echo `#x` $F',
