@@ -3,7 +3,7 @@
 // (ADR 003), and `pnpm docs:check` fails when a doc does not agree with it. This test checks
 // what `docs:check` does not: one options object, no default that is not an option, a
 // description on each option, and no default in `create`.
-// The test expects 78 rules with options. A new rule with options makes it fail until its author
+// The test expects 79 rules with options. A new rule with options makes it fail until its author
 // changes the count.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -29,7 +29,7 @@ const withOptions = Object.entries(plugin.rules).flatMap(([name, rule]) => {
 
 describe('default options', () => {
   it('finds each rule with a schema option', () => {
-    expect(withOptions).toHaveLength(78)
+    expect(withOptions).toHaveLength(79)
     expect([...PLATFORMS_IN_CREATE].every((name) => name in plugin.rules)).toBe(true)
   })
 

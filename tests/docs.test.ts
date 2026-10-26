@@ -135,6 +135,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-script-shebang',
     'hooks-sessionend-default-timeout',
     'hooks-sessionstart-static-context',
+    'hooks-skill-source-limit',
     'hooks-stop-loop-guard',
     'hooks-timeout-units',
     'hooks-worktree-create-without-remove',
