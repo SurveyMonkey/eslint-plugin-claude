@@ -99,10 +99,7 @@ put('shape/.claude/skills/b/SKILL.md', skill(1024))
 // 1,000 hooks under the event `Stop`, and 25 under `stop`. Claude Code skips the event name
 // `stop`, so the source registers 1,000.
 put('event/.claude/skills/a/SKILL.md', skill(1000))
-put(
-  'event/.claude/skills/b/SKILL.md',
-  `---\nhooks: {stop: [{hooks: [${handlers(25)}]}]}\n---\n`,
-)
+put('event/.claude/skills/b/SKILL.md', `---\nhooks: {stop: [{hooks: [${handlers(25)}]}]}\n---\n`)
 // One hook under a matcher of 16,000 characters, and 1,000 hooks with no matcher: 16,000.
 put('no-matcher/.claude/skills/a/SKILL.md', skill(1, 16000))
 put('no-matcher/.claude/skills/b/SKILL.md', skill(1000))

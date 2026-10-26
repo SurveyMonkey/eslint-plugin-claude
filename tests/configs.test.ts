@@ -563,10 +563,11 @@ function settingsFiles(dir: string, content: object): Record<string, string> {
   )
 }
 
-/** A skill whose frontmatter declares `count` prompt hooks under one `Stop` group. A prompt hook
- *  runs no command, so no command rule reports it. */
-const limitSkill = (count: number) =>
-  `---\ndescription: Hooks.\nhooks: {Stop: [{hooks: [${Array.from({ length: count }, () => '{type: prompt, prompt: "Check the work."}').join(', ')}]}]}\n---\n`
+/** A skill whose frontmatter declares one prompt hook under a `PreToolUse` matcher of 8,194
+ *  characters: `Read`, and 1,638 more `|Read`. A prompt hook runs no command, so no command rule
+ *  reports it. One hook keeps the cost of the other hooks rules low. */
+const limitSkill = () =>
+  `---\ndescription: Hooks.\nhooks: {PreToolUse: [{matcher: "Read${'|Read'.repeat(1638)}", hooks: [{type: prompt, prompt: "Check the work."}]}]}\n---\n`
 
 const TREE: Record<string, string> = {
   'plugins/p/.claude-plugin/plugin.json': JSON.stringify({ name: 'p', hooks: { Bogus: [] } }),
@@ -1993,10 +1994,10 @@ const TREE: Record<string, string> = {
     '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-sonnet-4-6"}}',
   'packages/oa-auto/managed-settings.json':
     '{"env": {"CLAUDE_CODE_AUTO_MODE_MODEL": "claude-opus-5"}}',
-  // `hooks-skill-source-limit`: the skills of one `.claude/` declare 1,025 hooks. Each skill with
-  // a hook reports. The skill with no hook does not.
-  'packages/sl/.claude/skills/a/SKILL.md': limitSkill(1024),
-  'packages/sl/.claude/skills/b/SKILL.md': limitSkill(1),
+  // `hooks-skill-source-limit`: the matchers of the skills of one `.claude/` total 16,388
+  // characters. Each skill with a hook reports. The skill with no hook does not.
+  'packages/sl/.claude/skills/a/SKILL.md': limitSkill(),
+  'packages/sl/.claude/skills/b/SKILL.md': limitSkill(),
   'packages/sl/.claude/skills/c/SKILL.md': '---\ndescription: No hooks.\n---\n',
   'packages/oa-cost/.claude/settings.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
   'packages/oa-cost/.claude/settings.local.json': '{"env": {"FORCE_PROMPT_CACHING_5M": "1"}}',
