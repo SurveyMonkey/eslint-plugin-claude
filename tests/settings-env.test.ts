@@ -39,6 +39,12 @@ describe('the variables that settings cannot set, against the settings reference
     expect(unknown).toEqual([])
   })
 
+  it('names the CLAUDE_AX_ family as ignored in project files', () => {
+    expect(IGNORED).toContain('whose names start with `CLAUDE_AX_`')
+    expect(envIgnoredIn('CLAUDE_AX_SCREEN_READER')).toBe('project-files')
+    expect(envIgnoredIn('CLAUDE_AX_STARTUP_QUIET_MS')).toBe('project-files')
+  })
+
   it('names each family of the module as a family in the section', () => {
     expect(IGNORED).toContain('`XDG_*` family')
     expect(IGNORED).toContain('`OTEL_EXPORTER_OTLP_*`')
@@ -61,6 +67,8 @@ describe('the variables that settings cannot set, against the settings reference
       'CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT',
       'CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT',
       'CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT',
+      'CLAUDE_CODE_WARN_DISK_FREE_GIB',
+      'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
     ]
     for (const name of everyFile) {
       expect(IGNORED).toContain(`\`${name}\``)
@@ -216,6 +224,21 @@ describe('the first versions of the variables, against the env vars reference', 
     for (const { name, since } of rows) {
       const expected = since !== undefined && atLeast(since, [2, 1, 211]) ? since : undefined
       expect(envFirstVersion(name), name).toBe(expected)
+    }
+  })
+
+  it('gives the five variables of #612 the versions of the env vars reference', () => {
+    const expected = {
+      CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND: '2.1.304',
+      CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK: '2.1.309',
+      CLAUDE_CODE_ENABLE_SHARE_BUNDLE: '2.1.299',
+      CLAUDE_CODE_WARN_DISK_FREE_GIB: '2.1.304',
+      CLAUDE_CODE_WARN_MEMORY_FREE_GIB: '2.1.304',
+    }
+    for (const [name, version] of Object.entries(expected)) {
+      expect(envFirstVersion(name), name).toBe(version)
+      const row = VARIABLES.split('\n').find((line) => line.startsWith(`| \`${name}\` |`))
+      expect(row, name).toContain(`Requires Claude Code v${version} or later`)
     }
   })
 

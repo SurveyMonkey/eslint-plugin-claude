@@ -34,6 +34,8 @@ const EVERY_FILE = [
   'CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT',
   'CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT',
   'CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION',
+  'CLAUDE_CODE_WARN_DISK_FREE_GIB',
+  'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
 ]
 
 // "Project and local settings can't set variables that a checked-out repository shouldn't
@@ -90,6 +92,9 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
+  // "the other variables whose names start with CLAUDE_AX_, such as CLAUDE_AX_STARTUP_QUIET_MS"
+  'CLAUDE_AX_SCREEN_READER',
+  'CLAUDE_AX_STARTUP_QUIET_MS',
 ]
 
 // "Removed ... and now a no-op", with the version of the env vars reference.
@@ -216,6 +221,9 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
         CLAUDE_CODE_REMOTE_X: 'x',
         CLAUDE_CODE_CONNECT_TIMEOUT: 'x',
         TASK_MAX_OUTPUT: 'x',
+        CLAUDE_AX: 'x',
+        CLAUDE_AXE_X: 'x',
+        XCLAUDE_AX_Y: 'x',
       }),
       filename,
     })),

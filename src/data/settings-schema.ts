@@ -434,6 +434,20 @@ const SHAPES: Record<string, ValueSpec> = {
       required: ['id', 'name', 'sshHost'],
     },
   },
+  sshHostCommands: {
+    kind: 'array',
+    items: {
+      kind: 'object',
+      fields: {
+        id: STRING,
+        name: STRING,
+        command: STRING,
+        sshIdentityFile: STRING,
+        startDirectory: STRING,
+      },
+      required: ['id', 'name', 'command'],
+    },
+  },
   statusLine: {
     kind: 'object',
     fields: {
