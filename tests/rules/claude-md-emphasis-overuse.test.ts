@@ -1,6 +1,7 @@
-// The best-practices page says to add emphasis such as "IMPORTANT" to a line that Claude
-// does not follow, and warns that "if you emphasize many lines, none of them stands out"
-// (https://code.claude.com/docs/en/best-practices#write-an-effective-claude-md). The docs give no
+// The best-practices page says that IMPORTANT "probably won't fix it" for a line that Claude
+// ignores (https://code.claude.com/docs/en/best-practices#keep-claude-md-short). It also
+// says that "piling on emphasis mostly makes Claude over-apply the rule"
+// (https://code.claude.com/docs/en/best-practices#what-you-can-stop-doing). The docs give no
 // number, so the rule has the option `max` and no default. It makes no report when the option is
 // not set. The globs are in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'
@@ -39,7 +40,7 @@ describe(RULE, () => {
       endColumn: 19,
     })
     expect(messages[0]?.message).toBe(
-      '4 lines of this file use emphasis words such as IMPORTANT or MUST. The configured limit is 2 lines. If you emphasize many lines, none of them stands out.',
+      '4 lines of this file use emphasis words such as IMPORTANT or MUST. The configured limit is 2 lines. Emphasis on many lines makes Claude over-apply the rules.',
     )
   })
 

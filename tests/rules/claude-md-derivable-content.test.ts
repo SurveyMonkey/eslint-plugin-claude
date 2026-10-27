@@ -1,6 +1,5 @@
-// The docs list what to leave out of a CLAUDE.md: anything Claude can work out by reading the
-// code, and file-by-file descriptions of the code base
-// (https://code.claude.com/docs/en/best-practices#write-an-effective-claude-md). The rule is a heuristic
+// The best practices page tells you to keep only what Claude "couldn't work out from the code
+// itself" (https://code.claude.com/docs/en/best-practices#keep-claude-md-short). The rule is a heuristic
 // for three shapes: a directory tree in a code block, a list of dependencies in a code block,
 // and a list that describes files one by one. The globs are in tests/configs.test.ts.
 import { describe, expect, it } from 'vitest'

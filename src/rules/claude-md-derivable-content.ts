@@ -1,6 +1,7 @@
 // Content that Claude can work out from the code (docs/rules/claude-md-derivable-content.md).
-// The docs list what to leave out of a CLAUDE.md: anything Claude can figure out from the
-// code, and file-by-file descriptions of the code base. The rule is a heuristic for three
+// The best practices page tells you to keep only what Claude "couldn't work out from the code
+// itself" (#keep-claude-md-short). The memory page names directory layouts, dependency lists
+// and architecture overviews (#my-claude-md-is-too-large). The rule is a heuristic for three
 // shapes. The syntax tree decides what a code block and a list are.
 // - A directory tree in a code block: at least three lines that start a branch.
 // - A list of dependencies in a code block: a double-quoted `"dependencies"` key of a JSON
