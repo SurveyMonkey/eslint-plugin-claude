@@ -27,9 +27,9 @@ The rule is `off` in `recommended`.
 ## Rule details
 
 The docs say that `/doctor` cuts content that Claude can derive from the code base, such as
-directory layouts, dependency lists and architecture overviews.[^trim] The best practices page lists
-the same kind of content to leave out: anything Claude can figure out from the code, and
-file-by-file descriptions of the code base.[^exclude]
+directory layouts, dependency lists and architecture overviews.[^trim] The best practices page says
+that the file works best when it "only holds what Claude couldn't work out from the code
+itself".[^exclude]
 
 The rule reports three shapes. It reads the syntax tree, so it reports the whole block or list:
 
@@ -85,4 +85,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^trim]: [How Claude remembers your project: My CLAUDE.md is too large](https://code.claude.com/docs/en/memory#my-claude-md-is-too-large)
-[^exclude]: [Best practices for Claude Code: Write an effective CLAUDE.md](https://code.claude.com/docs/en/best-practices#write-an-effective-claude-md)
+[^exclude]: [Best practices for Claude Code: Keep CLAUDE.md short](https://code.claude.com/docs/en/best-practices#keep-claude-md-short)

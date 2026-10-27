@@ -1,8 +1,9 @@
 // Emphasis on many lines of a CLAUDE.md (docs/rules/claude-md-emphasis-overuse.md). The best
-// practices page says to add emphasis such as "IMPORTANT" to a line that Claude does not follow,
-// and warns that if you emphasize many lines, none of them stands out. The docs give no number,
-// so the rule has the option `max` and no default. It makes no report when the option is not
-// set. The rule counts lines, not words. The syntax tree decides what is prose, so a word in a
+// practices page says that IMPORTANT "probably won't fix" a line that Claude ignores
+// (#keep-claude-md-short). It also says that "piling on emphasis mostly makes Claude over-apply
+// the rule" (#what-you-can-stop-doing). The docs give no number, so the rule has the option
+// `max` and no default. It makes no report when the option is not set. The rule counts lines,
+// not words. The syntax tree decides what is prose, so a word in a
 // code span, a code block or an HTML comment does not count.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -46,7 +47,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'tooMany'
     defaultOptions: [{}],
     messages: {
       tooMany:
-        '{{count}} lines of this file use emphasis words such as IMPORTANT or MUST. The configured limit is {{max}} lines. If you emphasize many lines, none of them stands out.',
+        '{{count}} lines of this file use emphasis words such as IMPORTANT or MUST. The configured limit is {{max}} lines. Emphasis on many lines makes Claude over-apply the rules.',
     },
   },
   create(context) {

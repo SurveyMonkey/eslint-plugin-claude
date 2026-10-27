@@ -26,9 +26,9 @@ The rule is `off` in `recommended`.
 
 ## Rule details
 
-The best practices page says to add emphasis such as "IMPORTANT" to a line that Claude
-ignores. It adds that if you emphasize many lines, none of them stands out.[^emphasis] The docs
-give no number of lines. So the rule has the option `max` and no default. **The rule makes no
+The best practices page says that adding IMPORTANT to a line that Claude ignores "probably
+won't fix" it.[^short] It also says that "piling on emphasis mostly makes Claude over-apply the
+rule".[^stop] The docs give no number of lines. So the rule has the option `max` and no default. **The rule makes no
 report when `max` is not set.**
 
 The rule counts the lines of the file that use emphasis. A line counts once, however many
@@ -97,4 +97,5 @@ docs give no limit of their own.
 
 ## Sources
 
-[^emphasis]: [Best practices for Claude Code: Write an effective CLAUDE.md](https://code.claude.com/docs/en/best-practices#write-an-effective-claude-md)
+[^short]: [Best practices for Claude Code: Keep CLAUDE.md short](https://code.claude.com/docs/en/best-practices#keep-claude-md-short)
+[^stop]: [Best practices for Claude Code: What you can stop doing](https://code.claude.com/docs/en/best-practices#what-you-can-stop-doing)
