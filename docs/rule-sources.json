@@ -382,7 +382,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "44c6b33868c049e049a3377511fe4fc8c1d3a51c461ccff4869f02a0cc78115b"
+      "hash": "f2bd3c8876fe39b39651c4d94af2a75be4789a61bcae332c8fc62a96838011f9"
     }
   ],
   "agent-skills-preload-limit": [
@@ -573,15 +573,20 @@
     },
     {
       "url": "https://code.claude.com/docs/en/best-practices",
-      "heading": "Write an effective CLAUDE.md",
-      "hash": "303f469eaee0d42c8104ef395c5915baf3e42a36792bcd0a071c5b8449aa9cbc"
+      "heading": "Keep CLAUDE.md short",
+      "hash": "88890f39385f40c67103bd12cfa5301dc10c55a4dd060a717c02bb0e1faba2aa"
     }
   ],
   "claude-md-emphasis-overuse": [
     {
       "url": "https://code.claude.com/docs/en/best-practices",
-      "heading": "Write an effective CLAUDE.md",
-      "hash": "303f469eaee0d42c8104ef395c5915baf3e42a36792bcd0a071c5b8449aa9cbc"
+      "heading": "Keep CLAUDE.md short",
+      "hash": "88890f39385f40c67103bd12cfa5301dc10c55a4dd060a717c02bb0e1faba2aa"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "heading": "What you can stop doing",
+      "hash": "c19f0cfbe38b091d63e04e5a83f60f6ff9ef0e519d6b923035724534c2378998"
     }
   ],
   "claude-md-excludes-absolute-committed": [
@@ -758,7 +763,7 @@
     {
       "url": "https://code.claude.com/docs/en/skills",
       "heading": "Extend Claude with skills",
-      "hash": "87fccc7d2c217f530b8a85eefb913bf78f9ca5ae239a63b212250bc3c32df684"
+      "hash": "c1bd2240a74a88f3df8db4b68e868c4222de2034d7ab8c645ade4b4eb5881e99"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -3312,7 +3317,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "PowerShell",
-      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
+      "hash": "2b912a2a24e85240c70a963808628b254f26f2219e9d31342dc5dbb8c90228b2"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -3473,7 +3478,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "PowerShell",
-      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
+      "hash": "2b912a2a24e85240c70a963808628b254f26f2219e9d31342dc5dbb8c90228b2"
     }
   ],
   "permissions-bash-deny-not-boundary": [
@@ -4920,7 +4925,7 @@
     {
       "url": "https://code.claude.com/docs/en/terminal-config",
       "heading": "Create a custom theme",
-      "hash": "5ef550d494a1ef519957e4b2c560c810ab42c74f334c2f198c75b9f8ba30cbcc"
+      "hash": "27aff446267327773039ca7b9d5eb2f9448ebfb706a8a28e675722d261b1c8b5"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -6245,7 +6250,7 @@
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys only a managed source can set",
-      "hash": "38c2bff5eeaeea33282ad619c5cf68bcb8042ce4ce64da2d7b604388ffe891f8"
+      "hash": "005c6c44560a4696c661a4bb602c910fb67949c5e045ffb4e6fa0317fed929dc"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -6717,7 +6722,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/org",
       "heading": "Recommend plugins",
-      "hash": "eb2a1f37f5f9e9e454259b40a73629b036c0927ce866adfc774b69b99ac1f441"
+      "hash": "98793340edcf89bcc128b3e73718b492b3a0707a434d43806acc6427b8a6ab79"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -7003,7 +7008,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "44c6b33868c049e049a3377511fe4fc8c1d3a51c461ccff4869f02a0cc78115b"
+      "hash": "f2bd3c8876fe39b39651c4d94af2a75be4789a61bcae332c8fc62a96838011f9"
     }
   ],
   "settings-strict-known-marketplaces-skills-dir": [
@@ -7159,7 +7164,7 @@
     {
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "PowerShell",
-      "hash": "9f4b0ff4a35d302c8f6ab355c6c9885592ca7a30afff01dccc0f9f455671d117"
+      "hash": "2b912a2a24e85240c70a963808628b254f26f2219e9d31342dc5dbb8c90228b2"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -7473,7 +7478,7 @@
     {
       "url": "https://code.claude.com/docs/en/commands",
       "heading": "All commands",
-      "hash": "44c6b33868c049e049a3377511fe4fc8c1d3a51c461ccff4869f02a0cc78115b"
+      "hash": "f2bd3c8876fe39b39651c4d94af2a75be4789a61bcae332c8fc62a96838011f9"
     }
   ],
   "skill-name-unique": [
