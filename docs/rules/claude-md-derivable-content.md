@@ -27,9 +27,8 @@ The rule is `off` in `recommended`.
 ## Rule details
 
 The docs say that `/doctor` cuts content that Claude can derive from the code base, such as
-directory layouts, dependency lists and architecture overviews.[^trim] The best practices page says
-that the file works best when it "only holds what Claude couldn't work out from the code
-itself".[^exclude]
+directory layouts, dependency lists and architecture overviews.[^trim] The best practices page tells
+you to keep only what Claude "couldn't work out from the code itself".[^exclude]
 
 The rule reports three shapes. It reads the syntax tree, so it reports the whole block or list:
 

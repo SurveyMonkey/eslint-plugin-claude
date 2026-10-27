@@ -3,8 +3,8 @@
 // (#keep-claude-md-short). It also says that "piling on emphasis mostly makes Claude over-apply
 // the rule" (#what-you-can-stop-doing). The docs give no number, so the rule has the option
 // `max` and no default. It makes no report when the option is not set. The rule counts lines,
-// not words. The syntax tree decides what is prose, so a word in a
-// code span, a code block or an HTML comment does not count.
+// not words. The syntax tree decides what is prose, so a word in a code span, a code block or
+// an HTML comment does not count.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
 import { classifyMemoryFile } from '../memory-files.ts'

@@ -26,10 +26,10 @@ The rule is `off` in `recommended`.
 
 ## Rule details
 
-The best practices page says that adding IMPORTANT to a line that Claude ignores "probably
-won't fix" it.[^short] It also says that "piling on emphasis mostly makes Claude over-apply the
-rule".[^stop] The docs give no number of lines. So the rule has the option `max` and no default. **The rule makes no
-report when `max` is not set.**
+The best practices page says that IMPORTANT "probably won't fix" a line that Claude
+ignores.[^short] It also says that "piling on emphasis mostly makes Claude over-apply the
+rule".[^stop] The docs give no number of lines. So the rule has the option `max` and no
+default. **The rule makes no report when `max` is not set.**
 
 The rule counts the lines of the file that use emphasis. A line counts once, however many
 emphasis words it has. A line has emphasis in these cases:

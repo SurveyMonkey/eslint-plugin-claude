@@ -1,5 +1,5 @@
-// The best-practices page says that adding IMPORTANT to a line that Claude ignores "probably
-// won't fix it" (https://code.claude.com/docs/en/best-practices#keep-claude-md-short). It also
+// The best-practices page says that IMPORTANT "probably won't fix it" for a line that Claude
+// ignores (https://code.claude.com/docs/en/best-practices#keep-claude-md-short). It also
 // says that "piling on emphasis mostly makes Claude over-apply the rule"
 // (https://code.claude.com/docs/en/best-practices#what-you-can-stop-doing). The docs give no
 // number, so the rule has the option `max` and no default. It makes no report when the option is
