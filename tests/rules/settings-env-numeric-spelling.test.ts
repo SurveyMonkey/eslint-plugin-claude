@@ -225,7 +225,7 @@ describe(`${name}: a variable that a client before v2.1.211 does not have`, () =
     // CLAUDE_CODE_CONFIG_LOCK_WAIT_MS needs v2.1.318. It has no rejecting form.
     expect(ids200({ CLAUDE_CODE_CONFIG_LOCK_WAIT_MS: '2e4' })).toEqual([])
     // These three also have a form that rejects the value. Their silence does not prove the skip.
-    // The two variables above, which have no rejecting form, prove it.
+    // The three variables above, which have no rejecting form, prove it.
     for (const [variable, value] of [
       ['CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS', '9e5'],
       ['CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH', '1e1'],

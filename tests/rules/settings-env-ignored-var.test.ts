@@ -36,7 +36,7 @@ const EVERY_FILE = [
   'CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION',
   'CLAUDE_CODE_WARN_DISK_FREE_GIB',
   'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
-  // "is ignored from every file", with the launch environment as the only source.
+  // The docs say Claude Code ignores it from every file. It reads the launch environment only.
   'CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS',
 ]
 

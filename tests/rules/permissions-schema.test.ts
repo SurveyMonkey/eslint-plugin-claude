@@ -193,7 +193,7 @@ describe.each(BOOLEANS)(`${name}: %s`, (key) => {
   })
 })
 
-describe(`${name}: blockWritesOutsideWorkingDirectories, the settings reference example`, () => {
+describe(`${name}: blockWritesOutsideWorkingDirectories, the example in the settings reference`, () => {
   it('is silent for the example of the key', () => {
     const example = '{"permissions": {"blockWritesOutsideWorkingDirectories": true}}'
     for (const file of EVERY_FILE) {
