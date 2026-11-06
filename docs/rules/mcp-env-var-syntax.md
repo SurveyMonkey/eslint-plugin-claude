@@ -27,7 +27,7 @@ The rule is `off` in `recommended`. It is a heuristic.
 ## Rule details
 
 Claude Code expands two forms in `.mcp.json`: `${VAR}` and `${VAR:-default}`.[^syntax] It expands
-them in `command`, `args`, `env`, `url` and `headers`.[^locations] Any other form stays as written. The
+them in `command`, `args`, `env`, `url` and `headers`.[^syntax] Any other form stays as written. The
 server then gets the text, for example `$HOME/bin/server`, and not a path.
 
 The rule reports these forms in a string of those five fields:
@@ -98,5 +98,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^syntax]: [Connect Claude Code to tools via MCP: Supported syntax](https://code.claude.com/docs/en/mcp#supported-syntax)
-[^locations]: [Connect Claude Code to tools via MCP: Expansion locations](https://code.claude.com/docs/en/mcp#expansion-locations)
+[^syntax]: [Connect Claude Code to tools via MCP: Environment variable expansion in .mcp.json](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcpjson)
