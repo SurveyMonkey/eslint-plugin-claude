@@ -100,7 +100,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^locations]: [Connect Claude Code to tools via MCP: Expansion locations](https://code.claude.com/docs/en/mcp#expansion-locations)
+[^locations]: [Connect Claude Code to tools via MCP: Environment variable expansion in .mcp.json](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcpjson)
 [^unset]: [Connect Claude Code to tools via MCP: Unset variables without a default](https://code.claude.com/docs/en/mcp#unset-variables-without-a-default)
 [^plugin]: [Connect Claude Code to tools via MCP: Plugin-provided MCP servers](https://code.claude.com/docs/en/mcp#plugin-provided-mcp-servers)
 [^empty]: [Connect Claude Code to tools via MCP: Credential variables that read as empty](https://code.claude.com/docs/en/mcp#credential-variables-that-read-as-empty)
