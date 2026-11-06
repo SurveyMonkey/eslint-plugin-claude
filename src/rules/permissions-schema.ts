@@ -16,6 +16,9 @@ type MessageId = 'unknownKey' | 'notArray' | 'listWithheld' | 'notString' | 'not
 /** The keys that hold an array of strings. */
 const LISTS = ['allow', 'ask', 'deny', 'additionalDirectories']
 
+/** The keys that hold a Boolean. */
+const BOOLEANS = ['blockReadsOutsideWorkingDirectories', 'blockWritesOutsideWorkingDirectories']
+
 /** The lists whose failure makes Claude Code withhold `allow` and `additionalDirectories` in a
  *  managed file. */
 const RESTRICTIONS = ['deny', 'ask']
@@ -63,7 +66,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
             context.report({ node: entry, messageId: 'notString', data: { key } })
           }
         }
-      } else if (key === 'blockReadsOutsideWorkingDirectories' && value.type !== 'Boolean') {
+      } else if (BOOLEANS.includes(key) && value.type !== 'Boolean') {
         context.report({ node: value, messageId: 'notBoolean', data: { key } })
       }
     }

@@ -269,12 +269,12 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: '5m or 1h',
   },
   {
-    // "low, medium, high, xhigh, max, or auto". The persisted setting and the variable do not
-    // accept `ultracode`.
+    // "low, medium, high, xhigh, or max", and "Set it to `auto` or `unset`". The persisted
+    // setting and the variable do not accept `ultracode`.
     name: 'CLAUDE_CODE_EFFORT_LEVEL',
-    pass: ['low', 'medium', 'high', 'xhigh', 'max', 'auto'],
-    fail: ['ultracode', 'Low', 'extreme', 'off'],
-    expected: 'low, medium, high, xhigh, max or auto',
+    pass: ['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'unset'],
+    fail: ['ultracode', 'Low', 'extreme', 'off', 'Unset'],
+    expected: 'low, medium, high, xhigh, max, auto or unset',
   },
   {
     // "Accepts a path to a bash or zsh binary. Other shells such as fish are not supported".

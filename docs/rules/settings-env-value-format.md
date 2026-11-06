@@ -59,7 +59,7 @@ A variable that is not in the table has no form, and any string is valid.
 | `MCP_SDK_GENERATION` | `v1` or `v2`[^vars] |
 | `MCP_PROTOCOL_NEGOTIATION` | `auto` or `legacy`[^vars] |
 | `CLAUDE_CODE_PROMPT_CACHE_TTL`, `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL` | `5m` or `1h`, the only values that Claude Code accepts[^vars] |
-| `CLAUDE_CODE_EFFORT_LEVEL` | `low`, `medium`, `high`, `xhigh`, `max` or `auto`. It does not accept `ultracode`[^vars][^effort] |
+| `CLAUDE_CODE_EFFORT_LEVEL` | `low`, `medium`, `high`, `xhigh`, `max`, `auto` or `unset`. It does not accept `ultracode`[^vars][^effort] |
 | `CLAUDE_CODE_SHELL` | A path to a `bash` or `zsh` binary. Other shells are not supported[^vars] |
 | `ANTHROPIC_DEFAULT_*_MODEL_SUPPORTED_CAPABILITIES`, `ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES` | A comma-separated list of `effort`, `xhigh_effort`, `max_effort`, `thinking`, `adaptive_thinking`, `interleaved_thinking`[^capabilities] |
 

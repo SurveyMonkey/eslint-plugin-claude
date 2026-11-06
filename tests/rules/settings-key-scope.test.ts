@@ -64,6 +64,11 @@ jsonTester.run('settings-key-scope (valid)', rule, {
       code: obj({ model: 'opus', env: { A: '1' }, hooks: {} }),
       filename,
     })),
+    // `permissions.blockWritesOutsideWorkingDirectories` is Any file, as the settings index says.
+    ...ALL.map((filename) => ({
+      code: obj({ permissions: { blockWritesOutsideWorkingDirectories: true } }),
+      filename,
+    })),
     // A key that the settings reference does not list is for `settings-schema`.
     ...ALL.map((filename) => ({ code: obj({ madeUpKey: 1, 'sandbox.nope': 1 }), filename })),
     // A key inside a value that the rule does not read is not a settings key.
