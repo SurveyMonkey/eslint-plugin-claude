@@ -36,6 +36,8 @@ const EVERY_FILE = [
   'CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION',
   'CLAUDE_CODE_WARN_DISK_FREE_GIB',
   'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
+  // "is ignored from every file", with the launch environment as the only source.
+  'CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS',
 ]
 
 // "Project and local settings can't set variables that a checked-out repository shouldn't
@@ -89,6 +91,10 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
+  // "Variables that set your claude.ai sign-in"
+  'CLAUDE_CODE_OAUTH_TOKEN',
+  'CLAUDE_CODE_OAUTH_REFRESH_TOKEN',
+  'CLAUDE_CODE_OAUTH_SCOPES',
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',

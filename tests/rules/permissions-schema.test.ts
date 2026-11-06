@@ -16,6 +16,7 @@ const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
 const MANAGED_FILES = [MANAGED, DROP_IN]
 const PROJECT_FILES = [PROJECT, LOCAL]
 const LISTS = ['allow', 'ask', 'deny', 'additionalDirectories']
+const BOOLEANS = ['blockReadsOutsideWorkingDirectories', 'blockWritesOutsideWorkingDirectories']
 const NOT_LISTS = ['Bash', 1, true, {}]
 
 const lint = (code: unknown, file = PROJECT) =>
@@ -31,6 +32,7 @@ describe(`${name}: a valid object`, () => {
       deny: ['Read(./.env)'],
       additionalDirectories: ['../docs'],
       blockReadsOutsideWorkingDirectories: true,
+      blockWritesOutsideWorkingDirectories: true,
       defaultMode: 'acceptEdits',
       disableBypassPermissionsMode: 'disable',
       disableAutoMode: 'disable',
@@ -47,6 +49,7 @@ describe(`${name}: a valid object`, () => {
       deny: [],
       additionalDirectories: [],
       blockReadsOutsideWorkingDirectories: false,
+      blockWritesOutsideWorkingDirectories: false,
     })
     expect(ids(code)).toEqual([])
   })
@@ -65,7 +68,7 @@ describe(`${name}: a valid object`, () => {
   })
 
   it('is silent for a key that is null', () => {
-    for (const key of [...LISTS, 'blockReadsOutsideWorkingDirectories']) {
+    for (const key of [...LISTS, ...BOOLEANS]) {
       expect(ids(permissions({ [key]: null })), key).toEqual([])
     }
   })
@@ -169,19 +172,33 @@ describe(`${name}: an entry that is not a string`, () => {
   })
 })
 
-describe(`${name}: blockReadsOutsideWorkingDirectories`, () => {
+describe.each(BOOLEANS)(`${name}: %s`, (key) => {
   it('reports a value that is not a Boolean, in every file', () => {
     for (const file of EVERY_FILE) {
       for (const value of ['true', 1, [], {}]) {
-        const code = permissions({ blockReadsOutsideWorkingDirectories: value })
+        const code = permissions({ [key]: value })
         expect(ids(code, file), `${file} ${JSON.stringify(value)}`).toEqual(['notBoolean'])
       }
     }
   })
 
+  it('names the key in the message', () => {
+    const [message] = lint(permissions({ [key]: 'yes' }))
+    expect(message?.message).toBe(`"${key}" must be true or false.`)
+  })
+
   it('is silent for true and false', () => {
-    expect(ids(permissions({ blockReadsOutsideWorkingDirectories: true }))).toEqual([])
-    expect(ids(permissions({ blockReadsOutsideWorkingDirectories: false }))).toEqual([])
+    expect(ids(permissions({ [key]: true }))).toEqual([])
+    expect(ids(permissions({ [key]: false }))).toEqual([])
+  })
+})
+
+describe(`${name}: blockWritesOutsideWorkingDirectories, the settings reference example`, () => {
+  it('is silent for the example of the key', () => {
+    const example = '{"permissions": {"blockWritesOutsideWorkingDirectories": true}}'
+    for (const file of EVERY_FILE) {
+      expect(ids(example, file), file).toEqual([])
+    }
   })
 })
 
