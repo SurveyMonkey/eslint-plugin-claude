@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                           |
+| ----------- | ------------------------------- |
 | consistency | `**/*.md`, in `.claude/agents/` |
 
 The rule is `off` in `recommended`.

@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json` |
+| Category | Files                      |
+| -------- | -------------------------- |
+| no-op    | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A monorepo can have one file for each
 package on purpose. `strict` turns it on at `warn`.

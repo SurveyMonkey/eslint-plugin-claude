@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -77,7 +77,9 @@ Fail, in `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "Bash(rm *)", "hooks": [{ "type": "command", "command": "./check.sh" }] }]
+    "PreToolUse": [
+      { "matcher": "Bash(rm *)", "hooks": [{ "type": "command", "command": "./check.sh" }] }
+    ]
   }
 }
 ```
@@ -88,7 +90,10 @@ Pass:
 {
   "hooks": {
     "PreToolUse": [
-      { "matcher": "Bash", "hooks": [{ "type": "command", "if": "Bash(rm *)", "command": "./check.sh" }] }
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "if": "Bash(rm *)", "command": "./check.sh" }]
+      }
     ]
   }
 }

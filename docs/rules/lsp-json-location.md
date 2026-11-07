@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.lsp.json` |
+| Category | Files          |
+| -------- | -------------- |
+| no-op    | `**/.lsp.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

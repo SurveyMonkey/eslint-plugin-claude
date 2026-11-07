@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files                                           |
+| -------- | ----------------------------------------------- |
+| limit    | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule is `off` in `recommended`. It is a heuristic.
 

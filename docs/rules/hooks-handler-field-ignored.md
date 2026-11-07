@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -29,19 +29,19 @@ elsewhere and does nothing with it. The rule reports the key of such a field, on
 the same files as [`hooks-config-schema`](hooks-config-schema.md). It skips a handler with no `type` or an unknown
 `type`.
 
-| Field | Ignored when | The docs say |
-|-------|--------------|--------------|
-| `async`, `asyncRewake` | The handler is not a `command` hook | The field "is only available on `type: "command"` hooks".[^async] |
-| `continueOnBlock` | The handler is not a `prompt` hook | Agent hooks have "no `continueOnBlock` field".[^agent] The docs describe the field for prompt hooks only, so the rule applies this to every other type. |
-| `continueOnBlock` | The event is `PostToolUseFailure` or `TaskCreated` | The reason goes to Claude as a tool error and the turn continues, "regardless of `continueOnBlock`".[^response] |
-| `shell` | The handler sets `args` | The field is "ignored when `args` is set".[^command] |
-| `once: true` | The file is a settings file or agent frontmatter | The field is "only honored for hooks declared in skill frontmatter".[^common] |
-| `timeout` | A command hook sets `async: true` and no `asyncRewake: true` | Claude Code "doesn't enforce it on a command hook you run with `async: true`". It still enforces `timeout` with `asyncRewake`.[^common][^async] |
-| `timeout` | The event is `SessionEnd`, and the value is over 60 (the default of `sessionEndMax`) | The budget rises to match the highest `timeout`, "up to 60 seconds".[^sessionend] |
-| `timeout` | The event is `SessionEnd` in a plugin `hooks.json`, and the value is over 1.5 (the default of `sessionEndPluginMax`) | "Timeouts set on plugin-provided hooks don't raise the budget."[^sessionend] |
-| `onFailure` | The handler is not a `command` or `http` hook | The field is for a `command` or `http` hook.[^onfailure] |
-| `onFailure` | The event is `Stop`, `SubagentStop`, `TaskCompleted` or `TeammateIdle` | Exit code 2 on these events sends Claude back to work, so the field "has no effect".[^onfailure] |
-| `onFailure` | A command hook sets `async` or `asyncRewake` to `true` | The field has no effect on a background command hook.[^onfailure] |
+| Field                  | Ignored when                                                                                                         | The docs say                                                                                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `async`, `asyncRewake` | The handler is not a `command` hook                                                                                  | The field "is only available on `type: "command"` hooks".[^async]                                                                                       |
+| `continueOnBlock`      | The handler is not a `prompt` hook                                                                                   | Agent hooks have "no `continueOnBlock` field".[^agent] The docs describe the field for prompt hooks only, so the rule applies this to every other type. |
+| `continueOnBlock`      | The event is `PostToolUseFailure` or `TaskCreated`                                                                   | The reason goes to Claude as a tool error and the turn continues, "regardless of `continueOnBlock`".[^response]                                         |
+| `shell`                | The handler sets `args`                                                                                              | The field is "ignored when `args` is set".[^command]                                                                                                    |
+| `once: true`           | The file is a settings file or agent frontmatter                                                                     | The field is "only honored for hooks declared in skill frontmatter".[^common]                                                                           |
+| `timeout`              | A command hook sets `async: true` and no `asyncRewake: true`                                                         | Claude Code "doesn't enforce it on a command hook you run with `async: true`". It still enforces `timeout` with `asyncRewake`.[^common][^async]         |
+| `timeout`              | The event is `SessionEnd`, and the value is over 60 (the default of `sessionEndMax`)                                 | The budget rises to match the highest `timeout`, "up to 60 seconds".[^sessionend]                                                                       |
+| `timeout`              | The event is `SessionEnd` in a plugin `hooks.json`, and the value is over 1.5 (the default of `sessionEndPluginMax`) | "Timeouts set on plugin-provided hooks don't raise the budget."[^sessionend]                                                                            |
+| `onFailure`            | The handler is not a `command` or `http` hook                                                                        | The field is for a `command` or `http` hook.[^onfailure]                                                                                                |
+| `onFailure`            | The event is `Stop`, `SubagentStop`, `TaskCompleted` or `TeammateIdle`                                               | Exit code 2 on these events sends Claude back to work, so the field "has no effect".[^onfailure]                                                        |
+| `onFailure`            | A command hook sets `async` or `asyncRewake` to `true`                                                               | The field has no effect on a background command hook.[^onfailure]                                                                                       |
 
 ### Notes on the checks
 

@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -37,10 +37,10 @@ because the rule cannot see which branch runs.
 The events are those of the list "Exit code 2 behavior per event" that say "Yes" under "Can block?", and
 `PermissionRequest`.[^exit2] Three of them are not checked:
 
-| Event | Why |
-|-------|-----|
-| `PermissionRequest` | Claude Code does not honor exit 2. The hook denies with the `decision` object |
-| `WorktreeCreate`, `WorktreeRemove` | Any non-zero code acts, so exit 1 is correct |
+| Event                              | Why                                                                           |
+| ---------------------------------- | ----------------------------------------------------------------------------- |
+| `PermissionRequest`                | Claude Code does not honor exit 2. The hook denies with the `decision` object |
+| `WorktreeCreate`, `WorktreeRemove` | Any non-zero code acts, so exit 1 is correct                                  |
 
 The rule makes no report in these cases:
 
@@ -72,7 +72,13 @@ Fail, in `.claude/settings.json`, when `.claude/hooks/no-rm.sh` writes "Blocked"
     "PreToolUse": [
       {
         "matcher": "Bash",
-        "hooks": [{ "type": "command", "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/no-rm.sh", "args": [] }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/no-rm.sh",
+            "args": []
+          }
+        ]
       }
     ]
   }

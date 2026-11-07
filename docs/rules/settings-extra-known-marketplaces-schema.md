@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 
@@ -38,14 +38,14 @@ object and an optional `autoUpdate` Boolean.[^entry] The rule reports each of th
   missing required field, each give a report.[^fields] A field that the table does not list gives no
   report.
 
-| Type | Required | Optional |
-|------|----------|----------|
-| `github` | `repo` (string) | `ref`, `path` (strings), `sparsePaths` (array of strings) |
-| `git` | `url` (string) | `ref`, `path` (strings), `sparsePaths` (array of strings) |
-| `url` | `url` (string) | `headers` (object), `headersHelper` (string) |
-| `file` | `path` (string) | none |
-| `directory` | `path` (string) | none |
-| `settings` | `name` (string), `plugins` (array) | none |
+| Type        | Required                           | Optional                                                  |
+| ----------- | ---------------------------------- | --------------------------------------------------------- |
+| `github`    | `repo` (string)                    | `ref`, `path` (strings), `sparsePaths` (array of strings) |
+| `git`       | `url` (string)                     | `ref`, `path` (strings), `sparsePaths` (array of strings) |
+| `url`       | `url` (string)                     | `headers` (object), `headersHelper` (string)              |
+| `file`      | `path` (string)                    | none                                                      |
+| `directory` | `path` (string)                    | none                                                      |
+| `settings`  | `name` (string), `plugins` (array) | none                                                      |
 
 The docs give the field list of each type. They do not give the type of each optional field, so the
 rule takes the type from the field description.[^fields] The rule checks no `url` scheme.

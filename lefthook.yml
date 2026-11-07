@@ -7,19 +7,19 @@
 pre-commit:
   jobs:
     - name: sort-package-json
-      glob: 'package.json'
+      glob: "package.json"
       # pnpm dlx, not a devDependency. The version is pinned here so every
       # contributor sorts the same way.
       run: pnpm dlx sort-package-json@4.0.0 {staged_files}
       stage_fixed: true
     - name: biome
-      glob: '*.{json,jsonc,ts,md,yml,yaml}'
+      glob: "*.{json,jsonc,ts,md,yml,yaml}"
       run: pnpm exec biome check --staged --error-on-warnings --no-errors-on-unmatched
     - name: types
-      glob: '{*.ts,tsconfig*.json}'
+      glob: "{*.ts,tsconfig*.json}"
       run: pnpm exec tsc -p tsconfig.json
     - name: vitest-staged
-      glob: '*.ts'
+      glob: "*.ts"
       # This job maps each staged path to one test file. It does not use the
       # import graph, because src/index.ts imports every rule.
       #   src/rules/<name>.ts              -> tests/rules/<name>.test.ts

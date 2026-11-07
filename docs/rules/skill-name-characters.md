@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| load     | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 

@@ -18,19 +18,19 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
 Three keys lock a permission mode. Each takes the string `"disable"` and no other value:
 
-| Key | The lock |
-|-----|----------|
-| `permissions.disableBypassPermissionsMode` | Nobody can enter `bypassPermissions` mode.[^bypass] |
-| `permissions.disableAutoMode` | Nobody can enter auto mode. Claude Code also accepts the key at the top level.[^auto] |
-| `disableAutoMode` | The same lock, at the top level.[^auto] |
+| Key                                        | The lock                                                                              |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `permissions.disableBypassPermissionsMode` | Nobody can enter `bypassPermissions` mode.[^bypass]                                   |
+| `permissions.disableAutoMode`              | Nobody can enter auto mode. Claude Code also accepts the key at the top level.[^auto] |
+| `disableAutoMode`                          | The same lock, at the top level.[^auto]                                               |
 
 A Boolean `true` is a common mistake. Claude Code rejects it, and the lock does not apply in a
 project, local or user file.[^broken] In a managed file, Claude Code reads a lock with a bad

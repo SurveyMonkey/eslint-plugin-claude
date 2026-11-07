@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                      |
+| -------- | -------------------------- |
 | security | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A name can end in `_KEY` and hold no secret.

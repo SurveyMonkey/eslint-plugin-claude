@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/*.md`, in the skill, command and agent files of a plugin |
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
+| load     | `**/*.md`, in the skill, command and agent files of a plugin |
 
 ## Rule details
 

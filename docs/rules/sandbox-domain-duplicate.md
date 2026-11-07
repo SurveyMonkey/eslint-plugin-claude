@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
@@ -50,7 +50,11 @@ Fail:
 Pass:
 
 ```json
-{ "sandbox": { "network": { "allowedDomains": ["example.com", "example.com:443", "*.example.com"] } } }
+{
+  "sandbox": {
+    "network": { "allowedDomains": ["example.com", "example.com:443", "*.example.com"] }
+  }
+}
 ```
 
 ## Usage

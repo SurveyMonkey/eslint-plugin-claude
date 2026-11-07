@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/*.md`, in `.claude/agents/` |
+| Category | Files                           |
+| -------- | ------------------------------- |
+| load     | `**/*.md`, in `.claude/agents/` |
 
 ## Rule details
 

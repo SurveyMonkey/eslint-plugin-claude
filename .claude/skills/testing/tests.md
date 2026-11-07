@@ -81,7 +81,9 @@ test('detects frontmatter', () => {
 // GOOD: the rule's report proves that it read the frontmatter.
 markdownTester.run('skill-description-max-length', rule, {
   valid: [{ code: '---\ndescription: x\n---\n', filename: '.claude/skills/s/SKILL.md' }],
-  invalid: [/* ... */],
+  invalid: [
+    /* ... */
+  ],
 })
 ```
 
@@ -115,6 +117,8 @@ errors: [{ messageId: 'listingTruncated', data: { length: '1537', max: '1536' } 
 ```ts
 // GOOD: by name through extends, and as the object from plugin.configs.
 const linter = new Linter()
-const config = defineConfig([{ files: ['**/*.js'], plugins: { claude: plugin }, extends: ['claude/recommended'] }])
+const config = defineConfig([
+  { files: ['**/*.js'], plugins: { claude: plugin }, extends: ['claude/recommended'] },
+])
 expect(linter.verify('const a = 1\n', config, 'a.js')).toEqual([])
 ```

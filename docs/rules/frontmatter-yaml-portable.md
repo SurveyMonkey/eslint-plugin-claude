@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                      |
+| ----------- | ---------------------------------------------------------- |
 | portability | `**/*.md`, in agent, skill, command and output style files |
 
 ## Rule details

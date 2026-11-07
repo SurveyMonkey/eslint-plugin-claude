@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -52,7 +52,9 @@ Fail, in `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "mcp__memory", "hooks": [{ "type": "command", "command": "./log.sh" }] }]
+    "PreToolUse": [
+      { "matcher": "mcp__memory", "hooks": [{ "type": "command", "command": "./log.sh" }] }
+    ]
   }
 }
 ```
@@ -62,7 +64,9 @@ Pass:
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "mcp__memory__.*", "hooks": [{ "type": "command", "command": "./log.sh" }] }]
+    "PreToolUse": [
+      { "matcher": "mcp__memory__.*", "hooks": [{ "type": "command", "command": "./log.sh" }] }
+    ]
   }
 }
 ```

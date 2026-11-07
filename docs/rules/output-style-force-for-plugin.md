@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                   |
+| -------- | ----------------------- |
 | practice | `**/output-styles/*.md` |
 
 ## Rule details

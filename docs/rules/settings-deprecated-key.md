@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category   | Files                                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ |
 | deprecated | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
@@ -29,11 +29,11 @@ Claude Code still reads each of them.
 The rule reports the key, and the message names the key to use in its place. The list is
 `DEPRECATED_KEYS` in `src/data/settings-keys.ts`.
 
-| Key | Replacement | Source |
-|-----|-------------|--------|
-| `includeCoAuthoredBy` | `attribution`. Deprecated since v2.0.62 | [^coauthored][^attribution] |
-| `voiceEnabled` | `voice.enabled`. Deprecated since v2.1.92 | [^voice] |
-| `disableArtifact: true` | `enableArtifact: false` | [^artifact] |
+| Key                     | Replacement                               | Source                      |
+| ----------------------- | ----------------------------------------- | --------------------------- |
+| `includeCoAuthoredBy`   | `attribution`. Deprecated since v2.0.62   | [^coauthored][^attribution] |
+| `voiceEnabled`          | `voice.enabled`. Deprecated since v2.1.92 | [^voice]                    |
+| `disableArtifact: true` | `enableArtifact: false`                   | [^artifact]                 |
 
 The report is on the key, for any value of `includeCoAuthoredBy` and `voiceEnabled`. A `null` is
 no value, so it gives no report. For `disableArtifact`, the rule reports the Boolean `true` only.

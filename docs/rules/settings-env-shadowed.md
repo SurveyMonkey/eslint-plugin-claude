@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -30,13 +30,13 @@ removes a key, so the rule takes it as no key. For two keys of one name, the rul
 as `JSON.parse` does. A hidden file in `managed-settings.d/` gets no report, because Claude Code
 ignores it.
 
-| Variable | Voided when | Report on | The docs say |
-|----------|-------------|-----------|--------------|
-| `BASH_MAX_OUTPUT_LENGTH` | the file also sets `bashOutputMaxChars` as a number | the variable name | "When you set this key, Claude Code ignores the `BASH_MAX_OUTPUT_LENGTH` environment variable."[^bash] |
-| `ANTHROPIC_DEFAULT_MODEL` | the file also sets a `model` that is not empty and not `default` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
-| `ANTHROPIC_DEFAULT_MODEL` | its value is `default`, `inherit`, `opusplan` or `haiku` | the value | "Claude Code ignores the variable in these cases ... You set it to `default`, `inherit`, `opusplan`, or `haiku`"[^default] |
-| `CLAUDE_CODE_SUBAGENT_MODEL` | its value is `inherit` | the value | "Setting the variable to `inherit` is the same as leaving it unset."[^subagent] |
-| `NO_COLOR`, `FORCE_COLOR` | its value is not empty | the variable name | "`NO_COLOR` and `FORCE_COLOR` set here reach only subprocesses."[^shell] |
+| Variable                     | Voided when                                                      | Report on         | The docs say                                                                                                                                                             |
+| ---------------------------- | ---------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `BASH_MAX_OUTPUT_LENGTH`     | the file also sets `bashOutputMaxChars` as a number              | the variable name | "When you set this key, Claude Code ignores the `BASH_MAX_OUTPUT_LENGTH` environment variable."[^bash]                                                                   |
+| `ANTHROPIC_DEFAULT_MODEL`    | the file also sets a `model` that is not empty and not `default` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
+| `ANTHROPIC_DEFAULT_MODEL`    | its value is `default`, `inherit`, `opusplan` or `haiku`         | the value         | "Claude Code ignores the variable in these cases ... You set it to `default`, `inherit`, `opusplan`, or `haiku`"[^default]                                               |
+| `CLAUDE_CODE_SUBAGENT_MODEL` | its value is `inherit`                                           | the value         | "Setting the variable to `inherit` is the same as leaving it unset."[^subagent]                                                                                          |
+| `NO_COLOR`, `FORCE_COLOR`    | its value is not empty                                           | the variable name | "`NO_COLOR` and `FORCE_COLOR` set here reach only subprocesses."[^shell]                                                                                                 |
 
 A value of `ANTHROPIC_DEFAULT_MODEL` that is one of the four ignored values gets one report. The
 rule does not add the `model` report for it. A variable with an empty string value is not set:

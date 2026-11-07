@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                |
+| -------- | ------------------------------------ |
 | practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it matches words in text.
@@ -40,7 +40,7 @@ such as `deploy-status` does not match. The rule reads two places:
 - The `Bash` rules in `allowed-tools`, such as `Bash(git push *)`. A rule that grants a whole
   tool, such as `Bash` or `Bash(*)`, has no pattern, so it does not match. A rule in
   `disallowed-tools` does not match.
-- The injected commands, in the inline form and in a ```` ```! ```` fence. The rule splits a
+- The injected commands, in the inline form and in a ` ```! ` fence. The rule splits a
   command at `&&`, `||`, `;`, `|`, `|&`, `&` and a line break. It skips a quoted string, a comment line, and
   a command that only prints or reads, such as `echo deploy` or `grep deploy notes.md`.
 

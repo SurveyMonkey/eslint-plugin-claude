@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                      |
+| -------- | -------------------------- |
 | practice | `**/.claude/rules/**/*.md` |
 
 The rule is `off` in `recommended`.

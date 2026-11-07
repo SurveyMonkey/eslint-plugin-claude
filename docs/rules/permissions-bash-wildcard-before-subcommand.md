@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
@@ -70,7 +70,11 @@ Fail:
 Pass:
 
 ```json
-{ "permissions": { "allow": ["Bash(git checkout main)", "Bash(git status *)", "Bash(git log * main)"] } }
+{
+  "permissions": {
+    "allow": ["Bash(git checkout main)", "Bash(git status *)", "Bash(git log * main)"]
+  }
+}
 ```
 
 ## Usage

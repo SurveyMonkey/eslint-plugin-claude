@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                      |
+| -------- | ---------------------------------------------------------- |
+| no-op    | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -51,17 +51,17 @@ The rule reports each of these faults:
 - **`pluginTrustMessage`.** The value must be a string.[^trust] A `null` value removes the key,
   so the rule does not report it.
 
-| Type | Required | Optional |
-|------|----------|----------|
-| `github` | `repo` (string) | `ref`, `path` (strings) |
-| `git` | `url` (string) | `ref`, `path` (strings) |
-| `url` | `url` (string) | `headers` (object) |
-| `file` | `path` (absolute string) | none |
-| `directory` | `path` (absolute string) | none |
-| `hostPattern` | `hostPattern` (regex string) | none |
-| `pathPattern` | `pathPattern` (regex string) | none |
-| `skills-dir` | none | none |
-| `settings` | not checked | not checked |
+| Type          | Required                     | Optional                |
+| ------------- | ---------------------------- | ----------------------- |
+| `github`      | `repo` (string)              | `ref`, `path` (strings) |
+| `git`         | `url` (string)               | `ref`, `path` (strings) |
+| `url`         | `url` (string)               | `headers` (object)      |
+| `file`        | `path` (absolute string)     | none                    |
+| `directory`   | `path` (absolute string)     | none                    |
+| `hostPattern` | `hostPattern` (regex string) | none                    |
+| `pathPattern` | `pathPattern` (regex string) | none                    |
+| `skills-dir`  | none                         | none                    |
+| `settings`    | not checked                  | not checked             |
 
 The rule reports at the node that has the fault. It reports a missing field at the `source`
 object. When a file has two keys of one name, the rule reads the last, as `JSON.parse` does.

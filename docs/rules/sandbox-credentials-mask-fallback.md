@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| limit    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads the `mask` entries of managed files only. It skips a hidden drop-in in `managed-settings.d`, because Claude Code
 ignores it.
@@ -53,7 +53,9 @@ Fail, in `managed-settings.json`:
 {
   "sandbox": {
     "credentials": {
-      "files": [{ "path": "~/.config/gh/hosts.yml", "mode": "mask", "extract": "oauth_token:\\s*\\S+" }]
+      "files": [
+        { "path": "~/.config/gh/hosts.yml", "mode": "mask", "extract": "oauth_token:\\s*\\S+" }
+      ]
     }
   }
 }
@@ -65,7 +67,9 @@ Pass, in `managed-settings.json`:
 {
   "sandbox": {
     "credentials": {
-      "files": [{ "path": "~/.config/gh/hosts.yml", "mode": "mask", "extract": "oauth_token:\\s*(\\S+)" }]
+      "files": [
+        { "path": "~/.config/gh/hosts.yml", "mode": "mask", "extract": "oauth_token:\\s*(\\S+)" }
+      ]
     }
   }
 }

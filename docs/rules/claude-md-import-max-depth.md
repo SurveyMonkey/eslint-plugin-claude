@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
+| Category | Files                                                |
+| -------- | ---------------------------------------------------- |
+| no-op    | `**/CLAUDE.md`, `**/CLAUDE.local.md`, `**/AGENTS.md` |
 
 ## Rule details
 

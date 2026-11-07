@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| no-op    | `**/CLAUDE.md`, `**/CLAUDE.local.md` |
 
 The rule is `off` in `recommended`.
 

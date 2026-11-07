@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
 | security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule reports in `.claude/settings.json` only. It makes no report in `.claude/settings.local.json`.

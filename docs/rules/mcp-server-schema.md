@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.mcp.json`, `**/managed-mcp.json`, `**/.claude-plugin/plugin.json` |
+| Category | Files                                                                  |
+| -------- | ---------------------------------------------------------------------- |
+| load     | `**/.mcp.json`, `**/managed-mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details
 

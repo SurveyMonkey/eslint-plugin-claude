@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                           |
+| ----------- | ------------------------------- |
 | portability | `**/.claude-plugin/plugin.json` |
 
 The rule makes no report until the option `minVersion` is set.
@@ -31,11 +31,11 @@ feature. `claude plugin validate` checks the manifest against the version that r
 cannot tell which older version fails. The rule reports each of these features when `minVersion`
 is older than the version that added it:
 
-| Feature | Added in | What older versions do | Source |
-|---------|----------|------------------------|--------|
-| `"."` as a `skills` path | v2.1.221 | Manifest validation fails. Use `"./"`, which means the same.[^path-rules] | Path rules |
-| The `metadata` key | v2.1.222 | The docs state that the key needs v2.1.222 or later.[^metadata] | `metadata` |
-| `options` on a `userConfig` field | v2.1.271 | The plugin fails to load.[^options] | Limit a field to fixed options |
+| Feature                           | Added in | What older versions do                                                    | Source                         |
+| --------------------------------- | -------- | ------------------------------------------------------------------------- | ------------------------------ |
+| `"."` as a `skills` path          | v2.1.221 | Manifest validation fails. Use `"./"`, which means the same.[^path-rules] | Path rules                     |
+| The `metadata` key                | v2.1.222 | The docs state that the key needs v2.1.222 or later.[^metadata]           | `metadata`                     |
+| `options` on a `userConfig` field | v2.1.271 | The plugin fails to load.[^options]                                       | Limit a field to fixed options |
 
 The rule reports these places:
 

@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                     |
+| ----------- | ----------------------------------------- |
 | consistency | `**/*.md`, in the agent files of a plugin |
 
 ## Rule details

@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| limit    | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it estimates the token count.
 

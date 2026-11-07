@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude-plugin/marketplace.json` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| load     | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -76,9 +76,7 @@ Pass:
 {
   "name": "acme",
   "owner": { "name": "Acme" },
-  "plugins": [
-    { "name": "formatter", "source": { "source": "github", "repo": "acme/formatter" } }
-  ]
+  "plugins": [{ "name": "formatter", "source": { "source": "github", "repo": "acme/formatter" } }]
 }
 ```
 

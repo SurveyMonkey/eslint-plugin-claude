@@ -20,9 +20,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| no-op    | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 

@@ -20,8 +20,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
 | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule reads managed files too. A hidden drop-in in `managed-settings.d` gets no report, because Claude Code ignores it.

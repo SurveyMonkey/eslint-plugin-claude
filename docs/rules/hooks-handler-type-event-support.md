@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -29,13 +29,13 @@ run. The rule reports at the `type` value of the handler. It reads the same file
 [`hooks-config-schema`](hooks-config-schema.md). It skips a handler with no `type` or an unknown `type`, and an
 event that it does not know.
 
-| Event | Runs | The rule reports |
-|-------|------|------------------|
-| `PermissionDenied`, `PostToolBatch`, `PostToolUse`, `PostToolUseFailure`, `PreToolUse`, `Stop`, `SubagentStop`, `TaskCompleted`, `TaskCreated`, `TeammateIdle`, `UserPromptExpansion`, `UserPromptSubmit` | All five types | A `prompt` or `agent` hook on `PermissionDenied` only (see below) |
-| `PermissionRequest` | `command`, `http`, `mcp_tool`, `prompt` | `agent` |
-| `ConfigChange`, `CwdChanged`, `DirectoryAdded`, `Elicitation`, `ElicitationResult`, `FileChanged`, `InstructionsLoaded`, `MessageDisplay`, `Notification`, `PostCompact`, `PostModelSwitch`, `PreCompact`, `PreModelSwitch`, `SessionEnd`, `StopFailure`, `SubagentStart`, `WorktreeCreate`, `WorktreeRemove` | `command`, `http`, `mcp_tool` | `prompt`, `agent` |
-| `SessionStart` | `command`, `mcp_tool` | `http`, `prompt`, `agent` |
-| `Setup` | `command` | `http`, `mcp_tool`, `prompt`, `agent` |
+| Event                                                                                                                                                                                                                                                                                                         | Runs                                    | The rule reports                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------------------------------------------- |
+| `PermissionDenied`, `PostToolBatch`, `PostToolUse`, `PostToolUseFailure`, `PreToolUse`, `Stop`, `SubagentStop`, `TaskCompleted`, `TaskCreated`, `TeammateIdle`, `UserPromptExpansion`, `UserPromptSubmit`                                                                                                     | All five types                          | A `prompt` or `agent` hook on `PermissionDenied` only (see below) |
+| `PermissionRequest`                                                                                                                                                                                                                                                                                           | `command`, `http`, `mcp_tool`, `prompt` | `agent`                                                           |
+| `ConfigChange`, `CwdChanged`, `DirectoryAdded`, `Elicitation`, `ElicitationResult`, `FileChanged`, `InstructionsLoaded`, `MessageDisplay`, `Notification`, `PostCompact`, `PostModelSwitch`, `PreCompact`, `PreModelSwitch`, `SessionEnd`, `StopFailure`, `SubagentStart`, `WorktreeCreate`, `WorktreeRemove` | `command`, `http`, `mcp_tool`           | `prompt`, `agent`                                                 |
+| `SessionStart`                                                                                                                                                                                                                                                                                                | `command`, `mcp_tool`                   | `http`, `prompt`, `agent`                                         |
+| `Setup`                                                                                                                                                                                                                                                                                                       | `command`                               | `http`, `mcp_tool`, `prompt`, `agent`                             |
 
 ### Cases that the docs word with care
 

@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                |
+| ----------- | ------------------------------------ |
 | portability | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
@@ -31,13 +31,13 @@ no effect, until a team sets the version that it supports.
 
 The versions are from the marketplace reference.[^top][^entries][^sources]
 
-| Field or source | Needs |
-|-----------------|-------|
-| Entry `metadata` | 2.1.222 |
-| `archive` source | 2.1.224 |
-| `command` source | 2.1.229 |
+| Field or source                     | Needs   |
+| ----------------------------------- | ------- |
+| Entry `metadata`                    | 2.1.222 |
+| `archive` source                    | 2.1.224 |
+| `command` source                    | 2.1.229 |
 | Entry `headers` and `headersHelper` | 2.1.238 |
-| Top-level `metadata.pluginRoot` | 2.1.239 |
+| Top-level `metadata.pluginRoot`     | 2.1.239 |
 
 The report is on the key, or for a source type, on the value of its `source` member. The rule
 compares each part of the version as a number, so `2.1.99` is older than `2.1.222`. When a key

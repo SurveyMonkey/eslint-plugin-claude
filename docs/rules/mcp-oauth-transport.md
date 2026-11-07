@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.mcp.json` |
+| Category | Files          |
+| -------- | -------------- |
+| no-op    | `**/.mcp.json` |
 
 ## Rule details
 
@@ -57,7 +57,11 @@ Pass:
 ```json
 {
   "mcpServers": {
-    "events": { "type": "http", "url": "https://mcp.example.com/mcp", "oauth": { "clientId": "id" } }
+    "events": {
+      "type": "http",
+      "url": "https://mcp.example.com/mcp",
+      "oauth": { "clientId": "id" }
+    }
   }
 }
 ```

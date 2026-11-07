@@ -18,22 +18,22 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
 The `permissions` object has nine keys:[^keys]
 
-| Key | Type | Checked by |
-|-----|------|------------|
-| `allow`, `ask`, `deny` | array of permission rule strings | this rule: the array and the type of each entry |
-| `additionalDirectories` | array of directory paths | this rule[^dirs] |
-| `blockReadsOutsideWorkingDirectories` | Boolean | this rule[^block] |
-| `blockWritesOutsideWorkingDirectories` | Boolean | this rule[^keys] |
-| `defaultMode` | one of seven strings | `permissions-default-mode-value` |
-| `disableBypassPermissionsMode`, `disableAutoMode` | the string `"disable"` | `permissions-disable-mode-value` |
+| Key                                               | Type                             | Checked by                                      |
+| ------------------------------------------------- | -------------------------------- | ----------------------------------------------- |
+| `allow`, `ask`, `deny`                            | array of permission rule strings | this rule: the array and the type of each entry |
+| `additionalDirectories`                           | array of directory paths         | this rule[^dirs]                                |
+| `blockReadsOutsideWorkingDirectories`             | Boolean                          | this rule[^block]                               |
+| `blockWritesOutsideWorkingDirectories`            | Boolean                          | this rule[^keys]                                |
+| `defaultMode`                                     | one of seven strings             | `permissions-default-mode-value`                |
+| `disableBypassPermissionsMode`, `disableAutoMode` | the string `"disable"`           | `permissions-disable-mode-value`                |
 
 The rule reports these faults:
 

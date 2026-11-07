@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                           |
+| ----------- | ----------------------------------------------- |
 | consistency | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 ## Rule details

@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files         |
+| ----------- | ------------- |
 | portability | `**/SKILL.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic.

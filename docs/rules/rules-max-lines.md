@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.claude/rules/**/*.md` |
+| Category | Files                      |
+| -------- | -------------------------- |
+| limit    | `**/.claude/rules/**/*.md` |
 
 ## Rule details
 
@@ -38,6 +38,7 @@ Fail, with the option `{ max: 5 }`, for a rule file of six lines or more:
 paths:
   - "src/**/*.ts"
 ---
+
 Validate input at the boundary.
 Keep each function short.
 ```
@@ -49,6 +50,7 @@ Pass, in the same configuration:
 paths:
   - "src/**/*.ts"
 ---
+
 Validate input at the boundary.
 ```
 

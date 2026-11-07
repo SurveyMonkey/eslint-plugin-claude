@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                                                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -41,11 +41,11 @@ The result depends on the platform of your team, and the rule cannot know it. Wi
 command in PowerShell, where it works. The other platforms run it in Bash. So the rule makes no report unless the
 option `platforms` is set.
 
-| Value | The hook shell by default |
-|-------|---------------------------|
-| `windows-git-bash` | Bash |
-| `windows-no-git-bash` | PowerShell |
-| `macos`, `linux`, `wsl` | Bash |
+| Value                   | The hook shell by default |
+| ----------------------- | ------------------------- |
+| `windows-git-bash`      | Bash                      |
+| `windows-no-git-bash`   | PowerShell                |
+| `macos`, `linux`, `wsl` | Bash                      |
 
 The rule reports when the list holds a value other than `windows-no-git-bash`. The message names those values.
 

@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
@@ -30,11 +30,11 @@ The helper runs a command and sends its output as the credential, so the file ho
 
 The rule reports an `env` block that sets one of these:
 
-| Variable | What it holds |
-|----------|---------------|
-| `ANTHROPIC_API_KEY` | An API key, sent as the `X-Api-Key` header[^vars] |
-| `ANTHROPIC_AUTH_TOKEN` | A value for the `Authorization` header[^vars] |
-| `CLAUDE_CODE_OAUTH_TOKEN` | An OAuth access token for claude.ai[^vars] |
+| Variable                   | What it holds                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------- |
+| `ANTHROPIC_API_KEY`        | An API key, sent as the `X-Api-Key` header[^vars]                                                  |
+| `ANTHROPIC_AUTH_TOKEN`     | A value for the `Authorization` header[^vars]                                                      |
+| `CLAUDE_CODE_OAUTH_TOKEN`  | An OAuth access token for claude.ai[^vars]                                                         |
 | `ANTHROPIC_CUSTOM_HEADERS` | `Name: Value` lines. The rule reports a line named `Authorization` or `X-Api-Key`[^vars][^managed] |
 
 A header line is a credential when its name is `Authorization` or `X-Api-Key`. The name is the

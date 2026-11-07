@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude-plugin/marketplace.json` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| no-op    | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -75,9 +75,7 @@ Fail:
       "name": "formatter",
       "source": "./plugins/formatter",
       "hooks": {
-        "PostToolUse": [
-          { "matcher": "Write", "hooks": [{ "type": "command", "command": "fmt" }] }
-        ]
+        "PostToolUse": [{ "matcher": "Write", "hooks": [{ "type": "command", "command": "fmt" }] }]
       }
     }
   ]

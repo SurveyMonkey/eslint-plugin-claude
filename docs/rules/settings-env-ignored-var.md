@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -91,16 +91,16 @@ no report on one. Examples are `0`, `true`, and a value that is not a string.
 
 These variables have no effect. Claude Code removed them, or accepts them for compatibility:[^vars]
 
-| Variable | No effect since |
-|----------|-----------------|
-| `CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE` | v2.1.142 |
-| `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` | v2.1.160 |
-| `CLAUDE_CODE_CONNECT_TIMEOUT_MS` | v2.1.186 |
-| `CLAUDE_CODE_ENABLE_AUTO_MODE` | v2.1.207. It was required in v2.1.158 through v2.1.206 |
-| `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` | v2.1.224 |
-| `CLAUDE_SUBAGENT_BG_SHELL_MAX_MS` | v2.1.260 |
-| `TASK_MAX_OUTPUT_LENGTH` | v2.1.277 |
-| `CLAUDE_CODE_AUTO_BACKGROUND_WORKER_CHECKIN_SECONDS` | v2.1.283 |
+| Variable                                             | No effect since                                        |
+| ---------------------------------------------------- | ------------------------------------------------------ |
+| `CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE`              | v2.1.142                                               |
+| `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE`            | v2.1.160                                               |
+| `CLAUDE_CODE_CONNECT_TIMEOUT_MS`                     | v2.1.186                                               |
+| `CLAUDE_CODE_ENABLE_AUTO_MODE`                       | v2.1.207. It was required in v2.1.158 through v2.1.206 |
+| `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`              | v2.1.224                                               |
+| `CLAUDE_SUBAGENT_BG_SHELL_MAX_MS`                    | v2.1.260                                               |
+| `TASK_MAX_OUTPUT_LENGTH`                             | v2.1.277                                               |
+| `CLAUDE_CODE_AUTO_BACKGROUND_WORKER_CHECKIN_SECONDS` | v2.1.283                                               |
 
 The rule reports a removed variable in each file.
 

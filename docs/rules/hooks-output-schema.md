@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -28,16 +28,16 @@ A hook prints a JSON object, and Claude Code reads specific fields from it. A fi
 `permissionDecision` and `additionalContext`, Claude Code shows no error.[^wrong-level] The rule reads JSON that a
 command prints as a literal, and reports these faults at the `command` string.
 
-| Message | Fault |
-|---------|-------|
-| `level` | `permissionDecision`, `additionalContext` or `updatedInput` at the top level. They belong inside `hookSpecificOutput`. The hooks guide names `permissionDecision` and `additionalContext` only.[^wrong-level][^decision] |
-| `eventName` | A `hookSpecificOutput.hookEventName` that is not the event of the hook |
-| `eventNameMissing` | A `hookSpecificOutput` with no `hookEventName`. The docs say that it "requires a `hookEventName` field set to the event name".[^json-output] |
-| `decision` | A top-level `decision` other than `"block"`. "The only value for `decision` is `"block"`".[^decision] |
-| `suppress` | The field `suppressOutput`. It "has no effect: Claude Code accepts the field but doesn't act on it".[^json-output] |
-| `modelSwitch` | On `PreModelSwitch`: `permissionDecision` of `"defer"`, `updatedInput` or `additionalContext` in `hookSpecificOutput`. The event does not accept them.[^model-switch] |
-| `classifierAsync` | `classifierContext` from a handler with `async` or `asyncRewake`. Claude Code ignores the field in the response of a hook in the background.[^classifier] |
-| `policyBlock` | A top-level `decision` of `"block"` in a `ConfigChange` handler whose matcher is exactly `policy_settings`. Claude Code ignores a block for that source.[^config-change] |
+| Message            | Fault                                                                                                                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `level`            | `permissionDecision`, `additionalContext` or `updatedInput` at the top level. They belong inside `hookSpecificOutput`. The hooks guide names `permissionDecision` and `additionalContext` only.[^wrong-level][^decision] |
+| `eventName`        | A `hookSpecificOutput.hookEventName` that is not the event of the hook                                                                                                                                                   |
+| `eventNameMissing` | A `hookSpecificOutput` with no `hookEventName`. The docs say that it "requires a `hookEventName` field set to the event name".[^json-output]                                                                             |
+| `decision`         | A top-level `decision` other than `"block"`. "The only value for `decision` is `"block"`".[^decision]                                                                                                                    |
+| `suppress`         | The field `suppressOutput`. It "has no effect: Claude Code accepts the field but doesn't act on it".[^json-output]                                                                                                       |
+| `modelSwitch`      | On `PreModelSwitch`: `permissionDecision` of `"defer"`, `updatedInput` or `additionalContext` in `hookSpecificOutput`. The event does not accept them.[^model-switch]                                                    |
+| `classifierAsync`  | `classifierContext` from a handler with `async` or `asyncRewake`. Claude Code ignores the field in the response of a hook in the background.[^classifier]                                                                |
+| `policyBlock`      | A top-level `decision` of `"block"` in a `ConfigChange` handler whose matcher is exactly `policy_settings`. Claude Code ignores a block for that source.[^config-change]                                                 |
 
 The rule reports each fault once for a handler.
 

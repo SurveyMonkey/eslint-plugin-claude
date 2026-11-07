@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.lsp.json` |
+| Category | Files          |
+| -------- | -------------- |
+| load     | `**/.lsp.json` |
 
 The rule lints a `.lsp.json` at the root of a plugin: the directory that holds
 `.claude-plugin/plugin.json`. The rule does not lint `plugin.json`. It makes no report for a
@@ -50,18 +50,18 @@ The rule reports these faults:
 
 ### Fields
 
-| Field | The value must be |
-|-------|-------------------|
-| `command` | A string. No whitespace unless the value starts with `/` |
-| `extensionToLanguage` | An object with at least one entry. Each key starts with a dot, such as `".go"`. Each value is a string |
-| `args` | An array of strings |
-| `transport` | `stdio` or `socket` |
-| `env` | An object of strings |
-| `initializationOptions`, `settings` | Any value |
-| `workspaceFolder` | A string |
-| `startupTimeout`, `shutdownTimeout`, `requestTimeout` | A positive integer. `requestTimeout` needs Claude Code v2.1.288 or later |
-| `restartOnCrash`, `diagnostics` | A Boolean |
-| `maxRestarts` | An integer of zero or more |
+| Field                                                 | The value must be                                                                                      |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `command`                                             | A string. No whitespace unless the value starts with `/`                                               |
+| `extensionToLanguage`                                 | An object with at least one entry. Each key starts with a dot, such as `".go"`. Each value is a string |
+| `args`                                                | An array of strings                                                                                    |
+| `transport`                                           | `stdio` or `socket`                                                                                    |
+| `env`                                                 | An object of strings                                                                                   |
+| `initializationOptions`, `settings`                   | Any value                                                                                              |
+| `workspaceFolder`                                     | A string                                                                                               |
+| `startupTimeout`, `shutdownTimeout`, `requestTimeout` | A positive integer. `requestTimeout` needs Claude Code v2.1.288 or later                               |
+| `restartOnCrash`, `diagnostics`                       | A Boolean                                                                                              |
+| `maxRestarts`                                         | An integer of zero or more                                                                             |
 
 The rule accepts `transport: "socket"`, because the value is valid. Claude Code runs every server
 over stdio, and `lsp-transport-socket` reports the value.[^reference] The inline `lspServers` key

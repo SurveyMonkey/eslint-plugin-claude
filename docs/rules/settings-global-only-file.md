@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/keybindings.json`, `**/.claude/themes/*.json`, `**/.claude.json` |
+| Category | Files                                                                        |
+| -------- | ---------------------------------------------------------------------------- |
+| no-op    | `**/.claude/keybindings.json`, `**/.claude/themes/*.json`, `**/.claude.json` |
 
 ## Rule details
 

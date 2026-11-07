@@ -18,19 +18,19 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category   | Files                                                                                                                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | deprecated | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
 The hooks reference has two deprecations and one "prefer" note. The rule reports each at the `command` string.
 
-| Message | Fault |
-|---------|-------|
-| `preToolUseDecision` | A literal JSON output of a `PreToolUse` handler with a top-level `decision` or `reason`. The docs say these "are deprecated for this event". Use `hookSpecificOutput.permissionDecision` and `permissionDecisionReason`. The old `"approve"` and `"block"` map to `"allow"` and `"deny"`.[^pretooluse] |
-| `updatedMcpToolOutput` | A literal JSON output of a `PostToolUse` handler with `updatedMCPToolOutput`. The docs do not call it deprecated. They say "Prefer `updatedToolOutput`, which works for all tools", so the message says to prefer it.[^posttooluse] |
-| `teamName` | An inline command or script of a `TaskCreated`, `TaskCompleted` or `TeammateIdle` handler that names `team_name`. The docs mark the input field "Deprecated", and say that Claude Code will remove it in a future release.[^created][^completed][^idle] |
+| Message                | Fault                                                                                                                                                                                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `preToolUseDecision`   | A literal JSON output of a `PreToolUse` handler with a top-level `decision` or `reason`. The docs say these "are deprecated for this event". Use `hookSpecificOutput.permissionDecision` and `permissionDecisionReason`. The old `"approve"` and `"block"` map to `"allow"` and `"deny"`.[^pretooluse] |
+| `updatedMcpToolOutput` | A literal JSON output of a `PostToolUse` handler with `updatedMCPToolOutput`. The docs do not call it deprecated. They say "Prefer `updatedToolOutput`, which works for all tools", so the message says to prefer it.[^posttooluse]                                                                    |
+| `teamName`             | An inline command or script of a `TaskCreated`, `TaskCompleted` or `TeammateIdle` handler that names `team_name`. The docs mark the input field "Deprecated", and say that Claude Code will remove it in a future release.[^created][^completed][^idle]                                                |
 
 The inventory row cites `TaskCreated` only. The docs give the same note for `TaskCompleted` and `TeammateIdle`, so
 the rule checks all three events. For `team_name`, the rule reads the text of the command and of the scripts, in any

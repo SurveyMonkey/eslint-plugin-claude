@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -72,7 +72,11 @@ Fail, in `.claude/settings.json`:
       { "hooks": [{ "type": "command", "command": "claude -p 'Summarize' --enable-auto-mode" }] }
     ],
     "SessionStart": [
-      { "hooks": [{ "type": "command", "command": "claude", "args": ["remote-control", "--sandbox"] }] }
+      {
+        "hooks": [
+          { "type": "command", "command": "claude", "args": ["remote-control", "--sandbox"] }
+        ]
+      }
     ]
   }
 }
@@ -84,7 +88,9 @@ Pass:
 {
   "hooks": {
     "SessionEnd": [
-      { "hooks": [{ "type": "command", "command": "claude -p 'Summarize' --permission-mode auto" }] }
+      {
+        "hooks": [{ "type": "command", "command": "claude -p 'Summarize' --permission-mode auto" }]
+      }
     ],
     "SessionStart": [
       { "hooks": [{ "type": "command", "command": "claude", "args": ["remote-control"] }] }

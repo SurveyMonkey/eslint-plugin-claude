@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -28,14 +28,14 @@ The docs list the fields of each handler type.[^fields] The rule reports the key
 list of the type of the handler. The docs do not say what Claude Code does with an unknown field. So the
 severity is `warn`.
 
-| Type | Fields |
-|------|--------|
-| All types | `type`, `if`, `timeout`, `statusMessage`, `once` |
-| `command` | `command`, `args`, `async`, `asyncRewake`, `shell`, `onFailure` |
-| `http` | `url`, `headers`, `allowedEnvVars`, `onFailure` |
-| `mcp_tool` | `server`, `tool`, `input` |
-| `prompt` | `prompt`, `model`, `continueOnBlock` |
-| `agent` | `prompt`, `model` |
+| Type       | Fields                                                          |
+| ---------- | --------------------------------------------------------------- |
+| All types  | `type`, `if`, `timeout`, `statusMessage`, `once`                |
+| `command`  | `command`, `args`, `async`, `asyncRewake`, `shell`, `onFailure` |
+| `http`     | `url`, `headers`, `allowedEnvVars`, `onFailure`                 |
+| `mcp_tool` | `server`, `tool`, `input`                                       |
+| `prompt`   | `prompt`, `model`, `continueOnBlock`                            |
+| `agent`    | `prompt`, `model`                                               |
 
 The hook handler fields table does not list `continueOnBlock`. The Response schema section of the hooks page
 names it for a `prompt` hook. A docs refresh would add that section as a source. It would also take in other

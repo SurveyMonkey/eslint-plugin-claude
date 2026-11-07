@@ -12,8 +12,8 @@ OKF frontmatter.
 
 ```yaml
 ---
-type: <ADR | Reference | Runbook>   # required
-description: <one line>             # required: the doc's subject, readable standalone
+type: <ADR | Reference | Runbook> # required
+description: <one line> # required: the doc's subject, readable standalone
 ---
 ```
 

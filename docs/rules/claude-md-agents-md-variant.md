@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/AGENTS.local.md`, `**/AGENTS.override.md`, `**/.agents/**/*.md` |
+| Category | Files                                                               |
+| -------- | ------------------------------------------------------------------- |
+| no-op    | `**/AGENTS.local.md`, `**/AGENTS.override.md`, `**/.agents/**/*.md` |
 
 ## Rule details
 

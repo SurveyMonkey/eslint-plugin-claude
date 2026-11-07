@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/SKILL.md` |
+| Category | Files         |
+| -------- | ------------- |
+| limit    | `**/SKILL.md` |
 
 ## Rule details
 

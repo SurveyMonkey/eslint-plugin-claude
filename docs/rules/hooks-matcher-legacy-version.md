@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                                                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -28,12 +28,12 @@ The rule makes no report unless the option `minVersion` is set. It is the oldest
 team supports. The rule reports a matcher form when `minVersion` is below the first version that reads the
 form. A `minVersion` equal to that version is no fault.
 
-| Fault | First version | The docs say |
-|-------|---------------|--------------|
-| A comma list, such as `Bash,PowerShell` | v2.1.191 | "Before v2.1.191, a comma fell through to regex evaluation and the matcher never matched".[^debug] |
-| `cloud_credential_error` on `StopFailure` | v2.1.267 | The value needs "Claude Code v2.1.267 or later".[^patterns] |
-| `quota_auto_resume_fired`, `quota_auto_resume_stale` or `quota_auto_resume_disabled` on `Notification` | v2.1.234 | The three types "require Claude Code v2.1.234 or later".[^notification] |
-| A hyphenated name, such as `code-reviewer` | v2.1.195 | The changelog only (see below). |
+| Fault                                                                                                  | First version | The docs say                                                                                       |
+| ------------------------------------------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------- |
+| A comma list, such as `Bash,PowerShell`                                                                | v2.1.191      | "Before v2.1.191, a comma fell through to regex evaluation and the matcher never matched".[^debug] |
+| `cloud_credential_error` on `StopFailure`                                                              | v2.1.267      | The value needs "Claude Code v2.1.267 or later".[^patterns]                                        |
+| `quota_auto_resume_fired`, `quota_auto_resume_stale` or `quota_auto_resume_disabled` on `Notification` | v2.1.234      | The three types "require Claude Code v2.1.234 or later".[^notification]                            |
+| A hyphenated name, such as `code-reviewer`                                                             | v2.1.195      | The changelog only (see below).                                                                    |
 
 ### The hyphenated name
 
@@ -64,7 +64,9 @@ Fail, with `minVersion: "2.1.150"`, in `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "Bash,PowerShell", "hooks": [{ "type": "command", "command": "./check.sh" }] }]
+    "PreToolUse": [
+      { "matcher": "Bash,PowerShell", "hooks": [{ "type": "command", "command": "./check.sh" }] }
+    ]
   }
 }
 ```
@@ -74,7 +76,9 @@ Pass:
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "Bash|PowerShell", "hooks": [{ "type": "command", "command": "./check.sh" }] }]
+    "PreToolUse": [
+      { "matcher": "Bash|PowerShell", "hooks": [{ "type": "command", "command": "./check.sh" }] }
+    ]
   }
 }
 ```

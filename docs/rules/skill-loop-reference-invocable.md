@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/loop.md` |
+| Category | Files                |
+| -------- | -------------------- |
+| no-op    | `**/.claude/loop.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic, and it reads other files.
 

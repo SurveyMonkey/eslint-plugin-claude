@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category   | Files                                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ |
 | deprecated | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
@@ -28,13 +28,13 @@ Claude Code still reads each variable in this table. The env vars reference mark
 deprecated, and calls two of them an older or legacy name.[^vars] The names are in
 `src/data/settings-env.ts`.
 
-| Variable | What the docs say |
-|----------|-------------------|
-| `ANTHROPIC_SMALL_FAST_MODEL` | Deprecated. Use `ANTHROPIC_DEFAULT_HAIKU_MODEL`.[^vars][^model] |
-| `ENABLE_PROMPT_CACHING_1H_BEDROCK` | Deprecated. Use `ENABLE_PROMPT_CACHING_1H`.[^vars] |
-| `DISABLE_BUG_COMMAND` | An older name of `DISABLE_FEEDBACK_COMMAND`.[^vars] |
-| `SLASH_COMMAND_TOOL_CHAR_BUDGET` | A legacy name that Claude Code keeps for backward compatibility. The docs name no replacement.[^vars] |
-| `CLAUDE_CODE_ENABLE_TASKS` set to `0` | Selects the legacy `TodoWrite` tool in place of the Task tools.[^vars] |
+| Variable                              | What the docs say                                                                                     |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `ANTHROPIC_SMALL_FAST_MODEL`          | Deprecated. Use `ANTHROPIC_DEFAULT_HAIKU_MODEL`.[^vars][^model]                                       |
+| `ENABLE_PROMPT_CACHING_1H_BEDROCK`    | Deprecated. Use `ENABLE_PROMPT_CACHING_1H`.[^vars]                                                    |
+| `DISABLE_BUG_COMMAND`                 | An older name of `DISABLE_FEEDBACK_COMMAND`.[^vars]                                                   |
+| `SLASH_COMMAND_TOOL_CHAR_BUDGET`      | A legacy name that Claude Code keeps for backward compatibility. The docs name no replacement.[^vars] |
+| `CLAUDE_CODE_ENABLE_TASKS` set to `0` | Selects the legacy `TodoWrite` tool in place of the Task tools.[^vars]                                |
 
 The report is on the variable name. The message names the replacement when the docs give one.
 Each variable gets one report. When a file has two keys of one name, the rule reads the last, as

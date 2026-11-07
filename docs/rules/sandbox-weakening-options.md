@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
@@ -28,17 +28,17 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 
 The rule reports each of these in a settings file. A quoted `"true"` counts as `true` in a managed file only.
 
-| Option | Why the docs call it weaker |
-|--------|-----------------------------|
-| `enableWeakerNestedSandbox: true` | The inner sandbox bind-mounts the existing `/proc`, which exposes process information.[^nested] The docs say it considerably weakens security.[^limits] |
-| `enableWeakerNetworkIsolation: true` | It opens a potential data exfiltration path through the macOS trust service.[^network] The rule reports it with or without `network.httpProxyPort`. The docs name the proxy as the reason to use the option, and say to use `excludedCommands` when there is no proxy.[^network] |
-| `network.allowAllUnixSockets: true` | Sandboxed commands connect to every Unix socket. On WSL2 it also reopens the interop socket.[^allsockets] |
-| `network.allowUnixSockets` with a `docker.sock` entry | Access to the Docker socket gives control of the host.[^unix] [^limits] The rule matches an entry whose last path part is `docker.sock`. |
-| `network.allowMachLookup` with the entry `"*"` | A lone `*` matches every XPC and Mach service.[^mach] |
-| `allowAppleEvents: true` | It removes code-execution isolation.[^apple] |
-| `allowNestedUserNamespaces: true` | It turns off a security boundary. Code from a sandboxed command can then run outside the sandbox.[^userns] [^limits] |
-| `credentials.allowPlaintextInject: true` | The credential travels in cleartext on plain HTTP.[^plaintext] |
-| `filesystem.disabled: true` with `autoAllowBashIfSandboxed` not `false` | Commands get unrestricted read and write access, and run with no prompt.[^disable] |
+| Option                                                                  | Why the docs call it weaker                                                                                                                                                                                                                                                      |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enableWeakerNestedSandbox: true`                                       | The inner sandbox bind-mounts the existing `/proc`, which exposes process information.[^nested] The docs say it considerably weakens security.[^limits]                                                                                                                          |
+| `enableWeakerNetworkIsolation: true`                                    | It opens a potential data exfiltration path through the macOS trust service.[^network] The rule reports it with or without `network.httpProxyPort`. The docs name the proxy as the reason to use the option, and say to use `excludedCommands` when there is no proxy.[^network] |
+| `network.allowAllUnixSockets: true`                                     | Sandboxed commands connect to every Unix socket. On WSL2 it also reopens the interop socket.[^allsockets]                                                                                                                                                                        |
+| `network.allowUnixSockets` with a `docker.sock` entry                   | Access to the Docker socket gives control of the host.[^unix] [^limits] The rule matches an entry whose last path part is `docker.sock`.                                                                                                                                         |
+| `network.allowMachLookup` with the entry `"*"`                          | A lone `*` matches every XPC and Mach service.[^mach]                                                                                                                                                                                                                            |
+| `allowAppleEvents: true`                                                | It removes code-execution isolation.[^apple]                                                                                                                                                                                                                                     |
+| `allowNestedUserNamespaces: true`                                       | It turns off a security boundary. Code from a sandboxed command can then run outside the sandbox.[^userns] [^limits]                                                                                                                                                             |
+| `credentials.allowPlaintextInject: true`                                | The credential travels in cleartext on plain HTTP.[^plaintext]                                                                                                                                                                                                                   |
+| `filesystem.disabled: true` with `autoAllowBashIfSandboxed` not `false` | Commands get unrestricted read and write access, and run with no prompt.[^disable]                                                                                                                                                                                               |
 
 ### Scope
 

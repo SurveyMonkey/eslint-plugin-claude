@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                      |
+| -------- | -------------------------- |
 | security | `**/.claude/settings.json` |
 
 ## Rule details
@@ -31,16 +31,16 @@ user accepts the workspace trust prompt.[^key] In `claude -p` or the SDK, the fo
 trusted and the trust dialog does not show. The permissions page says that helper commands are
 used in that case.[^trust]
 
-| Key | Form | Source |
-|-----|------|--------|
-| `apiKeyHelper` | A command line | [^key] |
-| `awsAuthRefresh` | A command line | [^aws] |
-| `awsCredentialExport` | A command line | [^export] |
-| `gcpAuthRefresh` | A command line | [^gcp] |
-| `otelHeadersHelper` | A command line | [^otel][^dialogs] |
-| `statusLine` | An object with `command` | [^status][^dialogs] |
-| `subagentStatusLine` | An object with `command` | [^subagent] |
-| `fileSuggestion` | An object with `command` | [^suggest] |
+| Key                   | Form                     | Source              |
+| --------------------- | ------------------------ | ------------------- |
+| `apiKeyHelper`        | A command line           | [^key]              |
+| `awsAuthRefresh`      | A command line           | [^aws]              |
+| `awsCredentialExport` | A command line           | [^export]           |
+| `gcpAuthRefresh`      | A command line           | [^gcp]              |
+| `otelHeadersHelper`   | A command line           | [^otel][^dialogs]   |
+| `statusLine`          | An object with `command` | [^status][^dialogs] |
+| `subagentStatusLine`  | An object with `command` | [^subagent]         |
+| `fileSuggestion`      | An object with `command` | [^suggest]          |
 
 The list is `COMMAND_STRING_KEYS` and `COMMAND_OBJECT_KEYS` in `src/data/settings-keys.ts`.
 
