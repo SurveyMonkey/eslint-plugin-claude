@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-schema, which reports a key in permissions that Claude Code does not read, a list that is not an array of strings, and a blockReadsOutsideWorkingDirectories that is not a Boolean.
+description: The ESLint rule claude/permissions-schema, which reports a key in permissions that Claude Code does not read, a list that is not an array of strings, and a blockReadsOutsideWorkingDirectories or blockWritesOutsideWorkingDirectories that is not a Boolean.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -24,13 +24,14 @@ generated:
 
 ## Rule details
 
-The `permissions` object has eight keys:[^keys]
+The `permissions` object has nine keys:[^keys]
 
 | Key | Type | Checked by |
 |-----|------|------------|
 | `allow`, `ask`, `deny` | array of permission rule strings | this rule: the array and the type of each entry |
 | `additionalDirectories` | array of directory paths | this rule[^dirs] |
 | `blockReadsOutsideWorkingDirectories` | Boolean | this rule[^block] |
+| `blockWritesOutsideWorkingDirectories` | Boolean | this rule[^keys] |
 | `defaultMode` | one of seven strings | `permissions-default-mode-value` |
 | `disableBypassPermissionsMode`, `disableAutoMode` | the string `"disable"` | `permissions-disable-mode-value` |
 
@@ -39,7 +40,7 @@ The rule reports these faults:
 - **A key that is not in the list.** Claude Code does not read it. The report is on the key.
 - **A list that is not an array.** The report is on the value.
 - **An entry of a list that is not a string.** The report is on the entry.
-- **A `blockReadsOutsideWorkingDirectories` that is not `true` or `false`.**
+- **A `blockReadsOutsideWorkingDirectories` or `blockWritesOutsideWorkingDirectories` that is not `true` or `false`.**
 
 A rule string that is not a valid permission rule is for `permissions-rule-syntax`, which also
 reports a NUL byte. The rule `permissions-unknown-tool` and its siblings check the rules too.

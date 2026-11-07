@@ -221,6 +221,7 @@ const ANY_FILE: readonly string[] = [
   'permissions.allow',
   'permissions.ask',
   'permissions.blockReadsOutsideWorkingDirectories',
+  'permissions.blockWritesOutsideWorkingDirectories',
   'permissions.defaultMode',
   'permissions.deny',
   'permissions.disableBypassPermissionsMode',

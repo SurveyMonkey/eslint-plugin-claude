@@ -44,6 +44,7 @@ Claude Code ignores these variables in the `env` block of any settings file:[^ig
   `CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT`, `CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT` and
   `CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT`.
 - `CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION`. Claude Code ignores a copy in a settings `env` block.[^vars]
+- `CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS`. Claude Code reads it from the launch environment only.
 
 ### Ignored in project and local files
 
@@ -68,6 +69,8 @@ can set them, so the rule makes no report in a managed file.[^ignored]
 - Variables that change how Claude Code starts or syncs: `CLAUDE_CODE_PROCESS_WRAPPER`,
   `CLAUDE_CODE_SYNC_SKILLS`, `CLAUDE_CODE_SYNC_PLUGINS`, `CLAUDE_CODE_PLUGIN_CACHE_DIR` and
   `CLAUDE_CODE_PLUGIN_SEED_DIR`.
+- The variables that set the claude.ai sign-in: `CLAUDE_CODE_OAUTH_TOKEN`,
+  `CLAUDE_CODE_OAUTH_REFRESH_TOKEN` and `CLAUDE_CODE_OAUTH_SCOPES`.
 - The timer of an unanswered dialog `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS`, the attachment switch
   `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and the file mention switch `CLAUDE_CODE_DISABLE_FILE_MENTIONS`.
 
