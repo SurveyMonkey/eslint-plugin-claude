@@ -279,7 +279,7 @@ describe(`${RULE} (silent)`, () => {
   })
 
   it.skipIf(noLinks)('stays silent for a valid path in a marketplace behind a link', () => {
-    const top = tree(Object.fromEntries(Object.entries(PLUGIN).map(([k, v]) => ['real/' + k, v])))
+    const top = tree(Object.fromEntries(Object.entries(PLUGIN).map(([k, v]) => [`real/${k}`, v])))
     link(top, 'alias', 'real')
     const dir = path.join(top, 'alias')
     expect(lint(dir, entry({ commands: './commands/c.md' }))).toEqual([])

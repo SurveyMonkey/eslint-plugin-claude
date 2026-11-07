@@ -3,6 +3,12 @@
 // `pnpm docs:check` fails when one of them does not agree with the rule `meta`
 // and the configs.
 
+import { execFileSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
+
+const ROOT = fileURLToPath(new URL('.', import.meta.url))
+const BIOME = fileURLToPath(new URL('node_modules/.bin/biome', import.meta.url))
+
 // The groups of the README rule list, in the order of the rule inventory. Each
 // rule is in one group only. Add a new rule to the list of its group.
 const GROUPS = [
@@ -549,4 +555,18 @@ export default {
   // `configsOff` column is empty, and the generator does not show it.
   ruleListColumns: ['name', 'description', 'configsError', 'configsWarn', 'configsOff', 'options'],
   ruleListSplit,
+  // Biome and the generator must agree on the table format (ADR 003, #742).
+  // This hook passes each output file through the Biome of this repository.
+  // Biome returns the text as it is for a file that `files.includes` skips.
+  // A Biome failure throws. It does not return the input.
+  postprocess: (content, pathToFile) =>
+    execFileSync(BIOME, ['format', `--stdin-file-path=${pathToFile}`], {
+      cwd: ROOT,
+      input: content,
+      encoding: 'utf8',
+      // Biome writes a notice to stderr for each skipped file. A failure still
+      // throws, and the error holds the stderr text.
+      stdio: ['pipe', 'pipe', 'pipe'],
+      maxBuffer: 64 * 1024 * 1024,
+    }),
 }
