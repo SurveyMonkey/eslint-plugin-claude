@@ -127,7 +127,8 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    product.** Biome checks the TypeScript and JSON in this repository. It also formats the
    Markdown and YAML ([#742](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/742)),
    except four paths:
-   - `tests/fixtures/**`: the fixtures break rules on purpose.
+   - The Markdown and YAML files under `tests/fixtures/`: the fixtures break rules on purpose.
+     Biome still checks the JSON fixtures.
    - `CHANGELOG.md`: Release Please writes it.
    - `pnpm-lock.yaml`: the package manager writes it.
    - `docs/rules-inventory.md`: it is larger than the Biome file size limit after the format.

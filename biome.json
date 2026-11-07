@@ -15,7 +15,9 @@
       "**/*.yml",
       "**/*.yaml",
       "!.release-please-manifest.json",
-      "!tests/fixtures",
+      "!tests/fixtures/**/*.md",
+      "!tests/fixtures/**/*.yml",
+      "!tests/fixtures/**/*.yaml",
       "!CHANGELOG.md",
       "!pnpm-lock.yaml",
       "!docs/rules-inventory.md"
