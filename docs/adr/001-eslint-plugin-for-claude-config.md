@@ -4,7 +4,7 @@ description: The checks for Claude Code configuration files (SKILL.md, agents, p
 status: stable
 created: 2026-09-29
 owner: brianespinosa
-related_issues: [5, 6, 7, 8, 17, 23, 56, 86, 98, 99, 235, 236, 348]
+related_issues: [5, 6, 7, 8, 17, 23, 56, 86, 98, 99, 235, 236, 348, 742]
 ---
 
 # ADR 001: An ESLint plugin for Claude Code configuration files
@@ -52,14 +52,14 @@ not acceptable either.
 
 **Current tools do not meet all of these constraints.** An evaluation found:
 
-| Tool | Why it does not fit |
-|------|---------------------|
-| [Skillsaw](https://github.com/stbenjam/skillsaw) | The authors control the checks. It needs Python, and its commit hook lints the whole repository. |
-| [claudelint](https://github.com/pdugan20/claudelint) | The authors control the checks. It has no staged-only hook, and one form is a Claude Code plugin. |
-| [@gtbuchanan/eslint-plugin-agent-skills](https://github.com/gtbuchanan/tooling/tree/main/packages/eslint-plugin-agent-skills) | It covers `SKILL.md` only. One maintainer publishes it, and v1.0.0 is from 2026-09-05. |
-| Biome GritQL plugins | Biome has no Markdown parser. A GritQL pattern sees one file only. |
-| markdownlint-cli2 custom rules | It is for Markdown. Its editor extension does not lint JSON. |
-| Oxlint JS plugins | Oxlint lints JavaScript and TypeScript only. |
+| Tool                                                                                                                          | Why it does not fit                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [Skillsaw](https://github.com/stbenjam/skillsaw)                                                                              | The authors control the checks. It needs Python, and its commit hook lints the whole repository.  |
+| [claudelint](https://github.com/pdugan20/claudelint)                                                                          | The authors control the checks. It has no staged-only hook, and one form is a Claude Code plugin. |
+| [@gtbuchanan/eslint-plugin-agent-skills](https://github.com/gtbuchanan/tooling/tree/main/packages/eslint-plugin-agent-skills) | It covers `SKILL.md` only. One maintainer publishes it, and v1.0.0 is from 2026-09-05.            |
+| Biome GritQL plugins                                                                                                          | Biome 2.6 formats Markdown, but a GritQL pattern still sees one file only.                        |
+| markdownlint-cli2 custom rules                                                                                                | It is for Markdown. Its editor extension does not lint JSON.                                      |
+| Oxlint JS plugins                                                                                                             | Oxlint lints JavaScript and TypeScript only.                                                      |
 
 No package named `eslint-plugin-claude` was on npm on 2026-09-27.
 
@@ -124,9 +124,16 @@ No package named `eslint-plugin-claude` was on npm on 2026-09-27.
    `yaml` parses it, in one helper that each rule calls. A hand-written parser would fail on
    folded, block and quoted scalars.
 7. **Biome lints this repository's source, ESLint lints the rule definitions, and ESLint is the
-   product.** Biome checks the TypeScript and JSON in this repository. ESLint, with
-   `eslint-plugin-eslint-plugin` and a parser that removes the TypeScript types, checks the rule
-   definitions in `src/rules/` ([#235](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/235)).
+   product.** Biome checks the TypeScript and JSON in this repository. It also formats the
+   Markdown and YAML ([#742](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/742)),
+   except four paths:
+   - `tests/fixtures/**`: the fixtures break rules on purpose.
+   - `CHANGELOG.md`: Release Please writes it.
+   - `pnpm-lock.yaml`: the package manager writes it.
+   - `docs/rules-inventory.md`: it is larger than the Biome file size limit after the format.
+
+   ESLint, with `eslint-plugin-eslint-plugin` and a parser that removes the TypeScript types,
+   checks the rule definitions in `src/rules/` ([#235](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/235)).
    Biome cannot check the `meta` of a rule, such as a schema option with no description. The docs
    generator of [ADR 003](003-generate-rule-docs-with-eslint-doc-generator.md) reads `meta`,
    with `meta.defaultOptions`. A default that only `create` applies does not get into the docs. The
