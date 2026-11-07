@@ -555,17 +555,17 @@ export default {
   // `configsOff` column is empty, and the generator does not show it.
   ruleListColumns: ['name', 'description', 'configsError', 'configsWarn', 'configsOff', 'options'],
   ruleListSplit,
-  // Biome and the generator must agree on the table format (ADR 003, #742).
+  // Biome and the generator must use the same table format (#742).
   // This hook passes each output file through the Biome of this repository.
-  // Biome returns the text as it is for a file that `files.includes` skips.
-  // A Biome failure throws. It does not return the input.
+  // Biome returns the text unchanged for a file that `files.includes` ignores.
+  // A Biome error stops the run. The hook does not return the input.
   postprocess: (content, pathToFile) =>
     execFileSync(BIOME, ['format', `--stdin-file-path=${pathToFile}`], {
       cwd: ROOT,
       input: content,
       encoding: 'utf8',
-      // Biome writes a notice to stderr for each skipped file. A failure still
-      // throws, and the error holds the stderr text.
+      // Biome writes a message to stderr for each ignored file. A Biome error
+      // still stops the run, and the error holds the stderr text.
       stdio: ['pipe', 'pipe', 'pipe'],
       maxBuffer: 64 * 1024 * 1024,
     }),
