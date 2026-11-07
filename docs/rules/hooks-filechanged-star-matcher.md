@@ -52,7 +52,7 @@ Fail, in `.claude/settings.json`:
 ```
 
 A group with no matcher adds no file to the watch list. The example below fires only when another group or a
-`watchPaths` hook starts the watcher.[^filechanged] A "_" segment is not a fix by itself, because no file is named "_".
+`watchPaths` hook starts the watcher.[^filechanged] A `"*"` segment is not a fix by itself, because no file is named `"*"`.
 
 Pass:
 
