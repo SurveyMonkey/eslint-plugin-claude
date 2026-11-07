@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                              |
+| ----------- | ------------------------------------------------------------------ |
 | portability | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin |
 
 ## Rule details
@@ -28,13 +28,13 @@ Some fields were added in a later Claude Code release. A team that supports an o
 which fields the old release does not read. The rule reports these cases when the option `minVersion` is lower than
 the version that added the field:
 
-| Case | First version | Where |
-|------|---------------|-------|
-| `omitClaudeMd` is set | v2.1.271 | Local and plugin agents. The docs say "Requires Claude Code v2.1.271 or later".[^fields] |
-| `autoCompactWindow` is set | v2.1.296 | Local and plugin agents. The docs say "Requires Claude Code v2.1.296 or later".[^fields] |
-| `experimental` holds `cacheTtl` | v2.1.248 | Local and plugin agents. The docs say "Requires Claude Code v2.1.248 or later".[^fields] |
-| `permissionMode: manual` | v2.1.200 | Local agents only. Claude Code ignores `permissionMode` in a plugin agent.[^fields] |
-| `background` or `omitClaudeMd` is `yes`, `no`, `on`, `off`, `1` or `0` | v2.1.218 | Local and plugin agents. |
+| Case                                                                   | First version | Where                                                                                    |
+| ---------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------- |
+| `omitClaudeMd` is set                                                  | v2.1.271      | Local and plugin agents. The docs say "Requires Claude Code v2.1.271 or later".[^fields] |
+| `autoCompactWindow` is set                                             | v2.1.296      | Local and plugin agents. The docs say "Requires Claude Code v2.1.296 or later".[^fields] |
+| `experimental` holds `cacheTtl`                                        | v2.1.248      | Local and plugin agents. The docs say "Requires Claude Code v2.1.248 or later".[^fields] |
+| `permissionMode: manual`                                               | v2.1.200      | Local agents only. Claude Code ignores `permissionMode` in a plugin agent.[^fields]      |
+| `background` or `omitClaudeMd` is `yes`, `no`, `on`, `off`, `1` or `0` | v2.1.218      | Local and plugin agents.                                                                 |
 
 The docs of the sub-agents page give the first three versions.[^fields] The page names `manual` as an alias for
 `default`, and gives no version.[^modes] The [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records the

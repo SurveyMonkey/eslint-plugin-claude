@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/package.json` |
+| Category | Files             |
+| -------- | ----------------- |
+| no-op    | `**/package.json` |
 
 ## Rule details
 

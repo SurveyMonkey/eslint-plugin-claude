@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude-plugin/marketplace.json` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| load     | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -44,24 +44,24 @@ The rule reports these faults:
 
 The types are these.[^top][^entries]
 
-| Where | Field | Type |
-|-------|-------|------|
-| Top level | `name` | string |
-| Top level | `owner` | object |
-| Top level | `plugins` | array |
-| Top level | `$schema`, `description`, `version` | string |
-| Top level | `forceRemoveDeletedPlugins` | Boolean |
-| Top level | `allowCrossMarketplaceDependenciesOn` | array of strings |
-| Top level | `renames` | object, each value a string or `null` |
-| `owner` | `name` | string, not empty |
-| `metadata` | `description`, `version`, `pluginRoot` | string |
-| Entry | `name` | string |
-| Entry | `source` | string or object |
-| Entry | `description`, `version`, `category`, `displayName`, `headersHelper` | string |
-| Entry | `tags` | array of strings |
-| Entry | `strict`, `defaultEnabled` | Boolean |
-| Entry | `headers` | object |
-| Entry | `hooks` | object, string or array |
+| Where      | Field                                                                | Type                                  |
+| ---------- | -------------------------------------------------------------------- | ------------------------------------- |
+| Top level  | `name`                                                               | string                                |
+| Top level  | `owner`                                                              | object                                |
+| Top level  | `plugins`                                                            | array                                 |
+| Top level  | `$schema`, `description`, `version`                                  | string                                |
+| Top level  | `forceRemoveDeletedPlugins`                                          | Boolean                               |
+| Top level  | `allowCrossMarketplaceDependenciesOn`                                | array of strings                      |
+| Top level  | `renames`                                                            | object, each value a string or `null` |
+| `owner`    | `name`                                                               | string, not empty                     |
+| `metadata` | `description`, `version`, `pluginRoot`                               | string                                |
+| Entry      | `name`                                                               | string                                |
+| Entry      | `source`                                                             | string or object                      |
+| Entry      | `description`, `version`, `category`, `displayName`, `headersHelper` | string                                |
+| Entry      | `tags`                                                               | array of strings                      |
+| Entry      | `strict`, `defaultEnabled`                                           | Boolean                               |
+| Entry      | `headers`                                                            | object                                |
+| Entry      | `hooks`                                                              | object, string or array               |
 
 The rule reports a wrong type once. Other `marketplace-*` rules read the same fields. They give
 no report on a value of the wrong type, and leave it to this rule. These are the fields in

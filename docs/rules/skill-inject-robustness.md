@@ -18,15 +18,15 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| load     | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic: it reads each command as text.
 
 ## Rule details
 
-A skill can run a command when it loads, with `` !`command` `` or a ```` ```! ```` block. A failed
+A skill can run a command when it loads, with `` !`command` `` or a ` ```! ` block. A failed
 command aborts the whole skill invocation, and Claude never sees the skill content.[^fails] The
 rule reports four faults. Each report is on the code span or on the fence.
 
@@ -147,25 +147,25 @@ rule reads no settings file.[^permission]
 
 Fail:
 
-````markdown
+```markdown
 ---
 allowed-tools: Bash(gh *)
 ---
 
 - Tests: !`npm test`
 - Lint: !`./scripts/check.sh`
-````
+```
 
 Pass:
 
-````markdown
+```markdown
 ---
 allowed-tools: Bash(gh *), Bash(npm *), Bash(${CLAUDE_SKILL_DIR}/scripts/check.sh)
 ---
 
 - Tests: !`npm test`
 - Lint: !`${CLAUDE_SKILL_DIR}/scripts/check.sh || true`
-````
+```
 
 The rule checks a `SKILL.md` in a project and in a plugin, and a command file. It makes no report
 for a plugin root that it cannot see.

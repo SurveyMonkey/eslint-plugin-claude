@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -59,7 +59,10 @@ Pass:
 {
   "hooks": {
     "SubagentStart": [
-      { "matcher": "^my-plugin:reviewer$", "hooks": [{ "type": "command", "command": "./setup.sh" }] }
+      {
+        "matcher": "^my-plugin:reviewer$",
+        "hooks": [{ "type": "command", "command": "./setup.sh" }]
+      }
     ]
   }
 }

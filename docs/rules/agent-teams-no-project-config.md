@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/teams/**/*.md`, `**/.claude/teams/**/*.json` |
+| Category | Files                                                    |
+| -------- | -------------------------------------------------------- |
+| no-op    | `**/.claude/teams/**/*.md`, `**/.claude/teams/**/*.json` |
 
 ## Rule details
 

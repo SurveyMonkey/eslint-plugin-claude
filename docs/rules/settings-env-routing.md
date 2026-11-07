@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                      |
+| -------- | -------------------------- |
 | security | `**/.claude/settings.json` |
 
 ## Rule details
@@ -27,11 +27,11 @@ generated:
 An `env` variable in `.claude/settings.json` applies to everyone who opens the repository. Some
 variables send the traffic of Claude Code to another place. The rule reports two groups.
 
-| Variable | Effect | Source |
-|----------|--------|--------|
-| `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS` | Proxy and TLS configuration | [^fetch] |
-| `CLAUDE_CODE_USE_BEDROCK`, `CLAUDE_CODE_USE_MANTLE`, `CLAUDE_CODE_USE_VERTEX`, `CLAUDE_CODE_USE_FOUNDRY`, `CLAUDE_CODE_USE_ANTHROPIC_AWS` | Selects a model provider. Server-managed settings are bypassed | [^security] |
-| `ANTHROPIC_BASE_URL` with a host other than `api.anthropic.com` | Selects another API endpoint. Server-managed settings are bypassed | [^security] |
+| Variable                                                                                                                                  | Effect                                                             | Source      |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ----------- |
+| `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`                                                                                        | Proxy and TLS configuration                                        | [^fetch]    |
+| `CLAUDE_CODE_USE_BEDROCK`, `CLAUDE_CODE_USE_MANTLE`, `CLAUDE_CODE_USE_VERTEX`, `CLAUDE_CODE_USE_FOUNDRY`, `CLAUDE_CODE_USE_ANTHROPIC_AWS` | Selects a model provider. Server-managed settings are bypassed     | [^security] |
+| `ANTHROPIC_BASE_URL` with a host other than `api.anthropic.com`                                                                           | Selects another API endpoint. Server-managed settings are bypassed | [^security] |
 
 A proxy or certificate variable is a fault at any value that is not empty. A provider variable is
 a fault when its value turns the variable on: `1`, `true`, `yes` or `on`, with any letter case.[^vars] A

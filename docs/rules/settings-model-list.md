@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -28,15 +28,15 @@ Some entries of a model list have no effect, or have an effect that the author d
 The rule reports each one. The rule reads the linted file. In a managed file, it also reads the sibling files of the same
 managed source. A key in any other file is not seen. The aliases and the ID forms are in `src/data/models.ts`.
 
-| Check | Files | The docs say |
-|-------|-------|--------------|
-| `fallbackModel` has more than 3 distinct entries | every file | "Claude Code caps chains at three models after duplicate removal and ignores extra entries."[^chains] |
-| `availableModels` is `[]` and the file names a model | managed files | "With `availableModels: []`, named model selections are blocked and `enforceAvailableModels` has no effect."[^behavior] |
-| `enforceAvailableModels: true` with no non-empty `availableModels` | managed files | "This key has no effect when `availableModels` is unset or empty."[^enforce] |
-| An `availableModels` family alias with a same-family ID | every file | "an entry naming a specific model in a family ... disables that family's wildcard entry: `["sonnet", "claude-sonnet-4-5"]` allows only Sonnet 4.5 versions, not every Sonnet model."[^merge] |
-| `best`, `opusplan` or `default` in `deniedModels` | managed files | "`best`, `opusplan`, and `default` entries are ignored"[^denied] |
-| A `modelOverrides` key that is no Anthropic model ID | every file | "Keys must be Anthropic model IDs ... Unknown keys are ignored."[^overrides] |
-| `env.ANTHROPIC_CUSTOM_MODEL_OPTION` that `availableModels` omits | managed files | "include the custom model ID in the allowlist as well. Otherwise Claude Code filters the custom entry from the picker and rejects a `--model` selection of it"[^custom] |
+| Check                                                              | Files         | The docs say                                                                                                                                                                                 |
+| ------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fallbackModel` has more than 3 distinct entries                   | every file    | "Claude Code caps chains at three models after duplicate removal and ignores extra entries."[^chains]                                                                                        |
+| `availableModels` is `[]` and the file names a model               | managed files | "With `availableModels: []`, named model selections are blocked and `enforceAvailableModels` has no effect."[^behavior]                                                                      |
+| `enforceAvailableModels: true` with no non-empty `availableModels` | managed files | "This key has no effect when `availableModels` is unset or empty."[^enforce]                                                                                                                 |
+| An `availableModels` family alias with a same-family ID            | every file    | "an entry naming a specific model in a family ... disables that family's wildcard entry: `["sonnet", "claude-sonnet-4-5"]` allows only Sonnet 4.5 versions, not every Sonnet model."[^merge] |
+| `best`, `opusplan` or `default` in `deniedModels`                  | managed files | "`best`, `opusplan`, and `default` entries are ignored"[^denied]                                                                                                                             |
+| A `modelOverrides` key that is no Anthropic model ID               | every file    | "Keys must be Anthropic model IDs ... Unknown keys are ignored."[^overrides]                                                                                                                 |
+| `env.ANTHROPIC_CUSTOM_MODEL_OPTION` that `availableModels` omits   | managed files | "include the custom model ID in the allowlist as well. Otherwise Claude Code filters the custom entry from the picker and rejects a `--model` selection of it"[^custom]                      |
 
 The report is on the entry, the key or the value that Claude Code does not act on. A `null`
 value removes a key, so the rule takes it as no key. For two keys of one name, the rule reads the
@@ -121,7 +121,9 @@ Pass:
   "availableModels": ["claude-sonnet-4-5", "haiku"],
   "fallbackModel": ["claude-sonnet-4-5", "haiku"],
   "deniedModels": ["claude-opus-5-5"],
-  "modelOverrides": { "claude-opus-4-7": "arn:aws:bedrock:us-east-1:123456789012:inference-profile/x" },
+  "modelOverrides": {
+    "claude-opus-4-7": "arn:aws:bedrock:us-east-1:123456789012:inference-profile/x"
+  },
   "enforceAvailableModels": true
 }
 ```

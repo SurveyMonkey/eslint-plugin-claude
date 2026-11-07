@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
 
@@ -82,7 +82,9 @@ Pass, in `managed-settings.json`:
   "sandbox": {
     "network": { "tlsTerminate": {} },
     "credentials": {
-      "envVars": [{ "name": "SERVICE_JWT", "mode": "mask", "decode": "jwt", "maskClaims": ["api_key"] }]
+      "envVars": [
+        { "name": "SERVICE_JWT", "mode": "mask", "decode": "jwt", "maskClaims": ["api_key"] }
+      ]
     }
   }
 }

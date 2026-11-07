@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -54,7 +54,9 @@ Fail, in `.claude/settings.json`:
 ```json
 {
   "disableAllHooks": true,
-  "hooks": { "PostToolUse": [{ "hooks": [{ "type": "command", "command": "./scripts/format.sh" }] }] }
+  "hooks": {
+    "PostToolUse": [{ "hooks": [{ "type": "command", "command": "./scripts/format.sh" }] }]
+  }
 }
 ```
 
@@ -62,7 +64,9 @@ Pass:
 
 ```json
 {
-  "hooks": { "PostToolUse": [{ "hooks": [{ "type": "command", "command": "./scripts/format.sh" }] }] }
+  "hooks": {
+    "PostToolUse": [{ "hooks": [{ "type": "command", "command": "./scripts/format.sh" }] }]
+  }
 }
 ```
 

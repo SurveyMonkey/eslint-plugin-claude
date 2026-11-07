@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -36,11 +36,11 @@ start with `#!`.
 
 The folders follow the place of the hook file:
 
-| File | `${CLAUDE_PROJECT_DIR}` | `${CLAUDE_PLUGIN_ROOT}` |
-|------|-------------------------|-------------------------|
-| `.claude/settings.json`, `.claude/settings.local.json`, a skill or a subagent under `.claude/` | The folder above `.claude/` | Not resolved |
-| `hooks/hooks.json` of a plugin | Not resolved | The plugin root |
-| A managed file | Not resolved | Not resolved |
+| File                                                                                           | `${CLAUDE_PROJECT_DIR}`     | `${CLAUDE_PLUGIN_ROOT}` |
+| ---------------------------------------------------------------------------------------------- | --------------------------- | ----------------------- |
+| `.claude/settings.json`, `.claude/settings.local.json`, a skill or a subagent under `.claude/` | The folder above `.claude/` | Not resolved            |
+| `hooks/hooks.json` of a plugin                                                                 | Not resolved                | The plugin root         |
+| A managed file                                                                                 | Not resolved                | Not resolved            |
 
 ### What the rule does not read
 
@@ -63,7 +63,9 @@ Fail, in `.claude/settings.json`, when `.claude/hooks/check.sh` has no `#!` line
     "PostToolUse": [
       {
         "matcher": "Write",
-        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check.sh" }]
+        "hooks": [
+          { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check.sh" }
+        ]
       }
     ]
   }

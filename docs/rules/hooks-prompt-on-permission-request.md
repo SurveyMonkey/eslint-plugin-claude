@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -52,9 +52,7 @@ Pass:
 ```json
 {
   "hooks": {
-    "PermissionRequest": [
-      { "hooks": [{ "type": "command", "command": "./decide.sh" }] }
-    ]
+    "PermissionRequest": [{ "hooks": [{ "type": "command", "command": "./decide.sh" }] }]
   }
 }
 ```

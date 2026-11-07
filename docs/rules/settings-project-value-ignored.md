@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details
 
@@ -29,15 +29,15 @@ value from user, managed and `--settings` sources, and ignores or limits the sam
 project or local file.[^exceptions] The rule reports each such value. The report is on the value,
 on the key for a tip key, or on the object for a tip object.
 
-| Key and value | What Claude Code does in a project or local file |
-|---------------|--------------------------------------------------|
-| `remoteControlAtStartup: true` | Ignores it. A repository can turn auto-connect off, and cannot turn it on[^remote] |
-| `isolatePeerMachines: false` | A `true` from any file applies, so a project file can turn the requirement on and not off[^isolate] |
-| `disableClaudeAiConnectors: false` | A `true` in any file applies, and a project `false` cannot override it. The value is the same as unset[^connectors] |
-| `crossSessionInbound: "accept"` | Applies a project value only when it is stricter than the value from managed, `--settings` or user settings. `accept` is the least strict[^inbound] |
-| `forceLoginMethod: "gateway"` | Treats it as unset. Only a managed source on the machine can set it[^login] |
-| `remote.defaultEnvironmentId` that starts with `ccpool_` | Ignores a self-hosted environment ID. It reads one from user settings, managed settings and `--settings` only[^environment] |
-| A tip object in `spinnerTipsOverride.tips`, and the keys `tipsFile`, `label` and `excludeDefault` | Reads plain string tips only[^tips] |
+| Key and value                                                                                     | What Claude Code does in a project or local file                                                                                                    |
+| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `remoteControlAtStartup: true`                                                                    | Ignores it. A repository can turn auto-connect off, and cannot turn it on[^remote]                                                                  |
+| `isolatePeerMachines: false`                                                                      | A `true` from any file applies, so a project file can turn the requirement on and not off[^isolate]                                                 |
+| `disableClaudeAiConnectors: false`                                                                | A `true` in any file applies, and a project `false` cannot override it. The value is the same as unset[^connectors]                                 |
+| `crossSessionInbound: "accept"`                                                                   | Applies a project value only when it is stricter than the value from managed, `--settings` or user settings. `accept` is the least strict[^inbound] |
+| `forceLoginMethod: "gateway"`                                                                     | Treats it as unset. Only a managed source on the machine can set it[^login]                                                                         |
+| `remote.defaultEnvironmentId` that starts with `ccpool_`                                          | Ignores a self-hosted environment ID. It reads one from user settings, managed settings and `--settings` only[^environment]                         |
+| A tip object in `spinnerTipsOverride.tips`, and the keys `tipsFile`, `label` and `excludeDefault` | Reads plain string tips only[^tips]                                                                                                                 |
 
 The `isolatePeerMachines` and `disableClaudeAiConnectors` messages say that the value has no
 effect. A project `false` is the same as no value, or loses to a `true` from another file.

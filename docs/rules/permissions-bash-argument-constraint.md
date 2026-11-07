@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | security | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
@@ -52,7 +52,12 @@ Fail:
 Pass:
 
 ```json
-{ "permissions": { "allow": ["WebFetch(domain:github.com)"], "deny": ["Bash(curl *)", "Bash(wget *)"] } }
+{
+  "permissions": {
+    "allow": ["WebFetch(domain:github.com)"],
+    "deny": ["Bash(curl *)", "Bash(wget *)"]
+  }
+}
 ```
 
 ## Usage

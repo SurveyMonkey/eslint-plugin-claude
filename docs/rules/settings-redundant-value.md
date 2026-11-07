@@ -18,21 +18,21 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
 Some values change nothing. The rule reports each one, on the value.
 
-| Key and value | Why it changes nothing | Source |
-|---------------|------------------------|--------|
-| `alwaysThinkingEnabled: true` | Thinking is on by default | [^thinking] |
-| `enableArtifact: true` | It never overrides a `false` from another file, from `CLAUDE_CODE_DISABLE_ARTIFACT`, or from the admin setting of the organization | [^artifact] |
-| `syncClaudeAiSkills: true` | Claude Code honors only `false` | [^skills] |
-| `syncClaudeAiPlugins: true` | Claude Code honors only `false` | [^plugins] |
-| `spinnerVerbs` with `"mode": "replace"` and `"verbs": []` | In replace mode with an empty list, Claude Code keeps the built-in verbs | [^verbs] |
+| Key and value                                             | Why it changes nothing                                                                                                             | Source      |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `alwaysThinkingEnabled: true`                             | Thinking is on by default                                                                                                          | [^thinking] |
+| `enableArtifact: true`                                    | It never overrides a `false` from another file, from `CLAUDE_CODE_DISABLE_ARTIFACT`, or from the admin setting of the organization | [^artifact] |
+| `syncClaudeAiSkills: true`                                | Claude Code honors only `false`                                                                                                    | [^skills]   |
+| `syncClaudeAiPlugins: true`                               | Claude Code honors only `false`                                                                                                    | [^plugins]  |
+| `spinnerVerbs` with `"mode": "replace"` and `"verbs": []` | In replace mode with an empty list, Claude Code keeps the built-in verbs                                                           | [^verbs]    |
 
 For `spinnerVerbs`, the report is on the empty list. A `replace` mode with no `verbs` key gives no
 report, because the docs name the empty array only.

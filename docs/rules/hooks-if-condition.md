@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -64,10 +64,10 @@ A rule such as `mcp__memory` names a whole MCP server, so the rule makes no repo
 
 A rule format covers a family of tools:[^rules]
 
-| Rule | Tools that it covers |
-|------|----------------------|
-| `Bash(...)` | `Bash`, `Monitor` |
-| `Read(...)` | `Read`, `Grep`, `Glob`, `LSP` |
+| Rule        | Tools that it covers            |
+| ----------- | ------------------------------- |
+| `Bash(...)` | `Bash`, `Monitor`               |
+| `Read(...)` | `Read`, `Grep`, `Glob`, `LSP`   |
 | `Edit(...)` | `Edit`, `Write`, `NotebookEdit` |
 
 The rule makes no report in these cases:
@@ -88,7 +88,10 @@ Fail, in `.claude/settings.json`:
 {
   "hooks": {
     "PreToolUse": [
-      { "matcher": "Bash", "hooks": [{ "type": "command", "if": "Bash(rm *) && Bash(git *)", "command": "./check.sh" }] }
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "if": "Bash(rm *) && Bash(git *)", "command": "./check.sh" }]
+      }
     ]
   }
 }

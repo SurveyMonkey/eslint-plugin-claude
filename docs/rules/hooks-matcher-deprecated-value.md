@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category   | Files                                                                                                                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | deprecated | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -44,7 +44,10 @@ Fail, in `.claude/settings.json`:
 {
   "hooks": {
     "SessionEnd": [
-      { "matcher": "logout|bypass_permissions_disabled", "hooks": [{ "type": "command", "command": "./bye.sh" }] }
+      {
+        "matcher": "logout|bypass_permissions_disabled",
+        "hooks": [{ "type": "command", "command": "./bye.sh" }]
+      }
     ]
   }
 }

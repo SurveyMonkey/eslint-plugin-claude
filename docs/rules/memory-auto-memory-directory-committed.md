@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
 | security | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 ## Rule details

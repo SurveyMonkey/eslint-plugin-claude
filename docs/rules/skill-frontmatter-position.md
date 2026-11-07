@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/SKILL.md`, `**/commands/**/*.md` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| no-op    | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details
 
@@ -56,8 +56,8 @@ A file elsewhere, such as `docs/SKILL.md`, is not a report. A plugin root is a d
 Fail:
 
 ```markdown
-
 ---
+
 name: deploy
 description: Deploys the service to staging.
 ---

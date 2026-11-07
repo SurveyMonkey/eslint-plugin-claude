@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
 | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ignores it.
@@ -34,12 +34,12 @@ part with no option makes no report. The `recommended` and `strict` configs set 
 `platforms` holds `windows-git-bash`, `windows-no-git-bash`, `macos`, `linux` or `wsl`. The value `wsl` means WSL2, the only WSL
 that the sandbox supports.[^wsl]
 
-| Platforms | What the rule reports |
-|-----------|-----------------------|
-| `linux`, `wsl` | An `allowWrite` or `denyWrite` entry with `*`, `?` or `[`, after Claude Code removes a trailing `/**`. The sandbox mounts concrete paths, so Claude Code skips the entry and it has no effect.[^prefixes] |
-| `linux`, `wsl` | An `Edit` `allow` or `deny` rule with the same characters, while `sandbox.enabled` is `true` in the same file. Claude Code adds the path of an `Edit` rule to those lists, so the same limit applies.[^prefixes] |
-| `linux`, `wsl` | A non-empty `allowUnixSockets`. Claude Code ignores it there. The docs name `allowAllUnixSockets` as the other way.[^unix] |
-| `windows-git-bash`, `windows-no-git-bash` | `failIfUnavailable: true`. The sandbox does not run on native Windows, so Claude Code exits at startup.[^enforce] The rule does not check `sandbox.enabled` for this part. |
+| Platforms                                 | What the rule reports                                                                                                                                                                                            |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linux`, `wsl`                            | An `allowWrite` or `denyWrite` entry with `*`, `?` or `[`, after Claude Code removes a trailing `/**`. The sandbox mounts concrete paths, so Claude Code skips the entry and it has no effect.[^prefixes]        |
+| `linux`, `wsl`                            | An `Edit` `allow` or `deny` rule with the same characters, while `sandbox.enabled` is `true` in the same file. Claude Code adds the path of an `Edit` rule to those lists, so the same limit applies.[^prefixes] |
+| `linux`, `wsl`                            | A non-empty `allowUnixSockets`. Claude Code ignores it there. The docs name `allowAllUnixSockets` as the other way.[^unix]                                                                                       |
+| `windows-git-bash`, `windows-no-git-bash` | `failIfUnavailable: true`. The sandbox does not run on native Windows, so Claude Code exits at startup.[^enforce] The rule does not check `sandbox.enabled` for this part.                                       |
 
 `denyRead` and `allowRead` are not read: wildcards work there on every platform.[^prefixes] The rule skips an `Edit` `allow` rule
 that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It skips a hidden drop-in.
@@ -48,10 +48,10 @@ that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It s
 
 `minVersion` is the oldest Claude Code version that reads your files, as `major.minor.patch`.
 
-| `minVersion` below | What the rule reports |
-|--------------------|-----------------------|
-| `2.1.224` | A `denyRead` or `denyWrite` entry that ends in `/`. Before v2.1.224, Claude Code passed the slash to the sandbox, and Claude could still read or write paths under the entry.[^prefixes] |
-| `2.1.229` | A bracketed IPv6 entry, such as `[::1]`, in `allowedDomains` or `deniedDomains`, and in a `WebFetch(domain:...)` rule of `allow` or `deny`. The bracketed form needs v2.1.229 or later.[^allowed] [^ipv6] |
+| `minVersion` below | What the rule reports                                                                                                                                                                                     |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `2.1.224`          | A `denyRead` or `denyWrite` entry that ends in `/`. Before v2.1.224, Claude Code passed the slash to the sandbox, and Claude could still read or write paths under the entry.[^prefixes]                  |
+| `2.1.229`          | A bracketed IPv6 entry, such as `[::1]`, in `allowedDomains` or `deniedDomains`, and in a `WebFetch(domain:...)` rule of `allow` or `deny`. The bracketed form needs v2.1.229 or later.[^allowed] [^ipv6] |
 
 ### Not checked
 

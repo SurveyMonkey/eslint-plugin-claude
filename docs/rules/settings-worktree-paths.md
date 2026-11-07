@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A directory such as `node_modules` is often not in
 a fresh checkout, and the rule then reports it. `strict` turns the rule on at `warn`.

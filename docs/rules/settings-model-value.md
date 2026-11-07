@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -36,14 +36,14 @@ so this is a check of the form. The rule reports on the value.
 
 ### Values that the rule checks
 
-| Value | Accepted | Docs |
-|-------|----------|------|
-| `model` | An alias or a `claude-` ID | "a model alias or full model ID"[^setting] |
-| `fallbackModel`, each entry | An alias or a `claude-` ID | "array of model aliases or IDs; `"default"` expands to the default model"[^fallback] |
-| `availableModels`, each entry | An alias or a `claude-` ID | "array of model aliases or IDs"[^available] |
-| `env.ANTHROPIC_MODEL`, `env.CLAUDE_CODE_SUBAGENT_MODEL` | An alias or a `claude-` ID | `ANTHROPIC_MODEL=<alias\|name>`[^model]. For the second variable: "Accepts an alias such as `haiku` or a full model name"[^variables] |
-| `advisorModel` | `fable`, `opus`, `sonnet`, or a `claude-` ID | "one of the aliases `"fable"`, `"opus"`, or `"sonnet"` ... or a full model ID"[^advisor] |
-| `env.ANTHROPIC_DEFAULT_OPUS_MODEL`, `_SONNET_`, `_HAIKU_`, `_FABLE_` | Any value that is not an alias | "Each value must be a full model name, or the equivalent identifier for your API provider"[^variables] |
+| Value                                                                | Accepted                                     | Docs                                                                                                                                  |
+| -------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`                                                              | An alias or a `claude-` ID                   | "a model alias or full model ID"[^setting]                                                                                            |
+| `fallbackModel`, each entry                                          | An alias or a `claude-` ID                   | "array of model aliases or IDs; `"default"` expands to the default model"[^fallback]                                                  |
+| `availableModels`, each entry                                        | An alias or a `claude-` ID                   | "array of model aliases or IDs"[^available]                                                                                           |
+| `env.ANTHROPIC_MODEL`, `env.CLAUDE_CODE_SUBAGENT_MODEL`              | An alias or a `claude-` ID                   | `ANTHROPIC_MODEL=<alias\|name>`[^model]. For the second variable: "Accepts an alias such as `haiku` or a full model name"[^variables] |
+| `advisorModel`                                                       | `fable`, `opus`, `sonnet`, or a `claude-` ID | "one of the aliases `"fable"`, `"opus"`, or `"sonnet"` ... or a full model ID"[^advisor]                                              |
+| `env.ANTHROPIC_DEFAULT_OPUS_MODEL`, `_SONNET_`, `_HAIKU_`, `_FABLE_` | Any value that is not an alias               | "Each value must be a full model name, or the equivalent identifier for your API provider"[^variables]                                |
 
 The empty string in an `env` variable is valid. It cancels a value that the shell exports.[^shell]
 

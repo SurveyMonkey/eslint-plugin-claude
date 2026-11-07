@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -52,7 +52,10 @@ Fail, in `.claude/settings.json`:
 {
   "hooks": {
     "PreToolUse": [
-      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "./check.sh", "async": true }] }
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "./check.sh", "async": true }]
+      }
     ]
   }
 }
@@ -64,7 +67,10 @@ Pass:
 {
   "hooks": {
     "PostToolUse": [
-      { "matcher": "Write", "hooks": [{ "type": "command", "command": "./run-tests.sh", "async": true }] }
+      {
+        "matcher": "Write",
+        "hooks": [{ "type": "command", "command": "./run-tests.sh", "async": true }]
+      }
     ]
   }
 }

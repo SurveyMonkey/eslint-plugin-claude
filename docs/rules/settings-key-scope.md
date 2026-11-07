@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -28,14 +28,14 @@ The settings index gives each key a Scope. The Scope says which files Claude Cod
 from.[^index] Claude Code ignores a key in a repository file outside its Scope.[^committed] The
 rule reports a key that the file cannot set. The report is on the key.
 
-| Scope | Where Claude Code reads the key | The rule reports it in |
-|-------|---------------------------------|------------------------|
-| `Managed` | Managed settings only[^managed] | `.claude/settings.json`, `.claude/settings.local.json` |
-| `User` | User settings only[^userscope] | `.claude/settings.json`, `.claude/settings.local.json` |
-| `User or managed` | User and managed settings | `.claude/settings.json`, `.claude/settings.local.json` |
-| `User, local, or managed` | User, local and managed settings | `.claude/settings.json` |
-| `Global config` | `~/.claude.json` only[^global] | Each file, a managed file too |
-| `Any file` | Each settings file | No file |
+| Scope                     | Where Claude Code reads the key  | The rule reports it in                                 |
+| ------------------------- | -------------------------------- | ------------------------------------------------------ |
+| `Managed`                 | Managed settings only[^managed]  | `.claude/settings.json`, `.claude/settings.local.json` |
+| `User`                    | User settings only[^userscope]   | `.claude/settings.json`, `.claude/settings.local.json` |
+| `User or managed`         | User and managed settings        | `.claude/settings.json`, `.claude/settings.local.json` |
+| `User, local, or managed` | User, local and managed settings | `.claude/settings.json`                                |
+| `Global config`           | `~/.claude.json` only[^global]   | Each file, a managed file too                          |
+| `Any file`                | Each settings file               | No file                                                |
 
 The index lists the `User` Scope as the user file `~/.claude/settings.json`.[^index] The rule treats
 a `User` key as a `User or managed` key. It reports the key in project files and local files. It

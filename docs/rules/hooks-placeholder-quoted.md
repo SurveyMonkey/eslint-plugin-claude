@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                                                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | portability | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -66,7 +66,9 @@ Fail, in `.claude/settings.json`:
     "PostToolUse": [
       {
         "matcher": "Write",
-        "hooks": [{ "type": "command", "command": "bash ${CLAUDE_PROJECT_DIR}/.claude/hooks/check.sh" }]
+        "hooks": [
+          { "type": "command", "command": "bash ${CLAUDE_PROJECT_DIR}/.claude/hooks/check.sh" }
+        ]
       }
     ]
   }
@@ -81,7 +83,9 @@ Pass:
     "PostToolUse": [
       {
         "matcher": "Write",
-        "hooks": [{ "type": "command", "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/check.sh\"" }]
+        "hooks": [
+          { "type": "command", "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/check.sh\"" }
+        ]
       }
     ]
   }

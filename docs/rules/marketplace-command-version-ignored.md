@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude-plugin/marketplace.json` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| no-op    | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 

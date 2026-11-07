@@ -29,7 +29,11 @@ writeFileSync(path.join(plugin, '.claude-plugin', 'plugin.json'), '{}')
 markdownTester.run('command-legacy-format', rule, {
   valid: [{ code: '# Doc\n', filename: path.join(scratch, 'docs', 'commands', 'a.md') }],
   invalid: [
-    { code: '# A\n', filename: path.join(plugin, 'commands', 'a.md'), errors: [{ messageId: 'legacy' }] },
+    {
+      code: '# A\n',
+      filename: path.join(plugin, 'commands', 'a.md'),
+      errors: [{ messageId: 'legacy' }],
+    },
   ],
 })
 ```

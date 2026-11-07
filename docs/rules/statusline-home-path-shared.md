@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                      |
+| ----------- | -------------------------- |
 | portability | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. A team can put the script in the home folder of

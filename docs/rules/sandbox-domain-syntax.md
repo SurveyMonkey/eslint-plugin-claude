@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
 It reads no hidden drop-in, because Claude Code ignores it.
@@ -66,13 +66,21 @@ wildcard is not checked by either rule.
 Fail:
 
 ```json
-{ "sandbox": { "network": { "allowedDomains": ["https://github.com", "api.example.com:0", "::1"] } } }
+{
+  "sandbox": { "network": { "allowedDomains": ["https://github.com", "api.example.com:0", "::1"] } }
+}
 ```
 
 Pass:
 
 ```json
-{ "sandbox": { "network": { "allowedDomains": ["github.com", "*.npmjs.org", "api.example.com:443", "[::1]:443"] } } }
+{
+  "sandbox": {
+    "network": {
+      "allowedDomains": ["github.com", "*.npmjs.org", "api.example.com:443", "[::1]:443"]
+    }
+  }
+}
 ```
 
 ## Usage

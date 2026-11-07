@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -31,10 +31,10 @@ should go: "Once Claude reads `AGENTS.md` directly, the hook adds a second copy 
 
 The rule is a heuristic with two reports, at the `command` string of a `SessionStart` command handler.
 
-| Message | Fault |
-|---------|-------|
+| Message      | Fault                                                                                                                                                                                                                |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `staticText` | Every command of the handler is an `echo` or `printf` to standard output, with no `$` and no backtick in its text. The text is plain, or a JSON object whose only payload is `hookSpecificOutput.additionalContext`. |
-| `agentsFile` | A command that prints a file named `AGENTS.md` to standard output: `cat`, `head`, `tail`, `less`, `more` or `bat` with the file as an argument. |
+| `agentsFile` | A command that prints a file named `AGENTS.md` to standard output: `cat`, `head`, `tail`, `less`, `more` or `bat` with the file as an argument.                                                                      |
 
 A handler that runs a repository script is judged by the script. The command line is only the launcher.
 

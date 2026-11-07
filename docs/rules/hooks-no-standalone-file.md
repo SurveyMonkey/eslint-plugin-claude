@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/hooks.json`, `**/.claude/hooks/hooks.json`, `**/.claude-plugin/hooks.json`, `**/.claude-plugin/hooks/hooks.json` |
+| Category | Files                                                                                                                        |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/hooks.json`, `**/.claude/hooks/hooks.json`, `**/.claude-plugin/hooks.json`, `**/.claude-plugin/hooks/hooks.json` |
 
 ## Rule details
 

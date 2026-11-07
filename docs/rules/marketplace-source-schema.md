@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude-plugin/marketplace.json` |
+| Category | Files                                |
+| -------- | ------------------------------------ |
+| load     | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details
 
@@ -38,14 +38,14 @@ faults:
 
 The fields of each type are these.[^sources]
 
-| Type | Required | Optional |
-|------|----------|----------|
-| `github` | `repo` | `ref`, `sha` |
-| `url` | `url` | `ref`, `sha` |
-| `git-subdir` | `url`, `path` | `ref`, `sha` |
-| `npm` | `package` | `version`, `registry` |
-| `archive` | `url` | `sha256` |
-| `command` | `command` | `timeout`, `mode` |
+| Type         | Required      | Optional              |
+| ------------ | ------------- | --------------------- |
+| `github`     | `repo`        | `ref`, `sha`          |
+| `url`        | `url`         | `ref`, `sha`          |
+| `git-subdir` | `url`, `path` | `ref`, `sha`          |
+| `npm`        | `package`     | `version`, `registry` |
+| `archive`    | `url`         | `sha256`              |
+| `command`    | `command`     | `timeout`, `mode`     |
 
 The docs set these limits on the values. The rule reports each value that breaks one:
 
@@ -97,9 +97,7 @@ Fail:
 {
   "name": "acme",
   "owner": { "name": "Acme" },
-  "plugins": [
-    { "name": "formatter", "source": { "source": "github", "repo": "formatter" } }
-  ]
+  "plugins": [{ "name": "formatter", "source": { "source": "github", "repo": "formatter" } }]
 }
 ```
 

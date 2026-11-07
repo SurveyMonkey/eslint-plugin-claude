@@ -59,20 +59,20 @@ each side adds, and each rule that cites the block. A block that is too large fo
 has a placeholder in place of each full text. The questions are constants. Docs text goes only
 into the `state`, as data.
 
-| Question | Asked for | Yes means |
-| - | - | - |
-| `alters_<i>` | each rule that cites the block | The change alters a value, limit, name, default, file location or severity that the rule uses. |
-| `obsolete_<i>` | each rule that cites the block | The rule has no purpose left: the docs now allow, support or remove the whole practice. |
-| `requirement` | every block, used when no heading cites it | The block states a requirement on a configuration file that a lint check can measure. |
+| Question       | Asked for                                  | Yes means                                                                                      |
+| -------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `alters_<i>`   | each rule that cites the block             | The change alters a value, limit, name, default, file location or severity that the rule uses. |
+| `obsolete_<i>` | each rule that cites the block             | The rule has no purpose left: the docs now allow, support or remove the whole practice.        |
+| `requirement`  | every block, used when no heading cites it | The block states a requirement on a configuration file that a lint check can measure.          |
 
 The code turns each answer into a finding. A value at or above `yes` is a yes. A value at or
 below `no` is a no. A value between them goes to a person.
 
-| Answer | `yes` | `no` | Yes gives | Between gives | No gives |
-| - | - | - | - | - | - |
-| `obsolete_<i>` | 0.5 | 0.35 | `rule-removal` | `needs-triage` | the next row |
-| `alters_<i>` | 0.5 | 0.2 | `rule-update` | `needs-triage` | no finding |
-| `requirement` | 0.5 | 0.4 | `new-rule` | `needs-triage` | no finding |
+| Answer         | `yes` | `no` | Yes gives      | Between gives  | No gives     |
+| -------------- | ----- | ---- | -------------- | -------------- | ------------ |
+| `obsolete_<i>` | 0.5   | 0.35 | `rule-removal` | `needs-triage` | the next row |
+| `alters_<i>`   | 0.5   | 0.2  | `rule-update`  | `needs-triage` | no finding   |
+| `requirement`  | 0.5   | 0.4  | `new-rule`     | `needs-triage` | no finding   |
 
 Code decides these cases with no model call:
 
@@ -124,40 +124,40 @@ case is a removed block, which needs no model call.
 The final questions ran four times on the 23 other cases. The table gives the range of each
 Noul over the four runs. `tests/fixtures/docs-classify/jev-responses.json` holds the fourth run.
 
-| Case | Label | `alters` | `obsolete` | `requirement` | Result |
-| - | - | - | - | - | - |
-| listing-cap-raised | rule-update | 0.59 to 0.69 | 0.03 to 0.04 | | rule-update |
-| when-to-use-leaves-cap | rule-update | 0.92 | 0.23 to 0.28 | | rule-update |
-| listing-cap-configurable | rule-update | 0.54 to 0.58 | 0.06 to 0.07 | | rule-update |
-| hook-event-added | rule-update | 0.78 to 0.84 | 0.03 | | rule-update |
-| hook-event-deprecated | rule-update | 0.51 to 0.56 | 0.06 to 0.07 | | rule-update |
-| hook-event-renamed | rule-update | 0.81 to 0.86 | 0.04 | | rule-update |
-| commands-stop-loading | rule-update | 0.55 to 0.62 | 0.08 to 0.11 | | rule-update |
-| listing-cap-removed | rule-removal | 0.77 to 0.82 | 0.79 to 0.81 | | rule-removal |
-| commands-not-legacy | rule-removal | 0.27 to 0.29 | 0.70 to 0.74 | | rule-removal |
-| cut-short-wording | no-change | 0.05 to 0.06 | 0.02 | | no finding |
-| frontmatter-new-field | no-change | 0.08 to 0.09 | 0.02 to 0.03 | | no finding |
-| hook-event-description | no-change | 0.14 to 0.16 | 0.03 | | no finding |
-| never-fires-wording | no-change | 0.07 to 0.08 | 0.03 | | no finding |
-| manifest-hooks-array | no-change | 0.31 to 0.34 | 0.02 to 0.03 | | needs-triage |
-| skills-key-default | no-change | 0.40 to 0.46 | 0.11 to 0.14 | | needs-triage |
-| plugin-agent-fields | new-rule | | | 0.84 to 0.85 | new-rule |
-| default-enabled | new-rule | | | 0.90 to 0.91 | new-rule |
-| compatibility-limit | new-rule | | | 0.74 to 0.76 | new-rule |
-| hooks-section-moved | new-rule | | | 0.73 to 0.76 | new-rule |
-| hook-output-to-disk | no-change | | | 0.02 | no finding |
-| web-fetch-env | no-change | | | 0.03 | no finding |
-| output-style-command | no-change | | | 0.04 | no finding |
-| bom-loads | no-change | | | 0.05 to 0.06 | no finding |
+| Case                     | Label        | `alters`     | `obsolete`   | `requirement` | Result       |
+| ------------------------ | ------------ | ------------ | ------------ | ------------- | ------------ |
+| listing-cap-raised       | rule-update  | 0.59 to 0.69 | 0.03 to 0.04 |               | rule-update  |
+| when-to-use-leaves-cap   | rule-update  | 0.92         | 0.23 to 0.28 |               | rule-update  |
+| listing-cap-configurable | rule-update  | 0.54 to 0.58 | 0.06 to 0.07 |               | rule-update  |
+| hook-event-added         | rule-update  | 0.78 to 0.84 | 0.03         |               | rule-update  |
+| hook-event-deprecated    | rule-update  | 0.51 to 0.56 | 0.06 to 0.07 |               | rule-update  |
+| hook-event-renamed       | rule-update  | 0.81 to 0.86 | 0.04         |               | rule-update  |
+| commands-stop-loading    | rule-update  | 0.55 to 0.62 | 0.08 to 0.11 |               | rule-update  |
+| listing-cap-removed      | rule-removal | 0.77 to 0.82 | 0.79 to 0.81 |               | rule-removal |
+| commands-not-legacy      | rule-removal | 0.27 to 0.29 | 0.70 to 0.74 |               | rule-removal |
+| cut-short-wording        | no-change    | 0.05 to 0.06 | 0.02         |               | no finding   |
+| frontmatter-new-field    | no-change    | 0.08 to 0.09 | 0.02 to 0.03 |               | no finding   |
+| hook-event-description   | no-change    | 0.14 to 0.16 | 0.03         |               | no finding   |
+| never-fires-wording      | no-change    | 0.07 to 0.08 | 0.03         |               | no finding   |
+| manifest-hooks-array     | no-change    | 0.31 to 0.34 | 0.02 to 0.03 |               | needs-triage |
+| skills-key-default       | no-change    | 0.40 to 0.46 | 0.11 to 0.14 |               | needs-triage |
+| plugin-agent-fields      | new-rule     |              |              | 0.84 to 0.85  | new-rule     |
+| default-enabled          | new-rule     |              |              | 0.90 to 0.91  | new-rule     |
+| compatibility-limit      | new-rule     |              |              | 0.74 to 0.76  | new-rule     |
+| hooks-section-moved      | new-rule     |              |              | 0.73 to 0.76  | new-rule     |
+| hook-output-to-disk      | no-change    |              |              | 0.02          | no finding   |
+| web-fetch-env            | no-change    |              |              | 0.03          | no finding   |
+| output-style-command     | no-change    |              |              | 0.04          | no finding   |
+| bom-loads                | no-change    |              |              | 0.05 to 0.06  | no finding   |
 
 Accuracy by label, on each of the four runs:
 
-| Label | Cases | Correct | To a person | Wrong |
-| - | - | - | - | - |
-| `rule-update` | 7 | 7 | 0 | 0 |
-| `rule-removal` | 3 | 3 | 0 | 0 |
-| `new-rule` | 4 | 4 | 0 | 0 |
-| `no-change` | 10 | 8 | 2 | 0 |
+| Label          | Cases | Correct | To a person | Wrong |
+| -------------- | ----- | ------- | ----------- | ----- |
+| `rule-update`  | 7     | 7       | 0           | 0     |
+| `rule-removal` | 3     | 3       | 0           | 0     |
+| `new-rule`     | 4     | 4       | 0           | 0     |
+| `no-change`    | 10    | 8       | 2           | 0     |
 
 **Why these thresholds.** The `no` values matter most, because a no opens no issue.
 
@@ -213,11 +213,11 @@ The table counts the cases where two sources give the same result, at the curren
 A `needs-triage` result matches no label. The repository stores only the held-out data. The
 Spike 24 column and the spike values below come from the comments of #38.
 
-| Pair | Spike 24 | Held-out 20 | All 44 |
-| - | - | - | - |
-| Author labels and Sonnet | 23 | 20 | 43 |
-| Author labels and Jev | 21 | 19 | 40 |
-| Sonnet and Jev | 20 | 19 | 39 |
+| Pair                     | Spike 24 | Held-out 20 | All 44 |
+| ------------------------ | -------- | ----------- | ------ |
+| Author labels and Sonnet | 23       | 20          | 43     |
+| Author labels and Jev    | 21       | 19          | 40     |
+| Sonnet and Jev           | 20       | 19          | 39     |
 
 **Two rows differ from the first run.** The run used a `requirement` `no` value of 0.2. PR
 #171 raised it to 0.4. The block `h19` (uncited, `requirement` 0.34, label `no-change`) gave
@@ -503,11 +503,11 @@ diff.
 
 The sizes on `main` at `4735cf3d0` on 2026-10-19:
 
-| What | Size |
-| --- | --- |
+| What                          | Size                                        |
+| ----------------------------- | ------------------------------------------- |
 | `docs/docs-snapshot/` on disk | 2.4 MB: 57 files, 2,370 blocks, 639 sources |
-| The text in `sources[].text` | 1.7 MB |
-| The text of the 57 pages | 4.0 MB |
+| The text in `sources[].text`  | 1.7 MB                                      |
+| The text of the 57 pages      | 4.0 MB                                      |
 
 **The choice.** Each snapshot file has `text`: the page text with LF line ends. `hash` is its
 hash. `update` writes it. The classifier splits `text` with `splitBlocks`, which also gives the

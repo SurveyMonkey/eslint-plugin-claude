@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/output-styles/*.md` |
+| Category | Files                   |
+| -------- | ----------------------- |
+| no-op    | `**/output-styles/*.md` |
 
 ## Rule details
 

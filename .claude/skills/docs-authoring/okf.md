@@ -13,10 +13,10 @@ that is a profile revision, not a local decision.
 
 ADRs carry `status`. They use OKF's three values and nothing else:
 
-| Value | Meaning |
-|-------|---------|
-| `draft` | In progress or under review. |
-| `stable` | Agreed and in force. |
+| Value        | Meaning                                       |
+| ------------ | --------------------------------------------- |
+| `draft`      | In progress or under review.                  |
+| `stable`     | Agreed and in force.                          |
 | `deprecated` | Superseded, withdrawn, or no longer in force. |
 
 Richer vocabularies collapse into these three values. ADR `Proposed` becomes `draft`. ADR
@@ -51,11 +51,11 @@ so link it from the record.
 
 Defined once here. `path-docs-adr.md` and [adr.md](adr.md) state which of them an ADR requires.
 
-| Key | Value |
-|-----|-------|
-| `owner` | GitHub handle accountable for the doc. |
-| `created` | `YYYY-MM-DD`. |
-| `related_issues` | Issue numbers this doc tracks. |
+| Key                  | Value                                           |
+| -------------------- | ----------------------------------------------- |
+| `owner`              | GitHub handle accountable for the doc.          |
+| `created`            | `YYYY-MM-DD`.                                   |
+| `related_issues`     | Issue numbers this doc tracks.                  |
 | `related_milestones` | Milestones that group the work this doc tracks. |
 
 Keys unique to one type live in that type's rule.
@@ -85,7 +85,7 @@ verified:
 Actors are namespaced: humans are `human:<github-handle>`, agents use their agent id.
 
 - **Never write a `verified` entry at authoring time.** It asserts that a person confirmed the
-  *current* content, which cannot be true before review. The team appends entries once reviewers
+  _current_ content, which cannot be true before review. The team appends entries once reviewers
   approve the landing PR, with `at:` set to the approval date. Until the OKF tooling lands, you
   can derive these from GitHub PR approvals. Add one by hand only when someone explicitly asks.
 - **Comments alone are provenance, never verification.** This covers feedback the team

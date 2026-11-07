@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -31,12 +31,12 @@ The list is in `src/data/settings-keys.ts`, with the Claude Code version of the 
 
 ### Keys with no effect
 
-| Key | No effect since | Source |
-|-----|-----------------|--------|
-| `taskOutputMaxChars` | v2.1.277, with the `TaskOutput` tool it sized | [^task] |
-| `keybindingFlavor` | v2.1.261. Claude Code still accepts the key | [^flavor] |
+| Key                          | No effect since                                 | Source       |
+| ---------------------------- | ----------------------------------------------- | ------------ |
+| `taskOutputMaxChars`         | v2.1.277, with the `TaskOutput` tool it sized   | [^task]      |
+| `keybindingFlavor`           | v2.1.261. Claude Code still accepts the key     | [^flavor]    |
 | `permissionExplainerEnabled` | v2.1.257, with the `Ctrl+E` command explanation | [^explainer] |
-| `teammateDefaultModel` | v2.1.234, with its `/config` row | [^teammate] |
+| `teammateDefaultModel`       | v2.1.234, with its `/config` row                | [^teammate]  |
 
 The rule reports these keys for any value.
 

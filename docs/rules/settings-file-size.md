@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| limit    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -52,7 +52,9 @@ Fail, with the option `{ max: 100 }`, for a file of 101 bytes or more:
 
 ```json
 {
-  "env": { "NOTE": "a long text that makes this file larger than the configured limit of 100 bytes" }
+  "env": {
+    "NOTE": "a long text that makes this file larger than the configured limit of 100 bytes"
+  }
 }
 ```
 

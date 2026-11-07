@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -55,7 +55,9 @@ Fail, in `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "PostToolUse": [{ "matcher": "Edit.*", "hooks": [{ "type": "command", "command": "./fmt.sh" }] }]
+    "PostToolUse": [
+      { "matcher": "Edit.*", "hooks": [{ "type": "command", "command": "./fmt.sh" }] }
+    ]
   }
 }
 ```
@@ -65,7 +67,9 @@ Pass:
 ```json
 {
   "hooks": {
-    "PostToolUse": [{ "matcher": "^Edit$", "hooks": [{ "type": "command", "command": "./fmt.sh" }] }]
+    "PostToolUse": [
+      { "matcher": "^Edit$", "hooks": [{ "type": "command", "command": "./fmt.sh" }] }
+    ]
   }
 }
 ```

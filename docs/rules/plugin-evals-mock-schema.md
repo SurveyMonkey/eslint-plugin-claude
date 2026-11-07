@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/mocks/*/*.md` |
+| Category | Files             |
+| -------- | ----------------- |
+| load     | `**/mocks/*/*.md` |
 
 ## Rule details
 

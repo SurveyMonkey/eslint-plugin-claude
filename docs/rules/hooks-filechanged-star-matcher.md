@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | practice | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
@@ -44,13 +44,15 @@ Fail, in `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "FileChanged": [{ "matcher": "*", "hooks": [{ "type": "command", "command": "./reload-env.sh" }] }]
+    "FileChanged": [
+      { "matcher": "*", "hooks": [{ "type": "command", "command": "./reload-env.sh" }] }
+    ]
   }
 }
 ```
 
 A group with no matcher adds no file to the watch list. The example below fires only when another group or a
-`watchPaths` hook starts the watcher.[^filechanged] A "*" segment is not a fix by itself, because no file is named "*".
+`watchPaths` hook starts the watcher.[^filechanged] A `"*"` segment is not a fix by itself, because no file is named `"*"`.
 
 Pass:
 

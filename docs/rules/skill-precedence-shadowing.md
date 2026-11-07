@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                |
+| ----------- | ------------------------------------ |
 | consistency | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. The rule is a heuristic. It has no effect until an option

@@ -526,11 +526,12 @@ function docOf(name: string): string {
 }
 
 // eslint-doc-generator writes no Files cell (ADR 003). A person writes it, so a test compares it
-// with the files of the rule. A cell can add where the files are, after ", in ".
+// with the files of the rule. A cell can add where the files are, after ", in ". Biome pads the
+// table cells, so the pattern accepts the padded form.
 it('gives each rule doc a Files cell with the files of the rule', () => {
   expect(STRICT.size).toBe(Object.keys(plugin.rules).length)
   for (const [name, { files }] of STRICT) {
-    const cell = /^\| Category \| Files \|\n\|-+\|-+\|\n\| [^|]+ \| (.+) \|$/m.exec(
+    const cell = /^\| Category +\| Files +\|\n\| -+ \| -+ \|\n\| [^|]+ +\| (.+?) +\|$/m.exec(
       docOf(name),
     )?.[1]
     const globs = files.map((file) => `\`${file}\``).join(', ')

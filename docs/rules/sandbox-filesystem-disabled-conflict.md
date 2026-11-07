@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                      |
+| -------- | ---------------------------------------------------------- |
+| no-op    | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files only. It reads no hidden drop-in, because Claude Code ignores it.
 

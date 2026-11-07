@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.claude/settings.json` |
+| Category | Files                      |
+| -------- | -------------------------- |
+| limit    | `**/.claude/settings.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. `strict` turns it on at `warn`. The rule
 compares no number, so it has no threshold option.

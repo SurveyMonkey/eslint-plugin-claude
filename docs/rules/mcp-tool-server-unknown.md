@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                                                                              |
+| ----------- | -------------------------------------------------------------------------------------------------- |
 | consistency | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule is `off` in `recommended`. It is a heuristic.

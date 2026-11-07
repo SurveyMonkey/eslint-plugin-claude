@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.mcp.json` |
+| Category | Files          |
+| -------- | -------------- |
+| limit    | `**/.mcp.json` |
 
 ## Rule details
 

@@ -20,8 +20,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                           |
+| -------- | ------------------------------- |
 | practice | `**/*.md`, in `.claude/agents/` |
 
 ## Rule details

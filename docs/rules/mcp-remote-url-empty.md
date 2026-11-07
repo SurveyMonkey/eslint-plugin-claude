@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.mcp.json`, `**/managed-mcp.json` |
+| Category | Files                                 |
+| -------- | ------------------------------------- |
+| no-op    | `**/.mcp.json`, `**/managed-mcp.json` |
 
 ## Rule details
 

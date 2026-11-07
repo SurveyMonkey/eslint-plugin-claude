@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                      |
+| -------- | ---------------------------------------------------------- |
+| limit    | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 

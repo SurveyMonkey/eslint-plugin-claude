@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                 |
+| -------- | ------------------------------------- |
 | practice | `**/.claude/agent-memory/*/MEMORY.md` |
 
 The rule is `off` in `recommended`.

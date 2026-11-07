@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -54,12 +54,12 @@ unknown key. The alias keys of the index are known keys.
 An invalid value is a report on the value. The message names the key by its path, such as
 `spinnerTipsOverride.tips[0].priority`. A `null` is no value, and the rule makes no report on it.
 
-| Message | The value |
-|---------|-----------|
-| `wrongType` | Is not of the JSON type that the Type line gives. |
-| `notOneOf` | Is not one of the listed words, or not one of the alternatives of a key. |
-| `outOfRange` | Is outside the range, is not a whole number, or is longer than the limit. |
-| `badFormat` | Does not fit the form that the docs give. |
+| Message        | The value                                                                   |
+| -------------- | --------------------------------------------------------------------------- |
+| `wrongType`    | Is not of the JSON type that the Type line gives.                           |
+| `notOneOf`     | Is not one of the listed words, or not one of the alternatives of a key.    |
+| `outOfRange`   | Is outside the range, is not a whole number, or is longer than the limit.   |
+| `badFormat`    | Does not fit the form that the docs give.                                   |
 | `missingField` | Is an object that lacks a required field. A field with a `null` is missing. |
 
 The data is in `src/data/settings-schema.ts`, with the Claude Code version and the date of the

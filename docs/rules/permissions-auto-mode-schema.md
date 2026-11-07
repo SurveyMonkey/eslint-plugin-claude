@@ -18,18 +18,18 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
 `autoMode` is an object with five keys:[^automode]
 
-| Key | Type |
-|-----|------|
+| Key                                              | Type                           |
+| ------------------------------------------------ | ------------------------------ |
 | `environment`, `allow`, `soft_deny`, `hard_deny` | array of strings (prose rules) |
-| `classifyAllShell` | Boolean[^classify] |
+| `classifyAllShell`                               | Boolean[^classify]             |
 
 The string `"$defaults"` in an array keeps the built-in rules at that position.[^defaults][^defaultsenv] The docs state no limit on how often
 it can stand in one array, so the rule does not check it.

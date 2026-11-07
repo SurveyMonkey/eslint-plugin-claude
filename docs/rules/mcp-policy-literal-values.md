@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                                      |
+| -------- | ---------------------------------------------------------- |
 | security | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule lints the managed settings files: `managed-settings.json` and each

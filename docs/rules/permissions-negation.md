@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule also lints the managed settings files: `managed-settings.json` and each `managed-settings.d/*.json` drop-in.
 It reads no hidden drop-in, because Claude Code ignores it.
@@ -68,7 +68,11 @@ it skips an entry that is not a string.
 Fail:
 
 ```json
-{ "permissions": { "deny": ["Read(!sample.env)", "Read(*.env)", "Read(secrets/**)", "Read(!secrets/public/**)"] } }
+{
+  "permissions": {
+    "deny": ["Read(!sample.env)", "Read(*.env)", "Read(secrets/**)", "Read(!secrets/public/**)"]
+  }
+}
 ```
 
 Pass:

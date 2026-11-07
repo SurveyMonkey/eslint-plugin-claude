@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.claude/agent-memory/*/MEMORY.md` |
+| Category | Files                                 |
+| -------- | ------------------------------------- |
+| limit    | `**/.claude/agent-memory/*/MEMORY.md` |
 
 ## Rule details
 

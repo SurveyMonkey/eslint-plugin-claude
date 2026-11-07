@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                |
+| -------- | ------------------------------------ |
 | security | `**/.claude-plugin/marketplace.json` |
 
 ## Rule details

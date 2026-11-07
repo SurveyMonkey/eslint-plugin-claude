@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                                |
+| -------- | ------------------------------------ |
 | practice | `**/SKILL.md`, `**/commands/**/*.md` |
 
 ## Rule details

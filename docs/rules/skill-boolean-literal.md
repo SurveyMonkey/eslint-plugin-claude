@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                |
+| ----------- | ------------------------------------ |
 | portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule makes no report until the option `minVersion` is set.

@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin (the `name` length only) |
+| Category | Files                                                                                       |
+| -------- | ------------------------------------------------------------------------------------------- |
+| load     | `**/*.md`, in `.claude/agents/` and in the agent files of a plugin (the `name` length only) |
 
 ## Rule details
 

@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -49,7 +49,14 @@ Fail, in `.claude/settings.json`:
 {
   "hooks": {
     "CwdChanged": [
-      { "hooks": [{ "type": "command", "command": "echo \"export M=$CLAUDE_MODEL\" >> \"$CLAUDE_ENV_FILE\"" }] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"export M=$CLAUDE_MODEL\" >> \"$CLAUDE_ENV_FILE\""
+          }
+        ]
+      }
     ],
     "PreToolUse": [
       { "hooks": [{ "type": "command", "command": "echo 'export A=1' >> \"$CLAUDE_ENV_FILE\"" }] }

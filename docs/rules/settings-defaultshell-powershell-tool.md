@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic. `strict` turns it on at `warn`. The rule makes no
 report until you set the option `platforms`.
@@ -43,11 +43,11 @@ report when one of them sets the variable on. It also makes no report when it ca
 The result depends on the platform of your team, and the rule cannot know it. So the rule makes no report
 unless the option `platforms` is set.
 
-| Value | The PowerShell tool by default |
-|-------|--------------------------------|
-| `windows-no-git-bash` | On |
-| `windows-git-bash` | On for claude.ai and Console accounts |
-| `macos`, `linux`, `wsl` | Off |
+| Value                   | The PowerShell tool by default        |
+| ----------------------- | ------------------------------------- |
+| `windows-no-git-bash`   | On                                    |
+| `windows-git-bash`      | On for claude.ai and Console accounts |
+| `macos`, `linux`, `wsl` | Off                                   |
 
 The rule reports when the list holds `macos`, `linux` or `wsl`. The message names those values. It makes
 no report for a list of Windows values only.

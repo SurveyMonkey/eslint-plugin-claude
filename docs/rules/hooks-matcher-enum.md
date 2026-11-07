@@ -18,26 +18,26 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
 Ten events match on a fixed set of values.[^patterns] A hook with a matcher value outside the set never
 runs. The rule reports at the `matcher` value, once for each value that is not in the set.
 
-| Event | Values |
-|-------|--------|
-| `SessionStart` | `startup`, `resume`, `clear`, `compact`, `fork` |
-| `Setup` | `init`, `maintenance` |
-| `SessionEnd` | `clear`, `resume`, `logout`, `prompt_input_exit`, `other` |
-| `Notification` | `permission_prompt`, `idle_prompt`, `auth_success`, `elicitation_dialog`, `elicitation_url_dialog`, `elicitation_complete`, `elicitation_response`, `agent_needs_input`, `agent_completed`, `quota_auto_resume_fired`, `quota_auto_resume_stale`, `quota_auto_resume_disabled`, `plugin_notification` |
-| `PreCompact`, `PostCompact` | `manual`, `auto` |
-| `ConfigChange` | `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills` |
-| `DirectoryAdded` | `slash_command`, `register_repo_root` |
-| `StopFailure` | `rate_limit`, `overloaded`, `authentication_failed`, `oauth_org_not_allowed`, `account_on_hold`, `billing_error`, `invalid_request`, `model_not_found`, `server_error`, `max_output_tokens`, `cloud_credential_error`, `unknown` |
-| `InstructionsLoaded` | `session_start`, `nested_traversal`, `path_glob_match`, `include`, `compact` |
+| Event                       | Values                                                                                                                                                                                                                                                                                                |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SessionStart`              | `startup`, `resume`, `clear`, `compact`, `fork`                                                                                                                                                                                                                                                       |
+| `Setup`                     | `init`, `maintenance`                                                                                                                                                                                                                                                                                 |
+| `SessionEnd`                | `clear`, `resume`, `logout`, `prompt_input_exit`, `other`                                                                                                                                                                                                                                             |
+| `Notification`              | `permission_prompt`, `idle_prompt`, `auth_success`, `elicitation_dialog`, `elicitation_url_dialog`, `elicitation_complete`, `elicitation_response`, `agent_needs_input`, `agent_completed`, `quota_auto_resume_fired`, `quota_auto_resume_stale`, `quota_auto_resume_disabled`, `plugin_notification` |
+| `PreCompact`, `PostCompact` | `manual`, `auto`                                                                                                                                                                                                                                                                                      |
+| `ConfigChange`              | `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills`                                                                                                                                                                                                                    |
+| `DirectoryAdded`            | `slash_command`, `register_repo_root`                                                                                                                                                                                                                                                                 |
+| `StopFailure`               | `rate_limit`, `overloaded`, `authentication_failed`, `oauth_org_not_allowed`, `account_on_hold`, `billing_error`, `invalid_request`, `model_not_found`, `server_error`, `max_output_tokens`, `cloud_credential_error`, `unknown`                                                                      |
+| `InstructionsLoaded`        | `session_start`, `nested_traversal`, `path_glob_match`, `include`, `compact`                                                                                                                                                                                                                          |
 
 The rule reads a matcher that holds exact-match characters only. These are letters, digits, `_`, `-`,
 spaces, `,` and `|`.[^patterns] It splits the matcher at `|` and `,`, and checks each value. For `StopFailure`
@@ -59,7 +59,9 @@ Fail, in `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "SessionStart": [{ "matcher": "begin", "hooks": [{ "type": "command", "command": "./setup.sh" }] }]
+    "SessionStart": [
+      { "matcher": "begin", "hooks": [{ "type": "command", "command": "./setup.sh" }] }
+    ]
   }
 }
 ```
@@ -69,7 +71,9 @@ Pass:
 ```json
 {
   "hooks": {
-    "SessionStart": [{ "matcher": "startup|resume", "hooks": [{ "type": "command", "command": "./setup.sh" }] }]
+    "SessionStart": [
+      { "matcher": "startup|resume", "hooks": [{ "type": "command", "command": "./setup.sh" }] }
+    ]
   }
 }
 ```

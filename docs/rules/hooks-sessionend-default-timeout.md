@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| limit | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
+| Category | Files                                                                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| limit    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json`, `**/hooks/hooks.json`, `**/SKILL.md`, `**/agents/**/*.md` |
 
 ## Rule details
 
@@ -66,7 +66,9 @@ Pass:
 ```json
 {
   "hooks": {
-    "SessionEnd": [{ "hooks": [{ "type": "command", "command": "./save-state.sh", "timeout": 10 }] }]
+    "SessionEnd": [
+      { "hooks": [{ "type": "command", "command": "./save-state.sh", "timeout": 10 }] }
+    ]
   }
 }
 ```

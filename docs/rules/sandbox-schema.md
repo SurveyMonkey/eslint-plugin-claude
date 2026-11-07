@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| load     | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -30,12 +30,12 @@ The rule owns every key under `sandbox`, so `settings-schema` makes no report in
 `sandbox` has 12 keys, and the objects `filesystem`, `network` and `credentials`.[^sandbox] The rule reports a key that is not
 in the list at these four levels. The report is on the key, and the message gives the dotted name.
 
-| Level | Keys and types |
-|-------|----------------|
-| `sandbox` | Booleans: `enabled`, `failIfUnavailable`, `autoAllowBashIfSandboxed`, `allowUnsandboxedCommands`, `enableWeakerNestedSandbox`, `enableWeakerNetworkIsolation`, `allowAppleEvents`, `allowNestedUserNamespaces`. `excludedCommands`: array of strings. `bwrapPath`, `socatPath`: absolute path.[^bwrap][^socat] `ignoreViolations`: object that maps a string to an array of strings.[^ignore] `ripgrep`: object with `command` (required) and `args`.[^ripgrep] |
-| `sandbox.filesystem` | Arrays of strings: `allowWrite`, `denyWrite`, `denyRead`, `allowRead`. Booleans: `allowManagedReadPathsOnly`, `disabled`.[^filesystem] |
-| `sandbox.network` | Arrays of strings: `allowUnixSockets`, `allowedDomains`, `deniedDomains`. `allowMachLookup`: array of strings with a `*` only at the end.[^mach] Booleans: `allowAllUnixSockets`, `allowLocalBinding`, `strictAllowlist`, `allowManagedDomainsOnly`. `httpProxyPort`, `socksProxyPort`: a TCP port.[^network] `tlsTerminate`: object with `caCertPath` and `caKeyPath` strings.[^tls] |
-| `sandbox.credentials` | `files`: array of objects with `path` and `mode`.[^files] `envVars`: array of objects with `name` and `mode`. `allowPlaintextInject`: Boolean.[^plaintext] `awsPairs`: array of objects with `accessKeyIdVar` and `secretAccessKeyVar`, and an optional `sessionTokenVar`.[^aws] `sigv4`: object with `streaming`, `presigned` and `sigv4a`, each `"deny"` or `"passthrough"`.[^sigv4] |
+| Level                 | Keys and types                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sandbox`             | Booleans: `enabled`, `failIfUnavailable`, `autoAllowBashIfSandboxed`, `allowUnsandboxedCommands`, `enableWeakerNestedSandbox`, `enableWeakerNetworkIsolation`, `allowAppleEvents`, `allowNestedUserNamespaces`. `excludedCommands`: array of strings. `bwrapPath`, `socatPath`: absolute path.[^bwrap][^socat] `ignoreViolations`: object that maps a string to an array of strings.[^ignore] `ripgrep`: object with `command` (required) and `args`.[^ripgrep] |
+| `sandbox.filesystem`  | Arrays of strings: `allowWrite`, `denyWrite`, `denyRead`, `allowRead`. Booleans: `allowManagedReadPathsOnly`, `disabled`.[^filesystem]                                                                                                                                                                                                                                                                                                                          |
+| `sandbox.network`     | Arrays of strings: `allowUnixSockets`, `allowedDomains`, `deniedDomains`. `allowMachLookup`: array of strings with a `*` only at the end.[^mach] Booleans: `allowAllUnixSockets`, `allowLocalBinding`, `strictAllowlist`, `allowManagedDomainsOnly`. `httpProxyPort`, `socksProxyPort`: a TCP port.[^network] `tlsTerminate`: object with `caCertPath` and `caKeyPath` strings.[^tls]                                                                           |
+| `sandbox.credentials` | `files`: array of objects with `path` and `mode`.[^files] `envVars`: array of objects with `name` and `mode`. `allowPlaintextInject`: Boolean.[^plaintext] `awsPairs`: array of objects with `accessKeyIdVar` and `secretAccessKeyVar`, and an optional `sessionTokenVar`.[^aws] `sigv4`: object with `streaming`, `presigned` and `sigv4a`, each `"deny"` or `"passthrough"`.[^sigv4]                                                                          |
 
 The rule reports these faults, each once for a value:
 

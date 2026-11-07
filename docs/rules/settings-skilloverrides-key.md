@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| no-op    | `**/.claude/settings.json`, `**/.claude/settings.local.json`, `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 ## Rule details
 
@@ -43,11 +43,11 @@ names no plugin, so it gets no report.
 
 In user, project and local settings, "Claude Code matches entries against skill names only".[^skills] An entry for `review` there applies to a skill named `review`. It does not reach the bundled `/code-review` through its `/review` alias. In managed settings, a key under an alias applies to the skill behind it. The same is true in a file that a `--settings` flag passes.[^skills]
 
-| Alias key | Bundled skill |
-|-----------|---------------|
-| `review` | `code-review` |
-| `checkup` | `doctor` |
-| `proactive` | `loop` |
+| Alias key   | Bundled skill |
+| ----------- | ------------- |
+| `review`    | `code-review` |
+| `checkup`   | `doctor`      |
+| `proactive` | `loop`        |
 
 The list is in `src/data/settings-keys.ts`. It holds the aliases of the rows that the
 [commands reference](https://code.claude.com/docs/en/commands#all-commands) marks as a bundled

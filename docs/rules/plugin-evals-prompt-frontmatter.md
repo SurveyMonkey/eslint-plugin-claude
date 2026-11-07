@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/prompt.md` |
+| Category | Files          |
+| -------- | -------------- |
+| load     | `**/prompt.md` |
 
 ## Rule details
 

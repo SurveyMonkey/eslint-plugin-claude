@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| no-op | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
+| Category | Files                                                      |
+| -------- | ---------------------------------------------------------- |
+| no-op    | `**/managed-settings.json`, `**/managed-settings.d/*.json` |
 
 The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on at `warn`.
 The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ignores it.

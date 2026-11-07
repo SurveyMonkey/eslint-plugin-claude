@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                           |
+| ----------- | ----------------------------------------------- |
 | portability | `**/.mcp.json`, `**/.claude-plugin/plugin.json` |
 
 The rule makes no report until the option `targets` holds `claude-ai`.

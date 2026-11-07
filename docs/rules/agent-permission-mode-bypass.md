@@ -18,8 +18,8 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category | Files                           |
+| -------- | ------------------------------- |
 | security | `**/*.md`, in `.claude/agents/` |
 
 ## Rule details

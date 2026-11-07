@@ -18,9 +18,9 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
-| load | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json` |
+| Category | Files                                                        |
+| -------- | ------------------------------------------------------------ |
+| load     | `**/.claude-plugin/plugin.json`, `**/monitors/monitors.json` |
 
 ## Rule details
 

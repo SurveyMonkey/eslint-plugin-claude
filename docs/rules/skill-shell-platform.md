@@ -18,15 +18,15 @@ generated:
 
 <!-- end auto-generated rule header -->
 
-| Category | Files |
-|----------|-------|
+| Category    | Files                                |
+| ----------- | ------------------------------------ |
 | portability | `**/SKILL.md`, `**/commands/**/*.md` |
 
 The rule makes no report until the option `platforms` lists a platform.
 
 ## Rule details
 
-A skill can run a command when the skill runs, with `` !`command` `` or a ```` ```! ```` block.
+A skill can run a command when the skill runs, with `` !`command` `` or a ` ```! ` block.
 The `shell` key picks the tool that runs the commands.[^injected][^field] Two values depend on the
 platform:
 
