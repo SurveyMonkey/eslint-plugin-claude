@@ -19,15 +19,3 @@ trustPolicyExclude:
   - undici-types@6.21.0
 # pnpm drops an exclusion above once the lockfile no longer resolves it.
 trustPolicyExcludePrune: true
-minimumReleaseAgeExclude:
-  - '@biomejs/biome@2.6.6'
-  - '@biomejs/cli-android-arm64@2.6.6'
-  - '@biomejs/cli-android-x64@2.6.6'
-  - '@biomejs/cli-darwin-arm64@2.6.6'
-  - '@biomejs/cli-darwin-x64@2.6.6'
-  - '@biomejs/cli-linux-arm64-musl@2.6.6'
-  - '@biomejs/cli-linux-arm64@2.6.6'
-  - '@biomejs/cli-linux-x64-musl@2.6.6'
-  - '@biomejs/cli-linux-x64@2.6.6'
-  - '@biomejs/cli-win32-arm64@2.6.6'
-  - '@biomejs/cli-win32-x64@2.6.6'
