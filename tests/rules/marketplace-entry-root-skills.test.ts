@@ -184,7 +184,7 @@ describe(`${RULE} (silent)`, () => {
 
   it.skipIf(noLinks)('reports for a marketplace that sits behind a link', () => {
     const top = tree({
-      ...Object.fromEntries(Object.entries(SKILLS).map(([k, v]) => ['real/' + k, v])),
+      ...Object.fromEntries(Object.entries(SKILLS).map(([k, v]) => [`real/${k}`, v])),
     })
     link(top, 'alias', 'real')
     const messages = lint(path.join(top, 'alias'), entry({ skills: ['./skills/a'] }))

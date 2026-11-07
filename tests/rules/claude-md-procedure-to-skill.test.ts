@@ -28,7 +28,7 @@ describe(RULE, () => {
   })
 
   it('reports a list over maxSteps, over the whole list, and names the limit', () => {
-    const messages = lint('# Release\n\n' + steps(4))
+    const messages = lint(`# Release\n\n${steps(4)}`)
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({
       ruleId: `claude/${RULE}`,

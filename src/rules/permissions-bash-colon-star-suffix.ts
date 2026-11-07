@@ -13,7 +13,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'suffix' }> = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Write the final wildcard of a Bash rule as a space and *, not as :*',
+      description: 'Write the final wildcard of a Bash rule as a space and `*`, not as `:*`',
       url: docsUrl(name),
     },
     schema: [],
