@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.1](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.12.0...v0.12.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* **settings:** add the first version of CLAUDE_CODE_DROP_UNAVAILABLE_DEFERRED_TOOL ([#740](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/740)) ([c770608](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/c7706084e35f8695fe5992538e60252943e705f3))
+* **settings:** match the new keys, env variables and versions of the docs ([#737](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/737)) ([8ab8158](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/8ab8158e99f6c319ef4e1d2efc152addcc86b8a7))
+
 ## [0.12.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.11.1...v0.12.0) (2026-10-27)
 
 
