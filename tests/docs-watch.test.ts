@@ -757,7 +757,7 @@ describe('checkPages', () => {
   })
 })
 
-describe('fetchMarkdown', () => {
+describe('fetchMarkdown with no server', () => {
   it('names the URL when the network call fails', async () => {
     await expect(api.fetchMarkdown('http://127.0.0.1:1/page.md')).rejects.toThrow(
       /^http:\/\/127\.0\.0\.1:1\/page\.md: /,
@@ -765,7 +765,7 @@ describe('fetchMarkdown', () => {
   })
 })
 
-describe('fetchMarkdown', () => {
+describe('fetchMarkdown with a stubbed fetch', () => {
   afterEach(() => vi.unstubAllGlobals())
 
   it('names the URL and the cause of a failed request', async () => {
