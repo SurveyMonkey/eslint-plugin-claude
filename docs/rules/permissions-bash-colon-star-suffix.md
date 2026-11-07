@@ -12,7 +12,7 @@ generated:
 
 # claude/permissions-bash-colon-star-suffix
 
-📝 Write the final wildcard of a Bash rule as a space and *, not as :*.
+📝 Write the final wildcard of a Bash rule as a space and `*`, not as `:*`.
 
 ⚠️ This rule _warns_ in the following configs: ✅ `recommended`, 🔒 `strict`.
 

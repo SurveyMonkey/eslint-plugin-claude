@@ -13,7 +13,7 @@ pre-commit:
       run: pnpm dlx sort-package-json@4.0.0 {staged_files}
       stage_fixed: true
     - name: biome
-      glob: '*.{json,jsonc,ts}'
+      glob: '*.{json,jsonc,ts,md,yml,yaml}'
       run: pnpm exec biome check --staged --error-on-warnings --no-errors-on-unmatched
     - name: types
       glob: '{*.ts,tsconfig*.json}'
