@@ -1803,6 +1803,11 @@
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
       "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "heading": "How entry fields combine with plugin.json",
+      "hash": "2b7ed0f2975803e9fed335b6913fb0254c65ddfc3186a9afe62c9b32e8e50ba0"
     }
   ],
   "hooks-stop-loop-guard": [

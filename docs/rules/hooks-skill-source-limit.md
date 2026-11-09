@@ -77,8 +77,10 @@ the other skills of the source.
   `skills` key. The rule does not count it.
 - Command files. A file in `.claude/commands/` takes the skill frontmatter, with `hooks`. The
   docs name skills only in the limit, so the rule does not count the hooks of a command.
-- A `skills` path that names the plugin root, or a `plugin.json` that does not parse. The rule
-  reads no listed folder for it.
+- A `skills` path that names the plugin root, or a `plugin.json` that does not parse to an
+  object or that the rule cannot read. The rule reads no listed folder for it.
+- The `skills` key of a `marketplace.json` entry. Claude Code adds the entry `skills` to those of
+  `plugin.json`.[^entry] The rule reads `plugin.json` only.
 - A nested `.claude/skills/` folder as part of the project source. The rule counts a folder such
   as `packages/web/.claude/skills/` as a source of its own. The docs do not say if Claude Code
   adds it to the project source.
@@ -141,3 +143,4 @@ not say that Claude Code stops there.
 [^lifecycle]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)
 [^symlinks]: [Extend Claude with skills: Choose where skills load](https://code.claude.com/docs/en/skills#choose-where-skills-load)
 [^fields]: [Plugin manifest reference: Fields](https://code.claude.com/docs/en/plugins/manifest-reference#fields)
+[^entry]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
