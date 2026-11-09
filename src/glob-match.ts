@@ -156,7 +156,7 @@ function isAnchored(glob: string): boolean {
 function globRegExp(glob: string): RegExp | null {
   const bare = glob.replace(/^(?:\.?\/)+/, '')
   if (bare === '') {
-    // The project root holds every file.
+    // The base directory holds every file.
     return /^/
   }
   try {

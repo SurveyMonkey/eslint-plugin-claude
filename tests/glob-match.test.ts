@@ -74,6 +74,9 @@ describe('unmatchedGlobs', () => {
     // A `{` with no `}` is text, so the `/` after it anchors the glob.
     expect(hit('{a,b/c', 'x/{a,b/c')).toBe(false)
     expect(hit('{a,b/c', '{a,b/c')).toBe(true)
+    // An escaped `{` starts no brace group, so the `/` after it anchors the glob.
+    expect(hit('\\{a,b/c}', 'x/{a,b/c}')).toBe(false)
+    expect(hit('\\{a,b/c}', '{a,b/c}')).toBe(true)
   })
 
   it('reads a double star only as a whole part', () => {
