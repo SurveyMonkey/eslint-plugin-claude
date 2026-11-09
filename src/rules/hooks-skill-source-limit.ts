@@ -131,12 +131,15 @@ const rule: MarkdownRuleDefinition<{
     const root = listing === undefined ? scopeRoot(self, file) : listing.plugin.root
     const bound = repositoryRoot(root)
     // In a plugin, the skills that the paths of the manifest `skills` key give add to `skills/`.
-    // A manifest that the rule cannot read gives no paths.
-    const plugin = listing?.plugin ?? (file.plugin ? readPluginAt(root) : undefined)
-    const others = [
-      ...skillFiles(path.join(root, 'skills'), bound),
-      ...(plugin === undefined ? [] : listedSkills(plugin).map((skill) => skill.file)),
-    ]
+    // A manifest that the rule cannot read gives no paths. The rule reads the other skills only
+    // for a skill with a hook.
+    const othersOf = () => {
+      const plugin = listing?.plugin ?? (file.plugin ? readPluginAt(root) : undefined)
+      return [
+        ...skillFiles(path.join(root, 'skills'), bound),
+        ...(plugin === undefined ? [] : listedSkills(plugin).map((skill) => skill.file)),
+      ]
+    }
     const { sourceCode } = context
     return {
       root(node) {
@@ -160,7 +163,7 @@ const rule: MarkdownRuleDefinition<{
         const seen = new Set<string>(selfReal === null ? [] : [selfReal])
         // This file is in `seen`, so the loop skips it and each link to it. A skill in `skills/`
         // that a manifest path also gives counts once.
-        for (const other of others) {
+        for (const other of othersOf()) {
           // `skillFiles` and `listedSkills` give only the files whose real path they can read.
           const real = realOf(other) as string
           if (seen.has(real)) {
