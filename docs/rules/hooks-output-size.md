@@ -26,14 +26,14 @@ generated:
 
 Claude Code caps the strings `additionalContext`, `systemMessage` and `initialUserMessage` of a hook, and its plain
 stdout, at 10,000 characters. It measures each string on its own. Except for `PreCompact` stdout, over the cap it saves
-the output to a file in the session directory, and passes Claude the file path with a preview of up to the first 2,000
+the output to a file in the session directory. It passes Claude the file path with a preview of up to the first 2,000
 characters. It does not ask Claude to read the file. "This cap has no setting or environment variable to raise it."[^json-output][^add-context]
 Plain stdout is added to the context on `UserPromptSubmit`, `UserPromptExpansion`, `SessionStart` and
 `PostModelSwitch`.[^exit-0]
 
-Claude Code handles the stdout of a `PreCompact` hook in a different way. It uses that stdout as instructions for the
-compaction summary. It cuts output past 10,000 characters per hook and appends a marker.[^precompact] It does not save
-the output to a file.[^json-output]
+Claude Code handles the stdout of a `PreCompact` hook in a different way. When the hook exits 0 and does not block,
+Claude Code uses that stdout as instructions for the compaction summary. It cuts output past 10,000 characters per hook
+and appends a marker.[^precompact] It does not save the output to a file.[^json-output]
 
 Claude Code also caps the `classifierContext` notes of one tool call at 2,000 characters, and truncates the rest.[^classifier]
 The cap is shared across every hook that responds to that call. The rule cannot add the notes of several hooks, so it

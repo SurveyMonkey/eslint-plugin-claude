@@ -153,8 +153,9 @@ describe(`${name}: PreCompact stdout`, () => {
     ])
   })
 
-  // The docs name no JSON field of PreCompact output that Claude Code reads. The rule measures each field of JSON
-  // output on every event, with the file message. This case pins that choice of the rule: a JSON object is not
+  // The docs name no string field of PreCompact JSON output that Claude Code adds to the context. They say that it
+  // discards `systemMessage` (hooks#precompact). The rule measures each field of JSON output on every event, with the
+  // file message. This case pins that choice of the rule: a JSON object is not
   // measured as plain stdout.
   it('keeps the file message for a field of JSON output on PreCompact, as a choice of the rule', () => {
     expect(
