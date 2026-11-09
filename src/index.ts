@@ -60,6 +60,7 @@ import * as claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import * as claudeMdLocation from './rules/claude-md-location.ts'
 import * as claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import * as claudeMdMaxLines from './rules/claude-md-max-lines.ts'
+import * as claudeMdOnDemandMaxChars from './rules/claude-md-on-demand-max-chars.ts'
 import * as claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
 import * as claudeMdSymlink from './rules/claude-md-symlink.ts'
 import * as commandLegacyFormat from './rules/command-legacy-format.ts'
@@ -948,6 +949,7 @@ const modules = [
   { target: rulesSymlinkExternalScoped.target, default: rulesSymlinkExternalScoped.default },
   { target: claudeMdImportExternal.target, default: claudeMdImportExternal.default },
   { target: claudeMdMaxLines.target, default: claudeMdMaxLines.default },
+  { target: claudeMdOnDemandMaxChars.target, default: claudeMdOnDemandMaxChars.default },
   { target: claudeMdSymlink.target, default: claudeMdSymlink.default },
   {
     target: memoryAutoMemoryDirectoryCommitted.target,
@@ -1469,6 +1471,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-symlink-external-scoped': 'error',
   'claude-md-import-external': 'warn',
   'claude-md-max-lines': 'warn',
+  'claude-md-on-demand-max-chars': 'warn',
   'claude-md-symlink': 'warn',
   'memory-auto-memory-directory-committed': 'warn',
   'memory-index-max-size': 'warn',
