@@ -161,7 +161,7 @@ jsonTester.run('settings-key-scope (invalid)', rule, {
       })),
     ),
     // `permissions.denyInsteadOfPrompting` is a fault in the project files, `false` too (#780).
-    // Claude Code honors `true` from the user file and `--settings` only. The report is on the
+    // Claude Code ignores the key in the project files, for each value. The report is on the
     // nested key.
     ...[project, local].flatMap((filename) =>
       [true, false].map((value) => ({
