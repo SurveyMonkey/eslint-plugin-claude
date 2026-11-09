@@ -19,7 +19,7 @@
  *  Claude Code took these characters near the classes: U+2801, U+FFFD, U+2423, U+2588,
  *  U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule refuses each `Cf` and
  *  `Default_Ignorable_Code_Point` character, also one that the probe did not try. This is a
- *  choice of the rule. `takenAt` gives the joiners that Claude Code took in the probe. */
+ *  choice of the rule. `takenAt` gives the characters of the classes that Claude Code took. */
 const CLASSES: [RegExp, string][] = [
   [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
   [/\p{Cc}/u, 'a control character'],
