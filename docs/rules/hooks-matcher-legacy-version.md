@@ -33,6 +33,7 @@ form. A `minVersion` equal to that version is no fault.
 | A comma list, such as `Bash,PowerShell`                                                                | v2.1.191      | "Before v2.1.191, a comma fell through to regex evaluation and the matcher never matched".[^debug] |
 | `cloud_credential_error` on `StopFailure`                                                              | v2.1.267      | The value needs "Claude Code v2.1.267 or later".[^patterns]                                        |
 | `quota_auto_resume_fired`, `quota_auto_resume_stale` or `quota_auto_resume_disabled` on `Notification` | v2.1.234      | The three types "require Claude Code v2.1.234 or later".[^notification]                            |
+| `auth_storage_failure` on `Notification`                                                               | v2.1.288      | The type "requires v2.1.288 or later".[^notification]                                              |
 | A hyphenated name, such as `code-reviewer`                                                             | v2.1.195      | The changelog only (see below).                                                                    |
 
 ### The hyphenated name

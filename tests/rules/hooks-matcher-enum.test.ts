@@ -47,6 +47,10 @@ describe(`${name}: the value sets`, () => {
     expect(ids('Notification', 'plugin_notification')).toEqual([])
   })
 
+  it('is silent for auth_storage_failure on Notification', () => {
+    expect(ids('Notification', 'auth_storage_failure')).toEqual([])
+  })
+
   it('reports a value that the event does not send', () => {
     for (const event of MATCHER_VALUES.keys()) {
       expect(ids(event, 'bogus'), event).toEqual(['unknown'])
