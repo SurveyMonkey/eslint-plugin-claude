@@ -233,7 +233,7 @@
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Model aliases",
-      "hash": "8df68c4f7f8716d3bab7f72edbea62bc0331354ef3595277eb9ba2cc0f74fc1b"
+      "hash": "aab79db6bbfa84c3334cee50c0731bfa0b6ca1f3d6dc42e9e656e4562015e919"
     }
   ],
   "agent-name-kebab-case": [
@@ -627,7 +627,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "claude-md-guardrail-to-hook": [
@@ -2545,7 +2545,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -2591,7 +2591,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/mcp",
@@ -4367,7 +4367,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "plugin-evals-case-yaml": [
@@ -5767,7 +5767,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-deprecated-key": [
@@ -5899,12 +5899,12 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Model aliases",
-      "hash": "8df68c4f7f8716d3bab7f72edbea62bc0331354ef3595277eb9ba2cc0f74fc1b"
+      "hash": "aab79db6bbfa84c3334cee50c0731bfa0b6ca1f3d6dc42e9e656e4562015e919"
     }
   ],
   "settings-env-context-cost": [
@@ -5921,7 +5921,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-env-credential": [
@@ -5938,7 +5938,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/server-managed-settings",
@@ -5950,7 +5950,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -5977,7 +5977,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-env-ignored-var": [
@@ -5989,7 +5989,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/chrome",
@@ -6001,14 +6001,14 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-env-prompt-caching-off": [
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
       "heading": "How Claude Code uses prompt caching",
-      "hash": "2f680d47124e66ad9f9581dd8438f9512b48296f6c83eec0308a4824054fb329"
+      "hash": "3e863f00d817110d3d0081d934b9b358ca52dd836daa624311efcdb15db611c6"
     },
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -6018,7 +6018,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-env-routing": [
@@ -6040,7 +6040,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
@@ -6057,7 +6057,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-env-shadowed": [
@@ -6106,7 +6106,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/tools-reference",
@@ -6121,7 +6121,7 @@
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Adjust effort level",
-      "hash": "a16f5d1acfe38d628ed9acf4e8709bb523f715ed5df52c1d456be9cdfb4bf574"
+      "hash": "a354580c9b4d8a026385cb88fc251f0a1ce346b1eea36a8f43ade0202a5523f0"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -6545,7 +6545,7 @@
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Extended context",
-      "hash": "1d7281f57a6cad6160a9a6e6192feed29a52244065563d966d20e7c0ed22d7a7"
+      "hash": "948d6d799cd9722b0a4b56f50c328baeb9887e1e566fe90bd54a83f42e778122"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -6560,12 +6560,12 @@
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Model aliases",
-      "hash": "8df68c4f7f8716d3bab7f72edbea62bc0331354ef3595277eb9ba2cc0f74fc1b"
+      "hash": "aab79db6bbfa84c3334cee50c0731bfa0b6ca1f3d6dc42e9e656e4562015e919"
     },
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     }
   ],
   "settings-model-list": [
@@ -6624,7 +6624,7 @@
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Model aliases",
-      "hash": "8df68c4f7f8716d3bab7f72edbea62bc0331354ef3595277eb9ba2cc0f74fc1b"
+      "hash": "aab79db6bbfa84c3334cee50c0731bfa0b6ca1f3d6dc42e9e656e4562015e919"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -6646,7 +6646,7 @@
     {
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Model aliases",
-      "hash": "8df68c4f7f8716d3bab7f72edbea62bc0331354ef3595277eb9ba2cc0f74fc1b"
+      "hash": "aab79db6bbfa84c3334cee50c0731bfa0b6ca1f3d6dc42e9e656e4562015e919"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -7414,7 +7414,7 @@
     {
       "url": "https://code.claude.com/docs/en/env-vars",
       "heading": "Variables",
-      "hash": "0e8209d75a3f64607d73f534ea957122a40cb46b9f2bdef490be7ed6ae8616d1"
+      "hash": "9e2bffd00744765ce055866e60ad5a2cf6d9adf349daf5a987fe47f0d2632ac3"
     },
     {
       "url": "https://code.claude.com/docs/en/skills",
