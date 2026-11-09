@@ -102,6 +102,9 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['x\u2800y', 'U+2800', BLANK_LIKE],
   ['x\uFFFCy', 'U+FFFC', BLANK_LIKE],
   ['x\u{1D159}y', 'U+1D159', BLANK_LIKE],
+  ['x\u{13441}y', 'U+13441', BLANK_LIKE],
+  ['x\u{13442}y', 'U+13442', BLANK_LIKE],
+  ['x\u{16FE4}y', 'U+16FE4', BLANK_LIKE],
   // Claude Code 2.1.319 refused a joiner or a selector that is not in an emoji sequence or a word
   // of a script that needs it: a red heart with U+FE0E, a joiner after a Tamil virama, a joiner at
   // the end of an emoji, and U+200C after an Arabic letter at the end.
@@ -109,6 +112,9 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['\u0B95\u0BCD\u200D\u0BB7', 'U+200D', HIDDEN],
   ['x\u{1F468}\u200D', 'U+200D', HIDDEN],
   ['\u0628\u200C', 'U+200C', HIDDEN],
+  // Claude Code 2.1.319 refused U+200C after an alef, and U+FE0F before a skin tone.
+  ['\u0627\u200C\u0628', 'U+200C', HIDDEN],
+  ['x\u261D\uFE0F\u{1F3FB}y', 'U+FE0F', HIDDEN],
 ]
 
 // Names with no character of the classes of the rule. They hold one plain space between words, or

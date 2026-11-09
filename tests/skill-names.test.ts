@@ -67,6 +67,9 @@ describe('firstFault', () => {
     ['U+2800', 'a blank-like character'],
     ['U+FFFC', 'a blank-like character'],
     ['U+1D159', 'a blank-like character'],
+    ['U+13441', 'a blank-like character'],
+    ['U+13442', 'a blank-like character'],
+    ['U+16FE4', 'a blank-like character'],
   ])('refuses %s as %s', (code, kind) => {
     const char = String.fromCodePoint(Number.parseInt(code.slice(2), 16))
     expect(firstFault(`x${char}y`)).toEqual({ code, kind })
@@ -105,6 +108,14 @@ describe('firstFault', () => {
       '\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u{1F468}\u200D\u{1F469}\u200D\u{1F467}',
     ],
     ['an Arabic U+200C after an emoji', 'x\u{1F600}\u0628\u200C\u0628'],
+    ['a Devanagari U+200D after a nukta', '\u0915\u093C\u094D\u200D\u0915'],
+    ['a Gujarati U+200D', '\u0A95\u0ACD\u200D\u0AB7'],
+    ['an Oriya U+200C', '\u0B15\u0B4D\u200C\u0B37'],
+    ['a Telugu U+200D', '\u0C15\u0C4D\u200D\u0C37'],
+    ['a Kannada U+200C', '\u0C95\u0CCD\u200C\u0CB7'],
+    ['a Malayalam U+200D', '\u0D15\u0D4D\u200D\u0D37'],
+    ['an Arabic U+200C after eight marks', `\u0628${'\u064E'.repeat(8)}\u200C\u0628`],
+    ['an Arabic U+200C after a mark of the Inherited script', '\u0628\u0300\u200C\u0628'],
   ])('takes %s', (_name, text) => {
     expect(firstFault(text)).toBeNull()
   })
@@ -118,6 +129,23 @@ describe('firstFault', () => {
     ['U+200C after an Arabic letter at the end', '\u0628\u200C', 'U+200C'],
     ['U+200D after a Devanagari virama at the end', '\u0915\u094D\u200D', 'U+200D'],
     ['U+200C between a Latin and an Arabic letter', 'a\u200C\u0628', 'U+200C'],
+    ['U+200C between an Arabic and a Latin letter', '\u0628\u200Ca', 'U+200C'],
+    ['U+200C after an alef', '\u0627\u200C\u0628', 'U+200C'],
+    ['U+200C before a hamza', '\u0628\u200C\u0621', 'U+200C'],
+    ['U+200C after an Arabic digit', '\u0663\u200C\u0628', 'U+200C'],
+    ['U+200C after nine Arabic marks', `\u0628${'\u064E'.repeat(9)}\u200C\u0628`, 'U+200C'],
+    ['U+200D between two Arabic letters', '\u0628\u200D\u0628', 'U+200D'],
+    ['U+200D between a Devanagari virama and a Latin letter', '\u0915\u094D\u200Da', 'U+200D'],
+    ['U+200D after a Devanagari virama on a vowel', '\u0905\u094D\u200D\u0915', 'U+200D'],
+    ['U+200D between Devanagari and Bengali', '\u0915\u094D\u200D\u0995', 'U+200D'],
+    ['U+200C between a Malayalam virama and a Latin letter', '\u0D15\u0D4D\u200Ca', 'U+200C'],
+    ['U+200D before a Bengali virama', '\u09B0\u200D\u09CD\u09AF', 'U+200D'],
+    ['U+200D after a Malayalam virama at the end', 'x\u0D28\u0D4D\u200D', 'U+200D'],
+    ['U+200D between a Sinhala virama and a Latin letter', '\u0D9A\u0DCA\u200Da', 'U+200D'],
+    ['U+200C after a Sinhala virama', '\u0DA4\u0DCA\u200C\u0DBA', 'U+200C'],
+    ['a red heart with U+FE0F before a mark', 'x\u2764\uFE0F\u0301y', 'U+FE0F'],
+    ['a red heart with U+FE0F before a Hangul jamo', 'x\u2764\uFE0F\u1161y', 'U+FE0F'],
+    ['U+FE0F before a skin tone', 'x\u261D\uFE0F\u{1F3FB}y', 'U+FE0F'],
   ])('refuses %s', (_name, text, code) => {
     expect(firstFault(text)).toEqual({ code, kind: 'a hidden character' })
   })

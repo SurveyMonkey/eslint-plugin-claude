@@ -15,7 +15,8 @@
  *  - Each probed `Default_Ignorable_Code_Point` character that is not `Cf`: U+034F, U+115F,
  *    U+1160, U+17B4, U+17B5, U+180B, U+180F, U+3164, U+FFA0, U+FE00, U+FE01, U+FE0E, U+FE0F,
  *    U+E0100 and U+E01EF.
- *  - Three blank-like characters that are in neither class: U+2800, U+FFFC and U+1D159.
+ *  - Six blank-like characters that are in neither class: U+2800, U+FFFC, U+1D159, U+13441,
+ *    U+13442 and U+16FE4.
  *  Claude Code took these characters near the classes: U+2801, U+FFFD, U+2423, U+2588,
  *  U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule refuses each `Cf` and
  *  `Default_Ignorable_Code_Point` character, also one that the probe did not try. This is a
@@ -29,35 +30,86 @@ const CLASSES: [RegExp, string][] = [
   [/\p{Z}/u, 'a blank that is not a plain space'],
   [/[<>]/u, 'an angle bracket'],
   [/[\p{Cf}\p{Default_Ignorable_Code_Point}]/u, 'a hidden character'],
-  [/[\u{2800}\u{FFFC}\u{1D159}]/u, 'a blank-like character'],
+  [/[\u{2800}\u{FFFC}\u{1D159}\u{13441}\u{13442}\u{16FE4}]/u, 'a blank-like character'],
 ]
 
 /** An emoji sequence of Unicode, such as a family of people joined with U+200D. */
 // biome-ignore lint/complexity/useRegexLiterals: tsc refuses a `v` literal for es2022.
 const EMOJI = new RegExp('\\p{RGI_Emoji}', 'gv')
 
-/** A joiner in a word of a script that needs one. The rule takes U+200C or U+200D after a
- *  virama of Devanagari, Bengali, Gujarati, Oriya, Telugu, Kannada or Malayalam, before a letter.
- *  It takes U+200D after the Sinhala virama, and U+200C between two Arabic letters. */
+/** A character after an emoji sequence that makes Claude Code 2.1.319 refuse the name: a mark or
+ *  a Hangul jamo. */
+const AFTER_EMOJI = /^[\p{M}\u{1160}-\u{11FF}\u{D7B0}-\u{D7FF}]/u
+
+/** A skin tone, which Claude Code 2.1.319 refuses after U+FE0F. */
+const TONE = /^[\u{1F3FB}-\u{1F3FF}]/u
+
+/** `hex` as a code point of a regular expression with the `u` flag. */
+function point(hex: number): string {
+  return `\\u{${hex.toString(16).toUpperCase()}}`
+}
+
+/** A joiner in an Indic word. The block of the script starts at `block`. Each block puts the
+ *  consonants at offsets 0x15 to 0x39, the nukta at 0x3C and the virama at 0x4D. Malayalam has
+ *  no nukta here. */
+function indicJoiner(block: number): string {
+  const consonant = `[${point(block + 0x15)}-${point(block + 0x39)}]`
+  const nukta = block === 0xd00 ? '' : `${point(block + 0x3c)}?`
+  return `(?<=${consonant}${nukta}${point(block + 0x4d)})[\\u{200C}\\u{200D}](?=${consonant})`
+}
+
+/** The Sinhala consonants. */
+const SINHALA = '[\\u{D9A}-\\u{DC6}]'
+
+/** The Arabic letters that Claude Code 2.1.319 accepts before U+200C. */
+const ARABIC_BEFORE = String.raw`\u{620}\u{626}\u{628}\u{62A}-\u{62E}\u{633}-\u{63F}\u{641}-\u{647}\u{649}\u{64A}\u{66E}\u{66F}\u{678}-\u{687}\u{69A}-\u{6BF}\u{6C1}\u{6C2}\u{6CC}\u{6CE}\u{6D0}\u{6D1}\u{6FA}-\u{6FC}\u{6FF}\u{750}-\u{758}\u{75C}-\u{76A}\u{76D}-\u{770}\u{772}\u{775}-\u{777}\u{77A}-\u{77F}\u{886}\u{889}-\u{88D}\u{88F}\u{8A0}-\u{8A9}\u{8AF}\u{8B0}\u{8B3}-\u{8B8}\u{8BA}-\u{8C8}`
+
+/** The Arabic letters that Claude Code 2.1.319 accepts after U+200C. */
+const ARABIC_AFTER = String.raw`\u{620}\u{622}-\u{63F}\u{641}-\u{64A}\u{66E}\u{66F}\u{671}-\u{673}\u{675}-\u{6D3}\u{6D5}\u{6EE}\u{6EF}\u{6FA}-\u{6FC}\u{6FF}\u{750}-\u{77F}\u{870}-\u{882}\u{886}\u{889}-\u{88F}\u{8A0}-\u{8AC}\u{8AE}-\u{8C8}`
+
+/** A mark between an Arabic letter and U+200C: a non-spacing mark of the Arabic or the Inherited
+ *  script that is not default-ignorable. */
+const ARABIC_MARK =
+  '(?:(?=[\\p{sc=Arabic}\\p{sc=Inherited}])(?!\\p{Default_Ignorable_Code_Point})\\p{Mn})'
+
+/** A joiner in a word of a script that needs one. The parts copy the joiner check of Claude Code
+ *  2.1.319:
+ *  - U+200C or U+200D between two consonants of one Indic script, after the virama. The scripts
+ *    are Devanagari, Bengali, Gujarati, Oriya, Telugu, Kannada and Malayalam. A nukta can come
+ *    before the virama.
+ *  - U+200D between two Sinhala consonants, after the virama.
+ *  - U+200C between two Arabic letters from the lists above. Up to eight marks can follow the
+ *    first letter. */
 const SCRIPT_JOINER = new RegExp(
   [
-    '(?<=[\\u{94D}\\u{9CD}\\u{ACD}\\u{B4D}\\u{C4D}\\u{CCD}\\u{D4D}])[\\u{200C}\\u{200D}](?=\\p{L})',
-    '(?<=\\u{DCA})\\u{200D}(?=\\p{L})',
-    '(?<=(?=\\p{sc=Arabic})\\p{L}\\p{Mn}{0,8})\\u{200C}(?=(?=\\p{sc=Arabic})\\p{L})',
+    ...[0x900, 0x980, 0xa80, 0xb00, 0xc00, 0xc80, 0xd00].map(indicJoiner),
+    `(?<=${SINHALA}\\u{DCA})\\u{200D}(?=${SINHALA})`,
+    `(?<=[${ARABIC_BEFORE}]${ARABIC_MARK}{0,8})\\u{200C}(?=[${ARABIC_AFTER}])`,
   ].join('|'),
   'gu',
 )
 
-/** The indexes of `chars` that Claude Code 2.1.319 took in a probe, though they are in a class
- *  of `CLASSES`. The probe loaded a project skill folder with an emoji sequence, such as a family
- *  of people, a red heart with U+FE0F, a keycap and the flag of England. It also loaded a
- *  Devanagari word with U+200D after the virama, and an Arabic word with U+200C. It refused
- *  `a<U+200C>b`, `x<U+FE0F>y` and a red heart with U+FE0E. */
+/** True when Claude Code 2.1.319 refuses the emoji sequence `sequence` before the text `rest`.
+ *  A mark or a Hangul jamo after it is a fault, and so is a skin tone after U+FE0F. */
+function refusedBefore(sequence: string, rest: string): boolean {
+  return AFTER_EMOJI.test(rest) || (sequence.endsWith('\u{FE0F}') && TONE.test(rest))
+}
+
+/** The indexes of `chars` that the rule takes in an emoji sequence or in a script joiner. Some of
+ *  these characters are in a class of `CLASSES`, such as U+200D or U+FE0F. A probe of Claude
+ *  Code 2.1.319 loaded a project skill folder with such a name. Examples are a family of people,
+ *  a red heart with U+FE0F, a keycap and the flag of England. Others are a Devanagari word with
+ *  U+200D after the virama, and an Arabic word with U+200C. It refused `a<U+200C>b`,
+ *  `x<U+FE0F>y` and a red heart with U+FE0E. */
 function takenAt(chars: string[]): Set<number> {
   const text = chars.join('')
   const taken = new Set<number>()
   for (const pattern of [EMOJI, SCRIPT_JOINER]) {
     for (const match of text.matchAll(pattern)) {
+      const end = match.index + match[0].length
+      if (pattern === EMOJI && refusedBefore(match[0], text.slice(end))) {
+        continue
+      }
       const first = [...text.slice(0, match.index)].length
       const count = [...match[0]].length
       for (let index = first; index < first + count; index++) {
