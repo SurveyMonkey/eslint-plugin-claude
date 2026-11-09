@@ -23,6 +23,8 @@ jsonTester.run('settings-env-auto-mode-model (valid)', rule, {
       'claude-sonnet-4-6',
       'claude-opus-4-8',
       'claude-opus-5-1',
+      // Opus 5.1 with a dot. Minor 0 would read it as Opus 5, which the docs name.
+      'claude-opus-5.1',
       'claude-sonnet-5',
       'claude-haiku-5-5',
       'claude-fable-5-1',
@@ -96,6 +98,9 @@ jsonTester.run('settings-env-auto-mode-model (invalid)', rule, {
       'claude-opus-5-5[1m]',
       'us.anthropic.claude-opus-5-5',
       'claude-sonnet-5-5@20261001',
+      // A gateway ID with a dot reads as minor 5: Sonnet 5.5 is a model of the docs list.
+      'claude-sonnet-5.5',
+      'anthropic/claude-sonnet-5.5',
     ].map((value) => ({
       code: env(value),
       filename: project,

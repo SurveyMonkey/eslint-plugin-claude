@@ -57,6 +57,8 @@ that variable, when it is on, on such a model.
 ### Which model the rule judges
 
 - A full model ID, or a provider ID that has a `claude-` name in it.
+- A model ID with a dot before the minor version, such as `anthropic/claude-opus-5.5`. The rule
+  reads it as Opus 5.5. This is a gateway form, and no Claude Code docs page shows it.
 - An alias that the file pins in `env`. The rule judges the pinned model, if it can read the ID.
 - An alias that is not pinned: only when the file selects no provider. The rule then uses the model
   that the alias has on the Anthropic API.[^aliases] `best`, `opusplan` and `default` are not judged.

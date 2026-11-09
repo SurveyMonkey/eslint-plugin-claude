@@ -28,7 +28,14 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       'claude-opus-4-7[1m]',
       'claude-opus-5-5[1m]',
     ].map((model) => ({ code: settings({ model }), filename: project })),
-    ...['claude-sonnet-5[1m]', 'claude-haiku-5-5[1m]', 'claude-fable-5-1[1m]'].map((model) => ({
+    // A dotted minor version reads as the hyphen form: Haiku 5.5 has a 1M window, and minor 0
+    // would not.
+    ...[
+      'claude-sonnet-5[1m]',
+      'claude-haiku-5-5[1m]',
+      'claude-fable-5-1[1m]',
+      'anthropic/claude-haiku-5.5[1m]',
+    ].map((model) => ({
       code: settings({ model }),
       filename: project,
     })),
@@ -194,6 +201,17 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       code: '{\n  "model": "claude-opus-5-5",\n  "alwaysThinkingEnabled": false\n}',
       filename: project,
       errors: [{ messageId: 'thinkingOff', line: 3, column: 28 }],
+    },
+    // A dotted ID reads as Opus 5.5, which always thinks. Minor 0 would not.
+    {
+      code: settings({ model: 'anthropic/claude-opus-5.5', alwaysThinkingEnabled: false }),
+      filename: project,
+      errors: [
+        {
+          messageId: 'thinkingOff',
+          data: { setting: 'alwaysThinkingEnabled', model: 'anthropic/claude-opus-5.5' },
+        },
+      ],
     },
     ...[
       'claude-sonnet-5-5',

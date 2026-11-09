@@ -40,6 +40,8 @@ cases.
   model reviews when you set one of these.[^ignored] The rule reads the family and the version of
   the ID. So `claude-opus-5`, `claude-opus-5-20260401`, `claude-opus-5-5[1m]` and
   `us.anthropic.claude-opus-5-5` all report.
+- A dot can separate the minor version, as in `anthropic/claude-sonnet-5.5`. The rule reads it
+  as Sonnet 5.5, so it reports. This is a gateway form, and no Claude Code docs page shows it.
 
 The docs say that the full model IDs of a cloud provider work too.[^choose] The rule cannot
 judge a provider ID, an ARN or the name of a gateway model. So it accepts any other value as text.

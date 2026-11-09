@@ -108,17 +108,20 @@ export interface ModelVersion {
 
 // The name of an ID puts the family first, or the version first for the older models:
 // `claude-sonnet-4-5-20250929`, `claude-3-5-haiku-latest`. A minor version has one or two digits.
-// A date has eight, so a date is not a minor version.
+// A date has eight, so a date is not a minor version. The separator of the minor version is a
+// hyphen or a dot. The dot is a gateway form, such as `anthropic/claude-sonnet-5.5`. No page of
+// the Claude Code docs shows a dotted model ID. The rule reads the form to avoid a wrong minor 0.
 const NAME_FIRST = new RegExp(
-  `(?:^|[^a-z0-9])claude-(${FAMILY_ALIASES.join('|')})-(\\d+)(?:-(\\d{1,2})(?![0-9]))?`,
+  `(?:^|[^a-z0-9])claude-(${FAMILY_ALIASES.join('|')})-(\\d+)(?:[-.](\\d{1,2})(?![0-9]))?`,
 )
 const VERSION_FIRST = new RegExp(
-  `(?:^|[^a-z0-9])claude-(\\d+)(?:-(\\d{1,2})(?![0-9]))?-(${FAMILY_ALIASES.join('|')})`,
+  `(?:^|[^a-z0-9])claude-(\\d+)(?:[-.](\\d{1,2})(?![0-9]))?-(${FAMILY_ALIASES.join('|')})`,
 )
 
 /** The family and the version of the model ID `value`. A provider ID that embeds a `claude-`
  *  name counts. The result is undefined for an alias, an ARN and any other text. A minor version
- *  that the ID omits is 0. */
+ *  that the ID omits is 0. A dot can separate the minor version, as in `claude-sonnet-5.5`. This
+ *  is a gateway form, and no Claude Code docs page shows it. */
 export function modelVersionOf(value: string): ModelVersion | undefined {
   const named = NAME_FIRST.exec(value)
   if (named !== null) {
