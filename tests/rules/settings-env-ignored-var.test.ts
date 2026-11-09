@@ -91,8 +91,8 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
-  // "Variables that set your claude.ai sign-in"
-  'CLAUDE_CODE_OAUTH_TOKEN',
+  // "Variables that set your claude.ai sign-in". `CLAUDE_CODE_OAUTH_TOKEN` is not here. It is a
+  // credential, and `settings-env-credential` gives its report (see `CREDENTIAL`).
   'CLAUDE_CODE_OAUTH_REFRESH_TOKEN',
   'CLAUDE_CODE_OAUTH_SCOPES',
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
@@ -120,11 +120,22 @@ const REMOVED: [string, string][] = [
 // "Only these values still apply from project and local settings, because they turn something
 // off: none for the three exporter selectors, and an off value such as 0 for
 // OTEL_LOG_USER_PROMPTS, OTEL_LOG_TOOL_CONTENT, and OTEL_LOG_TOOL_DETAILS".
+// The env vars reference names `CLAUDE_CODE_OAUTH_TOKEN` as ignored in project and local settings.
+// The rule `settings-env-credential` reports it as a credential when it has text. So this rule
+// makes no second report for it (#738).
+const CREDENTIAL = 'CLAUDE_CODE_OAUTH_TOKEN'
 const SELECTORS = ['OTEL_LOGS_EXPORTER', 'OTEL_METRICS_EXPORTER', 'OTEL_TRACES_EXPORTER']
 const CONTENT = ['OTEL_LOG_USER_PROMPTS', 'OTEL_LOG_TOOL_CONTENT', 'OTEL_LOG_TOOL_DETAILS']
 
 jsonTester.run('settings-env-ignored-var (valid)', rule, {
   valid: [
+    // A credential that has text gets its report from `settings-env-credential`, not from here.
+    ...ALL.flatMap((filename) =>
+      ['1', 'sk-ant-oat01-example', ' x '].map((value) => ({
+        code: env({ [CREDENTIAL]: value }),
+        filename,
+      })),
+    ),
     // A variable that a settings file may set.
     ...ALL.map((filename) => ({
       code: env({ API_TIMEOUT_MS: '1200000', DISABLE_AUTO_COMPACT: '1', ANTHROPIC_MODEL: 'opus' }),
@@ -309,6 +320,21 @@ jsonTester.run('settings-env-ignored-var (invalid)', rule, {
         ],
       })),
     ),
+    // An empty or a blank value, or a value that is not a string, is no credential for
+    // `settings-env-credential`. So the variable stays ignored in a project or local file.
+    ...['', '  ', 1, null, true].flatMap((value) =>
+      PROJECT_FILES.map((filename) => ({
+        code: env({ [CREDENTIAL]: value }),
+        filename,
+        errors: [{ messageId: 'projectFiles' as const, data: { name: CREDENTIAL } }],
+      })),
+    ),
+    // The two other sign-in variables are no credential variables, so they report with text.
+    ...['CLAUDE_CODE_OAUTH_REFRESH_TOKEN', 'CLAUDE_CODE_OAUTH_SCOPES'].map((name) => ({
+      code: env({ [name]: 'x' }),
+      filename: project,
+      errors: [{ messageId: 'projectFiles' as const, data: { name } }],
+    })),
     // A removed variable reports in each file.
     ...REMOVED.flatMap(([name, since]) =>
       ALL.map((filename) => ({
@@ -482,5 +508,49 @@ describe('settings-env-ignored-var and settings-env-value-format on one variable
 
   it('makes no report on an off value in a project file', () => {
     expect(lint(env({ OTEL_LOG_USER_PROMPTS: '0' }))).toEqual([])
+  })
+})
+
+// "One report for one fault": a `CLAUDE_CODE_OAUTH_TOKEN` in a project file gets one report, from
+// `settings-env-credential`. This rule gives none.
+describe('settings-env-ignored-var and settings-env-credential on CLAUDE_CODE_OAUTH_TOKEN', () => {
+  const lint = (code: string, filename: string) =>
+    new Linter().verify(
+      code,
+      [
+        {
+          files: ['**/*.json'],
+          plugins: { json, claude: plugin },
+          language: 'json/json',
+          rules: {
+            'claude/settings-env-ignored-var': 'error',
+            'claude/settings-env-credential': 'error',
+          },
+        },
+      ],
+      { filename },
+    )
+
+  it.each(PROJECT_FILES)('gives one report from the credential rule in %s', (filename) => {
+    const messages = lint(env({ CLAUDE_CODE_OAUTH_TOKEN: 'sk-ant-oat01-example' }), filename)
+    expect(messages).toHaveLength(1)
+    expect(messages[0]?.ruleId).toBe('claude/settings-env-credential')
+    expect(messages[0]?.message).toBe(
+      'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
+    )
+  })
+
+  it.each(MANAGED_FILES)('gives one report from the credential rule in %s', (filename) => {
+    const messages = lint(env({ CLAUDE_CODE_OAUTH_TOKEN: 'sk-ant-oat01-example' }), filename)
+    expect(messages.map(({ ruleId }) => ruleId)).toEqual(['claude/settings-env-credential'])
+  })
+
+  it('keeps the report of this rule for an empty value, which is no credential', () => {
+    const messages = lint(env({ CLAUDE_CODE_OAUTH_TOKEN: '' }), project)
+    expect(messages).toHaveLength(1)
+    expect(messages[0]?.ruleId).toBe('claude/settings-env-ignored-var')
+    expect(messages[0]?.message).toBe(
+      'Claude Code ignores "CLAUDE_CODE_OAUTH_TOKEN" in the env block of a project or local settings file. Set it in your shell, user settings, or managed settings.',
+    )
   })
 })
