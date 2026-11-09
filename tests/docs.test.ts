@@ -127,6 +127,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'hooks-output-size',
     'hooks-placeholder-quoted',
     'hooks-powershell-placeholder',
+    'hooks-powershell-quoted-program',
     'hooks-prefer-exec-form',
     'hooks-prompt-on-permission-request',
     'hooks-ps1-needs-powershell-shell',

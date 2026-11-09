@@ -23,14 +23,14 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **458 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
-  and not-built rows. 341 rules go in `recommended`: 204 at `error` and 137 at
+- **459 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
+  and not-built rows. 342 rules go in `recommended`: 205 at `error` and 137 at
   `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
-- **Silent failure is the largest category.** 143 rules have the category `no-op`. The file loads,
+- **Silent failure is the largest category.** 144 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 442 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 443 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -120,7 +120,7 @@ It is in the Subagents and output styles group.
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 77 |
-| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 143 |
+| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 144 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
@@ -138,7 +138,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 458 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 459 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -170,16 +170,16 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 |-------|--------------------:|-------------------:|------:|------:|
 | Skills and commands | 16 | 13 | 9 | 38 |
 | Subagents and output styles | 17 | 16 | 11 | 44 |
-| Hooks | 19 | 17 | 21 | 57 |
+| Hooks | 20 | 17 | 21 | 58 |
 | Plugin manifest and layout | 26 | 19 | 9 | 54 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
 | CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
 | Settings | 18 | 19 | 15 | 52 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **204** | **137** | **117** | **458** |
+| **Total** | **205** | **137** | **117** | **459** |
 
-By severity, 204 rules are `error` and 254 are `warn`: the 137 `recommended` `warn` rules and
+By severity, 205 rules are `error` and 254 are `warn`: the 137 `recommended` `warn` rules and
 the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -385,7 +385,7 @@ Covers subagent files (`.claude/agents/**/*.md`, plugin `agents/**/*.md`), outpu
 
 ### Hooks
 
-These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 57 rules: 19 error and 17 warn in `recommended`, and 21 `off`.
+These rules cover every hook config a repo can commit: the `hooks` key in `.claude/settings.json` and `.claude/settings.local.json`, `<plugin>/hooks/hooks.json`, the inline `hooks` in `.claude-plugin/plugin.json`, the `hooks:` frontmatter in SKILL.md and agent `.md` files, and the script files that hook commands run. 58 rules: 20 error and 17 warn in `recommended`, and 21 `off`.
 
 Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *handler* is one object in a group's inner `hooks` array. *Shell form* is a `command` handler with no `args`. *Exec form* is a handler with `args`. *Placeholder* means `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}` or `${CLAUDE_PROJECT_DIR}`. Unless a row says otherwise, a rule applies to all five sources.
 
@@ -413,6 +413,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 | `hooks-prefer-exec-form` | A `command` handler that references a placeholder sets `args` (exec form). The rule skips a line that needs a shell: the docs say to omit `args` for pipes, `&&` and the like. It also skips `shell: "powershell"`, where the docs show the placeholder in shell form. It cannot tell a `.cmd` or `.bat` shim, which the docs say to run in shell form on Windows, from another script, so it reports that case too. The hooks guide, "Hook error in output", advises `"args": []`. | recommended | warn | practice | – | [^hooks-reference-scripts-by-path] [^hooks-exec-form-and-shell-form] [^hooks-windows-powershell-tool] [^hooks-guide-hook-error-in-output] |
 | `hooks-exec-form-command-spaces` | In exec form, a bare `command` (no path separator) holds no whitespace. The spawn fails. | recommended | error | load | – | [^hooks-exec-form-and-shell-form] |
 | `hooks-powershell-placeholder` | With `shell: "powershell"` and no `args`: no bare `$CLAUDE_PROJECT_DIR` (resolves to `$null`) outside single quotes; none of `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PLUGIN_DATA}` inside single quotes (not expanded). The rule reads the quote rules of PowerShell (`''`, `""` and the backtick). `shell` is ignored when `args` is set, so exec form gets no report. No report without a `shell` key. | recommended | error | load | – | [^hooks-windows-powershell-tool] |
+| `hooks-powershell-quoted-program` | With `shell: "powershell"` and no `args`: the `command` is not only quoted strings whose first string is a program path. PowerShell prints such a command and starts no program [^hooks-powershell-started-no-program]. A program path ends in `.exe`, `.ps1`, `.cmd` or `.bat`, or starts with a drive letter, or with `$HOME`, `$env:NAME` or a placeholder and then `\` or `/` [^hooks-powershell-started-no-program] [^hooks-reference-scripts-by-path-in-powershell-hooks]. `.com`, `~`, `./` and `../` are out: no docs block shows them. The rule reads the quote rules of PowerShell (`''`, `""` and the backtick). A quoted text that is not a program path, such as JSON, gets no report. With no `shell` key, the rule reports only when the option `platforms` holds `windows-no-git-bash` [^hooks-command-hook-fields]. `claude plugin validate` 2.1.321 passes a plugin `hooks/hooks.json` with `"C:\\Tools\\guard.exe"` and `"${CLAUDE_PLUGIN_ROOT}\\bin\\guard.exe"`. | recommended | error | no-op | – | [^hooks-powershell-started-no-program] [^hooks-reference-scripts-by-path-in-powershell-hooks] [^hooks-command-hook-fields] |
 | `hooks-ps1-needs-powershell-shell` | A `command` that runs a `.ps1` file sets `shell: "powershell"`. The docs set the default shell to Bash, or to PowerShell on Windows without Git Bash. So the file fails in Bash on Windows with Git Bash, and on macOS, Linux and WSL unless it has a `pwsh` shebang line and the executable bit. The rule cannot know the platform. It takes the option `platforms` (`windows-git-bash`, `windows-no-git-bash`, `macos`, `linux`, `wsl`) and reports nothing when it is unset. It reads shell form only, because `shell` has no effect with `args`. | recommended | warn | portability | – | [^sub-agents-conditional-rules-with-hooks] [^hooks-command-hook-fields] |
 | `hooks-script-exists` | (cross-file) A repository script that a hook command names exists. Files: `hooks/hooks.json` in a plugin, the two project settings files, `managed-settings.json` and `managed-settings.d/*.json`. The rule checks the program word, and the first argument when the program is an interpreter that runs a file (`bash`, `sh`, `zsh`, `node`, `python`, `python3`, `deno`, `bun`, `pwsh`, `powershell`, `ruby`, `perl`). Another argument can be a file that the program makes, such as the target of `tee`, so the rule does not check it. A word is a path when it starts with `${CLAUDE_PROJECT_DIR}` or `$CLAUDE_PROJECT_DIR` in a settings file, or with `${CLAUDE_PLUGIN_ROOT}` or `$CLAUDE_PLUGIN_ROOT` in `hooks/hooks.json`. The program also counts when it is a path from the project, in a project settings file. A managed file resolves the project variable from the repository root. No option. Not checked: frontmatter `hooks` and `plugin.json` `hooks`, which the row does not name. No report for these: a path out of the repository, a link that hides the path, an absolute or `~` path, a glob, a word with another variable, and a hidden drop-in. A mistyped path leaves the hook silently off. | recommended | error | load | – | [^hooks-other-exit-codes] [^hooks-guide-hook-error-in-output] [^hooks-reference-scripts-by-path] [^hooks-exec-form-and-shell-form] |
 | `hooks-script-executable` | (cross-file) A repo script that is itself the `command` (not `node x.ts`, `bash x.sh`) has git mode `100755`. The program is the first word of a shell form `command`, or `command` in the exec form. It is read in the same files and path forms as `hooks-script-exists`. The rule reports index mode `100644` and no other mode. It reads the git index (`git ls-files --stage`), not the disk: the index can keep `100755` while the disk shows `644`, and with `core.fileMode=false` git does not see the disk mode. No report for a script that git does not track, or when there is no `.git` or `git` fails. The docs limit the bit to macOS and Linux (sub-agents); the rule reports on every system. No option. | recommended | error | load | – | [^hooks-guide-block-edits-to-protected-files] [^sub-agents-conditional-rules-with-hooks] [^plugins-components-hooks] |
@@ -472,6 +473,7 @@ Terms. A *group* is one object in an event's array (`matcher` and `hooks`). A *h
 - `async: true` on a decision event was an exact finding (degraded). I moved it to `off` as a heuristic, because an async logging hook on `PreToolUse` is valid, and the docs name no error. [^hooks-run-hooks-in-the-background]
 - Profile echo. hooks-guide.md says a shell profile `echo` can corrupt a shell-form hook's JSON. This is a second reason for `hooks-prefer-exec-form`. The repo cannot see the profile, so there is no separate rule. [^hooks-guide-hook-json-has-no-effect]
 - `shell: "powershell"` on a hook works without `CLAUDE_CODE_USE_POWERSHELL_TOOL`, unlike `defaultShell` and skill `shell`. So `hooks-config-schema` needs no env-var check. [^tools-reference-shell-selection-in-settings-hooks-and-skills]
+- `hooks-powershell-quoted-program` is `recommended` `error`, with no "(heuristic)" tag. The docs say that the hook starts no program, so it is a `no-op`. The check is narrow: `shell: "powershell"`, no `args`, only quoted strings, and a program path form from the docs. So the heuristic row of the severity table does not apply. A quoted text that looks like a path can still get a report. [^hooks-powershell-started-no-program]
 - Left to other groups: `hooks` in plugin agent frontmatter is ignored (agents: plugin-agent ignored fields). Marketplace entry `hooks` as a path or array, and entry matchers that replace manifest matchers (marketplace). Plugin.json `hooks` path not found, `../` escapes, and no state writes under `${CLAUDE_PLUGIN_ROOT}` (plugin). `httpHookAllowedEnvVars` type, `allowManagedHooksOnly` managed-only, `statusLine` under `disableAllHooks`, `hooks` in the security-approval key list, nested `.claude/settings.json` without parent fallback, multi-repo cloud keys (settings). Transcript labels such as `Stop Task` in matchers (permissions). `hooks-if-condition` owns the permission-rule grammar for `if`, through the shared parser. Canonical tool list (mcp-lsp appendix).
 - Two rows were dropped: the timeout defaults reference row (no check) and the match-all forms preference row (the docs state that the forms are equivalent and name no preferred form).
 
@@ -1254,6 +1256,8 @@ Other names a rule may contain:
 [^hooks-stop-input]: [Hooks reference: Stop input](https://code.claude.com/docs/en/hooks#stop-input)
 [^hooks-stop-decision-control]: [Hooks reference: Stop decision control](https://code.claude.com/docs/en/hooks#stop-decision-control)
 [^hooks-sessionstart-decision-control]: [Hooks reference: SessionStart decision control](https://code.claude.com/docs/en/hooks#sessionstart-decision-control)
+[^hooks-powershell-started-no-program]: [Hooks reference: PowerShell started no program](https://code.claude.com/docs/en/hooks#powershell-started-no-program)
+[^hooks-reference-scripts-by-path-in-powershell-hooks]: [Hooks reference: Reference scripts by path in PowerShell hooks](https://code.claude.com/docs/en/hooks#reference-scripts-by-path-in-powershell-hooks)
 [^plugins-manifest-reference-manifest-file]: [Plugin manifest reference: Manifest file](https://code.claude.com/docs/en/plugins/manifest-reference#manifest-file)
 [^plugins-create-plugin-layout]: [Create a Claude Code plugin: Plugin layout](https://code.claude.com/docs/en/plugins/create#plugin-layout)
 [^plugins-troubleshooting-plugin-loads-but-its-skills-are-missing]: [Troubleshoot plugins: Plugin loads but its skills are missing](https://code.claude.com/docs/en/plugins/troubleshooting#plugin-loads-but-its-skills-are-missing)
