@@ -74,6 +74,7 @@ export const BUILT_IN_COMMANDS: readonly string[] = [
   'remote-control',
   'remote-env',
   'rename',
+  'restart',
   'resume',
   'rewind',
   'sandbox',

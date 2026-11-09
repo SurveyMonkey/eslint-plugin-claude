@@ -98,7 +98,7 @@ Pass:
     "bwrapPath": "/opt/admin/bwrap",
     "network": {
       "httpProxyPort": 8080,
-      "allowMachLookup": ["com.apple.coresimulator.*"]
+      "allowMachLookup": ["com.apple.CoreSimulator.*"]
     },
     "credentials": { "envVars": [{ "name": "NPM_TOKEN", "mode": "deny" }] }
   }

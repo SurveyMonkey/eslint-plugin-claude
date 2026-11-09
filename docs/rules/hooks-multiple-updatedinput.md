@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-multiple-updatedinput, a heuristic that reports a PreToolUse handler that prints updatedInput when an earlier handler of the same file does so for the same tool, because the last hook to finish wins.
+description: The ESLint rule claude/hooks-multiple-updatedinput, a heuristic that reports a PreToolUse handler that prints updatedInput when an earlier handler of the same file does so for the same tool, because Claude Code does not merge the rewrites or guarantee which one the tool runs with.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [10]
@@ -24,8 +24,8 @@ generated:
 
 ## Rule details
 
-When several `PreToolUse` hooks return `updatedInput`, "the last one to finish takes effect. Since hooks run in
-parallel, the order is non-deterministic. Avoid having more than one hook modify the same tool's input."[^limits]
+When several `PreToolUse` hooks return `updatedInput`, "Claude Code doesn't merge the rewrites or guarantee which
+rewrite the tool runs with. Avoid having more than one hook rewrite the same tool's input."[^limits]
 `updatedInput` sits directly under `hookSpecificOutput` and replaces the whole input object of the tool.[^pretooluse]
 
 The rule is a heuristic. It reads the handlers of one file. It reports a handler that prints

@@ -1,6 +1,6 @@
-// The hooks guide says: "When multiple `PreToolUse` hooks return `updatedInput` to rewrite a tool's arguments,
-// the last one to finish takes effect. Since hooks run in parallel, the order is non-deterministic. Avoid having
-// more than one hook modify the same tool's input"
+// The hooks guide says: "When multiple `PreToolUse` hooks return `updatedInput` to rewrite a tool's input,
+// Claude Code doesn't merge the rewrites or guarantee which rewrite the tool runs with. Avoid having more than
+// one hook rewrite the same tool's input"
 // (https://code.claude.com/docs/en/hooks-guide#limitations). The rule reads the handlers of one file. It reports a
 // `PreToolUse` handler that prints `updatedInput` as a literal, when an earlier handler of the file also does so
 // for a tool that both matchers name.
@@ -70,7 +70,7 @@ describe(`${name}: the report`, () => {
       FILES.project,
     )
     expect(message?.message).toBe(
-      'An earlier PreToolUse handler in this file also returns "updatedInput" for the tool Bash. The hooks run in parallel, and the last one to finish wins. Let one hook rewrite the input.',
+      'An earlier PreToolUse handler in this file also returns "updatedInput" for the tool Bash. Claude Code does not merge the rewrites, and does not guarantee which one the tool runs with. Let one hook rewrite the input.',
     )
   })
 

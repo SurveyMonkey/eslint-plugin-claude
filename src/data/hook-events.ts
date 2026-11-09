@@ -80,6 +80,7 @@ export const MATCHER_VALUES: ReadonlyMap<string, readonly string[]> = new Map([
       'permission_prompt',
       'idle_prompt',
       'auth_success',
+      'auth_storage_failure',
       'elicitation_dialog',
       'elicitation_url_dialog',
       'elicitation_complete',
@@ -130,7 +131,7 @@ export const REMOVED_MATCHER_VALUES: ReadonlyMap<string, readonly string[]> = ne
 
 /** A matcher value that only a later Claude Code sends, with the first version. Source: the hooks
  *  reference, "Matcher patterns" for `cloud_credential_error` and "Notification" for the three
- *  `quota_auto_resume_*` values. */
+ *  `quota_auto_resume_*` values and for `auth_storage_failure`. */
 export const MATCHER_VALUE_SINCE: readonly {
   event: string
   values: readonly string[]
@@ -142,6 +143,7 @@ export const MATCHER_VALUE_SINCE: readonly {
     values: ['quota_auto_resume_fired', 'quota_auto_resume_stale', 'quota_auto_resume_disabled'],
     version: '2.1.234',
   },
+  { event: 'Notification', values: ['auth_storage_failure'], version: '2.1.288' },
 ]
 
 /** The events whose matcher is a list of exact values with `|` as the one separator. Every other

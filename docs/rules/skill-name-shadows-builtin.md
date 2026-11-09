@@ -40,7 +40,7 @@ The lists of names are in `src/data/command-names.ts`. They come from the All co
 The table marks a bundled skill as a Skill. The rule compares the exact name, with the same letter
 case. The lists leave out these names:
 
-- The aliases `review`, `cost` and `stats`. The skill keeps its name and the alias keeps the command.
+- The aliases `review`, `cost`, `stats` and `update`. The skill keeps its name and the alias keeps the command.
 - The workflow `deep-research`. It is not a skill, and the docs do not say what a skill of that
   name does.
 - `verify` and `simplify`. The skills page describes a project skill with either name as a

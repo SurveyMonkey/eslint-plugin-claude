@@ -50,6 +50,7 @@ describe('the matcher data', () => {
         'permission_prompt',
         'idle_prompt',
         'auth_success',
+        'auth_storage_failure',
         'elicitation_dialog',
         'elicitation_url_dialog',
         'elicitation_complete',

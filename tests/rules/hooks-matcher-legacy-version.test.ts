@@ -199,6 +199,13 @@ describe(`${name}: a value that a later version sends`, () => {
     }
   })
 
+  it('reports auth_storage_failure on Notification before v2.1.288', () => {
+    expect(ids('Notification', 'auth_storage_failure', '2.1.287')).toEqual(['value'])
+    expect(ids('Notification', 'auth_storage_failure', '2.1.288')).toEqual([])
+    expect(ids('Notification', 'auth_storage_failure', '2.1.289')).toEqual([])
+    expect(ids('Notification', 'auth_success', '2.1.287')).toEqual([])
+  })
+
   it('reports each such value of a list', () => {
     expect(
       ids('Notification', 'idle_prompt|quota_auto_resume_fired|quota_auto_resume_stale', '2.1.233'),

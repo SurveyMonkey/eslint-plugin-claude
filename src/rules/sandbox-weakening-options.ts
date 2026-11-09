@@ -55,7 +55,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       dockerSocket:
         '`{{entry}}` gives sandboxed commands control of the Docker daemon on macOS, and so of the host. Linux and WSL2 ignore the list. Do not allow a Docker socket.',
       machLookupAll:
-        '"*" in "allowMachLookup" allows every XPC and Mach service. List the services that a tool needs, or a prefix such as `com.apple.coresimulator.*`.',
+        '"*" in "allowMachLookup" allows every XPC and Mach service. List the services that a tool needs, or a prefix such as `com.apple.CoreSimulator.*`.',
       appleEvents:
         '"allowAppleEvents" removes code-execution isolation: sandboxed commands can launch other applications unsandboxed with no user prompt. Add the one tool to "excludedCommands" instead.',
       nestedUserNamespaces:

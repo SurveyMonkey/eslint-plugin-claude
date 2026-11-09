@@ -27,7 +27,8 @@ The rule is `off` in `recommended`. It is a heuristic.
 ## Rule details
 
 The MCP docs name these keys of a server entry: `type`, `command`, `args`, `env`, `url`,
-`headers`, `headersHelper`, `oauth`, `timeout` and `alwaysLoad`.[^edit][^ws] They name these keys
+`headers`, `headersHelper`, `oauth`, `timeout` and `alwaysLoad`.[^edit][^ws] The errors page also names
+`bareElicitationCapability`, for stdio, `sse`, `http` and `ws` entries.[^elicit] The MCP docs name these keys
 of `oauth`: `clientId`, `callbackPort`, `authServerMetadataUrl` and `scopes`.[^oauth][^port][^meta][^scopes] The
 docs do not say that another key is an error. A misspelled key is most likely a mistake, for
 example `Command` or `callbackport`. So the rule is a heuristic.
@@ -102,4 +103,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^port]: [Connect Claude Code to tools via MCP: Use a fixed OAuth callback port](https://code.claude.com/docs/en/mcp#use-a-fixed-oauth-callback-port)
 [^meta]: [Connect Claude Code to tools via MCP: Override OAuth metadata discovery](https://code.claude.com/docs/en/mcp#override-oauth-metadata-discovery)
 [^scopes]: [Connect Claude Code to tools via MCP: Restrict OAuth scopes](https://code.claude.com/docs/en/mcp#restrict-oauth-scopes)
+[^elicit]: [Error reference: MCP server rejected the elicitation capability](https://code.claude.com/docs/en/errors#mcp-server-rejected-the-elicitation-capability)
 [^sdk]: [Control MCP server access for your organization: How a server is evaluated](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated)

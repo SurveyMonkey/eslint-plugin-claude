@@ -39,7 +39,7 @@ const rule: MarkdownRuleDefinition<{
       specifier:
         '`tools` takes a tool name only. Only `Agent(type)` and its old name `Task(type)` take parentheses here. A specifier such as `{{entry}}` is for `disallowedTools`.',
       anyMcp:
-        '`mcp__*` is for `disallowedTools`. Name a server, as in `mcp__<server>`, in `tools`.',
+        '`mcp__*` is for `disallowedTools`. Name a server, as in `mcp__<server>__*`, in `tools`.',
     },
   },
   create(context) {
