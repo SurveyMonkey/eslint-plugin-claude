@@ -31,11 +31,19 @@ keeps them available. It matches no marketplace.[^org][^types][^policy]
 
 An author can leave the entry out on purpose. So the rule has the severity `warn`.
 
-The rule reports the `strictKnownMarketplaces` key of a managed file when no entry has
-`"source": "skills-dir"`. It reads the alias `allowedMarketplaces` when the file does not set the
+The rule reports the `strictKnownMarketplaces` key of a managed file when its list has no entry
+with `"source": "skills-dir"`. It reads the alias `allowedMarketplaces` when the file does not set the
 canonical key.[^aliases] The rule counts the canonical key as set for any value. A key set to `null`
 counts as set, and the rule then ignores the alias. An empty list gets a report, because the docs
 say that any allowlist stops the plugins.[^types]
+
+The rule also reports a value that is present and is not a list, such as `{}` or `"x"`. The docs
+say that Claude Code enforces such a `strictKnownMarketplaces` "as an empty allowlist until the
+value is fixed, so no marketplace source is admitted".[^closed] An empty allowlist stops the
+plugins, so no skills-directory plugin loads.[^types] The message says this. A `null` removes the
+key,[^closed] so the rule makes no report for it. The lock, the `merge`, the `blockedMarketplaces`
+and the sibling cases below end this report too. The docs do not say how Claude Code joins an
+invalid value with a list of another file. So an entry in a sibling file also ends the report.
 
 The managed settings page merges `managed-settings.json` and each `managed-settings.d/*.json`
 file into one source, and the lists combine.[^split] So the rule reads the sibling files through
@@ -66,6 +74,14 @@ Fail:
 ```json
 {
   "strictKnownMarketplaces": [{ "source": "github", "repo": "acme-corp/*" }]
+}
+```
+
+Fail, a value that is not a list:
+
+```json
+{
+  "strictKnownMarketplaces": "x"
 }
 ```
 
