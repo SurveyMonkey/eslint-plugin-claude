@@ -19,3 +19,13 @@ trustPolicyExclude:
   - undici-types@6.21.0
 # pnpm drops an exclusion above once the lockfile no longer resolves it.
 trustPolicyExcludePrune: true
+
+# Pin transitive dependencies to versions with security patches. Remove an
+# entry when its parent package accepts the patched version.
+overrides:
+  # GHSA-238p-pmpm-9mq7, through @eslint/markdown > micromark-extension-math.
+  katex@<0.18.2: ^0.18.2
+  # GHSA-g3hv-75wg-m249, through eslint, typescript-eslint and editorconfig.
+  minimatch@>=7.0.0 <11.0.1: ^11.0.1
+  # GHSA-mrhx-c7xc-m3w5, through knip.
+  zod@<4.6.6: ^4.6.6
