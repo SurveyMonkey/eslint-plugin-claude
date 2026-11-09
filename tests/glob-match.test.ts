@@ -34,11 +34,27 @@ describe('unmatchedGlobs', () => {
     expect(hit('src/**/*', 'src/a.ts')).toBe(true)
     expect(hit('src/**/*', 'lib/a.ts')).toBe(false)
     expect(hit('*.md', 'README.md')).toBe(true)
-    expect(hit('*.md', 'docs/README.md')).toBe(false)
+    expect(hit('*.md', 'docs/README.md')).toBe(true)
+    expect(hit('/*.md', 'README.md')).toBe(true)
+    expect(hit('/*.md', 'docs/README.md')).toBe(false)
     expect(hit('src/components/*.tsx', 'src/components/B.tsx')).toBe(true)
     expect(hit('src/components/*.tsx', 'src/components/x/B.tsx')).toBe(false)
     expect(hit('src/**/*.{ts,tsx}', 'src/a/B.tsx')).toBe(true)
     expect(hit('src/**/*.{ts,tsx}', 'src/a/B.js')).toBe(false)
+  })
+
+  it('matches a glob with no slash at any depth, and anchors a glob that has a slash', () => {
+    // Path-specific rules: `*.md` is ".md files anywhere under the base directory". `/*.md` is
+    // ".md files directly in the base directory, not in subfolders".
+    expect(hit('*.md', 'a/b/c/README.md')).toBe(true)
+    expect(hit('*.md', 'README.txt')).toBe(false)
+    expect(hit('README.md', 'docs/README.md')).toBe(true)
+    expect(hit('/*.md', 'a/b/README.md')).toBe(false)
+    expect(hit('./*.md', 'docs/README.md')).toBe(false)
+    expect(hit('./*.md', 'README.md')).toBe(true)
+    expect(hit('docs/*.md', 'a/docs/README.md')).toBe(false)
+    expect(hit('docs/*.md', 'docs/README.md')).toBe(true)
+    expect(hit('src/components/*.tsx', 'a/src/components/B.tsx')).toBe(false)
   })
 
   it('reads a double star only as a whole part', () => {

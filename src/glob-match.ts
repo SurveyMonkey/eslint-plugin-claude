@@ -1,10 +1,13 @@
 // Match the `paths` globs of a rule file against the files on disk, for a rule that checks that a
-// glob can match. The docs name the forms: `**/*.ts`, `src/**/*`, `*.md` (the project root only),
-// `src/components/*.tsx` and brace groups such as `src/**/*.{ts,tsx}`
+// glob can match. The docs name the forms: `**/*.ts`, `src/**/*`, `*.md` (`.md` files anywhere under the
+// base directory), `/*.md` (`.md` files directly in the base directory only), `src/components/*.tsx`
+// and brace groups such as `src/**/*.{ts,tsx}`
 // (https://code.claude.com/docs/en/memory#path-specific-rules). They do not give the full
 // syntax. So the matcher is wide where the docs are silent, and a glob that it takes for a match
 // is not reported. These choices follow:
-// - A glob is relative to the root of the project. A `./` or `/` at the start is dropped.
+// - A glob is relative to the base directory. A `./` or `/` at the start is dropped, and the glob
+//   is anchored to the base directory.
+// - A glob with no `/` matches at any depth, so `*.md` matches `docs/a.md`.
 // - `*` and `?` match a dot file. `*` does not cross a `/`.
 // - A glob that names a folder matches the files below the folder. A `/` at the end is the same.
 // - A brace group without a comma stays as text.
@@ -125,7 +128,7 @@ function translate(glob: string): string {
 }
 
 /** A regular expression for `glob`, or null when the glob builds none, such as a reversed range
- *  in a bracket. The glob is relative to the project root. */
+ *  in a bracket. The glob is relative to the base directory. */
 function globRegExp(glob: string): RegExp | null {
   const bare = glob.replace(/^(?:\.?\/)+/, '')
   if (bare === '') {
@@ -133,7 +136,9 @@ function globRegExp(glob: string): RegExp | null {
     return /^/
   }
   try {
-    return new RegExp(`^${translate(bare.endsWith('/') ? `${bare}**` : bare)}$`)
+    const source = translate(bare.endsWith('/') ? `${bare}**` : bare)
+    // A glob with no `/` matches at any depth. A `/` anywhere anchors the glob to the base directory.
+    return new RegExp(`^${glob.includes('/') ? '' : '(?:.*/)?'}${source}$`)
   } catch {
     return null
   }
