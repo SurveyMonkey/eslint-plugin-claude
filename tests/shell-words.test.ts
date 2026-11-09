@@ -742,6 +742,14 @@ describe('scanCommands', () => {
     expect(Date.now() - start).toBeLessThan(5000)
   })
 
+  it(`reads many substitutions in one \${...} expansion in linear time`, () => {
+    // Each `)` in the expansion starts a scan for a `}`. A scan that reads the text after each
+    // `)` again takes about 1.5 s here. A flat line of 8,000 substitutions takes about 2 ms.
+    const start = Date.now()
+    expect(scanCommands(`echo \${a:-${'$(a)'.repeat(8000)}}`)).toHaveLength(16_001)
+    expect(Date.now() - start).toBeLessThan(500)
+  })
+
   it(`goes on with a \${...} expansion after a new line in it`, () => {
     // bash 5.3 prints `x #y`, then `hi`.
     expect(commandsOf(`echo \${a:-x\n #y}; echo hi`)).toEqual([
