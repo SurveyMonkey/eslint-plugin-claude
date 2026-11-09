@@ -67,7 +67,16 @@ markdownTester.run('agent-tools-known', ruleOf('agent-tools-known'), {
     // `mcp__*` is for `disallowedTools`.
     {
       ...file('tools: Read, mcp__*\n'),
-      errors: [{ messageId: 'anyMcp', line: 4, column: 14, endColumn: 20 }],
+      errors: [
+        {
+          // The subagents page shows `mcp__<server>__*` for `tools`.
+          message:
+            '`mcp__*` is for `disallowedTools`. Name a server, as in `mcp__<server>__*`, in `tools`.',
+          line: 4,
+          column: 14,
+          endColumn: 20,
+        },
+      ],
     },
     // A specifier is for `disallowedTools`.
     {
