@@ -58,7 +58,7 @@ describe(`${name}: the options that any file can set`, () => {
           network: {
             allowAllUnixSockets: false,
             allowUnixSockets: ['~/.ssh/agent-socket'],
-            allowMachLookup: ['com.apple.coresimulator.*'],
+            allowMachLookup: ['com.apple.CoreSimulator.*'],
           },
         }),
       ),

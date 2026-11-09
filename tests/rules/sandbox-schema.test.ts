@@ -53,7 +53,7 @@ const VALID = sandbox({
     allowUnixSockets: ['~/.ssh/agent-socket'],
     allowAllUnixSockets: false,
     allowLocalBinding: true,
-    allowMachLookup: ['com.apple.coresimulator.*', '*'],
+    allowMachLookup: ['com.apple.CoreSimulator.*', '*'],
     allowedDomains: ['github.com', '*.npmjs.org', '[::1]:443'],
     deniedDomains: ['uploads.github.com'],
     strictAllowlist: true,
