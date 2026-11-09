@@ -71,6 +71,9 @@ describe('unmatchedGlobs', () => {
     expect(hit('{src/a}.ts', 'x/{src/a}.ts')).toBe(false)
     expect(hit('src\\/a.ts', 'x/src/a.ts')).toBe(false)
     expect(hit('src\\/a.ts', 'src/a.ts')).toBe(true)
+    // A `{` with no `}` is text, so the `/` after it anchors the glob.
+    expect(hit('{a,b/c', 'x/{a,b/c')).toBe(false)
+    expect(hit('{a,b/c', '{a,b/c')).toBe(true)
   })
 
   it('reads a double star only as a whole part', () => {

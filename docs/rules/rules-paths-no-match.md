@@ -28,10 +28,11 @@ The rule is `off` in `recommended`.
 
 A rule file with a `paths` field loads when Claude works with a file that one of the globs
 matches.[^paths] A glob that matches no file scopes the rule to nothing, so the rule never loads.
-The docs give two forms for a glob that ends in a file type. `*.md` matches `.md` files anywhere under the base directory.
-`/*.md` matches `.md` files directly in the base directory, not in subfolders.[^paths] The rule reads a glob with no `/` at
-any depth. It anchors a glob with a `/` at the start to the base directory, as it does each other glob with a `/`, so
-`src/components/*.tsx` matches that folder only.
+The docs give two forms of a glob for `.md` files. `*.md` matches `.md` files anywhere under the base directory.
+`/*.md` matches `.md` files directly in the base directory, not in subfolders.[^paths] So the rule reads a glob with no
+`/` at any depth. It anchors each other glob to the base directory, so `src/components/*.tsx` matches that folder only.
+The docs do not name two other forms: a glob such as `docs/`, with a `/` only at the end, and a brace group such as
+`{README.md,src/*.ts}`, with a `/` in one part only. The rule reads them at any depth, so it makes no false report.
 
 The rule matches each glob against the files on disk. The base is the folder that holds the
 `.claude/` directory of the rule file. It reports each glob that matches no file, at the `paths`

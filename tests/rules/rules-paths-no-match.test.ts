@@ -70,7 +70,9 @@ describe(RULE, () => {
     expect(lint(listOf('/*.md'))).toEqual([])
     const messages = lint(listOf('/*.md'), { 'docs/a.md': '# A\n' })
     expect(patterns(messages)).toEqual(['/*.md'])
-    expect(messages[0]?.message).toContain('"/*.md"')
+    expect(messages.map((message) => message.message)).toEqual([
+      'The glob "/*.md" matches no file below the folder that holds `.claude/`, so Claude Code never loads this rule for it. Fix the glob, or remove it. A glob is relative to that folder.',
+    ])
   })
 
   it('reports each glob of the list that matches no file, and no other', () => {
