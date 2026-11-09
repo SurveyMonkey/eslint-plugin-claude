@@ -848,7 +848,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PermissionRequest decision control",
-      "hash": "66b4b34e57355b8244090ede24c44504d899e091b562b1d11e5b5d7040063e57"
+      "hash": "b69655690c32c97bd322b71d2de79b8001489cd4b6a9fa520f270b6c4cfd6419"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -863,7 +863,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
       "heading": "Auto-approve specific permission prompts",
-      "hash": "7d2bd000222d4d0c4d6ff1a24c9ae108531c02f1cba44e90493cd097293e8872"
+      "hash": "7ea843d920d770ecfc8f1d569a1730a709b4b15ee8595f5141855120e926a9a0"
     }
   ],
   "hooks-command-deprecated-cli-flag": [
@@ -1644,7 +1644,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "PermissionRequest decision control",
-      "hash": "66b4b34e57355b8244090ede24c44504d899e091b562b1d11e5b5d7040063e57"
+      "hash": "b69655690c32c97bd322b71d2de79b8001489cd4b6a9fa520f270b6c4cfd6419"
     }
   ],
   "hooks-ps1-needs-powershell-shell": [
