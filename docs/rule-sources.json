@@ -3074,6 +3074,11 @@
       "hash": "1005e7f314981cdd5f8a8534d15c6c730c4bed4a5c1c720b897ff58e8e184c62"
     },
     {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "MCP server rejected the elicitation capability",
+      "hash": "f8e23050c7c36ed3f8675d37e605ab3229e9971da785da278399f6b2dabf6635"
+    },
+    {
       "url": "https://code.claude.com/docs/en/managed-mcp",
       "heading": "How a server is evaluated",
       "hash": "b7f2d2ae840607b51d791b9e22a3e0c3b266895c74e234fc5ab1a4d30bfe13fb"
