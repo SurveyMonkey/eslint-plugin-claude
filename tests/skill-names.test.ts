@@ -55,6 +55,15 @@ describe('firstFault', () => {
     ['U+FE0F', 'a hidden character'],
     ['U+1160', 'a hidden character'],
     ['U+E01EF', 'a hidden character'],
+    ['U+2063', 'a hidden character'],
+    ['U+E0050', 'a hidden character'],
+    ['U+1BCA0', 'a hidden character'],
+    ['U+13430', 'a hidden character'],
+    ['U+1D173', 'a hidden character'],
+    ['U+FFA0', 'a hidden character'],
+    ['U+FE01', 'a hidden character'],
+    ['U+FE0E', 'a hidden character'],
+    ['U+E0100', 'a hidden character'],
     ['U+2800', 'a blank-like character'],
     ['U+FFFC', 'a blank-like character'],
     ['U+1D159', 'a blank-like character'],
@@ -73,8 +82,37 @@ describe('firstFault', () => {
     '\u{1D15A}',
     '\u{301}',
     '\u{1F600}',
+    '\u{2FFF}',
+    '\u{5D0}',
   ])('takes %j', (char) => {
     expect(firstFault(`x${char}y`)).toBeNull()
+  })
+
+  // Claude Code 2.1.319 took a project skill folder with each of these names. Each holds a
+  // character of the hidden class in an emoji sequence, or a joiner in a word of a script.
+  it.each([
+    ['a family emoji', 'family-\u{1F468}\u200D\u{1F469}\u200D\u{1F467}'],
+    ['a red heart with U+FE0F', 'x\u2764\uFE0Fy'],
+    ['a keycap', 'x1\uFE0F\u20E3y'],
+    ['the flag of England', 'x\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}y'],
+    ['a Devanagari U+200D', '\u0915\u094D\u200D\u0937'],
+    ['a Bengali U+200C', '\u0995\u09CD\u200C\u09B7'],
+    ['a Sinhala U+200D', '\u0DA4\u0DCA\u200D\u0DBA'],
+    ['an Arabic U+200C', '\u0628\u200C\u0628'],
+    ['an Arabic U+200C after a mark', '\u0628\u064E\u200C\u0628'],
+  ])('takes %s', (_name, text) => {
+    expect(firstFault(text)).toBeNull()
+  })
+
+  // Claude Code 2.1.319 refused a project skill folder with each of these names.
+  it.each([
+    ['a red heart with U+FE0E', 'x\u2764\uFE0Ey', 'U+FE0E'],
+    ['U+200C between Latin letters', 'a\u200Cb', 'U+200C'],
+    ['U+200D after a Tamil virama', '\u0B95\u0BCD\u200D\u0BB7', 'U+200D'],
+    ['U+200D at the end of an emoji', 'x\u{1F468}\u200D', 'U+200D'],
+    ['U+200C after an Arabic letter at the end', '\u0628\u200C', 'U+200C'],
+  ])('refuses %s', (_name, text, code) => {
+    expect(firstFault(text)).toEqual({ code, kind: 'a hidden character' })
   })
 })
 
