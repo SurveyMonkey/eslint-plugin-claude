@@ -115,6 +115,23 @@ symlinkSync('a', at('link/.claude/skills/c'))
 put('plugin-link/.claude-plugin/plugin.json', '{"name":"p"}')
 put('plugin-link/skills/a/SKILL.md', skill(600))
 symlinkSync('a', at('plugin-link/skills/b'))
+// The manifest `skills` key adds a folder of skill folders and one skill folder to `skills/`
+// (manifest reference, Fields table): 1,000, 20 and 5 hooks. A listed skill finds its plugin
+// only below the repository root, so the tree has a `.git`.
+put('listed/.git/HEAD', '')
+put('listed/.claude-plugin/plugin.json', '{"name":"p","skills":["./extra/","./one"]}')
+put('listed/skills/a/SKILL.md', skill(1000))
+put('listed/extra/b/SKILL.md', skill(20))
+put('listed/one/SKILL.md', skill(5))
+// The key names `skills/`, so each skill there occurs two times: 1,000 and 24 hooks.
+put('twice/.claude-plugin/plugin.json', '{"name":"p","skills":"./skills/"}')
+put('twice/skills/a/SKILL.md', skill(1000))
+put('twice/skills/b/SKILL.md', skill(24))
+// A manifest that does not parse gives no paths. `skills/` still counts: 1,000 and 25 hooks.
+put('bad-manifest/.claude-plugin/plugin.json', '{"name":')
+put('bad-manifest/skills/a/SKILL.md', skill(1000))
+put('bad-manifest/skills/b/SKILL.md', skill(25))
+put('bad-manifest/extra/c/SKILL.md', skill(25))
 
 /** The location of the `hooks` key on line 2. */
 const key = { line: 2, column: 1, endLine: 2, endColumn: 6 }
@@ -189,6 +206,11 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
     // A plugin folder link to one skill counts that skill once: 600 hooks.
     { code: skill(600), filename: at('plugin-link/skills/a/SKILL.md') },
     { code: skill(600), filename: at('plugin-link/skills/b/SKILL.md') },
+    // A skill in `skills/` that the manifest also lists counts once: 1,024 hooks.
+    { code: skill(1000), filename: at('twice/skills/a/SKILL.md') },
+    { code: skill(24), filename: at('twice/skills/b/SKILL.md') },
+    // The listed skills, at the limit with 4 hooks in the editor: 1,000, 20 and 4.
+    { code: skill(4), filename: at('listed/one/SKILL.md') },
   ],
   invalid: [
     // 1,025 hooks: one over the limit. Each skill of the source with a hook reports.
@@ -229,6 +251,35 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
     {
       code: skill(25),
       filename: at('plugin/skills/b/SKILL.md'),
+      errors: [hooksError(1025, 25)],
+    },
+    // The skills that the manifest `skills` key lists add to `skills/`: 1,025 hooks. Each skill
+    // reports, in `skills/` and in a listed folder.
+    {
+      code: skill(1000),
+      filename: at('listed/skills/a/SKILL.md'),
+      errors: [hooksError(1025, 1000)],
+    },
+    {
+      code: skill(20),
+      filename: at('listed/extra/b/SKILL.md'),
+      errors: [hooksError(1025, 20)],
+    },
+    {
+      code: skill(5),
+      filename: at('listed/one/SKILL.md'),
+      errors: [hooksError(1025, 5)],
+    },
+    // A skill in `skills/` that the manifest also lists counts once: 1,025 hooks.
+    {
+      code: skill(25),
+      filename: at('twice/skills/b/SKILL.md'),
+      errors: [hooksError(1025, 25)],
+    },
+    // A manifest that does not parse gives no paths: `extra/` adds nothing.
+    {
+      code: skill(25),
+      filename: at('bad-manifest/skills/b/SKILL.md'),
       errors: [hooksError(1025, 25)],
     },
     // Past both limits: 1,025 hooks under a matcher of 16 characters make 16,400.
