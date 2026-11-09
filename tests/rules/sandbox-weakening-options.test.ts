@@ -43,6 +43,12 @@ describe(`${name}: the options that any file can set`, () => {
     }
   })
 
+  it('names the CoreSimulator prefix as the docs write it', () => {
+    expect(at(repo({}), PROJECT, network({ allowMachLookup: ['*'] }))[0]?.message).toContain(
+      'com.apple.CoreSimulator.*',
+    )
+  })
+
   it('names the option in the message', () => {
     for (const [, text, word] of CASES) {
       expect(at(repo({}), PROJECT, text)[0]?.message, word).toContain(word)
