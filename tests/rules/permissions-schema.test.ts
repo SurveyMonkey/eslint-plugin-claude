@@ -63,6 +63,14 @@ describe(`${name}: a valid object`, () => {
     expect(ids(code)).toEqual([])
   })
 
+  it('makes no unknownKey report on denyInsteadOfPrompting, in every file (#780)', () => {
+    for (const file of EVERY_FILE) {
+      for (const value of [true, false]) {
+        expect(ids(permissions({ denyInsteadOfPrompting: value }), file), file).toEqual([])
+      }
+    }
+  })
+
   it('is silent for an entry with a NUL byte: permissions-rule-syntax reports it', () => {
     expect(ids(permissions({ allow: ['Bash\u0000'] }))).toEqual([])
   })

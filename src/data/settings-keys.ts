@@ -95,6 +95,7 @@ const USER_OR_MANAGED: readonly string[] = [
   'footerLinksRegexes',
   'forceLoginGatewayUrl',
   'modelPicker',
+  'permissions.denyInsteadOfPrompting',
   'pluginConfigs',
   'prependPlugins',
   'processWrapper',

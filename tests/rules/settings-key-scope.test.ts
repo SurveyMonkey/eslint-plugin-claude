@@ -47,6 +47,13 @@ jsonTester.run('settings-key-scope (valid)', rule, {
       code: obj({ [key]: key === 'axScreenReader' ? true : [] }),
       filename: managed,
     })),
+    // `permissions.denyInsteadOfPrompting` is a User or managed key (#780).
+    ...[managed, dropIn].flatMap((filename) =>
+      [true, false].map((value) => ({
+        code: obj({ permissions: { denyInsteadOfPrompting: value } }),
+        filename,
+      })),
+    ),
     // A User key is for the user file. The rule makes no report in a managed file.
     ...[managed, dropIn].map((filename) => ({
       code: obj({ worktree: { location: 'remote' } }),
@@ -151,6 +158,24 @@ jsonTester.run('settings-key-scope (invalid)', rule, {
         code: obj({ [key]: key === 'axScreenReader' ? true : [] }),
         filename,
         errors: [{ messageId: 'userOrManaged' as const, line: 1, column: 2 }],
+      })),
+    ),
+    // `permissions.denyInsteadOfPrompting` is a fault in the project files, `false` too (#780).
+    // Claude Code honors `true` from the user file and `--settings` only. The report is on the
+    // nested key.
+    ...[project, local].flatMap((filename) =>
+      [true, false].map((value) => ({
+        code: `{"permissions": {"denyInsteadOfPrompting": ${value}}}`,
+        filename,
+        errors: [
+          {
+            messageId: 'userOrManaged' as const,
+            data: { key: 'permissions.denyInsteadOfPrompting' },
+            line: 1,
+            column: 18,
+            endColumn: 42,
+          },
+        ],
       })),
     ),
     // A User key is a fault in the project files. The report is on the nested key.
