@@ -1801,7 +1801,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "Fields"
+      "heading": "Fields",
+      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
     }
   ],
   "hooks-stop-loop-guard": [
