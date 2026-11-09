@@ -13,6 +13,7 @@ import {
   isAnthropicModelId,
   isModelAlias,
   isModelId,
+  modelVersionOf,
   withoutSuffix,
 } from '../src/data/models.ts'
 
@@ -199,5 +200,56 @@ describe('the [1m] suffix', () => {
     expect(withoutSuffix('opus')).toBe('opus')
     expect(withoutSuffix('[1m]opus')).toBe('[1m]opus')
     expect(withoutSuffix('opus[1m][1m]')).toBe('opus[1m]')
+  })
+})
+
+// The docs show hyphen IDs. A gateway ID can use a dot for the minor version. No Claude Code docs
+// page shows a dotted ID, so the expected values come from the hyphen form of the same model.
+describe('the version of a model ID', () => {
+  it('reads a hyphen minor version', () => {
+    expect(modelVersionOf('claude-sonnet-5-5')).toEqual({ family: 'sonnet', major: 5, minor: 5 })
+    expect(modelVersionOf('claude-3-5-haiku-latest')).toEqual({
+      family: 'haiku',
+      major: 3,
+      minor: 5,
+    })
+  })
+
+  it('reads a dot as the separator of the minor version', () => {
+    expect(modelVersionOf('claude-sonnet-5.5')).toEqual({ family: 'sonnet', major: 5, minor: 5 })
+    expect(modelVersionOf('anthropic/claude-sonnet-5.5')).toEqual({
+      family: 'sonnet',
+      major: 5,
+      minor: 5,
+    })
+  })
+
+  it('reads a dot in an ID that has the version first', () => {
+    expect(modelVersionOf('claude-3.5-haiku-latest')).toEqual({
+      family: 'haiku',
+      major: 3,
+      minor: 5,
+    })
+  })
+
+  it('does not read a date as a minor version, with a hyphen or a dot', () => {
+    expect(modelVersionOf('claude-sonnet-4-20250514')).toEqual({
+      family: 'sonnet',
+      major: 4,
+      minor: 0,
+    })
+    expect(modelVersionOf('claude-sonnet-4.20250514')).toEqual({
+      family: 'sonnet',
+      major: 4,
+      minor: 0,
+    })
+    // A date before the family name is no version at all, in the hyphen form and the dot form.
+    expect(modelVersionOf('claude-3-20250514-haiku')).toBeUndefined()
+    expect(modelVersionOf('claude-3.20250514-haiku')).toBeUndefined()
+  })
+
+  it('gives undefined for an alias and for text', () => {
+    expect(modelVersionOf('sonnet')).toBeUndefined()
+    expect(modelVersionOf('claude-sonnet-x.5')).toBeUndefined()
   })
 })

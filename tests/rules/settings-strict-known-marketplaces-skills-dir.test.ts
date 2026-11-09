@@ -42,10 +42,20 @@ describe(`${name} (silent)`, () => {
     expect(idsAt({}, { blockedMarketplaces: [github] })).toEqual([])
   })
 
-  it('is silent for a value that is not a list', () => {
-    expect(idsAt({}, { strictKnownMarketplaces: 'x' })).toEqual([])
+  // The managed settings page, "Keys that fail closed": "A `null` removes the key."
+  it('is silent for a null value, also with an alias list that has no entry', () => {
     expect(idsAt({}, { strictKnownMarketplaces: null })).toEqual([])
-    expect(idsAt({}, { strictKnownMarketplaces: { source: 'skills-dir' } })).toEqual([])
+    expect(idsAt({}, { allowedMarketplaces: null })).toEqual([])
+    expect(idsAt({}, { strictKnownMarketplaces: null, allowedMarketplaces: [github] })).toEqual([])
+  })
+
+  it('is silent for a value that is not a list when a lock, a merge or an entry ends the report', () => {
+    const notList = { strictKnownMarketplaces: {} }
+    expect(idsAt({}, { ...notList, strictPluginOnlyCustomization: true })).toEqual([])
+    expect(idsAt({}, { ...notList, managedSourcesBehavior: 'merge' })).toEqual([])
+    expect(idsAt({}, { ...notList, blockedMarketplaces: [skillsDir] })).toEqual([])
+    expect(idsAt({ [`${DROP}/20-b.json`]: json(allow(skillsDir)) }, notList)).toEqual([])
+    expect(idsAt({ [`${DROP}/20-b.json`]: '{' }, notList)).toEqual([])
   })
 
   it('is silent when a sibling drop-in has the entry, because the lists combine', () => {
@@ -147,6 +157,43 @@ describe(`${name} (reports)`, () => {
   it('reports a list with no skills-dir entry, in the file and in a drop-in', () => {
     expect(idsAt({}, allow(github))).toEqual(['missing'])
     expect(idsAt({}, allow(github), `${DROP}/10-a.json`)).toEqual(['missing'])
+  })
+
+  // The managed settings page, "Keys that fail closed", row `strictKnownMarketplaces`: "Enforced as
+  // an empty allowlist until the value is fixed, so no marketplace source is admitted."
+  const NOT_LIST_TEXT = (key: string) =>
+    `The "${key}" value is not a list. Claude Code enforces it as an empty allowlist until you fix the value. So it admits no marketplace source, and no skills-directory plugin loads. Replace it with a list that has a {"source": "skills-dir"} entry.`
+
+  it('reports a value that is not a list, with the message of an empty allowlist', () => {
+    const root = repo({})
+    for (const value of [{}, 'x', 1, true, false, { source: 'skills-dir' }, '']) {
+      const text = json({ strictKnownMarketplaces: value })
+      const messages = lintJson(name, text, path.join(root, MAIN))
+      expect(messages, text).toHaveLength(1)
+      expect(messages[0]?.message, text).toBe(NOT_LIST_TEXT('strictKnownMarketplaces'))
+      expect(messages[0]?.messageId, text).toBe('notList')
+    }
+  })
+
+  it('reports a value of the alias that is not a list, on the key, and names the alias', () => {
+    const root = repo({})
+    const text = '{\n  "allowedMarketplaces": "x"\n}'
+    const messages = lintJson(name, text, path.join(root, MAIN))
+    expect(messages).toHaveLength(1)
+    expect([messages[0]?.line, messages[0]?.column, messages[0]?.message]).toEqual([
+      2,
+      3,
+      NOT_LIST_TEXT('allowedMarketplaces'),
+    ])
+  })
+
+  it('reports a canonical value that is not a list, and not the alias list', () => {
+    const both = { strictKnownMarketplaces: 'x', allowedMarketplaces: [skillsDir] }
+    expect(idsAt({}, both)).toEqual(['notList'])
+  })
+
+  it('reports a drop-in value that is not a list', () => {
+    expect(idsAt({}, { strictKnownMarketplaces: {} }, `${DROP}/10-a.json`)).toEqual(['notList'])
   })
 
   it('reports an empty list, because any allowlist stops the plugins', () => {

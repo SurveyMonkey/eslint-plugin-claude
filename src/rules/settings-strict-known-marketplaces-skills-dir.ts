@@ -3,8 +3,9 @@
 // page merges `managed-settings.json` and each `managed-settings.d/*.json` drop-in into one source,
 // and combines the lists. A file can lock a kind of customization with
 // `strictPluginOnlyCustomization`. Such a lock stops the plugins whether or not the entry is there,
-// so the rule makes no report. The rule reads the text of the linted file, and the sibling files
-// through `readManagedSource`.
+// so the rule makes no report. A value that is present and not a list reads as an empty
+// allowlist, and the rule reports it too. A `null` removes the key, so it gets no report. The rule
+// reads the text of the linted file, and the sibling files through `readManagedSource`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { UNLOADED_MARKETPLACE_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -57,7 +58,7 @@ function locksCustomization(fields: Fields): boolean {
   return lock !== undefined && lock !== null
 }
 
-const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
+const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' | 'notList' }> = {
   meta: {
     type: 'suggestion',
     docs: {
@@ -68,6 +69,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
     messages: {
       missing:
         'Claude Code does not load skills-directory plugins when an allowlist has no entry for them. This "{{key}}" list has no {"source": "skills-dir"} entry. Add it to keep the plugins that users keep under ".claude/skills/".',
+      notList:
+        'The "{{key}}" value is not a list. Claude Code enforces it as an empty allowlist until you fix the value. So it admits no marketplace source, and no skills-directory plugin loads. Replace it with a list that has a {"source": "skills-dir"} entry.',
     },
   },
   create(context) {
@@ -78,7 +81,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
           return
         }
         const member = marketplaceMember(node.body, 'strictKnownMarketplaces')
-        if (member?.value.type !== 'Array') {
+        // A `null` removes the key (managed settings, "Keys that fail closed").
+        if (member === undefined || member.value.type === 'Null') {
           return
         }
         // The top level has the key, so it is an object. The rule cannot see text that `JSON.parse`
@@ -100,11 +104,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'missing' }> = {
         if (source.some((fields) => fields.managedSourcesBehavior === 'merge')) {
           return
         }
-        // The entry does not help when a lock is set, so a report would ask for no gain.
+        // The entry does not help when a lock is set, so a report would ask for no gain. A sibling
+        // that lists the entry also ends the report. The rule cannot tell how Claude Code joins
+        // an invalid value with a list of another file.
         if (!source.some(listsSkillsDir) && !source.some(locksCustomization)) {
           context.report({
             node: member.name,
-            messageId: 'missing',
+            messageId: member.value.type === 'Array' ? 'missing' : 'notList',
             data: { key: keyOf(member.name) },
           })
         }

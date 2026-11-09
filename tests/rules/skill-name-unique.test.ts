@@ -42,8 +42,6 @@ const SAME: [string, string, string][] = [
   ['spacing', 'my deploy', 'mydeploy'],
   ['spacing, twice', 'a b c', 'abc'],
   ['dash, twice', 'a\u{2010}b\u{2010}c', 'a-b-c'],
-  ['invisible', '\u{ad}deploy', 'deploy'],
-  ['invisible', 'dep\u{200d}loy', 'deploy'],
   ['fullwidth', '\u{ff44}\u{ff45}\u{ff50}\u{ff4c}\u{ff4f}\u{ff59}', 'deploy'],
   ['fullwidth', '\u{ff24}\u{ff25}\u{ff30}\u{ff2c}\u{ff2f}\u{ff39}', 'deploy'],
   ['compatibility form', '\u{fb01}le', 'file'],
@@ -73,6 +71,12 @@ const REFUSED: [string, string, string][] = [
   ['space at the end', 'deploy ', 'deploy'],
   ['direction control', 'dep\u{202e}loy', 'deploy'],
   ['both refused', 'dep\u{200b}loy', 'dep\tloy'],
+  // Claude Code 2.1.319 refused a project skill folder with a soft hyphen or a zero-width joiner.
+  ['soft hyphen', '\u{ad}deploy', 'deploy'],
+  ['zero-width joiner', 'dep\u{200d}loy', 'deploy'],
+  ['zero-width non-joiner', 'dep\u{200c}loy', 'deploy'],
+  ['word joiner', 'dep\u{2060}loy', 'deploy'],
+  ['braille blank', 'dep\u{2800}loy', 'deploy'],
 ]
 const DIFFERENT: [string, string][] = [
   ['d\u{435}ploy', 'deploy'], // a Cyrillic letter looks like a Latin letter
@@ -842,25 +846,65 @@ describe.skipIf(process.platform === 'win32')('a .claude link to a repository of
   })
 })
 
-// Claude Code 2.1.310 refuses a project skill folder of soft hyphens only. A plugin skill folder of
+// Claude Code 2.1.319 refuses a project skill folder of soft hyphens. A plugin skill folder of
 // soft hyphens loads with one hyphen for each, so `\u{ad}` is `-` and `\u{ad}\u{ad}` is `--`. The
-// rule gives no entry to a name that folds to an empty string, so neither tree reports.
-describe('a name of format characters only', () => {
+// probe loaded the plugin names `pp:-`, `pp:--`, `pp:a-b` and `pp:x-y` from the folders `\u{ad}`,
+// `\u{ad}\u{ad}`, `a\u{ad}b` and `x\u{2800}y`, and from `-`, `--`, `a-b` and `x\u{200d}y`.
+describe('a name of format characters', () => {
   const lint = (file: string, code: string) => lintMarkdown('skill-name-unique', code, file)
   const shy = '\u{ad}'
+  const message = (name: string, others: string) =>
+    `\`${name}\` is also the command name of ${others}. Claude Code gives that name to only one of them. Rename one.`
 
-  it.each([
-    ['a project', 'shy-proj/.claude/skills'],
-    ['a plugin', 'shy-plug/skills'],
-  ])('gives no report for two such folders in %s', (_name, dir) => {
-    put('shy-plug/.claude-plugin/plugin.json', '{"name":"shy"}')
-    const one = put(`${dir}/${shy}/SKILL.md`, bare)
-    const two = put(`${dir}/${shy}${shy}/SKILL.md`, bare)
+  it('gives no report for two project folders of soft hyphens', () => {
+    const one = put(`shy-proj/.claude/skills/${shy}/SKILL.md`, bare)
+    const two = put(`shy-proj/.claude/skills/${shy}${shy}/SKILL.md`, bare)
+    put('shy-proj/.claude/skills/-/SKILL.md', bare)
     expect(lint(one, bare)).toEqual([])
     expect(lint(two, bare)).toEqual([])
   })
 
-  it('takes a `name` of format characters only as no name, and compares the folder name', () => {
+  it('reports a plugin folder of soft hyphens and a folder `-`, in each file', () => {
+    put('shy-plug/.claude-plugin/plugin.json', '{"name":"shy"}')
+    const soft = put(`shy-plug/skills/${shy}/SKILL.md`, bare)
+    const dash = put('shy-plug/skills/-/SKILL.md', bare)
+    const softReport = lint(soft, bare)
+    expect(softReport).toHaveLength(1)
+    expect(softReport[0]?.message).toBe(message('-', '`skills/-/SKILL.md`'))
+    const dashReport = lint(dash, bare)
+    expect(dashReport).toHaveLength(1)
+    expect(dashReport[0]?.message).toBe(message('-', '`skills/<U+00AD>/SKILL.md`'))
+  })
+
+  it('reports two soft hyphens and a folder `--`, and keeps `-` and `--` apart', () => {
+    put('shy-two/.claude-plugin/plugin.json', '{"name":"shy"}')
+    const soft = put(`shy-two/skills/${shy}${shy}/SKILL.md`, bare)
+    put('shy-two/skills/--/SKILL.md', bare)
+    put(`shy-two/skills/${shy}/SKILL.md`, bare)
+    const report = lint(soft, bare)
+    expect(report).toHaveLength(1)
+    expect(report[0]?.message).toBe(message('--', '`skills/--/SKILL.md`'))
+  })
+
+  it('reports a soft hyphen inside a plugin folder name', () => {
+    put('shy-mid/.claude-plugin/plugin.json', '{"name":"shy"}')
+    const soft = put(`shy-mid/skills/a${shy}b/SKILL.md`, bare)
+    put('shy-mid/skills/a-b/SKILL.md', bare)
+    const report = lint(soft, bare)
+    expect(report).toHaveLength(1)
+    expect(report[0]?.message).toBe(message('a-b', '`skills/a-b/SKILL.md`'))
+  })
+
+  it('reports a plugin folder with a braille blank and a folder with a joiner', () => {
+    put('shy-bl/.claude-plugin/plugin.json', '{"name":"shy"}')
+    const blank = put('shy-bl/skills/x\u{2800}y/SKILL.md', bare)
+    put('shy-bl/skills/x\u{200d}y/SKILL.md', bare)
+    const report = lint(blank, bare)
+    expect(report).toHaveLength(1)
+    expect(report[0]?.message).toBe(message('x-y', '`skills/x<U+200D>y/SKILL.md`'))
+  })
+
+  it('takes a `name` of a soft hyphen as a refused name, and compares the folder name', () => {
     const code = named(quote(shy))
     const one = put(`shy-name/.claude/skills/one/SKILL.md`, code)
     const two = put(`shy-name/.claude/skills/two/SKILL.md`, code)
@@ -870,7 +914,7 @@ describe('a name of format characters only', () => {
     expect(lint(one, code)).toHaveLength(1)
   })
 
-  it('gives no report for two command files of format characters only', () => {
+  it('gives no report for two command files of soft hyphens', () => {
     const one = put(`shy-cmd/.claude/commands/${shy}.md`, bare)
     put(`shy-cmd/.claude/commands/${shy}${shy}.md`, bare)
     expect(lint(one, bare)).toEqual([])

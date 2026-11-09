@@ -2,6 +2,7 @@
 // (docs/rules/settings-env-ignored-var.md). The lists are in `src/data/settings-env.ts`.
 import type { JSONRuleDefinition } from '@eslint/json'
 import {
+  CREDENTIAL_ENV_VARS,
   envIgnoredIn,
   ignoresValueInProjectFiles,
   removedEnvVarSince,
@@ -51,9 +52,19 @@ const rule: JSONRuleDefinition<{
           if (lastMember(env, variable) !== member) {
             continue
           }
+          const { value } = member
+          // `settings-env-credential` reports a credential that has text. One report for one
+          // fault: `CLAUDE_CODE_OAUTH_TOKEN` is in both lists. An empty or a non-string value is
+          // no credential for that rule, so this rule still reports it.
+          if (
+            CREDENTIAL_ENV_VARS.includes(variable) &&
+            value.type === 'String' &&
+            value.value.trim() !== ''
+          ) {
+            continue
+          }
           const since = removedEnvVarSince(variable)
           const ignoredIn = envIgnoredIn(variable)
-          const { value } = member
           if (since !== undefined) {
             context.report({
               node: member.name,

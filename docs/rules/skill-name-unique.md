@@ -85,15 +85,15 @@ The rule changes only the characters that `skill-name-characters` refuses, and e
 to another blank. The docs give no other mapping, so a plugin folder `a.b` and a plugin folder `a-b`
 give no report.
 
-The rule compares no name that is empty after it removes the differences above. Such a name holds
-only characters such as soft hyphens. Claude Code 2.1.310 refuses a project skill folder of one or
-two soft hyphens, and loads no skill from it. It loads a plugin skill folder of soft hyphens. Each
-soft hyphen becomes one hyphen, so `/plugin:-` and `/plugin:--` are two names.
+The rule compares no empty name. A `name` field that is empty is not a loaded name, and the
+skill then goes by its folder name. A command name, with its folders joined by `:`, has no name to
+compare when it is empty.
 
-The rule does not change a soft hyphen to a hyphen, because `skill-name-characters` does not refuse
-it. So the rule gives such a folder no name. A `name` field that is empty after the fold is not a
-loaded name. The skill then goes by its folder name. A command name, with its folders joined by `:`,
-has no name to compare when it is empty after the fold.
+Claude Code 2.1.319 refuses a project skill folder of soft hyphens, and loads no skill from it.
+It loads a plugin skill folder of soft hyphens. Each soft hyphen becomes one hyphen, so
+`/plugin:-` and `/plugin:--` are two names. `skill-name-characters` refuses a soft hyphen, so the
+rule changes it to a hyphen in a plugin folder name. A plugin folder `<U+00AD>` and a plugin
+folder `-` give a report in each file.
 
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
@@ -125,9 +125,6 @@ The rule does not check these cases:
 - A skill `name` in a plugin that has the plugin prefix, such as `my-plugin:review`.
 - A `skills` path of a manifest that names the plugin root, such as `.`. The rule reads no such
   path, whether the root holds a `SKILL.md` or skill folders.
-- A plugin skill folder of soft hyphens and a plugin skill folder of hyphens, such as
-  `<U+00AD>` and `-`. Claude Code 2.1.310 loads both as `-`, but the rule gives the first folder
-  no name.
 - A name that matches a bundled skill, a built-in command, an MCP prompt, or a skill in `~/.claude/`.
   The rule cannot see them.
 - A skill folder that is a link out of the repository. Claude Code can load it, but the rule reads

@@ -69,8 +69,9 @@ can set them, so the rule makes no report in a managed file.[^ignored]
 - Variables that change how Claude Code starts or syncs: `CLAUDE_CODE_PROCESS_WRAPPER`,
   `CLAUDE_CODE_SYNC_SKILLS`, `CLAUDE_CODE_SYNC_PLUGINS`, `CLAUDE_CODE_PLUGIN_CACHE_DIR` and
   `CLAUDE_CODE_PLUGIN_SEED_DIR`.
-- The variables that set the claude.ai sign-in: `CLAUDE_CODE_OAUTH_TOKEN`,
-  `CLAUDE_CODE_OAUTH_REFRESH_TOKEN` and `CLAUDE_CODE_OAUTH_SCOPES`.
+- The variables that set the claude.ai sign-in: `CLAUDE_CODE_OAUTH_REFRESH_TOKEN` and
+  `CLAUDE_CODE_OAUTH_SCOPES`. `CLAUDE_CODE_OAUTH_TOKEN` is the third variable of this group. The
+  rule makes no report for it when its value has text (see below).
 - The timer of an unanswered dialog `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS`, the attachment switch
   `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and the file mention switch `CLAUDE_CODE_DISABLE_FILE_MENTIONS`.
 
@@ -106,6 +107,12 @@ The rule reports a removed variable in each file.
 
 ### What the rule does not check
 
+- `CLAUDE_CODE_OAUTH_TOKEN` with a value that has text, in a project or local file. Claude Code
+  ignores it there.[^ignored] But it is also a credential in a file that the repository holds.
+  So [`settings-env-credential`](settings-env-credential.md) gives the one report. The rule skips
+  a name that `CREDENTIAL_ENV_VARS` lists when its value is a string with text. An empty value, a
+  blank value, and a value that is not a string are no credential for that rule. This rule still
+  reports them.
 - A variable that Claude Code sets itself, such as `CLAUDE_CODE_CHILD_SESSION`,
   `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_REMOTE_SESSION_ID`, `CLAUDE_CODE_BRIDGE_SESSION_ID`,
   `CLAUDE_EFFORT`, `CLAUDE_JOB_DIR` and `CLAUDE_PID`. The env vars reference says how Claude

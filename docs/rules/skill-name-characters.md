@@ -36,6 +36,68 @@ these:[^characters][^refused]
   the start or the end of the name, or next to another space.
 - `<` or `>`.
 
+The startup notice of Claude Code adds this: a name may not hold "hidden, direction-changing or
+blank-like characters".[^refused] The docs give no list of the hidden and blank-like characters.
+The rule takes two more classes from a probe of Claude Code 2.1.319. The probe made a project
+skill folder `x<c>y` for each of a set of sample characters. Claude Code refused each sample. The
+rule extends the samples to these two classes:
+
+- A hidden character: a format character (`Cf`), or a default-ignorable code point
+  (`Default_Ignorable_Code_Point`). The samples include these characters:
+  - a soft hyphen (U+00AD) and a word joiner (U+2060)
+  - a zero-width joiner (U+200D) and a zero-width non-joiner (U+200C)
+  - the variation selectors U+FE00, U+FE0E and U+FE0F, and U+034F
+  - the Hangul fillers U+115F and U+3164
+- A blank-like character: U+2800 (braille pattern blank), U+FFFC (object replacement character),
+  U+1D159 (musical symbol null notehead), U+13441 and U+13442 (Egyptian hieroglyph full blank and
+  half blank), and U+16FE4 (Khitan small script filler).
+
+The rule refuses each character of the two classes, also one that the probe did not try. The
+probe also showed that Claude Code takes these characters near the classes: U+2801, U+FFFD,
+U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule reports no
+character outside the classes above.
+
+Claude Code 2.1.319 took some characters of the hidden class in a probe. Revision 38 of UAX #31
+gives contexts for some of them.[^uax31-38] Revision 39 and later do not hold these contexts.
+The current UAX #31 says: "The joining controls are used in the
+orthographies of some languages, as well as in emoji ZWJ sequences."[^uax31] The rule takes
+these characters in the cases below. Each limit that no Unicode source gives is a choice of the
+rule, set from probes of Claude Code 2.1.319.
+
+- An emoji sequence of the RGI emoji set.[^rgi] UAX #31 revision 38 says: "Implementations that
+  allow emoji characters in identifiers should also normally allow emoji sequences."[^uax31-38]
+  Examples are a family of people joined with U+200D, and a red heart with U+FE0F. A keycap and
+  the flag of England are two more.
+  - Probes only: Claude Code refused the sequence when a mark or a Hangul jamo came after it.
+    It also refused U+FE0F before a skin tone. The rule reports the first hidden character of
+    the sequence in these cases.
+- A joiner between two consonants of one Indic script, after the virama. Contexts A2 and B of
+  UAX #31 revision 38 take a joiner after a letter and a virama.[^uax31-38] The consonants are
+  the `Indic_Syllabic_Category` Consonant characters at offsets 0x15 to 0x39 of the
+  block.[^isc] A nukta can come before the virama.
+  - Probes only: the probe took U+200C or U+200D in each of Devanagari, Bengali, Gujarati,
+    Oriya, Telugu, Kannada and Malayalam. It refused a joiner after a Tamil virama, before a
+    Latin letter, before a vowel sign, and between two scripts. It refused a joiner after a
+    virama on a vowel letter or on a Latin letter. It also refused a joiner before
+    U+0958 or U+0D3A, which are consonants outside the range.
+  - The rule takes no nukta in Malayalam, because U+0D3C is a Pure_Killer there.[^isc] The
+    probe refused a joiner after U+0D3C.
+- U+200D between two Sinhala consonants, after the virama. A2 also takes U+200C there, but the
+  probe refused it.
+- U+200C between two Arabic letters (context A1).[^uax31-38] The letter before has
+  `Joining_Type` Dual_Joining or Left_Joining. The letter after has Dual_Joining or
+  Right_Joining.[^joining] The two lists hold the Arabic letters from U+0620 to U+08C8.
+  - Probes only: the lists leave out U+10EC2 to U+10EC4. The probe refused U+200C after U+10EC3,
+    and before U+10EC2.
+  - Probes only: A1 takes any number of Transparent characters next to U+200C. The rule takes up
+    to eight Arabic or inherited non-spacing marks after the first letter. The probe took eight
+    marks, and refused nine and a Devanagari nukta.
+
+Claude Code refused a joiner outside these cases. Examples are U+200C between two Latin letters,
+U+200D after a Tamil virama, and U+200C after a Sinhala virama. Others are a joiner before a Latin
+letter, a joiner between two scripts and U+200D between Arabic letters. It also refused a red
+heart with U+FE0E. The rule reports each one.
+
 The rule reports these cases:
 
 - A skill folder in `.claude/skills/`. Claude Code does not load the skill. Rename the folder.
@@ -52,10 +114,8 @@ The rule does not report a folder in the `skills/` directory of a plugin. Claude
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It
 still reports the `name` field of a plugin skill, and the file or folder name of a plugin command.
 
-The docs give examples, not a full list. The rule reports only the classes above. So it does not
-report a zero-width joiner, which is also a part of many emoji. The rule does not read the `name`
-field of a command file. A command gets its name from its path, and the docs give the `name`
-effect for a skill only.
+The docs give examples, not a full list. The rule does not read the `name` field of a command
+file. A command gets its name from its path, and the docs give the `name` effect for a skill only.
 
 Claude Code also refuses a name over 256 characters.[^refused] The rule reports this length
 fault, with no option: the limit is fixed. The docs do not say how Claude Code counts
@@ -101,3 +161,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^characters]: [Extend Claude with skills: Characters a skill name can't hold](https://code.claude.com/docs/en/skills#characters-a-skill-name-cant-hold)
 [^refused]: [Error reference: Skill or command name refused](https://code.claude.com/docs/en/errors#skill-or-command-name-refused)
+[^uax31]: [UAX #31: Unicode Identifiers and Syntax: Layout and Format Control Characters](https://www.unicode.org/reports/tr31/#Layout_and_Format_Control_Characters)
+[^uax31-38]: [UAX #31 revision 38: Limited Contexts for Joining Controls](https://www.unicode.org/reports/tr31/tr31-38.html#Limited_Contexts_for_Joining_Controls)
+[^rgi]: [UTS #51: Unicode Emoji: ED-27 RGI emoji set](https://www.unicode.org/reports/tr51/#def_rgi_set)
+[^isc]: [Unicode Character Database: IndicSyllabicCategory.txt](https://www.unicode.org/Public/UCD/latest/ucd/IndicSyllabicCategory.txt)
+[^joining]: [Unicode Character Database: DerivedJoiningType.txt](https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedJoiningType.txt)
