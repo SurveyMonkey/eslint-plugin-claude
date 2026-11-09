@@ -27,12 +27,12 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 ## Rule details
 
 A `Read` deny rule also blocks the Edit and Write tools on the same path. "NotebookEdit isn't covered, so add an `Edit` deny rule
-for paths no tool may change."[^read] The block of Edit needs v2.1.208 or later, and the block of Write needs v2.1.228 or later.
+for paths no tool may change."[^cover] The block of Edit needs v2.1.208 or later, and the block of Write needs v2.1.228 or later.
 The docs give no version for the gap of NotebookEdit.
 
 The rule reports a `Read(<path>)` rule in `deny` when the source has no `Edit` deny rule for the path. The path match is on text:
 `./path` and `path` are the same path, and white space around the path does not matter. A bare `Edit` deny rule, or a bare
-`NotebookEdit` deny rule, covers every path, because a rule with no path matches at the tool level.[^read] An `Edit` rule in
+`NotebookEdit` deny rule, covers every path, because a rule with no path matches at the tool level.[^never-match] An `Edit` rule in
 `allow` or `ask` does not count.
 
 ### One source
@@ -72,4 +72,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
+[^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)

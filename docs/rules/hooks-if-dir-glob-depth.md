@@ -42,7 +42,7 @@ The rule is `off` in `recommended`. The pattern is correct when you mean the top
 cannot know what you mean. Turn it on to find the patterns that a v2.1.214 upgrade changed.
 
 The rule applies the hooks reference only. The permissions page says that a deny or ask rule in the settings
-`permissions` lists matches at any depth for such a pattern.[^read] The rule does not read those lists.
+`permissions` lists matches at any depth for such a pattern.[^depth] The rule does not read those lists.
 
 The rule makes no report for these `if` values: `Edit(**/src/**)`, `Edit(/src/**)`, `Edit(./src/**)`,
 `Edit(src/components/**)`, a pattern with a glob character in the first segment, and a tool that is not a file tool.
@@ -105,4 +105,4 @@ configs set no option. The message names the `minVersion` that you set.
 ## Sources
 
 [^common]: [Hooks reference: Common fields](https://code.claude.com/docs/en/hooks#common-fields)
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^depth]: [Configure permissions: How deep a pattern matches](https://code.claude.com/docs/en/permissions#how-deep-a-pattern-matches)

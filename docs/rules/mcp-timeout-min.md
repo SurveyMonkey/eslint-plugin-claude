@@ -97,4 +97,4 @@ allow.
 
 ## Sources
 
-[^timeout]: [Connect Claude Code to tools via MCP: Push messages with channels](https://code.claude.com/docs/en/mcp#push-messages-with-channels)
+[^timeout]: [Connect Claude Code to tools via MCP: Time limits on MCP tool calls](https://code.claude.com/docs/en/mcp#time-limits-on-mcp-tool-calls)

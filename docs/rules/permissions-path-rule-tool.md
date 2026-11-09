@@ -27,7 +27,7 @@ The rule also lints the managed settings files: `managed-settings.json` and each
 ## Rule details
 
 Claude Code checks file permissions against `Edit(path)` and `Read(path)` rules only. A path rule for `Write`,
-`NotebookEdit`, `Glob` or the legacy `MultiEdit` tool is accepted and never consulted.[^read] Claude Code warns at
+`NotebookEdit`, `Glob` or the legacy `MultiEdit` tool is accepted and never consulted.[^never-match] Claude Code warns at
 startup.[^warning] A bare name such as `Write` is a rule for the whole tool, and it works.
 
 The rule reports a rule with parentheses for one of those four tools. The message names the rule to use instead.
@@ -80,7 +80,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)
 [^warning]: [Error reference: Is not matched by file permission checks](https://code.claude.com/docs/en/errors#is-not-matched-by-file-permission-checks)
 [^tools]: [Tools reference: Configure tools with permission rules and hooks](https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks)
 [^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)

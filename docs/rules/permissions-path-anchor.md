@@ -28,8 +28,8 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 ## Rule details
 
-In a `Read`, `Edit` or `Cd` rule, a single leading slash anchors at the settings source, not at the file system root.[^read] The docs
-say: "A pattern like `/Users/alice/file` isn't an absolute path." The pattern for an absolute path starts with `//`.[^read]
+In a `Read`, `Edit` or `Cd` rule, a single leading slash anchors at the settings source, not at the file system root.[^patterns] The docs
+say: "A pattern like `/Users/alice/file` isn't an absolute path." The pattern for an absolute path starts with `//`.[^patterns]
 The rule reports a rule in any list whose path starts with one slash and a first segment from a short list of root directories
 (`Users`, `home`, `tmp`, `var`, `etc`, `opt`, `usr`, `mnt`, `Volumes`, `private`, `Library`, `Applications`, `root`, `srv`, `nix`).
 `Edit(/src/**)` is silent: a project directory is a valid use. The list is a choice of the plugin, in `src/data/bash-commands.ts`.
@@ -44,11 +44,11 @@ file system root keeps the path. The rule checks the four lists below `sandbox.f
 ### What the rule does not check
 
 Issue 15 has two more parts. Both rest on user settings: a `/path` rule in `~/.claude/settings.json` resolves under `~/.claude`, and a
-sandbox `.` or `./` path there resolves under `~/.claude`.[^read][^prefixes] A user file is outside the repository, and the plugin
+sandbox `.` or `./` path there resolves under `~/.claude`.[^anchors][^prefixes] A user file is outside the repository, and the plugin
 does not read it (ADR 001, Decision 14). The rule does not check them.
 
 The docs do not say how a managed file resolves `./x`, so the sandbox part is silent there. The permission part
-reads managed files, because the warning of the docs holds for every source.[^read]
+reads managed files, because the warning of the docs holds for every source.[^anchors]
 
 Fail:
 
@@ -79,5 +79,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^patterns]: [Configure permissions: How path patterns match](https://code.claude.com/docs/en/permissions#how-path-patterns-match)
+[^anchors]: [Configure permissions: Where a pattern anchors](https://code.claude.com/docs/en/permissions#where-a-pattern-anchors)
 [^prefixes]: [All settings: Sandbox path prefixes](https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes)
