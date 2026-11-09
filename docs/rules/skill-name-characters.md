@@ -39,17 +39,34 @@ these:[^characters][^refused]
 The startup notice of Claude Code adds this: a name may not hold "hidden, direction-changing or
 blank-like characters".[^refused] The docs give no list of the hidden and blank-like characters.
 The rule takes two more classes from a probe of Claude Code 2.1.319. The probe made a project
-skill folder `x<c>y` for each character. Claude Code refused every one of them:
+skill folder `x<c>y` for each of a set of sample characters. Claude Code refused each sample. The
+rule extends the samples to these two classes:
 
 - A hidden character: a format character (`Cf`), or a default-ignorable code point
-  (`Default_Ignorable_Code_Point`). Examples are a soft hyphen (U+00AD), a zero-width joiner
-  (U+200D), a zero-width non-joiner (U+200C), a word joiner (U+2060), a variation selector
-  (U+FE00 and U+FE0F), U+034F and the Hangul fillers (U+115F, U+3164).
+  (`Default_Ignorable_Code_Point`). The samples include these characters:
+  - a soft hyphen (U+00AD) and a word joiner (U+2060)
+  - a zero-width joiner (U+200D) and a zero-width non-joiner (U+200C)
+  - the variation selectors U+FE00, U+FE0E and U+FE0F, and U+034F
+  - the Hangul fillers U+115F and U+3164
 - A blank-like character: U+2800 (braille pattern blank), U+FFFC (object replacement character)
   and U+1D159 (musical symbol null notehead).
 
-The probe also showed that Claude Code takes the neighbours U+2801, U+FFFD, U+2423, U+2588,
-U+1D158, U+1D15A, U+0301 and U+1F600. The rule reports no character outside the classes above.
+The rule refuses each character of the two classes, also one that the probe did not try. The
+probe also showed that Claude Code takes these characters near the classes: U+2801, U+FFFD,
+U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule reports no
+character outside the classes above.
+
+Claude Code 2.1.319 took some characters of the hidden class in two cases. The rule takes them
+there too:
+
+- An emoji sequence of Unicode (`RGI_Emoji`). Examples are a family of people joined with U+200D,
+  a red heart with U+FE0F, a keycap and the flag of England.
+- A joiner in a word of a script that needs one. The probe took U+200D or U+200C after a
+  Devanagari, Bengali or Sinhala virama, and U+200C between two Arabic letters. The rule also
+  takes a joiner after a Gujarati, Oriya, Telugu, Kannada or Malayalam virama.
+
+Claude Code refused a joiner outside these cases, such as U+200C between two Latin letters, or
+U+200D after a Tamil virama. It also refused a red heart with U+FE0E. The rule reports each one.
 
 The rule reports these cases:
 
@@ -67,10 +84,8 @@ The rule does not report a folder in the `skills/` directory of a plugin. Claude
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It
 still reports the `name` field of a plugin skill, and the file or folder name of a plugin command.
 
-The docs give examples, not a full list. The rule reports only the classes above. So it reports a
-zero-width joiner, which is also a part of many emoji. Claude Code 2.1.319 refused it in a probe.
-The rule does not read the `name` field of a command file. A command gets its name from its path, and the docs give the `name`
-effect for a skill only.
+The docs give examples, not a full list. The rule does not read the `name` field of a command
+file. A command gets its name from its path, and the docs give the `name` effect for a skill only.
 
 Claude Code also refuses a name over 256 characters.[^refused] The rule reports this length
 fault, with no option: the limit is fixed. The docs do not say how Claude Code counts

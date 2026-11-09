@@ -33,7 +33,7 @@ const CLASSES: [RegExp, string][] = [
 ]
 
 /** An emoji sequence of Unicode, such as a family of people joined with U+200D. */
-// biome-ignore lint/complexity/useRegexLiterals: the target is es2022, and tsc refuses a `v` literal.
+// biome-ignore lint/complexity/useRegexLiterals: tsc refuses a `v` literal for es2022.
 const EMOJI = new RegExp('\\p{RGI_Emoji}', 'gv')
 
 /** A joiner in a word of a script that needs one. The rule takes U+200C or U+200D after a
