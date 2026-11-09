@@ -100,6 +100,11 @@ describe('firstFault', () => {
     ['a Sinhala U+200D', '\u0DA4\u0DCA\u200D\u0DBA'],
     ['an Arabic U+200C', '\u0628\u200C\u0628'],
     ['an Arabic U+200C after a mark', '\u0628\u064E\u200C\u0628'],
+    [
+      'two family emoji',
+      '\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u{1F468}\u200D\u{1F469}\u200D\u{1F467}',
+    ],
+    ['an Arabic U+200C after an emoji', 'x\u{1F600}\u0628\u200C\u0628'],
   ])('takes %s', (_name, text) => {
     expect(firstFault(text)).toBeNull()
   })
@@ -111,6 +116,8 @@ describe('firstFault', () => {
     ['U+200D after a Tamil virama', '\u0B95\u0BCD\u200D\u0BB7', 'U+200D'],
     ['U+200D at the end of an emoji', 'x\u{1F468}\u200D', 'U+200D'],
     ['U+200C after an Arabic letter at the end', '\u0628\u200C', 'U+200C'],
+    ['U+200D after a Devanagari virama at the end', '\u0915\u094D\u200D', 'U+200D'],
+    ['U+200C between a Latin and an Arabic letter', 'a\u200C\u0628', 'U+200C'],
   ])('refuses %s', (_name, text, code) => {
     expect(firstFault(text)).toEqual({ code, kind: 'a hidden character' })
   })
