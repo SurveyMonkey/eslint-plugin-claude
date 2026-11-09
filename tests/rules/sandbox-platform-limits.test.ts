@@ -1,4 +1,4 @@
-// Four limits of the sandbox depend on the platform or on the Claude Code version:
+// Six limits of the sandbox depend on the platform or on the Claude Code version:
 // https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes
 // https://code.claude.com/docs/en/settings-reference#where-wildcards-work-in-sandbox-paths
 // https://code.claude.com/docs/en/settings-reference#directory-names-with-brackets-braces-or-parentheses
@@ -79,7 +79,7 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
     }
   })
 
-  it('reports a bracket in a write list on no platform, because the name is literal', () => {
+  it('is silent for a bracket in a write list on Linux and WSL2, because the name is literal', () => {
     for (const file of EVERY_FILE) {
       for (const list of ['allowWrite', 'denyWrite']) {
         expect(
@@ -91,9 +91,9 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
     expect(ids(filesystem({ allowWrite: ['./app/[slug]'] }), WSL)).toEqual([])
   })
 
-  it('says that Claude Code matches the literal name, and that only a trailing /** works', () => {
+  it('says that only a trailing /** works, and what ./src/* covers', () => {
     expect(messages(filesystem({ allowWrite: ['./src/*'] }), LINUX)).toEqual([
-      'On Linux and WSL2 only a trailing `/**` works in this list. Claude Code matches the entry as a literal name, so `./src/*` covers only a path that is itself named `*`. Name the directory in full, or add one entry for each path.',
+      'On Linux and WSL2 only a trailing `/**` works in this list. So `./src/*` covers only a file or directory in `src` that is itself named `*`, and nothing when there is none. Name the directory in full, or add one entry for each path.',
     ])
   })
 
@@ -102,6 +102,13 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
       '{\n  "sandbox": {\n    "filesystem": {\n      "allowWrite": ["/a", "/b/*"]\n    }\n  }\n}'
     const [message] = lint(text, LINUX)
     expect([message?.line, message?.column]).toEqual([4, 28])
+  })
+
+  it('reports a read entry at its line and column', () => {
+    const text =
+      '{\n  "sandbox": {\n    "filesystem": {\n      "denyRead": ["/a", "/**/x"]\n    }\n  }\n}'
+    const [message] = lint(text, LINUX)
+    expect([message?.messageId, message?.line, message?.column]).toEqual(['readWildcard', 4, 26])
   })
 
   it('is silent for denyRead and allowRead with a wildcard after the first directory name', () => {
@@ -124,7 +131,7 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
 describe(`${name}: read lists on Linux and WSL2`, () => {
   it('reports an absolute entry with a wildcard in the first directory name', () => {
     expect(messages(filesystem({ denyRead: ['/**/*.pem'] }), LINUX)).toEqual([
-      'On Linux and WSL2 a wildcard in a "denyRead" or "allowRead" entry works only after the first directory name of the full path, so this entry covers nothing. Write the first directory name in full, with one entry for each top-level directory.',
+      'On Linux and WSL2 a wildcard in a "denyRead" or "allowRead" entry works only after the first directory name of the full path, so the wildcard of this entry does not work. Write the first directory name in full, with one entry for each top-level directory.',
     ])
   })
 

@@ -36,17 +36,18 @@ that the sandbox supports.[^wsl]
 
 | Platforms                                 | What the rule reports                                                                                                                                                                                                                                                   |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `linux`, `wsl`                            | An `allowWrite` or `denyWrite` entry with `*` or `?`, after Claude Code removes a trailing `/**`. Only a trailing `/**` works in those lists. Claude Code matches the entry as a literal name, so `./src/*` covers only a path that is itself named `*`.[^wildcards]    |
-| `linux`, `wsl`                            | An `Edit` `allow` or `deny` rule with the same characters, while `sandbox.enabled` is `true` in the same file. Claude Code adds the path of an `Edit` rule to those lists, so the same limit applies.[^wildcards][^prefixes]                                            |
+| `linux`, `wsl`                            | An `allowWrite` or `denyWrite` entry with `*` or `?`, after Claude Code removes a trailing `/**`. Only a trailing `/**` works in those lists. So `./src/*` covers only a file or directory in `src` that is itself named `*`.[^wildcards]                               |
+| `linux`, `wsl`                            | An `Edit` `allow` or `deny` rule with the same characters, while `sandbox.enabled` is `true` in the same file. Claude Code adds the path of an `Edit` rule to those lists, so the same limit applies.[^wildcards]                                                       |
 | `linux`, `wsl`                            | A `denyRead` or `allowRead` entry with an absolute path (`/` or `//`) whose first directory name holds `*`, `?` or `**`. A wildcard there works only after the first directory name of the full path, so `/**/*.pem` covers nothing. `/srv/**/*.pem` works.[^wildcards] |
 | `linux`, `wsl`                            | A non-empty `allowUnixSockets`. Claude Code ignores it there. The docs name `allowAllUnixSockets` as the other way.[^unix]                                                                                                                                              |
 | `windows-git-bash`, `windows-no-git-bash` | `failIfUnavailable: true`. The sandbox does not run on native Windows, so Claude Code exits at startup.[^enforce] The rule does not check `sandbox.enabled` for this part.                                                                                              |
 
-A `[` in an `allowWrite` or `denyWrite` entry is not reported. On Linux and WSL2 it is part of a real directory name, so
-`./app/[slug]` covers the directory with that name.[^brackets] The rule skips a `~/` entry and a `./` entry of a read list,
-because the first directory name of the full path is a part of the home or project path. A trailing `/**` of a read entry works,
-so the rule removes it first.[^wildcards] The rule skips an `Edit` `allow` rule
-that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It skips a hidden drop-in.
+The rule does not report a `[` in an `allowWrite` or `denyWrite` entry, or in an `Edit` rule. In a write list on Linux
+and WSL2 it is part of a real directory name, so `./app/[slug]` covers the directory with that name.[^brackets] In a read list, the rule
+skips a `~/` entry, a `./` entry and an entry with no prefix. The full path of each starts with a name of the home or
+project path.[^prefixes] A trailing `/**` of a read entry works, so the rule removes it first.[^wildcards] The rule skips
+an `Edit` `allow` rule that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It skips a hidden
+drop-in.
 
 ### Parts that need `minVersion`
 
@@ -62,7 +63,9 @@ that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It s
 - WSL1. The sandbox needs WSL2, and `failIfUnavailable` stops Claude Code there too.[^wsl] The `platforms` values cannot tell WSL1 from WSL2.
 - `ask` rules. The docs name `Edit` allow rules. The rule reads `Edit` deny rules too, and skips `ask` rules.
 - A deny path with a trailing `/**`, because Claude Code removes it.[^prefixes]
-- A `[` in a read list, and a wildcard in the first directory name of a `~/` or `./` entry.[^brackets]
+- A `[` in a read list. There it is a pattern on every platform, so it is not a limit of Linux and WSL2.[^brackets]
+- A read entry with a reversed range in brackets, such as `[user-id]`. Before v2.1.304, sandboxed commands on Linux and
+  WSL2 failed to start with such an entry. The rule has no part that needs both options.[^brackets]
 
 Fail, with `platforms: ["linux"]`:
 
