@@ -31,12 +31,16 @@ Claude to read the file. "This cap has no setting or environment variable to rai
 Plain stdout is added to the context on `UserPromptSubmit`, `UserPromptExpansion`, `SessionStart` and
 `PostModelSwitch`.[^exit-0]
 
+The cut is different for the stdout of a `PreCompact` hook. Claude Code uses that stdout as instructions for the
+compaction summary. It cuts output past 10,000 characters per hook and appends a marker. It does not save the output
+to a file.[^precompact]
+
 Claude Code also caps the `classifierContext` notes of one tool call at 2,000 characters, and truncates the rest.[^classifier]
 The cap is shared across every hook that responds to that call. The rule cannot add the notes of several hooks, so it
 measures each string on its own. A string over the cap proves a cut.
 
 The rule reads the strings of a JSON object that a command prints as a literal. It reads each field at the top level
-and inside `hookSpecificOutput`. On the four events above, it also measures a literal `echo` or `printf` text that is
+and inside `hookSpecificOutput`. On the four events above and on `PreCompact`, it also measures a literal `echo` or `printf` text that is
 no JSON object. The length is `String.length`, which counts UTF-16 code units.
 
 ### JSON that the rule reads
@@ -92,7 +96,7 @@ The defaults are the caps of Claude Code. The docs say that no setting raises th
 2,000 of the classifier cap (`maximum`). A team can set a lower value to keep the context short. A config that sets only the severity keeps the
 defaults. The `recommended` and `strict` configs set no option.
 
-At the default, the message says that Claude Code caps the string. At another value, the message says "The configured
+At the default, the message says that Claude Code caps the string. For `PreCompact` stdout, it says that Claude Code cuts the text and saves no file. At another value, the message says "The configured
 limit is 4000", and claims no cut.
 
 ## Sources
@@ -100,4 +104,5 @@ limit is 4000", and claims no cut.
 [^json-output]: [Hooks reference: JSON output](https://code.claude.com/docs/en/hooks#json-output)
 [^add-context]: [Hooks reference: Add context for Claude](https://code.claude.com/docs/en/hooks#add-context-for-claude)
 [^exit-0]: [Hooks reference: Exit code 0](https://code.claude.com/docs/en/hooks#exit-code-0)
+[^precompact]: [Hooks reference: PreCompact output](https://code.claude.com/docs/en/hooks#precompact-output)
 [^classifier]: [Hooks reference: Annotate a result for the auto mode classifier](https://code.claude.com/docs/en/hooks#annotate-a-result-for-the-auto-mode-classifier)

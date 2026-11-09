@@ -1,11 +1,12 @@
 // Claude Code caps `additionalContext`, `systemMessage`, `initialUserMessage` and plain stdout at 10,000 characters,
 // and the `classifierContext` notes of one tool call at 2,000 characters (docs/rules/hooks-output-size.md).
-// Over the first cap, Claude Code saves the text to a file and passes Claude the path and a preview. The docs say no
-// setting raises the output cap. The rule measures the strings that a command prints as literals, inline or from a
+// Over the first cap, Claude Code saves the text to a file and passes Claude the path and a preview. The exception
+// is the stdout of a PreCompact hook: Claude Code cuts it at the cap, appends a marker, and saves no file. The docs
+// say no setting raises the output cap. The rule measures the strings that a command prints as literals, inline or from a
 // repository script. The options set a lower limit, and their schemas allow no more than the cap. At another
 // value, the message names the configured limit.
 import type { Rule } from 'eslint'
-import { PLAIN_STDOUT_EVENTS } from '../data/hook-events.ts'
+import { CUT_STDOUT_EVENTS, PLAIN_STDOUT_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
 import {
   commandOutput,
@@ -33,6 +34,8 @@ interface Measured {
   what: string
   length: number
   classifier: boolean
+  /** True when Claude Code cuts the text and saves no file. */
+  cut: boolean
 }
 
 /** The strings that the caps measure in the JSON object `json`. A field is read at the top level and inside
@@ -48,6 +51,7 @@ function measuredIn(json: Json): Measured[] {
               what: `"${field}" string`,
               length: value.length,
               classifier: field === 'classifierContext',
+              cut: false,
             },
           ]
         : []
@@ -87,6 +91,8 @@ const rule: Rule.RuleModule = {
     messages: {
       overCap:
         'The {{what}} has {{length}} characters. Claude Code caps it at {{max}}, saves the text to a file, and passes Claude the file path with a preview of up to the first 2,000 characters.',
+      cutCap:
+        'The {{what}} has {{length}} characters. Claude Code cuts PreCompact stdout at {{max}} characters per hook and appends a marker. It does not save the text to a file.',
       overConfigured: 'The {{what}} has {{length}} characters. The configured limit is {{max}}.',
       classifierCap:
         'The {{what}} has {{length}} characters. Claude Code caps the notes of one tool call at {{max}} characters and cuts the rest.',
@@ -106,11 +112,13 @@ const rule: Rule.RuleModule = {
           json !== undefined
             ? measuredIn(json)
             : PLAIN_STDOUT_EVENTS.includes(event)
-              ? [{ what: 'plain stdout', length: text.length, classifier: false }]
-              : [],
+              ? [{ what: 'plain stdout', length: text.length, classifier: false, cut: false }]
+              : CUT_STDOUT_EVENTS.includes(event)
+                ? [{ what: 'plain stdout', length: text.length, classifier: false, cut: true }]
+                : [],
         )
         const seen = new Set<string>()
-        for (const { what, length, classifier } of strings) {
+        for (const { what, length, classifier, cut } of strings) {
           const max = classifier ? maxClassifierChars : maxOutputChars
           const cap = classifier ? CLASSIFIER_CAP : OUTPUT_CAP
           if (length > max && !seen.has(what)) {
@@ -118,7 +126,14 @@ const rule: Rule.RuleModule = {
             context.report({
               loc: output.loc,
               // At another value, the message names the configured limit and claims no cut.
-              messageId: max !== cap ? 'overConfigured' : classifier ? 'classifierCap' : 'overCap',
+              messageId:
+                max !== cap
+                  ? 'overConfigured'
+                  : classifier
+                    ? 'classifierCap'
+                    : cut
+                      ? 'cutCap'
+                      : 'overCap',
               data: { what, length: String(length), max: String(max) },
             })
           }
