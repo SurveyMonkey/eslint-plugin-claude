@@ -150,3 +150,20 @@ it('reads the last of two members with one name, for type, oauth and callbackPor
   const oauth = '{"oauth": {"clientSecret": "s"}, "oauth": {"clientId": "i"}}'
   expect(ids(lintProject(NAME, raw(oauth)))).toEqual([])
 })
+it('is silent for bareElicitationCapability on a stdio entry and on an http entry', () => {
+  // The errors page: "The field is accepted on stdio, `sse`, `http`, and `ws` entries".
+  expect(ids(lintProject(NAME, at({ command: 'x', bareElicitationCapability: true })))).toEqual([])
+  expect(ids(lintProject(NAME, at({ ...http, bareElicitationCapability: true })))).toEqual([])
+})
+it('is silent for the .mcp.json example of the errors page', () => {
+  const example = `{
+  "mcpServers": {
+    "inventory": {
+      "type": "http",
+      "url": "https://mcp.example.com/mcp",
+      "bareElicitationCapability": true
+    }
+  }
+}`
+  expect(ids(lintProject(NAME, example))).toEqual([])
+})
