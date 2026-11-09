@@ -57,20 +57,41 @@ probe also showed that Claude Code takes these characters near the classes: U+28
 U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule reports no
 character outside the classes above.
 
-Claude Code 2.1.319 took some characters of the hidden class in these cases. The rule takes them
-there too:
+Claude Code 2.1.319 took some characters of the hidden class in a probe. Revision 38 of UAX #31
+gives contexts for some of them.[^uax31-38] Revision 39 and later do not hold these contexts.
+The current UAX #31 says: "The joining controls are used in the
+orthographies of some languages, as well as in emoji ZWJ sequences."[^uax31] The rule takes
+these characters in the cases below. Each limit that no Unicode source gives is a choice of the
+rule, set from probes of Claude Code 2.1.319.
 
-- An emoji sequence of Unicode (`RGI_Emoji`). Examples are a family of people joined with U+200D,
-  and a red heart with U+FE0F. A keycap and the flag of England are two more. Claude Code refused
-  the sequence when a mark or a Hangul jamo came after it. It also refused U+FE0F before a skin
-  tone. The rule reports the first hidden character of the sequence in these cases.
-- A joiner between two consonants of one Indic script, after the virama. The probe took U+200C or
-  U+200D in each of Devanagari, Bengali, Gujarati, Oriya, Telugu, Kannada and Malayalam. A nukta
-  can come before the virama.
-- U+200D between two Sinhala consonants, after the virama.
-- U+200C between two Arabic letters. Claude Code refused it after an alef and before a hamza. The
-  rule copies the two letter lists of Claude Code 2.1.319. Up to eight Arabic or inherited marks
-  can follow the first letter.
+- An emoji sequence of the RGI emoji set.[^rgi] UAX #31 revision 38 says: "Implementations that
+  allow emoji characters in identifiers should also normally allow emoji sequences."[^uax31-38]
+  Examples are a family of people joined with U+200D, and a red heart with U+FE0F. A keycap and
+  the flag of England are two more.
+  - Probes only: Claude Code refused the sequence when a mark or a Hangul jamo came after it.
+    It also refused U+FE0F before a skin tone. The rule reports the first hidden character of
+    the sequence in these cases.
+- A joiner between two consonants of one Indic script, after the virama. Contexts A2 and B of
+  UAX #31 revision 38 take a joiner after a letter and a virama.[^uax31-38] The consonants are
+  the `Indic_Syllabic_Category` Consonant characters at offsets 0x15 to 0x39 of the
+  block.[^isc] A nukta can come before the virama.
+  - Probes only: the probe took U+200C or U+200D in each of Devanagari, Bengali, Gujarati,
+    Oriya, Telugu, Kannada and Malayalam. It refused a joiner after a Tamil virama, before a
+    Latin letter, before a vowel sign, and between two scripts. It refused a joiner after a
+    virama on a vowel letter or on a Latin letter. It also refused a joiner before
+    U+0958 or U+0D3A, which are consonants outside the range.
+  - The rule takes no nukta in Malayalam, because U+0D3C is a Pure_Killer there.[^isc] The
+    probe refused a joiner after U+0D3C.
+- U+200D between two Sinhala consonants, after the virama. A2 also takes U+200C there, but the
+  probe refused it.
+- U+200C between two Arabic letters (context A1).[^uax31-38] The letter before has
+  `Joining_Type` Dual_Joining or Left_Joining. The letter after has Dual_Joining or
+  Right_Joining.[^joining] The two lists hold the Arabic letters from U+0620 to U+08C8.
+  - Probes only: the lists leave out U+10EC2 to U+10EC4. The probe refused U+200C after U+10EC3,
+    and before U+10EC2.
+  - Probes only: A1 takes any number of Transparent characters next to U+200C. The rule takes up
+    to eight Arabic or inherited non-spacing marks after the first letter. The probe took eight
+    marks, and refused nine and a Devanagari nukta.
 
 Claude Code refused a joiner outside these cases. Examples are U+200C between two Latin letters,
 U+200D after a Tamil virama, and U+200C after a Sinhala virama. Others are a joiner before a Latin
@@ -140,3 +161,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^characters]: [Extend Claude with skills: Characters a skill name can't hold](https://code.claude.com/docs/en/skills#characters-a-skill-name-cant-hold)
 [^refused]: [Error reference: Skill or command name refused](https://code.claude.com/docs/en/errors#skill-or-command-name-refused)
+[^uax31]: [UAX #31: Unicode Identifiers and Syntax: Layout and Format Control Characters](https://www.unicode.org/reports/tr31/#Layout_and_Format_Control_Characters)
+[^uax31-38]: [UAX #31 revision 38: Limited Contexts for Joining Controls](https://www.unicode.org/reports/tr31/tr31-38.html#Limited_Contexts_for_Joining_Controls)
+[^rgi]: [UTS #51: Unicode Emoji: ED-27 RGI emoji set](https://www.unicode.org/reports/tr51/#def_rgi_set)
+[^isc]: [Unicode Character Database: IndicSyllabicCategory.txt](https://www.unicode.org/Public/UCD/latest/ucd/IndicSyllabicCategory.txt)
+[^joining]: [Unicode Character Database: DerivedJoiningType.txt](https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedJoiningType.txt)
