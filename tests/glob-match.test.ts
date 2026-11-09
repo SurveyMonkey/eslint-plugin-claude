@@ -55,6 +55,22 @@ describe('unmatchedGlobs', () => {
     expect(hit('docs/*.md', 'a/docs/README.md')).toBe(false)
     expect(hit('docs/*.md', 'docs/README.md')).toBe(true)
     expect(hit('src/components/*.tsx', 'a/src/components/B.tsx')).toBe(false)
+    // A name at any depth starts after a `/`, not inside a name.
+    expect(hit('README.md', 'docsREADME.md')).toBe(false)
+  })
+
+  it('does not anchor a glob for a / at the end or a / in a brace group with a comma', () => {
+    // The docs do not name these forms, so the matcher is wide. A brace group expands into one
+    // pattern for each part, and `README.md` has no `/` (memory#path-specific-rules).
+    expect(hit('docs/', 'a/docs/x.md')).toBe(true)
+    expect(hit('docs/', 'docs/x.md')).toBe(true)
+    expect(hit('/docs/', 'a/docs/x.md')).toBe(false)
+    expect(hit('{README.md,src/*.ts}', 'docs/README.md')).toBe(true)
+    expect(hit('src/{a,b}.ts', 'x/src/a.ts')).toBe(false)
+    expect(hit('{src,lib}/*.ts', 'x/src/a.ts')).toBe(false)
+    expect(hit('{src/a}.ts', 'x/{src/a}.ts')).toBe(false)
+    expect(hit('src\\/a.ts', 'x/src/a.ts')).toBe(false)
+    expect(hit('src\\/a.ts', 'src/a.ts')).toBe(true)
   })
 
   it('reads a double star only as a whole part', () => {
