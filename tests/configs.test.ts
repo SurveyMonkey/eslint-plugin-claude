@@ -108,6 +108,8 @@ const hooksFaults = {
   // A bare `$CLAUDE_PROJECT_DIR` in a PowerShell command (`hooks-powershell-placeholder`).
   PostCompact: [
     { hooks: [{ type: 'command', shell: 'powershell', command: '& $CLAUDE_PROJECT_DIR\\x.ps1' }] },
+    // A PowerShell command that is only a quoted path (`hooks-powershell-quoted-program`).
+    { hooks: [{ type: 'command', shell: 'powershell', command: '"C:\\Tools\\guard.exe"' }] },
   ],
   // A matcher on an event without matcher support (`hooks-matcher-unsupported-event`).
   // A matcher that names an MCP server and no tool (`hooks-matcher-mcp-name`).
@@ -263,6 +265,10 @@ hooks:
         - type: command
           shell: powershell
           command: '& $CLAUDE_PROJECT_DIR\\x.ps1'
+    - hooks:
+        - type: command
+          shell: powershell
+          command: '"C:\\Tools\\guard.exe"'
   PreToolUse:
     - matcher: mcp__memory
       hooks:
@@ -3435,10 +3441,10 @@ const STRICT_ONLY_EXPECTED = [
   ),
   // The JSON files hold three more command handlers than the YAML files: an allow, a pipe in exec form and a script.
   ...['packages/hk/.claude/agents/hk.md', 'packages/hk/.claude/skills/hk/SKILL.md'].flatMap(
-    (file) => times(22, `${file}: claude/hooks-committed-command-review@1`),
+    (file) => times(23, `${file}: claude/hooks-committed-command-review@1`),
   ),
   ...['packages/hk/.claude/settings.json', 'packages/hk/plugin/hooks/hooks.json'].flatMap((file) =>
-    times(25, `${file}: claude/hooks-committed-command-review@1`),
+    times(26, `${file}: claude/hooks-committed-command-review@1`),
   ),
   ...[
     'packages/hk/.claude/settings.json',
@@ -4009,6 +4015,7 @@ const EXPECTED = [
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/.claude/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/hooks/hooks.json: claude/hooks-no-standalone-file@2',
@@ -4096,6 +4103,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.json: claude/hooks-script-exists@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/.claude/settings.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/settings.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/settings.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/.claude/settings.local.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-config-schema@2',
@@ -4122,6 +4130,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.local.json: claude/hooks-script-exists@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-script-exists@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/.claude/skills/ev/SKILL.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/skills/ev/SKILL.md: claude/skill-description-present@1',
@@ -4143,6 +4152,7 @@ const EXPECTED = [
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-removed-cli-flag@2',
@@ -4163,6 +4173,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/managed-settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.json: claude/hooks-config-schema@2',
@@ -4183,6 +4194,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/managed-settings.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/managed-settings.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/managed-settings.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-config-schema@2',
@@ -4202,6 +4214,7 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-syntax@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-prompt-on-permission-request@1',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
@@ -5762,6 +5775,7 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   },
   { name: 'hooks-placeholder-quoted', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-powershell-placeholder', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-powershell-quoted-program', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-prefer-exec-form', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   {
     name: 'hooks-prompt-on-permission-request',
