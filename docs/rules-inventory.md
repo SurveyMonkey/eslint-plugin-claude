@@ -23,14 +23,14 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **458 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
-  and not-built rows. 341 rules go in `recommended`: 204 at `error` and 137 at
+- **459 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
+  and not-built rows. 342 rules go in `recommended`: 204 at `error` and 138 at
   `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
 - **Silent failure is the largest category.** 143 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 442 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 443 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -124,7 +124,7 @@ It is in the Subagents and output styles group.
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
-| `limit` | `problem` | A size, count or length limit, or a truncation. | 22 |
+| `limit` | `problem` | A size, count or length limit, or a truncation. | 23 |
 | `deprecated` | `suggestion` | A legacy or renamed form that still works. | 12 |
 | `practice` | `suggestion` | A documented recommendation. Nothing breaks. | 84 |
 
@@ -138,7 +138,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 458 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 459 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -173,13 +173,13 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Hooks | 19 | 17 | 21 | 57 |
 | Plugin manifest and layout | 26 | 19 | 9 | 54 |
 | Marketplace manifest | 25 | 13 | 3 | 41 |
-| CLAUDE.md, rules and memory | 12 | 9 | 16 | 37 |
+| CLAUDE.md, rules and memory | 12 | 10 | 16 | 38 |
 | Settings | 18 | 19 | 15 | 52 |
 | Permissions and sandbox | 37 | 20 | 22 | 79 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **204** | **137** | **117** | **458** |
+| **Total** | **204** | **138** | **117** | **459** |
 
-By severity, 204 rules are `error` and 254 are `warn`: the 137 `recommended` `warn` rules and
+By severity, 204 rules are `error` and 255 are `warn`: the 138 `recommended` `warn` rules and
 the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -627,7 +627,7 @@ Covers `.claude-plugin/marketplace.json` (top level, entries, plugin sources, re
 
 ### CLAUDE.md, rules and memory
 
-Rules for instruction files: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md` and its variants, `@path` imports, `.claude/rules/**/*.md`, subagent `agent-memory` directories, the gitignore state of local files, and the settings keys that control instruction loading. 37 rules: 12 error and 9 warn in `recommended`, and 16 heuristic rules `off`.
+Rules for instruction files: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md` and its variants, `@path` imports, `.claude/rules/**/*.md`, subagent `agent-memory` directories, the gitignore state of local files, and the settings keys that control instruction loading. 38 rules: 12 error and 10 warn in `recommended`, and 16 heuristic rules `off`.
 
 | Rule | Checks | Preset | Severity | Category | Validate | Docs |
 |------|--------|--------|----------|----------|----------|------|
@@ -644,6 +644,7 @@ Rules for instruction files: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`
 | `memory-settings-schema` | In any settings file: `autoMemoryEnabled` is a boolean; `autoMemoryDirectory` is a string that is absolute or starts with `~/`; `claudeMdExcludes` is an array of strings; `pluginConfigs["cc-plugin-agents-md@builtin"].options.instructionFiles` is `claude-md-or-agents-md`, `claude-md-and-agents-md`, `claude-md` or `managed-only`. Before Claude Code v2.1.285 the plugin ID was `agents-md@builtin`, and v2.1.285 and later read either ID, so the rule checks both. A `null` value reads as unset. | recommended | error | load | – | [^settings-reference-automemorydirectory] [^settings-reference-automemoryenabled] [^settings-reference-claudemdexcludes] [^settings-reference-pluginconfigs] [^memory-choose-which-instruction-files-load] |
 | `claude-md-excludes-pattern` | Each `claudeMdExcludes` entry starts with `/`, `**/`, a Windows drive or a Windows share (`\\`), or is `**` alone. Patterns match absolute paths, so a relative-style pattern such as `packages/web/**` never matches. | recommended | error | no-op | – | [^large-codebases-exclude-irrelevant-claude-md-files] [^memory-exclude-specific-claude-md-files] |
 | `claude-md-max-lines` | `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md` and each `@path`-imported file have at most 200 lines. Option `max`, default 200. Over the recommended length, Claude Code shows a startup and `/status` warning. (cross-file) The rule counts the lines of the linted file, and of each file that its imports load, to the depth of four hops. It reports an imported file at the import in the linted file. It leaves an imported `CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md` or rule file to the check of that file. A `CLAUDE.md` or `AGENTS.md` file below `.claude/rules/` is a rule file, and `rules-max-lines` checks it. | recommended | warn | limit | – | [^memory-write-effective-instructions] [^memory-my-claude-md-is-too-large] [^features-overview-compare-similar-features] [^costs-move-instructions-from-claude-md-to-skills] |
+| `claude-md-on-demand-max-chars` | A file that loads on demand has at most 40,000 characters, as `wc -m` counts them (one for each code point). Over a per-file limit, Claude gets only the start of the file (Claude Code v2.1.309 or later) [^memory-claude-ignores-the-end-of-my-subdirectory-claude-md]. Option `max`, default 40,000: the limit of a 200K context window. A 1M context window has 200,000 on Claude Opus 4.6 and Claude Sonnet 4.6, and 150,000 on later models. The model sets the window, so the schema sets no maximum. See the 200-line note below. The files: a `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` in a subfolder of the start folder, and the files that it imports, to four hops [^memory-import-additional-files]; a rule file in the `.claude/rules/` of a subfolder; a rule file with `paths` in the project `.claude/rules/` [^memory-path-specific-rules]. (cross-file) The start folder is the git top above the folder that holds the file or its `.claude/`, else that folder (as `claude-md-combined-size`). The root `CLAUDE.md` files and a project rule file with no `paths` load at launch, so they pass. An import report is at the import of the linted file. Not checked: `~/.claude/rules/` (out of the repository); the imports of a rule file; an imported `CLAUDE.md` or rule file, which has its own check; a path that the rule cannot read; a byte order mark, which ESLint removes. Validate `–`: `claude plugin validate` 2.1.321 passes a plugin with a `pkg/CLAUDE.md` and a `pkg/.claude/rules/a.md` of 40,001 characters. | recommended | warn | limit | – | [^memory-claude-ignores-the-end-of-my-subdirectory-claude-md] [^memory-import-additional-files] [^memory-path-specific-rules] |
 | `rules-max-lines` | Each `.claude/rules/**/*.md` file has at most 200 lines. Option `max`, default 200. Each rules file counts as a separate file for the length warning. | recommended | warn | limit | – | [^memory-my-claude-md-is-too-large] |
 | `memory-index-max-size` | A committed `.claude/agent-memory/*/MEMORY.md` has at most 200 lines and 25,000 bytes, measured after YAML frontmatter and block HTML comments are removed. Content past either limit does not load. Options `maxLines`, default 200, schema maximum 200, and `maxBytes`, default 25000, schema maximum 25000. | recommended | warn | limit | – | [^sub-agents-enable-persistent-memory] [^memory-how-it-works] [^errors-memory-index-is-over-its-read-limit] |
 | `claude-md-import-external` | In committed instruction files (`CLAUDE.md`, `.claude/CLAUDE.md`, `AGENTS.md`, imported files), no `@path` resolves outside the repo root (absolute, `~/`, or `../` escape). It needs per-user approval; a decline disables it for good. An `AGENTS.md` that Claude Code reads through the Project instructions setting never prompts. The rule lints `CLAUDE.md` files only, and the files that they import (cross-file), an imported `AGENTS.md` among them. It lints no `AGENTS.md` as a root. It checks the imports of files at hops one to three. An import in a file at hop four is at hop five and does not load. It reads the path as written, so a target that is not there is still reported. With no `.git`, it makes no report. A missing target inside the repo is `claude-md-import-exists`. | recommended | warn | portability | – | [^memory-import-additional-files] [^memory-where-agents-md-differs-from-claude-md] |
@@ -671,7 +672,7 @@ Rules for instruction files: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`
 
 #### CLAUDE.md, rules and memory: notes
 
-- 200-line target vs scaling threshold: memory.md gives a 200-line target and a warning at the "recommended length". The changelog says the "too long" threshold "now scales with the model's context window". `claude-md-max-lines` and `rules-max-lines` use 200 as a documented target (warn, option `max`). [^memory-my-claude-md-is-too-large] [^changelog-claude-code-changelog]
+- 200-line target vs scaling threshold: memory.md gives a 200-line target and a warning at the "recommended length". The changelog says the "too long" threshold "now scales with the model's context window". `claude-md-max-lines` and `rules-max-lines` use 200 as a documented target (warn, option `max`). `claude-md-on-demand-max-chars` does the same. Its limit also changes with the context window, and the option `max` holds it. [^memory-my-claude-md-is-too-large] [^changelog-claude-code-changelog]
 - 4 MiB is a hard skip, so `claude-md-max-bytes` is an error. memory.md names only CLAUDE.md files for it. Whether it applies to `AGENTS.md` is not documented, so the rule leaves `AGENTS.md` out. [^memory-how-it-works]
 - "25KB" is not defined as 25,000 or 25,600 bytes. `memory-index-max-size` uses the stricter 25,000. Only content that loads counts. Partial truncation is "degraded", so the rule is warn, not error. [^errors-memory-index-is-over-its-read-limit]
 - External rule symlinks conflict: memory.md says the approval prompt appears "only when a project memory file imports a file outside the working directory with `@path`, not for symlinks alone". The 2.1.284 changelog says a fix now shows the prompt for rules and for a symlinked `.claude` directory. Both agree that approval is needed, so the rules assume it. The path-scoped case never loads, so it is a separate error rule. [^memory-share-rules-across-projects-with-symlinks] [^changelog-claude-code-changelog]
@@ -1377,6 +1378,7 @@ Other names a rule may contain:
 [^settings-reference-pluginsuggestionmarketplaces]: [All settings: pluginSuggestionMarketplaces](https://code.claude.com/docs/en/settings-reference#pluginsuggestionmarketplaces)
 [^memory-how-it-works]: [How Claude remembers your project: How it works](https://code.claude.com/docs/en/memory#how-it-works)
 [^memory-my-claude-md-is-too-large]: [How Claude remembers your project: My CLAUDE.md is too large](https://code.claude.com/docs/en/memory#my-claudemd-is-too-large)
+[^memory-claude-ignores-the-end-of-my-subdirectory-claude-md]: [How Claude remembers your project: Claude ignores the end of my subdirectory CLAUDE.md](https://code.claude.com/docs/en/memory#claude-ignores-the-end-of-my-subdirectory-claudemd)
 [^memory-import-additional-files]: [How Claude remembers your project: Import additional files](https://code.claude.com/docs/en/memory#import-additional-files)
 [^memory-write-effective-instructions]: [How Claude remembers your project: Write effective instructions](https://code.claude.com/docs/en/memory#write-effective-instructions)
 [^memory-when-claude-code-reads-agents-md]: [How Claude remembers your project: When Claude Code reads AGENTS.md](https://code.claude.com/docs/en/memory#when-claude-code-reads-agentsmd)

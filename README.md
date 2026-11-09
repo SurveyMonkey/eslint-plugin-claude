@@ -425,6 +425,7 @@ default if it has one.
 | [claude-md-location](docs/rules/claude-md-location.md)                                         | Put a CLAUDE.md file where Claude Code loads it, with its exact name                |       | 🔒    |     |
 | [claude-md-max-bytes](docs/rules/claude-md-max-bytes.md)                                       | Keep a CLAUDE.md file at or under 4 MiB                                             | ✅ 🔒 |       | ⚙️  |
 | [claude-md-max-lines](docs/rules/claude-md-max-lines.md)                                       | Keep an instruction file at or under 200 lines                                      |       | ✅ 🔒 | ⚙️  |
+| [claude-md-on-demand-max-chars](docs/rules/claude-md-on-demand-max-chars.md)                   | Keep an instruction file that loads on demand at or under 40,000 characters         |       | ✅ 🔒 | ⚙️  |
 | [claude-md-procedure-to-skill](docs/rules/claude-md-procedure-to-skill.md)                     | Move a long numbered procedure from CLAUDE.md into a skill or a scoped rule         |       | 🔒    | ⚙️  |
 | [claude-md-symlink](docs/rules/claude-md-symlink.md)                                           | Make a CLAUDE.md a regular file, and import AGENTS.md                               |       | ✅ 🔒 |     |
 | [memory-agent-memory-local-untracked](docs/rules/memory-agent-memory-local-untracked.md)       | Keep the local memory of a subagent out of git                                      |       | ✅ 🔒 |     |
