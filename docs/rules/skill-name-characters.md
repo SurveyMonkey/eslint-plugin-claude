@@ -48,25 +48,34 @@ rule extends the samples to these two classes:
   - a zero-width joiner (U+200D) and a zero-width non-joiner (U+200C)
   - the variation selectors U+FE00, U+FE0E and U+FE0F, and U+034F
   - the Hangul fillers U+115F and U+3164
-- A blank-like character: U+2800 (braille pattern blank), U+FFFC (object replacement character)
-  and U+1D159 (musical symbol null notehead).
+- A blank-like character: U+2800 (braille pattern blank), U+FFFC (object replacement character),
+  U+1D159 (musical symbol null notehead), U+13441 and U+13442 (Egyptian hieroglyph full blank and
+  half blank), and U+16FE4 (Khitan small script filler).
 
 The rule refuses each character of the two classes, also one that the probe did not try. The
 probe also showed that Claude Code takes these characters near the classes: U+2801, U+FFFD,
 U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule reports no
 character outside the classes above.
 
-Claude Code 2.1.319 took some characters of the hidden class in two cases. The rule takes them
+Claude Code 2.1.319 took some characters of the hidden class in these cases. The rule takes them
 there too:
 
 - An emoji sequence of Unicode (`RGI_Emoji`). Examples are a family of people joined with U+200D,
-  a red heart with U+FE0F, a keycap and the flag of England.
-- A joiner in a word of a script that needs one. The probe took U+200D or U+200C after a
-  Devanagari, Bengali or Sinhala virama, and U+200C between two Arabic letters. The rule also
-  takes a joiner after a Gujarati, Oriya, Telugu, Kannada or Malayalam virama.
+  and a red heart with U+FE0F. A keycap and the flag of England are two more. Claude Code refused
+  the sequence when a mark or a Hangul jamo came after it. It also refused U+FE0F before a skin
+  tone. The rule reports the first hidden character of the sequence in these cases.
+- A joiner between two consonants of one Indic script, after the virama. The probe took U+200C or
+  U+200D in each of Devanagari, Bengali, Gujarati, Oriya, Telugu, Kannada and Malayalam. A nukta
+  can come before the virama.
+- U+200D between two Sinhala consonants, after the virama.
+- U+200C between two Arabic letters. Claude Code refused it after an alef and before a hamza. The
+  rule copies the two letter lists of Claude Code 2.1.319. Up to eight Arabic or inherited marks
+  can follow the first letter.
 
-Claude Code refused a joiner outside these cases, such as U+200C between two Latin letters, or
-U+200D after a Tamil virama. It also refused a red heart with U+FE0E. The rule reports each one.
+Claude Code refused a joiner outside these cases. Examples are U+200C between two Latin letters,
+U+200D after a Tamil virama, and U+200C after a Sinhala virama. Others are a joiner before a Latin
+letter, a joiner between two scripts and U+200D between Arabic letters. It also refused a red
+heart with U+FE0E. The rule reports each one.
 
 The rule reports these cases:
 

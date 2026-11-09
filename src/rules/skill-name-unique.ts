@@ -33,8 +33,8 @@ function fold(text: string): string {
 }
 
 /** `name`, or null when it folds to an empty string. `firstFault` refuses each non-empty name of
- *  such characters: a name of spaces has a space at its start, and each other character that
- *  `fold` removes is in a class of `firstFault`. Claude Code 2.1.319 refuses a project skill folder
+ *  such characters. A name of spaces has a space at its start. Each other character that `fold`
+ *  removes is in a class of `firstFault`. Claude Code 2.1.319 refuses a project skill folder
  *  of soft hyphens. It loads a plugin skill folder of soft hyphens with one hyphen for each, and
  *  `hyphenate` does the same. */
 function comparable(name: string): string | null {

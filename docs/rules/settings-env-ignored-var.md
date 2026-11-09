@@ -110,8 +110,9 @@ The rule reports a removed variable in each file.
 - `CLAUDE_CODE_OAUTH_TOKEN` with a value that has text, in a project or local file. Claude Code
   ignores it there.[^ignored] But it is also a credential in a file that the repository holds.
   So [`settings-env-credential`](settings-env-credential.md) gives the one report. The rule skips
-  each name that `CREDENTIAL_ENV_VARS` lists. An empty value, a blank value, and a value that is
-  not a string are no credential for that rule. This rule still reports them.
+  a name that `CREDENTIAL_ENV_VARS` lists when its value is a string with text. An empty value, a
+  blank value, and a value that is not a string are no credential for that rule. This rule still
+  reports them.
 - A variable that Claude Code sets itself, such as `CLAUDE_CODE_CHILD_SESSION`,
   `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_REMOTE_SESSION_ID`, `CLAUDE_CODE_BRIDGE_SESSION_ID`,
   `CLAUDE_EFFORT`, `CLAUDE_JOB_DIR` and `CLAUDE_PID`. The env vars reference says how Claude
