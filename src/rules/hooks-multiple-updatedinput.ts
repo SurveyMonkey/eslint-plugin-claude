@@ -1,5 +1,5 @@
-// When several `PreToolUse` hooks return `updatedInput`, the last one to finish takes effect, and the order
-// is not fixed, because the hooks run in parallel (docs/rules/hooks-multiple-updatedinput.md). The rule reads
+// When several `PreToolUse` hooks return `updatedInput`, Claude Code does not merge the rewrites. It does not
+// guarantee which rewrite the tool runs with (docs/rules/hooks-multiple-updatedinput.md). The rule reads
 // the handlers of one file. It reports a handler that prints `hookSpecificOutput.updatedInput` as a literal,
 // when an earlier handler of the file does so too, and a tool exists that both matchers select. A handler with an
 // `if` condition, or in the background, is not a provable rewrite for every call, so the rule skips it.
@@ -64,7 +64,7 @@ const rule: Rule.RuleModule = {
     schema: [],
     messages: {
       multiple:
-        'An earlier PreToolUse handler in this file also returns "updatedInput" for {{tool}}. The hooks run in parallel, and the last one to finish wins. Let one hook rewrite the input.',
+        'An earlier PreToolUse handler in this file also returns "updatedInput" for {{tool}}. Claude Code does not merge the rewrites, and does not guarantee which one the tool runs with. Let one hook rewrite the input.',
     },
   },
   create(context) {
