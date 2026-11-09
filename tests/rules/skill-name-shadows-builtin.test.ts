@@ -18,6 +18,7 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
     { code: bare, filename: inFolder('review') },
     { code: bare, filename: inFolder('cost') },
     { code: bare, filename: inFolder('stats') },
+    { code: bare, filename: inFolder('update') },
     // The docs describe a project skill named `verify` or `simplify` as a supported setup.
     { code: bare, filename: inFolder('verify') },
     { code: named('simplify'), filename: inFolder('s') },
@@ -84,6 +85,12 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
           column: 1,
         },
       ],
+    },
+    // The command `/restart` has the alias `/update`. The alias stays out of the list.
+    {
+      code: bare,
+      filename: inFolder('restart'),
+      errors: [{ messageId: 'builtIn', data: { name: 'restart' }, line: 1, column: 1 }],
     },
     // A non-string `name` is the fault of the schema rule, and the folder still gives the name.
     {
