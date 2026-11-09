@@ -27,8 +27,8 @@ The rule is `off` in `recommended`. It is a heuristic.
 ## Rule details
 
 The MCP docs name these keys of a server entry: `type`, `command`, `args`, `env`, `url`,
-`headers`, `headersHelper`, `oauth`, `timeout`, `alwaysLoad` and `bareElicitationCapability`.[^edit][^ws][^elicit] The errors page names
-`bareElicitationCapability` for stdio, `sse`, `http` and `ws` entries. They name these keys
+`headers`, `headersHelper`, `oauth`, `timeout` and `alwaysLoad`.[^edit][^ws] The errors page also names
+`bareElicitationCapability`, for stdio, `sse`, `http` and `ws` entries.[^elicit] The MCP docs name these keys
 of `oauth`: `clientId`, `callbackPort`, `authServerMetadataUrl` and `scopes`.[^oauth][^port][^meta][^scopes] The
 docs do not say that another key is an error. A misspelled key is most likely a mistake, for
 example `Command` or `callbackport`. So the rule is a heuristic.

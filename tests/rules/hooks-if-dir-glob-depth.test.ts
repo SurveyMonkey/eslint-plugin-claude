@@ -1,9 +1,8 @@
 // The hooks page says of an `if` condition for a file tool: "a single-segment directory pattern like
 // `"Edit(src/**)"` matches only the `src` directory in the working directory and the files under it. To match a
 // directory named `src` at any depth, write `"Edit(**/src/**)"`" (https://code.claude.com/docs/en/hooks#common-fields).
-// The changelog entry 2.1.214 says: "Fixed single-segment `dir/**` allow rules like `Edit(src/**)` auto-approving
-// writes to nested `dir/` directories anywhere in the tree instead of only `<cwd>/dir`"
-// (https://code.claude.com/docs/en/changelog). So Claude Code before 2.1.214 matched a nested `dir/` at any depth.
+// The changelog entry 2.1.214 says: "Changed single-segment `dir/**` hook `if:` conditions to match only `<cwd>/dir`;
+// write `**/dir/**` for any-depth matching." (https://code.claude.com/docs/en/changelog). So Claude Code before 2.1.214 matched a nested `dir/` at any depth.
 // A repository file does not say which Claude Code runs it. The rule reports only with the option `minVersion` at
 // v2.1.214 or later (ADR 001, Decision 2).
 import { describe, expect, it } from 'vitest'

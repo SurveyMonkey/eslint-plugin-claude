@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/hooks-multiple-updatedinput, a heuristic that reports a PreToolUse handler that prints updatedInput when an earlier handler of the same file does so for the same tool, because Claude Code does not merge the rewrites or choose one.
+description: The ESLint rule claude/hooks-multiple-updatedinput, a heuristic that reports a PreToolUse handler that prints updatedInput when an earlier handler of the same file does so for the same tool, because Claude Code does not merge the rewrites or guarantee which one the tool runs with.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [10]
