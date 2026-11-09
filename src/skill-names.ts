@@ -50,8 +50,8 @@ function point(hex: number): string {
 }
 
 /** A joiner in an Indic word. The block of the script starts at `block`. Each block puts the
- *  consonants at offsets 0x15 to 0x39, the nukta at 0x3C and the virama at 0x4D. Malayalam has
- *  no nukta here. */
+ *  consonants at offsets 0x15 to 0x39, the nukta at 0x3C and the virama at 0x4D. As in Claude
+ *  Code 2.1.319, the rule takes no nukta in Malayalam. */
 function indicJoiner(block: number): string {
   const consonant = `[${point(block + 0x15)}-${point(block + 0x39)}]`
   const nukta = block === 0xd00 ? '' : `${point(block + 0x3c)}?`
