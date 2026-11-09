@@ -93,7 +93,7 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
 
   it('says that only a trailing /** works, and what ./src/* covers', () => {
     expect(messages(filesystem({ allowWrite: ['./src/*'] }), LINUX)).toEqual([
-      'On Linux and WSL2 only a trailing `/**` works in this list. So `./src/*` covers only a file or directory in `src` that is itself named `*`, and nothing when there is none. Name the directory in full, or add one entry for each path.',
+      'On Linux and WSL2 only a trailing `/**` works in this list. For example, `./src/*` covers only a file or directory in `src` that is itself named `*`, and nothing when there is none. Name the directory in full, or add one entry for each path.',
     ])
   })
 
@@ -153,7 +153,7 @@ describe(`${name}: read lists on Linux and WSL2`, () => {
     }
   })
 
-  it('is silent for a ~/ entry and a ./ entry, whose first name is part of a known path', () => {
+  it('is silent for a ~/ entry, a ./ entry and an entry with no prefix, whose first name is part of a known path', () => {
     for (const entry of ['~/**/*.pem', '~/*/x', './**/*.pem', './*/x', '*/x', '**/*.pem']) {
       expect(ids(filesystem({ denyRead: [entry], allowRead: [entry] }), LINUX), entry).toEqual([])
     }

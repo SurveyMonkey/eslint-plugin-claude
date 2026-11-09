@@ -53,7 +53,7 @@ function isBelow(a: string, b: string): boolean {
   return at !== -1 && (left[at] as number) < (right[at] as number)
 }
 
-/** True when `path` holds `*` or `?` after Claude Code removes a trailing `/**`. On Linux and WSL2
+/** True when `path` holds `*` or `?` after the rule removes a trailing `/**`. On Linux and WSL2
  *  such a wildcard does not work in a write list. A `[` there is part of a real directory name. */
 const hasWildcard = (path: string) => /[*?]/.test(path.replace(/\/\*\*$/, ''))
 
@@ -105,7 +105,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
     defaultOptions: [{}],
     messages: {
       writeWildcard:
-        'On Linux and WSL2 only a trailing `/**` works in this list. So `./src/*` covers only a file or directory in `src` that is itself named `*`, and nothing when there is none. Name the directory in full, or add one entry for each path.',
+        'On Linux and WSL2 only a trailing `/**` works in this list. For example, `./src/*` covers only a file or directory in `src` that is itself named `*`, and nothing when there is none. Name the directory in full, or add one entry for each path.',
       editWildcard:
         'On Linux and WSL2 a wildcard other than a trailing `/**` in an `Edit` rule does not work for sandboxed commands. Add each path that the rule should cover, or the directory that holds them, to "allowWrite" for an allow rule or "denyWrite" for a deny rule.',
       readWildcard:
