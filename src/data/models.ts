@@ -110,7 +110,8 @@ export interface ModelVersion {
 // `claude-sonnet-4-5-20250929`, `claude-3-5-haiku-latest`. A minor version has one or two digits.
 // A date has eight, so a date is not a minor version. The separator of the minor version is a
 // hyphen or a dot. The dot is a gateway form, such as `anthropic/claude-sonnet-5.5`. No page of
-// the Claude Code docs shows a dotted model ID. The rule reads the form to avoid a wrong minor 0.
+// the Claude Code docs shows a dotted model ID. `modelVersionOf` reads the form to avoid a wrong
+// minor 0.
 const NAME_FIRST = new RegExp(
   `(?:^|[^a-z0-9])claude-(${FAMILY_ALIASES.join('|')})-(\\d+)(?:[-.](\\d{1,2})(?![0-9]))?`,
 )

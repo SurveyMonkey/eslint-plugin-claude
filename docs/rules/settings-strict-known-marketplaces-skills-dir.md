@@ -41,7 +41,8 @@ The rule also reports a value that is present and is not a list, such as `{}` or
 say that Claude Code enforces such a `strictKnownMarketplaces` "as an empty allowlist until the
 value is fixed, so no marketplace source is admitted".[^closed] An empty allowlist stops the
 plugins, so no skills-directory plugin loads.[^types] The message says this. A `null` removes the
-key,[^closed] so the rule makes no report for it. The lock, the `merge`, the `blockedMarketplaces`
+key,[^closed] so the rule makes no report for it. The docs do not say if the alias then applies.
+The rule does not read the alias next to a `null`. The lock, the `merge`, the `blockedMarketplaces`
 and the sibling cases below end this report too. The docs do not say how Claude Code joins an
 invalid value with a list of another file. So an entry in a sibling file also ends the report.
 
