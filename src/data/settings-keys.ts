@@ -5,9 +5,8 @@
 // before 2027-04-08, the `stale_after` date of docs/rules/settings-key-scope.md.
 // A nested key is dotted, as in the index.
 //
-// The index has four keys that Appendix A.1 of docs/rules-inventory.md lacks:
-// `allowClaudeInChromeWithManagedMcp` and `allowedProviders` (Managed), and
-// `appendPlugins` and `prependPlugins` (User or managed).
+// The index has two keys that Appendix A.1 of docs/rules-inventory.md lacks:
+// `allowClaudeInChromeWithManagedMcp` and `allowedProviders` (Managed).
 
 /** Where Claude Code reads a key. "user-or-managed" means user and managed
  *  settings, and a `--settings` file. "user" means the user file
