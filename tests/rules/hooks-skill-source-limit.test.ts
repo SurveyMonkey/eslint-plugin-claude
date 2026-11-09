@@ -116,19 +116,22 @@ put('plugin-link/.claude-plugin/plugin.json', '{"name":"p"}')
 put('plugin-link/skills/a/SKILL.md', skill(600))
 symlinkSync('a', at('plugin-link/skills/b'))
 // The manifest `skills` key adds a folder of skill folders and one skill folder to `skills/`
-// (manifest reference, Fields table): 1,000, 20 and 5 hooks. A listed skill finds its plugin
-// only below the repository root, so the tree has a `.git`.
+// (manifest reference, Fields table): 1,000, 20 and 5 hooks. With no `.git`, the repository
+// root is the skill folder, and the rule finds no plugin above it. So the tree has a `.git`.
 put('listed/.git/HEAD', '')
 put('listed/.claude-plugin/plugin.json', '{"name":"p","skills":["./extra/","./one"]}')
 put('listed/skills/a/SKILL.md', skill(1000))
 put('listed/extra/b/SKILL.md', skill(20))
 put('listed/one/SKILL.md', skill(5))
+// A skill folder that the manifest does not list.
+put('listed/other/c/SKILL.md', skill(1025))
 // The key names `skills/`, so each skill there occurs two times: 1,000 and 24 hooks.
 put('twice/.claude-plugin/plugin.json', '{"name":"p","skills":"./skills/"}')
 put('twice/skills/a/SKILL.md', skill(1000))
 put('twice/skills/b/SKILL.md', skill(24))
-// A manifest that does not parse gives no paths. `skills/` still counts: 1,000 and 25 hooks.
-put('bad-manifest/.claude-plugin/plugin.json', '{"name":')
+// A manifest that names `extra/` but does not parse gives no paths. `skills/` still counts:
+// 1,000 and 25 hooks.
+put('bad-manifest/.claude-plugin/plugin.json', '{"name":"p","skills":"./extra/"')
 put('bad-manifest/skills/a/SKILL.md', skill(1000))
 put('bad-manifest/skills/b/SKILL.md', skill(25))
 put('bad-manifest/extra/c/SKILL.md', skill(25))
@@ -211,6 +214,8 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
     { code: skill(24), filename: at('twice/skills/b/SKILL.md') },
     // The listed skills, at the limit with 4 hooks in the editor: 1,000, 20 and 4.
     { code: skill(4), filename: at('listed/one/SKILL.md') },
+    // A skill outside `skills/` that no manifest lists is in no source: 1,025 hooks, no report.
+    { code: skill(1025), filename: at('listed/other/c/SKILL.md') },
   ],
   invalid: [
     // 1,025 hooks: one over the limit. Each skill of the source with a hook reports.
@@ -276,7 +281,7 @@ markdownTester.run('hooks-skill-source-limit', ruleOf('hooks-skill-source-limit'
       filename: at('twice/skills/b/SKILL.md'),
       errors: [hooksError(1025, 25)],
     },
-    // A manifest that does not parse gives no paths: `extra/` adds nothing.
+    // A manifest that does not parse gives no paths: `extra/` adds nothing. 1,025, not 1,050.
     {
       code: skill(25),
       filename: at('bad-manifest/skills/b/SKILL.md'),
