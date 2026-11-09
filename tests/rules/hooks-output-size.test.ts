@@ -130,11 +130,13 @@ describe(`${name}: PreCompact stdout`, () => {
   const long = 'z'.repeat(10_001)
 
   it('reports a PreCompact command that prints more than 10,000 characters, with the cut message', () => {
-    const [message] = lintJson(
+    const found = lintJson(
       name,
       settings(hooks('PreCompact', [command({ command: `echo "${long}"` })])),
       '/repo/.claude/settings.json',
     )
+    expect(found).toHaveLength(1)
+    const [message] = found
     expect(message?.messageId).toBe('cutCap')
     expect(message?.message).toBe(
       'The plain stdout has 10001 characters. Claude Code cuts PreCompact stdout at 10000 characters per hook and appends a marker. It does not save the text to a file.',
@@ -151,7 +153,10 @@ describe(`${name}: PreCompact stdout`, () => {
     ])
   })
 
-  it('keeps the file message for a field of JSON output on PreCompact', () => {
+  // The docs name no JSON field of PreCompact output that Claude Code reads. The rule measures each field of JSON
+  // output on every event, with the file message. This case pins that choice of the rule: a JSON object is not
+  // measured as plain stdout.
+  it('keeps the file message for a field of JSON output on PreCompact, as a choice of the rule', () => {
     expect(
       ids(context('x'.repeat(10_001), 'additionalContext', 'PreCompact'), 'PreCompact'),
     ).toEqual(['overCap'])
