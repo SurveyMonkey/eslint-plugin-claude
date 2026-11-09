@@ -743,8 +743,8 @@ describe('scanCommands', () => {
   })
 
   it(`reads many substitutions in one \${...} expansion in linear time`, () => {
-    // Each `)` in the expansion starts a scan for a `}`. A scan that reads the text after each
-    // `)` again takes about 1.5 s here. A flat line of 8,000 substitutions takes about 2 ms.
+    // Each `)` in the expansion starts a scan for a `}`. With no `known` map, each scan reads the
+    // text after its `)` again. That took about 1.5 s on one machine, and this line about 3 ms.
     const start = Date.now()
     expect(scanCommands(`echo \${a:-${'$(a)'.repeat(8000)}}`)).toHaveLength(16_001)
     expect(Date.now() - start).toBeLessThan(500)

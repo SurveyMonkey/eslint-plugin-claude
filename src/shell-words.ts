@@ -118,9 +118,10 @@ function closingTick(line: string, start: number): number {
  *  stays open, as in `closingParen`.
  *
  *  `known` holds the result of each index that an earlier scan of `line` read with no open plain
- *  parenthesis. From such an index, the scan gives the same result. So a scan stops at a known
- *  index, and the text after it is read once. Many substitutions in one `${...}` then take
- *  linear time. */
+ *  parenthesis. A later scan that reads such an index gets the result of the earlier scan. So a
+ *  scan stops at a known index, and the text after it is read once. Many substitutions in one
+ *  `${...}` then take linear time. The scan does not keep an index in a plain parenthesis, because
+ *  a scan that starts there can give another result. */
 function braceBeforeParen(line: string, from: number, known: Map<number, boolean>): boolean {
   // The open plain parentheses. In an expansion, a plain parenthesis is text.
   let depth = 0
