@@ -125,6 +125,45 @@ describe(`${name}: plain stdout`, () => {
   })
 })
 
+describe(`${name}: PreCompact stdout`, () => {
+  // https://code.claude.com/docs/en/hooks#precompact-output: Claude Code cuts longer output at the cap and appends a marker.
+  const long = 'z'.repeat(10_001)
+
+  it('reports a PreCompact command that prints more than 10,000 characters, with the cut message', () => {
+    const found = lintJson(
+      name,
+      settings(hooks('PreCompact', [command({ command: `echo "${long}"` })])),
+      '/repo/.claude/settings.json',
+    )
+    expect(found).toHaveLength(1)
+    const [message] = found
+    expect(message?.messageId).toBe('cutCap')
+    expect(message?.message).toBe(
+      'The plain stdout has 10001 characters. Claude Code cuts PreCompact stdout at 10000 characters per hook and appends a marker. It does not save the text to a file.',
+    )
+  })
+
+  it('is silent for a PreCompact command at 10,000 characters and under', () => {
+    expect(ids(`echo "${'z'.repeat(10_000)}"`, 'PreCompact')).toEqual([])
+  })
+
+  it('names the configured limit at another value', () => {
+    expect(ids(`echo "${'z'.repeat(51)}"`, 'PreCompact', [{ maxOutputChars: 50 }])).toEqual([
+      'overConfigured',
+    ])
+  })
+
+  // The docs name no string field of PreCompact JSON output that Claude Code adds to the context. They say that it
+  // discards `systemMessage` (hooks#precompact). The rule measures each field of JSON output on every event, with the
+  // file message. This case pins that choice of the rule: a JSON object is not
+  // measured as plain stdout.
+  it('keeps the file message for a field of JSON output on PreCompact, as a choice of the rule', () => {
+    expect(
+      ids(context('x'.repeat(10_001), 'additionalContext', 'PreCompact'), 'PreCompact'),
+    ).toEqual(['overCap'])
+  })
+})
+
 describe(`${name}: options`, () => {
   it('takes another limit, and names it as the configured limit', () => {
     const found = ids(context('x'.repeat(51)), 'SessionStart', [{ maxOutputChars: 50 }])

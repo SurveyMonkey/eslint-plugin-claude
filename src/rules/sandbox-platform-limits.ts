@@ -1,9 +1,14 @@
-// Five limits of the sandbox depend on the platform or on the Claude Code version
+// Six limits of the sandbox depend on the platform or on the Claude Code version
 // (docs/rules/sandbox-platform-limits.md). No file shows the platform of a team or the oldest
 // client that reads it. So each part has an option, and a part with no option makes no report:
-// `platforms` for the three platform parts, and `minVersion` for the two version parts.
-//   - Linux and WSL2 skip an `allowWrite` or `denyWrite` entry with `*`, `?` or `[`, and the
-//     `Edit` permission rules that feed those lists. They ignore `allowUnixSockets`.
+// `platforms` for the four platform parts, and `minVersion` for the two version parts.
+//   - On Linux and WSL2, only a trailing `/**` works in `allowWrite` and `denyWrite`. The paths of
+//     the `Edit` permission rules feed those lists, so the same limit applies to `*` and `?` there.
+//     A `[` in those lists is part of a real directory name. The `/sandbox` warning names no `[` in
+//     an `Edit` rule, so the rule does not report one.
+//   - On Linux and WSL2, a wildcard in `denyRead` or `allowRead` works only after the first
+//     directory name of the full path. So `/**/*.pem` covers nothing.
+//   - Linux and WSL2 ignore `allowUnixSockets`.
 //   - Before v2.1.224, a trailing `/` on a `denyRead` or `denyWrite` entry went to the sandbox.
 //   - Before v2.1.229, a bracketed IPv6 entry of a domain list or a `WebFetch` rule is not read.
 //   - `failIfUnavailable: true` stops Claude Code at startup on native Windows. The rule does not
@@ -24,6 +29,7 @@ const name = 'sandbox-platform-limits' as const
 type MessageId =
   | 'writeWildcard'
   | 'editWildcard'
+  | 'readWildcard'
   | 'unixSockets'
   | 'trailingSlash'
   | 'ipv6'
@@ -47,9 +53,23 @@ function isBelow(a: string, b: string): boolean {
   return at !== -1 && (left[at] as number) < (right[at] as number)
 }
 
-/** True when `path` holds a character that the Linux and WSL2 sandbox does not mount, once
- *  Claude Code has removed a trailing `/**`. */
-const hasWildcard = (path: string) => /[*?[]/.test(path.replace(/\/\*\*$/, ''))
+/** True when `path` holds `*` or `?` after the rule removes a trailing `/**`. On Linux and WSL2
+ *  such a wildcard does not work in a write list. A `[` there is part of a real directory name. */
+const hasWildcard = (path: string) => /[*?]/.test(path.replace(/\/\*\*$/, ''))
+
+/** True when `path` is absolute (`/` or `//`), and its first directory name holds `*` or `?`. The
+ *  rule removes a trailing `/**` first. The full path of a `~/` entry, a `./` entry and an entry
+ *  with no prefix starts with a name of the home or project path. */
+function hasLeadingWildcard(path: string): boolean {
+  if (!path.startsWith('/')) {
+    return false
+  }
+  const [first] = path
+    .replace(/\/\*\*$/, '')
+    .replace(/^\/+/, '')
+    .split('/')
+  return /[*?]/.test(first as string)
+}
 
 /** True when `host` is an IPv6 address in brackets, with an optional port. A bracket that does not
  *  close, or that holds nothing, is not that form. */
@@ -85,9 +105,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
     defaultOptions: [{}],
     messages: {
       writeWildcard:
-        'On Linux and WSL2 the sandbox mounts concrete paths, so Claude Code skips this entry and it has no effect. Name the directory in full.',
+        'On Linux and WSL2 only a trailing `/**` works in this list. For example, `./src/*` covers only a file or directory in `src` that is itself named `*`, and nothing when there is none. Name the directory in full, or add one entry for each path.',
       editWildcard:
-        'On Linux and WSL2 Claude Code adds the path of an `Edit` rule to the sandbox write lists, and skips a path with `*`, `?` or `[`. The sandbox write lists get no path from this rule. Name the directory in full.',
+        'On Linux and WSL2 a wildcard other than a trailing `/**` in an `Edit` rule does not work for sandboxed commands. Add each path that the rule should cover, or the directory that holds them, to "allowWrite" for an allow rule or "denyWrite" for a deny rule.',
+      readWildcard:
+        'On Linux and WSL2 a wildcard in a "denyRead" or "allowRead" entry works only after the first directory name of the full path, so the wildcard of this entry does not work. Write the first directory name in full, with one entry for each top-level directory.',
       unixSockets:
         'Claude Code ignores "allowUnixSockets" on Linux and WSL2, because the seccomp filter cannot inspect socket paths. "allowAllUnixSockets" is the only way to permit Unix sockets there, and it opens every Unix socket.',
       trailingSlash:
@@ -117,6 +139,13 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
           for (const entry of list(['sandbox', 'filesystem', key])) {
             if (hasWildcard(entry.value)) {
               context.report({ node: entry, messageId: 'writeWildcard' })
+            }
+          }
+        }
+        for (const key of ['denyRead', 'allowRead']) {
+          for (const entry of list(['sandbox', 'filesystem', key])) {
+            if (hasLeadingWildcard(entry.value)) {
+              context.report({ node: entry, messageId: 'readWildcard' })
             }
           }
         }

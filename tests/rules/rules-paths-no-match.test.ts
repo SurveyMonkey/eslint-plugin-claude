@@ -2,7 +2,8 @@
 // (https://code.claude.com/docs/en/memory#path-specific-rules). A glob that matches no file
 // scopes the rule to nothing. The rule matches each glob against the files on disk below the
 // folder that holds `.claude/`, inside the repository, and skips `.git` and `node_modules`. The
-// docs say `*.md` matches Markdown files in the project root. Each case builds a tree on disk.
+// docs say `*.md` matches `.md` files anywhere under the base directory, and `/*.md` matches `.md` files
+// directly in the base directory, not in subfolders. Each case builds a tree on disk.
 // The globs are in tests/configs.test.ts.
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -58,11 +59,20 @@ describe(RULE, () => {
     expect(lint(listOf('src/api/[!x]sers.ts'))).toEqual([])
   })
 
-  it('matches *.md against files in the root only', () => {
+  it('matches *.md against files at any depth', () => {
     expect(lint(listOf('*.md'))).toEqual([])
-    expect(patterns(lint(listOf('*.md'), { 'docs/guide.md': '# G\n' }))).toEqual(['*.md'])
+    expect(lint(listOf('*.md'), { 'docs/a.md': '# A\n' })).toEqual([])
     expect(lint(listOf('**/*.md'), { 'docs/guide.md': '# G\n' })).toEqual([])
-    expect(lint(listOf('*.ts'), SRC)).toHaveLength(1)
+    expect(lint(listOf('*.py'), SRC)).toHaveLength(1)
+  })
+
+  it('matches /*.md against files in the base directory only', () => {
+    expect(lint(listOf('/*.md'))).toEqual([])
+    const messages = lint(listOf('/*.md'), { 'docs/a.md': '# A\n' })
+    expect(patterns(messages)).toEqual(['/*.md'])
+    expect(messages.map((message) => message.message)).toEqual([
+      'The glob "/*.md" matches no file below the folder that holds `.claude/`, so Claude Code never loads this rule for it. Fix the glob, or remove it. A glob is relative to that folder.',
+    ])
   })
 
   it('reports each glob of the list that matches no file, and no other', () => {

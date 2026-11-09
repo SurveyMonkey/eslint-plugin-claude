@@ -265,5 +265,10 @@ export const PLAIN_STDOUT_EVENTS: readonly string[] = [
   'PostModelSwitch',
 ]
 
+/** The events where Claude Code cuts the plain-text stdout of a hook at the 10,000-character cap and appends a
+ *  marker (https://code.claude.com/docs/en/hooks#precompact-output). It does not save that stdout to a file
+ *  (https://code.claude.com/docs/en/hooks#json-output: "except for PreCompact stdout"). */
+export const CUT_STDOUT_EVENTS: readonly string[] = ['PreCompact']
+
 /** The events whose input has the deprecated field `team_name`. */
 export const TEAM_NAME_EVENTS: readonly string[] = ['TaskCreated', 'TaskCompleted', 'TeammateIdle']

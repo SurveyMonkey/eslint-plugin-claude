@@ -34,11 +34,49 @@ describe('unmatchedGlobs', () => {
     expect(hit('src/**/*', 'src/a.ts')).toBe(true)
     expect(hit('src/**/*', 'lib/a.ts')).toBe(false)
     expect(hit('*.md', 'README.md')).toBe(true)
-    expect(hit('*.md', 'docs/README.md')).toBe(false)
+    expect(hit('*.md', 'docs/README.md')).toBe(true)
+    expect(hit('/*.md', 'README.md')).toBe(true)
+    expect(hit('/*.md', 'docs/README.md')).toBe(false)
     expect(hit('src/components/*.tsx', 'src/components/B.tsx')).toBe(true)
     expect(hit('src/components/*.tsx', 'src/components/x/B.tsx')).toBe(false)
     expect(hit('src/**/*.{ts,tsx}', 'src/a/B.tsx')).toBe(true)
     expect(hit('src/**/*.{ts,tsx}', 'src/a/B.js')).toBe(false)
+  })
+
+  it('matches a glob with no slash at any depth, and anchors a glob that has a slash', () => {
+    // Path-specific rules: `*.md` is ".md files anywhere under the base directory". `/*.md` is
+    // ".md files directly in the base directory, not in subfolders".
+    expect(hit('*.md', 'a/b/c/README.md')).toBe(true)
+    expect(hit('*.md', 'README.txt')).toBe(false)
+    expect(hit('README.md', 'docs/README.md')).toBe(true)
+    expect(hit('/*.md', 'a/b/README.md')).toBe(false)
+    expect(hit('./*.md', 'docs/README.md')).toBe(false)
+    expect(hit('./*.md', 'README.md')).toBe(true)
+    expect(hit('docs/*.md', 'a/docs/README.md')).toBe(false)
+    expect(hit('docs/*.md', 'docs/README.md')).toBe(true)
+    expect(hit('src/components/*.tsx', 'a/src/components/B.tsx')).toBe(false)
+    // A name at any depth starts after a `/`, not inside a name.
+    expect(hit('README.md', 'docsREADME.md')).toBe(false)
+  })
+
+  it('does not anchor a glob for a / at the end or a / in a brace group with a comma', () => {
+    // The docs do not name these forms, so the matcher is wide. A brace group expands into one
+    // pattern for each part, and `README.md` has no `/` (memory#path-specific-rules).
+    expect(hit('docs/', 'a/docs/x.md')).toBe(true)
+    expect(hit('docs/', 'docs/x.md')).toBe(true)
+    expect(hit('/docs/', 'a/docs/x.md')).toBe(false)
+    expect(hit('{README.md,src/*.ts}', 'docs/README.md')).toBe(true)
+    expect(hit('src/{a,b}.ts', 'x/src/a.ts')).toBe(false)
+    expect(hit('{src,lib}/*.ts', 'x/src/a.ts')).toBe(false)
+    expect(hit('{src/a}.ts', 'x/{src/a}.ts')).toBe(false)
+    expect(hit('src\\/a.ts', 'x/src/a.ts')).toBe(false)
+    expect(hit('src\\/a.ts', 'src/a.ts')).toBe(true)
+    // A `{` with no `}` is text, so the `/` after it anchors the glob.
+    expect(hit('{a,b/c', 'x/{a,b/c')).toBe(false)
+    expect(hit('{a,b/c', '{a,b/c')).toBe(true)
+    // An escaped `{` starts no brace group, so the `/` after it anchors the glob.
+    expect(hit('\\{a,b/c}', 'x/{a,b/c}')).toBe(false)
+    expect(hit('\\{a,b/c}', '{a,b/c}')).toBe(true)
   })
 
   it('reads a double star only as a whole part', () => {

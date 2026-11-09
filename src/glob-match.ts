@@ -1,10 +1,14 @@
 // Match the `paths` globs of a rule file against the files on disk, for a rule that checks that a
-// glob can match. The docs name the forms: `**/*.ts`, `src/**/*`, `*.md` (the project root only),
-// `src/components/*.tsx` and brace groups such as `src/**/*.{ts,tsx}`
+// glob can match. The docs name the forms: `**/*.ts`, `src/**/*`, `*.md` (`.md` files anywhere under the
+// base directory), `/*.md` (`.md` files directly in the base directory only), `src/components/*.tsx`
+// and brace groups such as `src/**/*.{ts,tsx}`
 // (https://code.claude.com/docs/en/memory#path-specific-rules). They do not give the full
 // syntax. So the matcher is wide where the docs are silent, and a glob that it takes for a match
 // is not reported. These choices follow:
-// - A glob is relative to the root of the project. A `./` or `/` at the start is dropped.
+// - A glob is relative to the base directory. The matcher drops a `./` or `/` at the start, and
+//   anchors the glob to the base directory.
+// - A glob with no `/` matches at any depth, so `*.md` matches `docs/a.md`. A `/` at the end, and a
+//   `/` in a brace group with a comma, do not anchor the glob. The docs do not name these forms.
 // - `*` and `?` match a dot file. `*` does not cross a `/`.
 // - A glob that names a folder matches the files below the folder. A `/` at the end is the same.
 // - A brace group without a comma stays as text.
@@ -124,16 +128,41 @@ function translate(glob: string): string {
   return out
 }
 
+/** True when `glob` has a `/` that anchors it: a `/` that is not at the end, and not in a brace
+ *  group with a comma. Claude Code expands a brace group into one pattern for each part, so one
+ *  part can match at any depth. The matcher reads the whole group at any depth. */
+function isAnchored(glob: string): boolean {
+  const body = glob.replace(/\/$/, '')
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] === '\\') {
+      // An escaped `/` is still a `/` of the path.
+      if (body[++i] === '/') {
+        return true
+      }
+    } else if (body[i] === '{') {
+      const close = closeOf(body, i)
+      if (close !== -1 && splitTop(body.slice(i + 1, close)).length > 1) {
+        i = close
+      }
+    } else if (body[i] === '/') {
+      return true
+    }
+  }
+  return false
+}
+
 /** A regular expression for `glob`, or null when the glob builds none, such as a reversed range
- *  in a bracket. The glob is relative to the project root. */
+ *  in a bracket. The glob is relative to the base directory. */
 function globRegExp(glob: string): RegExp | null {
   const bare = glob.replace(/^(?:\.?\/)+/, '')
   if (bare === '') {
-    // The project root holds every file.
+    // The base directory holds every file.
     return /^/
   }
   try {
-    return new RegExp(`^${translate(bare.endsWith('/') ? `${bare}**` : bare)}$`)
+    const source = translate(bare.endsWith('/') ? `${bare}**` : bare)
+    // A glob with no `/` that anchors it matches at any depth.
+    return new RegExp(`^${isAnchored(glob) ? '' : '(?:.*/)?'}${source}$`)
   } catch {
     return null
   }

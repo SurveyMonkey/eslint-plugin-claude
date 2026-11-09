@@ -1580,6 +1580,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreCompact output",
+      "hash": "356d107f2bdd7060877b797b8ad57e8f8cc98e14b2c37becd06c97d2569675e3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Annotate a result for the auto mode classifier",
       "hash": "87b27a8f2922e014918c15a0f7ccfa0e249858f009ce229f751de1af3b0ea8bd"
     }
@@ -5351,6 +5356,16 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Sandbox path prefixes",
       "hash": "a764f97fbcf268348057ae4fa1c548c2b86ade8b45a66d20183d409653291abe"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Where wildcards work in sandbox paths",
+      "hash": "107f62c1048ebe851157d8989b5291f1266f685a1717dea3b1c77e6ceee5b56a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "Directory names with brackets, braces, or parentheses",
+      "hash": "a605d0be85158f1efc711dde4e1eeda67f03a1c7ea45f66dddcd056c7b8a8762"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
