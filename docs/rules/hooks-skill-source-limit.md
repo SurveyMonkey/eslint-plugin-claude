@@ -79,8 +79,8 @@ the other skills of the source.
   docs name skills only in the limit, so the rule does not count the hooks of a command.
 - A `skills` path that names the plugin root, or a `plugin.json` that does not parse to an
   object or that the rule cannot read. The rule reads no listed folder for it.
-- The `skills` key of a `marketplace.json` entry. Claude Code adds the entry `skills` to those of
-  `plugin.json`.[^entry] The rule reads `plugin.json` only.
+- The `skills` key of a `marketplace.json` entry. When `strict` is unset or `true`, Claude Code
+  adds the entry `skills` to those of `plugin.json`.[^entry] The rule reads `plugin.json` only.
 - A nested `.claude/skills/` folder as part of the project source. The rule counts a folder such
   as `packages/web/.claude/skills/` as a source of its own. The docs do not say if Claude Code
   adds it to the project source.
