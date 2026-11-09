@@ -45,6 +45,8 @@ const DIRECTION = 'a character that changes the text direction'
 const BLANK = 'a blank that is not a plain space'
 const SPACE = 'a space at the start or end, or next to another space'
 const ANGLE = 'an angle bracket'
+const HIDDEN = 'a hidden character'
+const BLANK_LIKE = 'a blank-like character'
 const BAD: [name: string, code: string, kind: string][] = [
   ['a​b', 'U+200B', ZERO_WIDTH],
   ['a﻿b', 'U+FEFF', ZERO_WIDTH],
@@ -78,11 +80,33 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['a ', 'U+0020', SPACE],
   ['a<b', 'U+003C', ANGLE],
   ['a>b', 'U+003E', ANGLE],
+  // Claude Code 2.1.319 refused a project skill folder `x<c>y` for each of the 14 code points of
+  // issue #589. The debug log said: a name may not hold hidden, direction-changing or blank-like
+  // characters.
+  ['x\u00ADy', 'U+00AD', HIDDEN],
+  ['x\u200Cy', 'U+200C', HIDDEN],
+  ['x\u200Dy', 'U+200D', HIDDEN],
+  ['x\u2060y', 'U+2060', HIDDEN],
+  ['x\u180Ey', 'U+180E', HIDDEN],
+  ['x\uFFF9y', 'U+FFF9', HIDDEN],
+  ['x\u{E0001}y', 'U+E0001', HIDDEN],
+  ['x\u0600y', 'U+0600', HIDDEN],
+  ['x\u{110BD}y', 'U+110BD', HIDDEN],
+  ['x\u2061y', 'U+2061', HIDDEN],
+  ['x\u034Fy', 'U+034F', HIDDEN],
+  ['x\uFE00y', 'U+FE00', HIDDEN],
+  ['x\u115Fy', 'U+115F', HIDDEN],
+  ['x\u3164y', 'U+3164', HIDDEN],
+  // Claude Code 2.1.319 refused these too.
+  ['x\uFE0Fy', 'U+FE0F', HIDDEN],
+  ['x\u2800y', 'U+2800', BLANK_LIKE],
+  ['x\uFFFCy', 'U+FFFC', BLANK_LIKE],
+  ['x\u{1D159}y', 'U+1D159', BLANK_LIKE],
 ]
 
 // Names with no character of the classes of the rule. They hold one plain space between words, or
-// letters of other scripts. Two hold a zero-width joiner in an emoji, or a zero-width non-joiner.
-// The rule reports only the classes that the docs name.
+// letters of other scripts. Claude Code 2.1.319 took a neighbour of each refused class: U+2801,
+// U+FFFD, U+2423, U+2588, U+1D158, U+1D15A, U+0301 and U+1F600.
 const GOOD = [
   'deploy',
   'deploy app',
@@ -90,8 +114,14 @@ const GOOD = [
   'café',
   '日本語',
   'a:b',
-  'family-\u{1F468}\u200D\u{1F469}\u200D\u{1F467}',
-  'a\u200Cb',
+  'x\u2801y',
+  'x\uFFFDy',
+  'x\u2423y',
+  'x\u2588y',
+  'x\u{1D158}y',
+  'x\u{1D15A}y',
+  'x\u0301y',
+  'x\u{1F600}y',
 ]
 
 // Names at and over the limit of 256 characters. A file or folder name over 255 bytes cannot be
@@ -189,6 +219,20 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       code: '---\nname: a<b\n---\n',
       filename: skillIn('s'),
       errors: [{ messageId: 'name', line: 2, column: 7, endLine: 2, endColumn: 10 }],
+    },
+    // A zero-width joiner in an emoji sequence is refused, and the message escapes each one.
+    {
+      code: '# S\n',
+      filename: skillIn('family-\u{1F468}\u200D\u{1F469}\u200D\u{1F467}'),
+      errors: [
+        {
+          messageId: 'folder',
+          data: {
+            name: 'family-\u{1F468}<U+200D>\u{1F469}<U+200D>\u{1F467}',
+            ...at('U+200D', HIDDEN),
+          },
+        },
+      ],
     },
     // The message gives the first character that Claude Code refuses.
     {

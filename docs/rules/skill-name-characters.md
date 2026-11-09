@@ -36,6 +36,21 @@ these:[^characters][^refused]
   the start or the end of the name, or next to another space.
 - `<` or `>`.
 
+The startup notice of Claude Code adds this: a name may not hold "hidden, direction-changing or
+blank-like characters".[^refused] The docs give no list of the hidden and blank-like characters.
+The rule takes two more classes from a probe of Claude Code 2.1.319. The probe made a project
+skill folder `x<c>y` for each character. Claude Code refused every one of them:
+
+- A hidden character: a format character (`Cf`), or a default-ignorable code point
+  (`Default_Ignorable_Code_Point`). Examples are a soft hyphen (U+00AD), a zero-width joiner
+  (U+200D), a zero-width non-joiner (U+200C), a word joiner (U+2060), a variation selector
+  (U+FE00 and U+FE0F), U+034F and the Hangul fillers (U+115F, U+3164).
+- A blank-like character: U+2800 (braille pattern blank), U+FFFC (object replacement character)
+  and U+1D159 (musical symbol null notehead).
+
+The probe also showed that Claude Code takes the neighbours U+2801, U+FFFD, U+2423, U+2588,
+U+1D158, U+1D15A, U+0301 and U+1F600. The rule reports no character outside the classes above.
+
 The rule reports these cases:
 
 - A skill folder in `.claude/skills/`. Claude Code does not load the skill. Rename the folder.
@@ -52,9 +67,9 @@ The rule does not report a folder in the `skills/` directory of a plugin. Claude
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It
 still reports the `name` field of a plugin skill, and the file or folder name of a plugin command.
 
-The docs give examples, not a full list. The rule reports only the classes above. So it does not
-report a zero-width joiner, which is also a part of many emoji. The rule does not read the `name`
-field of a command file. A command gets its name from its path, and the docs give the `name`
+The docs give examples, not a full list. The rule reports only the classes above. So it reports a
+zero-width joiner, which is also a part of many emoji. Claude Code 2.1.319 refused it in a probe.
+The rule does not read the `name` field of a command file. A command gets its name from its path, and the docs give the `name`
 effect for a skill only.
 
 Claude Code also refuses a name over 256 characters.[^refused] The rule reports this length

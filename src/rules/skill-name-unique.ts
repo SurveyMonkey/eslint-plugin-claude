@@ -32,12 +32,10 @@ function fold(text: string): string {
     .replace(/[\p{Cf}\p{Cc}\p{Z}]/gu, '')
 }
 
-/** `name`, or null when it folds to an empty string. Such a name holds only characters that
- *  `fold` removes, such as soft hyphens. The rule compares no such name: a `name` field, a folder
- *  name or a command name. In a plugin folder name, `hyphenate` keeps a soft hyphen, because
- *  `skill-name-characters` does not refuse it. Claude Code 2.1.310 refuses a project skill folder
- *  of soft hyphens. It loads a plugin skill folder of soft hyphens with one hyphen for each. The
- *  rule misses that name. */
+/** `name`, or null when it folds to an empty string. Such a name is empty, because each
+ *  character that `fold` removes is one that `firstFault` refuses. Claude Code 2.1.319 refuses a
+ *  project skill folder of soft hyphens. It loads a plugin skill folder of soft hyphens with one
+ *  hyphen for each, and `hyphenate` does the same. */
 function comparable(name: string): string | null {
   return fold(name) === '' ? null : name
 }
