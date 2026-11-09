@@ -1,5 +1,7 @@
 // Four limits of the sandbox depend on the platform or on the Claude Code version:
 // https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes
+// https://code.claude.com/docs/en/settings-reference#where-wildcards-work-in-sandbox-paths
+// https://code.claude.com/docs/en/settings-reference#directory-names-with-brackets-braces-or-parentheses
 // https://code.claude.com/docs/en/settings-reference#sandbox-network-allowunixsockets
 // https://code.claude.com/docs/en/settings-reference#sandbox-network-alloweddomains
 // https://code.claude.com/docs/en/sandboxing#enforce-sandboxing-with-managed-settings
@@ -35,6 +37,8 @@ function lint(text: string, options: unknown[], file = PROJECT, root = repo({}))
     { filename: absolute },
   )
 }
+const messages = (text: string, options: unknown[], file = PROJECT) =>
+  lint(text, options, file).map((message) => message.message)
 const ids = (text: string, options: unknown[], file = PROJECT, root?: string) =>
   lint(text, options, file, root).map((message) => message.messageId)
 
@@ -66,13 +70,31 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
     expect(ids(text, WINDOWS)).toEqual([])
   })
 
-  it('reads *, ? and [ after it removes a trailing /**', () => {
-    for (const entry of ['/a/*.log', '/a/?', '/a/[bc]', '~/*/x', '/a/**/b', '/a/b/**/']) {
+  it('reads * and ? after it removes a trailing /**', () => {
+    for (const entry of ['/a/*.log', '/a/?', '~/*/x', '/a/**/b', '/a/b/**/']) {
       expect(ids(filesystem({ allowWrite: [entry] }), LINUX), entry).toEqual(['writeWildcard'])
     }
-    for (const entry of ['/a/b/**', '~/build/**', '/a/b', './out']) {
+    for (const entry of ['/a/b/**', '~/build/**', '/a/b', './out', './app/[slug]', '/a/[bc]']) {
       expect(ids(filesystem({ allowWrite: [entry] }), LINUX), entry).toEqual([])
     }
+  })
+
+  it('reports a bracket in a write list on no platform, because the name is literal', () => {
+    for (const file of EVERY_FILE) {
+      for (const list of ['allowWrite', 'denyWrite']) {
+        expect(
+          ids(filesystem({ [list]: ['./app/[slug]'] }), LINUX, file),
+          `${list} ${file}`,
+        ).toEqual([])
+      }
+    }
+    expect(ids(filesystem({ allowWrite: ['./app/[slug]'] }), WSL)).toEqual([])
+  })
+
+  it('says that Claude Code matches the literal name, and that only a trailing /** works', () => {
+    expect(messages(filesystem({ allowWrite: ['./src/*'] }), LINUX)).toEqual([
+      'On Linux and WSL2 only a trailing `/**` works in this list. Claude Code matches the entry as a literal name, so `./src/*` covers only a path that is itself named `*`. Name the directory in full, or add one entry for each path.',
+    ])
   })
 
   it('reports each entry, at its line and column', () => {
@@ -82,8 +104,9 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
     expect([message?.line, message?.column]).toEqual([4, 28])
   })
 
-  it('is silent for denyRead and allowRead, where wildcards work on every platform', () => {
+  it('is silent for denyRead and allowRead with a wildcard after the first directory name', () => {
     expect(ids(filesystem({ denyRead: ['/a/*'], allowRead: ['/b/*'] }), LINUX)).toEqual([])
+    expect(ids(filesystem({ denyRead: ['/srv/**/*.pem'] }), LINUX)).toEqual([])
   })
 
   it('is silent with no option, and with an empty platforms list', () => {
@@ -95,6 +118,49 @@ describe(`${name}: write lists on Linux and WSL2`, () => {
 
   it('does not read an entry that is not a string, or a list that is not an array', () => {
     expect(ids(filesystem({ allowWrite: [1, null], denyWrite: 'x' }), LINUX)).toEqual([])
+  })
+})
+
+describe(`${name}: read lists on Linux and WSL2`, () => {
+  it('reports an absolute entry with a wildcard in the first directory name', () => {
+    expect(messages(filesystem({ denyRead: ['/**/*.pem'] }), LINUX)).toEqual([
+      'On Linux and WSL2 a wildcard in a "denyRead" or "allowRead" entry works only after the first directory name of the full path, so this entry covers nothing. Write the first directory name in full, with one entry for each top-level directory.',
+    ])
+  })
+
+  it('reads denyRead and allowRead, `/` and `//`, and `*`, `?` and `**` in the first name', () => {
+    for (const list of ['denyRead', 'allowRead']) {
+      for (const entry of ['/**/*.pem', '//**/x', '/*/x', '/v?r/x', '/da*/x', '/*', '/**/x/**']) {
+        for (const options of [LINUX, WSL]) {
+          expect(ids(filesystem({ [list]: [entry] }), options), `${list} ${entry}`).toEqual([
+            'readWildcard',
+          ])
+        }
+      }
+    }
+  })
+
+  it('is silent for a wildcard after the first name, a trailing /**, and no wildcard', () => {
+    for (const entry of ['/srv/**/*.pem', '//srv/*.pem', '/**', '/', '//', '/srv', '/srv/**']) {
+      expect(ids(filesystem({ denyRead: [entry] }), LINUX), entry).toEqual([])
+    }
+  })
+
+  it('is silent for a ~/ entry and a ./ entry, whose first name is part of a known path', () => {
+    for (const entry of ['~/**/*.pem', '~/*/x', './**/*.pem', './*/x', '*/x', '**/*.pem']) {
+      expect(ids(filesystem({ denyRead: [entry], allowRead: [entry] }), LINUX), entry).toEqual([])
+    }
+  })
+
+  it('is silent on macOS, on Windows, and with no platform, where the part is off', () => {
+    const text = filesystem({ denyRead: ['/**/*.pem'] })
+    expect(ids(text, MAC)).toEqual([])
+    expect(ids(text, WINDOWS)).toEqual([])
+    expect(ids(text, [])).toEqual([])
+  })
+
+  it('does not read an entry that is not a string', () => {
+    expect(ids(filesystem({ denyRead: [1, null], allowRead: 'x' }), LINUX)).toEqual([])
   })
 })
 
@@ -115,6 +181,20 @@ describe(`${name}: Edit rules on Linux and WSL2`, () => {
     expect(ids(settings({ deny: ['Edit(*.env)'] }, { enabled: 'true' }), LINUX, PROJECT)).toEqual(
       [],
     )
+  })
+
+  it('says that the wildcard does not work, and where to add each path', () => {
+    expect(
+      lint(settings({ deny: ['Edit(*.env)'] }), LINUX).map((message) => message.message),
+    ).toEqual([
+      'On Linux and WSL2 a wildcard other than a trailing `/**` in an `Edit` rule does not work for sandboxed commands. Add each path that the rule should cover, or the directory that holds them, to "allowWrite" for an allow rule or "denyWrite" for a deny rule.',
+    ])
+  })
+
+  it('is silent for a bracket in an Edit rule, which names a real directory', () => {
+    expect(
+      ids(settings({ allow: ['Edit(./app/[slug]/**)', 'Edit(./app/[slug])'] }), LINUX),
+    ).toEqual([])
   })
 
   it('reads a wildcard after it removes a trailing /**', () => {

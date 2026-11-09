@@ -34,14 +34,18 @@ part with no option makes no report. The `recommended` and `strict` configs set 
 `platforms` holds `windows-git-bash`, `windows-no-git-bash`, `macos`, `linux` or `wsl`. The value `wsl` means WSL2, the only WSL
 that the sandbox supports.[^wsl]
 
-| Platforms                                 | What the rule reports                                                                                                                                                                                            |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `linux`, `wsl`                            | An `allowWrite` or `denyWrite` entry with `*`, `?` or `[`, after Claude Code removes a trailing `/**`. The sandbox mounts concrete paths, so Claude Code skips the entry and it has no effect.[^prefixes]        |
-| `linux`, `wsl`                            | An `Edit` `allow` or `deny` rule with the same characters, while `sandbox.enabled` is `true` in the same file. Claude Code adds the path of an `Edit` rule to those lists, so the same limit applies.[^prefixes] |
-| `linux`, `wsl`                            | A non-empty `allowUnixSockets`. Claude Code ignores it there. The docs name `allowAllUnixSockets` as the other way.[^unix]                                                                                       |
-| `windows-git-bash`, `windows-no-git-bash` | `failIfUnavailable: true`. The sandbox does not run on native Windows, so Claude Code exits at startup.[^enforce] The rule does not check `sandbox.enabled` for this part.                                       |
+| Platforms                                 | What the rule reports                                                                                                                                                                                                                                                   |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linux`, `wsl`                            | An `allowWrite` or `denyWrite` entry with `*` or `?`, after Claude Code removes a trailing `/**`. Only a trailing `/**` works in those lists. Claude Code matches the entry as a literal name, so `./src/*` covers only a path that is itself named `*`.[^wildcards]    |
+| `linux`, `wsl`                            | An `Edit` `allow` or `deny` rule with the same characters, while `sandbox.enabled` is `true` in the same file. Claude Code adds the path of an `Edit` rule to those lists, so the same limit applies.[^wildcards][^prefixes]                                            |
+| `linux`, `wsl`                            | A `denyRead` or `allowRead` entry with an absolute path (`/` or `//`) whose first directory name holds `*`, `?` or `**`. A wildcard there works only after the first directory name of the full path, so `/**/*.pem` covers nothing. `/srv/**/*.pem` works.[^wildcards] |
+| `linux`, `wsl`                            | A non-empty `allowUnixSockets`. Claude Code ignores it there. The docs name `allowAllUnixSockets` as the other way.[^unix]                                                                                                                                              |
+| `windows-git-bash`, `windows-no-git-bash` | `failIfUnavailable: true`. The sandbox does not run on native Windows, so Claude Code exits at startup.[^enforce] The rule does not check `sandbox.enabled` for this part.                                                                                              |
 
-`denyRead` and `allowRead` are not read: wildcards work there on every platform.[^prefixes] The rule skips an `Edit` `allow` rule
+A `[` in an `allowWrite` or `denyWrite` entry is not reported. On Linux and WSL2 it is part of a real directory name, so
+`./app/[slug]` covers the directory with that name.[^brackets] The rule skips a `~/` entry and a `./` entry of a read list,
+because the first directory name of the full path is a part of the home or project path. A trailing `/**` of a read entry works,
+so the rule removes it first.[^wildcards] The rule skips an `Edit` `allow` rule
 that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It skips a hidden drop-in.
 
 ### Parts that need `minVersion`
@@ -58,6 +62,7 @@ that a `deny` or `ask` rule covers, which `permissions-dead-allow` reports. It s
 - WSL1. The sandbox needs WSL2, and `failIfUnavailable` stops Claude Code there too.[^wsl] The `platforms` values cannot tell WSL1 from WSL2.
 - `ask` rules. The docs name `Edit` allow rules. The rule reads `Edit` deny rules too, and skips `ask` rules.
 - A deny path with a trailing `/**`, because Claude Code removes it.[^prefixes]
+- A `[` in a read list, and a wildcard in the first directory name of a `~/` or `./` entry.[^brackets]
 
 Fail, with `platforms: ["linux"]`:
 
@@ -98,6 +103,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^prefixes]: [All settings: Sandbox path prefixes](https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes)
+[^wildcards]: [All settings: Where wildcards work in sandbox paths](https://code.claude.com/docs/en/settings-reference#where-wildcards-work-in-sandbox-paths)
+[^brackets]: [All settings: Directory names with brackets, braces, or parentheses](https://code.claude.com/docs/en/settings-reference#directory-names-with-brackets-braces-or-parentheses)
 [^unix]: [All settings: sandbox.network.allowUnixSockets](https://code.claude.com/docs/en/settings-reference#sandbox-network-allowunixsockets)
 [^allowed]: [All settings: sandbox.network.allowedDomains](https://code.claude.com/docs/en/settings-reference#sandbox-network-alloweddomains)
 [^ipv6]: [Configure the sandboxed Bash tool: IPv6 addresses in domain lists](https://code.claude.com/docs/en/sandboxing#ipv6-addresses-in-domain-lists)
