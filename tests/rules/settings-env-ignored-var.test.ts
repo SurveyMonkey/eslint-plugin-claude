@@ -536,7 +536,7 @@ describe('settings-env-ignored-var and settings-env-credential on CLAUDE_CODE_OA
     expect(messages).toHaveLength(1)
     expect(messages[0]?.ruleId).toBe('claude/settings-env-credential')
     expect(messages[0]?.message).toBe(
-      'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
+      'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token", and do not store it in a settings file.',
     )
   })
 
