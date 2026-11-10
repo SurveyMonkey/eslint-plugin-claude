@@ -15,7 +15,6 @@ import { declaredMcpStrings } from '../mcp-servers.ts'
 import { placeOf } from '../plugin-links.ts'
 import { entriesOf, realDirectory, repositoryRoot } from '../skill-tree.ts'
 import { pathFault } from './marketplace-relative-source-format.ts'
-import { URL_START } from './plugin-path-no-backslash.ts'
 
 const name = 'marketplace-entry-component-paths' as const
 
@@ -23,8 +22,8 @@ const name = 'marketplace-entry-component-paths' as const
 // `hooks` and `mcpServers` also take inline configuration, and `commands` also takes an object map.
 const COMPONENT_FIELDS = ['commands', 'agents', 'skills', 'outputStyles', 'themes']
 
-// An MCP bundle is a `.mcpb` or `.dxt` file, or a URL (manifest reference, "mcpServers").
-// Claude Code does not read it as a server file.
+// An MCP bundle is a `.mcpb` or `.dxt` file (manifest reference, "mcpServers"). Claude Code
+// does not read it as a server file. A bundle URL has no `./` start, so `serverPaths` drops it.
 const BUNDLE = /\.(?:mcpb|dxt)$/
 
 type MessageIds = 'start' | 'parent' | 'backslash' | 'missing' | 'escapes' | 'server'
@@ -54,14 +53,14 @@ function textFault(text: string, field: string): MessageIds | undefined {
   return text.startsWith('./') || (field === 'skills' && text === '.') ? undefined : 'start'
 }
 
-/** The server file paths of an entry: the strings of `mcpServers` that are not a bundle or URL,
+/** The server file paths of an entry: the strings of `mcpServers` that are not a bundle,
  *  and the strings of `lspServers`. A path with no `./` start is not here, because
  *  `claude plugin validate` fails it in an entry. An inline map is not a string. */
 function serverPaths(entry: ValueNode): { field: string; item: StringNode }[] {
   const lsp = lastMember(entry, 'lspServers')?.value
   return [
     ...declaredMcpStrings(entry)
-      .filter((item) => !URL_START.test(item.value) && !BUNDLE.test(item.value))
+      .filter((item) => !BUNDLE.test(item.value))
       .map((item) => ({ field: 'mcpServers', item })),
     ...(lsp === undefined ? [] : pathsOf(lsp).map((item) => ({ field: 'lspServers', item }))),
   ].filter(({ item }) => item.value.startsWith('./') && pathFault(item.value) === 'parent')
