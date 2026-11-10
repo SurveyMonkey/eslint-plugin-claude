@@ -238,6 +238,7 @@ import * as permissionsBashRunnerWildcard from './rules/permissions-bash-runner-
 import * as permissionsBashStrippedWrapper from './rules/permissions-bash-stripped-wrapper.ts'
 import * as permissionsBashWildcardBeforeSubcommand from './rules/permissions-bash-wildcard-before-subcommand.ts'
 import * as permissionsBlockReadsFalse from './rules/permissions-block-reads-false.ts'
+import * as permissionsBlockWritesFalse from './rules/permissions-block-writes-false.ts'
 import * as permissionsBypassModeCommitted from './rules/permissions-bypass-mode-committed.ts'
 import * as permissionsCdAllowlist from './rules/permissions-cd-allowlist.ts'
 import * as permissionsDeadAllow from './rules/permissions-dead-allow.ts'
@@ -680,6 +681,7 @@ const modules = [
     default: permissionsAdditionalDirectoriesPath.default,
   },
   { target: permissionsBlockReadsFalse.target, default: permissionsBlockReadsFalse.default },
+  { target: permissionsBlockWritesFalse.target, default: permissionsBlockWritesFalse.default },
   { target: permissionsInvalidPathPattern.target, default: permissionsInvalidPathPattern.default },
   { target: permissionsNegation.target, default: permissionsNegation.default },
   {
@@ -1326,6 +1328,7 @@ const recommended: Record<RuleName, Severity> = {
   'permissions-protected-path-allow': 'error',
   'permissions-additional-directories-path': 'error',
   'permissions-block-reads-false': 'error',
+  'permissions-block-writes-false': 'error',
   'permissions-invalid-path-pattern': 'error',
   'permissions-negation': 'error',
   'permissions-webfetch-domain-syntax': 'error',

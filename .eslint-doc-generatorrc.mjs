@@ -397,6 +397,7 @@ const GROUPS = [
       'permissions-protected-path-allow',
       'permissions-additional-directories-path',
       'permissions-block-reads-false',
+      'permissions-block-writes-false',
       'permissions-invalid-path-pattern',
       'permissions-negation',
       'permissions-webfetch-domain-syntax',

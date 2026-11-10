@@ -2686,6 +2686,23 @@ const TREE: Record<string, string> = {
     '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
   'packages/pbr/.vscode/settings.json':
     '{"permissions": {"blockReadsOutsideWorkingDirectories": false}}',
+  // `permissions-block-writes-false`: `blockWritesOutsideWorkingDirectories: false`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
+  'packages/pbw/.claude/settings.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/.claude/settings.local.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/managed-settings.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/managed-settings.d/10-a.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/managed-settings.d/.20-hidden.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/managed-settings.d/30-b.txt':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/managed-settings.d/sub/40-c.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
+  'packages/pbw/.vscode/settings.json':
+    '{"permissions": {"blockWritesOutsideWorkingDirectories": false}}',
   // `permissions-invalid-path-pattern`: an `Edit` rule with an unclosed `[`, in each file that it reads. A hidden drop-in is for `settings-managed-file`. The same content where no rule reads it.
   'packages/pip/.claude/settings.json': '{"permissions": {"allow": ["Edit(docs/[draft/**)"]}}',
   'packages/pip/.claude/settings.local.json':
@@ -3688,6 +3705,7 @@ const ALLOW_RULES = [
 const PATH_RULES = [
   { name: 'permissions-additional-directories-path', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-block-reads-false', files: [...PROJECT_FILES, ...MANAGED_FILES] },
+  { name: 'permissions-block-writes-false', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-invalid-path-pattern', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-negation', files: [...PROJECT_FILES, ...MANAGED_FILES] },
   { name: 'permissions-webfetch-domain-syntax', files: [...PROJECT_FILES, ...MANAGED_FILES] },
@@ -5072,6 +5090,7 @@ const EXPECTED = [
     ['pad', 'permissions-additional-directories-path'],
     ['pau', 'permissions-allow-unrestricted'],
     ['pbr', 'permissions-block-reads-false'],
+    ['pbw', 'permissions-block-writes-false'],
     ['pec', 'permissions-end-conversation'],
     ['pew', 'permissions-bash-exec-wrapper-prefix'],
     ['pip', 'permissions-invalid-path-pattern'],
