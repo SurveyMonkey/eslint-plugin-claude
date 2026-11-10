@@ -4,7 +4,8 @@
 // stdout is the exception. Claude Code cuts it at the cap, appends a marker, and saves no file. The docs
 // say no setting raises the output cap. The rule measures the strings that a command prints as literals, inline or from a
 // repository script. The options set a lower limit, and their schemas allow no more than the cap. At another
-// value, the message names the configured limit.
+// value, the message names the configured limit. The rule skips each JSON field that Claude Code discards on the
+// event (DISCARDED_JSON_OUTPUT).
 import type { Rule } from 'eslint'
 import {
   CUT_STDOUT_EVENTS,

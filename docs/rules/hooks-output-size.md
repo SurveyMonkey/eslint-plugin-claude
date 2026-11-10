@@ -35,15 +35,19 @@ Claude Code handles the stdout of a `PreCompact` hook in a different way. When t
 Claude Code uses that stdout as instructions for the compaction summary. It cuts output past 10,000 characters per hook
 and appends a marker.[^precompact] It does not save the output to a file.[^json-output]
 
-Claude Code keeps no JSON output of some events. It discards every JSON field of a `Setup`, `WorktreeRemove`,
-`InstructionsLoaded`, `SessionEnd` or `StopFailure` hook.[^setup][^worktreeremove][^instructionsloaded][^sessionend][^stopfailure]
-It discards the `systemMessage` and `continue` fields of a `PreCompact` hook, and the docs name no JSON field of
-`PreCompact` that it keeps.[^precompact-fields] It discards the `systemMessage` and `continue` fields of a
-`PostCompact`, `Notification`, `MessageDisplay`, `ConfigChange` or `WorktreeCreate` hook.[^postcompact][^notification][^messagedisplay][^configchange][^worktreecreate]
-It discards the `reason`, `systemMessage` and `continue` fields of an `Elicitation` or `ElicitationResult` hook.[^elicitation][^elicitationresult]
-The rule measures no JSON field of `PreCompact`, `Setup`, `WorktreeRemove`, `InstructionsLoaded`, `SessionEnd` or
-`StopFailure`. For the other events in this paragraph, it measures no `systemMessage`. A cap does not apply to text
-that Claude Code discards.
+Claude Code keeps no JSON output of some events. It discards the JSON output fields of a `Setup`, `WorktreeRemove`,
+`InstructionsLoaded` or `SessionEnd` hook.[^setup][^worktreeremove][^instructionsloaded][^sessionend] It ignores the
+output of a `StopFailure` hook, apart from `terminalSequence`.[^stopfailure]
+
+It discards the `systemMessage` and `continue` fields of a `PreCompact` hook.[^precompact-fields] The docs name no
+string field of `PreCompact` JSON that Claude Code adds to the context. So the rule measures no JSON field of
+`PreCompact`. The rule also measures no JSON field of `Setup`, `WorktreeRemove`, `InstructionsLoaded`, `SessionEnd` or
+`StopFailure`.
+
+Some events discard only `systemMessage` and `continue`: `PostCompact`, `Notification`, `MessageDisplay`,
+`ConfigChange` and `WorktreeCreate`.[^postcompact][^notification][^messagedisplay][^configchange][^worktreecreate]
+`Elicitation` and `ElicitationResult` also discard `reason`.[^elicitation][^elicitationresult] For these seven events,
+the rule measures no `systemMessage`. A cap does not apply to text that Claude Code discards.
 
 Claude Code also caps the `classifierContext` notes of one tool call at 2,000 characters, and truncates the rest.[^classifier]
 The cap is shared across every hook that responds to that call. The rule cannot add the notes of several hooks, so it
@@ -51,7 +55,7 @@ measures each string on its own. A string over the cap proves a cut.
 
 The rule reads the strings of a JSON object that a command prints as a literal. It reads each field at the top level
 and inside `hookSpecificOutput`. It also measures a literal `echo` or `printf` text that is no JSON object, on the four
-events above and on `PreCompact`. It does that with plain stdout only. The length is `String.length`, which counts UTF-16 code units.
+events above and on `PreCompact`, with plain stdout only. The length is `String.length`, which counts UTF-16 code units.
 
 ### JSON that the rule reads
 

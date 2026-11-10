@@ -274,8 +274,8 @@ export const CUT_STDOUT_EVENTS: readonly string[] = ['PreCompact']
  *  `'all'` means every JSON field. A list names the discarded fields only. Claude Code keeps none of that text, so a
  *  size cap does not apply to it. The sentences, checked on 2026-11-10 (https://code.claude.com/docs/en/hooks):
  *  - PreCompact (#precompact): "Claude Code discards a PreCompact hook's `systemMessage` and `continue` fields."
- *    The reference also says that the output cap applies "except for PreCompact stdout" (#json-output). It names no
- *    other string field of PreCompact JSON that Claude Code keeps, so the whole object counts as discarded.
+ *    The reference names no string field of PreCompact JSON that Claude Code adds to
+ *    context, so the rule counts the whole object as discarded. Only plain stdout is cut at the cap (#precompact-output).
  *  - PostCompact (#postcompact): "Claude Code discards a PostCompact hook's `systemMessage` and `continue` fields."
  *  - Setup (#setup-decision-control): "On every exit code, Claude Code discards a Setup hook's JSON output fields,
  *    such as `systemMessage`, `continue`, and `hookSpecificOutput.additionalContext`."
