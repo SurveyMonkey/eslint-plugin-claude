@@ -215,6 +215,10 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     named('\u{1F600}'.repeat(LIMIT)),
     // Claude Code changes a plugin skill folder name, so its length is not a fault. The `name` is.
     { code: '# S\n', filename: path.join(plugin, 'skills', long(LIMIT + 1), 'SKILL.md') },
+    // `claude plugin validate` 2.1.322 fails a lone surrogate in the `name` of a plugin
+    // `skills/` folder, as a YAML parse error. The rule then makes no report on that `name`.
+    named('a\uD800b', path.join(plugin, 'skills', 's', 'SKILL.md')),
+    named(`<${long(LIMIT)}\uDC00`, path.join(plugin, 'skills', 's', 'SKILL.md')),
     // A command file has no `name` that counts.
     named(long(LIMIT + 1), commandAt('c.md')),
     // Not a skill or command file.
@@ -298,6 +302,19 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       ...named('a\uDC00b'),
       errors: [
         { messageId: 'name', data: { name: 'a<U+DC00>b', ...at('U+DC00', SURROGATE) }, line: 2 },
+      ],
+    },
+    // Claude Code 2.1.322 also did not read a `name` with U+DBFF or U+DFFF.
+    {
+      ...named('a\uDBFFb'),
+      errors: [
+        { messageId: 'name', data: { name: 'a<U+DBFF>b', ...at('U+DBFF', SURROGATE) }, line: 2 },
+      ],
+    },
+    {
+      ...named('a\uDFFFb'),
+      errors: [
+        { messageId: 'name', data: { name: 'a<U+DFFF>b', ...at('U+DFFF', SURROGATE) }, line: 2 },
       ],
     },
     {
@@ -410,6 +427,12 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     {
       ...named('a​b', path.join(plugin, 'SKILL.md')),
       errors: [{ messageId: 'name', data: { name: 'a<U+200B>b', ...at('U+200B', ZERO_WIDTH) } }],
+    },
+    // `claude plugin validate` 2.1.322 does not read a plugin-root `SKILL.md`. So the rule
+    // reports a lone surrogate in its `name`.
+    {
+      ...named('a\uD800b', path.join(plugin, 'SKILL.md')),
+      errors: [{ messageId: 'name', data: { name: 'a<U+D800>b', ...at('U+D800', SURROGATE) } }],
     },
     // The message prints a refused character as its code point, in the three messages.
     {
