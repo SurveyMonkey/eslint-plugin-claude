@@ -270,5 +270,26 @@ export const PLAIN_STDOUT_EVENTS: readonly string[] = [
  *  (https://code.claude.com/docs/en/hooks#json-output: "except for PreCompact stdout"). */
 export const CUT_STDOUT_EVENTS: readonly string[] = ['PreCompact']
 
+/** The JSON output that Claude Code discards, for each event whose section of the hooks reference says so. The value
+ *  `'all'` means every JSON field. A list names the discarded fields only. Claude Code keeps none of that text, so a
+ *  size cap does not apply to it. The sentences, checked on 2026-11-10 (https://code.claude.com/docs/en/hooks):
+ *  - PreCompact (#precompact): "Claude Code discards a PreCompact hook's `systemMessage` and `continue` fields."
+ *    The reference also says that the output cap applies "except for PreCompact stdout" (#json-output). It names no
+ *    other string field of PreCompact JSON that Claude Code keeps, so the whole object counts as discarded.
+ *  - PostCompact (#postcompact): "Claude Code discards a PostCompact hook's `systemMessage` and `continue` fields."
+ *  - Setup (#setup-decision-control): "On every exit code, Claude Code discards a Setup hook's JSON output fields,
+ *    such as `systemMessage`, `continue`, and `hookSpecificOutput.additionalContext`."
+ *  - WorktreeRemove (#worktreeremove): "Claude Code discards a WorktreeRemove hook's JSON output fields, such as
+ *    `systemMessage` and `continue`." */
+export const DISCARDED_JSON_OUTPUT: ReadonlyMap<string, 'all' | readonly string[]> = new Map<
+  string,
+  'all' | readonly string[]
+>([
+  ['PreCompact', 'all'],
+  ['PostCompact', ['systemMessage', 'continue']],
+  ['Setup', 'all'],
+  ['WorktreeRemove', 'all'],
+])
+
 /** The events whose input has the deprecated field `team_name`. */
 export const TEAM_NAME_EVENTS: readonly string[] = ['TaskCreated', 'TaskCompleted', 'TeammateIdle']

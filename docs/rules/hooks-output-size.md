@@ -35,13 +35,19 @@ Claude Code handles the stdout of a `PreCompact` hook in a different way. When t
 Claude Code uses that stdout as instructions for the compaction summary. It cuts output past 10,000 characters per hook
 and appends a marker.[^precompact] It does not save the output to a file.[^json-output]
 
+Claude Code keeps no JSON output of some events. It discards every JSON field of a `Setup` or `WorktreeRemove` hook.[^setup][^worktreeremove]
+It discards the `systemMessage` and `continue` fields of a `PostCompact` hook.[^postcompact] It discards the
+`systemMessage` and `continue` fields of a `PreCompact` hook, and the docs name no JSON field of `PreCompact` that it
+keeps.[^precompact-fields] The rule measures no JSON field of `PreCompact`, `Setup` or `WorktreeRemove`, and no
+`systemMessage` of `PostCompact`. A cap does not apply to text that Claude Code discards.
+
 Claude Code also caps the `classifierContext` notes of one tool call at 2,000 characters, and truncates the rest.[^classifier]
 The cap is shared across every hook that responds to that call. The rule cannot add the notes of several hooks, so it
 measures each string on its own. A string over the cap proves a cut.
 
 The rule reads the strings of a JSON object that a command prints as a literal. It reads each field at the top level
 and inside `hookSpecificOutput`. It also measures a literal `echo` or `printf` text that is no JSON object, on the four
-events above and on `PreCompact`. The length is `String.length`, which counts UTF-16 code units.
+events above and on `PreCompact`. It does that with plain stdout only. The length is `String.length`, which counts UTF-16 code units.
 
 ### JSON that the rule reads
 
@@ -105,4 +111,8 @@ cuts the text and saves no file. At another value, the message says "The configu
 [^add-context]: [Hooks reference: Add context for Claude](https://code.claude.com/docs/en/hooks#add-context-for-claude)
 [^exit-0]: [Hooks reference: Exit code 0](https://code.claude.com/docs/en/hooks#exit-code-0)
 [^precompact]: [Hooks reference: PreCompact output](https://code.claude.com/docs/en/hooks#precompact-output)
+[^precompact-fields]: [Hooks reference: PreCompact](https://code.claude.com/docs/en/hooks#precompact)
+[^postcompact]: [Hooks reference: PostCompact](https://code.claude.com/docs/en/hooks#postcompact)
+[^setup]: [Hooks reference: Setup decision control](https://code.claude.com/docs/en/hooks#setup-decision-control)
+[^worktreeremove]: [Hooks reference: WorktreeRemove](https://code.claude.com/docs/en/hooks#worktreeremove)
 [^classifier]: [Hooks reference: Annotate a result for the auto mode classifier](https://code.claude.com/docs/en/hooks#annotate-a-result-for-the-auto-mode-classifier)

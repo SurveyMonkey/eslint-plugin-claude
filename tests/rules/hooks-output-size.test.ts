@@ -152,15 +152,48 @@ describe(`${name}: PreCompact stdout`, () => {
       'overConfigured',
     ])
   })
+})
 
-  // The docs name no string field of PreCompact JSON output that Claude Code adds to the context. They say that it
-  // discards `systemMessage` (hooks#precompact). The rule measures each field of JSON output on every event, with the
-  // file message. This case pins that choice of the rule: a JSON object is not
-  // measured as plain stdout.
-  it('keeps the file message for a field of JSON output on PreCompact, as a choice of the rule', () => {
+describe(`${name}: JSON output that Claude Code discards`, () => {
+  // https://code.claude.com/docs/en/hooks#json-output: the output cap applies "except for PreCompact stdout".
+  // https://code.claude.com/docs/en/hooks#precompact: "Claude Code discards a PreCompact hook's `systemMessage` and
+  // `continue` fields." The docs name no field of PreCompact JSON that Claude Code keeps.
+  const long = 'x'.repeat(10_001)
+
+  it('is silent for each JSON field of a PreCompact command past the cap', () => {
+    expect(ids(echo({ systemMessage: long }), 'PreCompact')).toEqual([])
+    expect(ids(context(long, 'additionalContext', 'PreCompact'), 'PreCompact')).toEqual([])
+    expect(ids(context(long, 'initialUserMessage', 'PreCompact'), 'PreCompact')).toEqual([])
     expect(
-      ids(context('x'.repeat(10_001), 'additionalContext', 'PreCompact'), 'PreCompact'),
-    ).toEqual(['overCap'])
+      ids(context('x'.repeat(2_001), 'classifierContext', 'PreCompact'), 'PreCompact'),
+    ).toEqual([])
+  })
+
+  // https://code.claude.com/docs/en/hooks#setup-decision-control: "Claude Code discards a Setup hook's JSON output
+  // fields, such as `systemMessage`, `continue`, and `hookSpecificOutput.additionalContext`."
+  it('is silent for the JSON fields of a Setup command past the cap', () => {
+    expect(ids(echo({ systemMessage: long }), 'Setup')).toEqual([])
+    expect(ids(context(long, 'additionalContext', 'Setup'), 'Setup')).toEqual([])
+  })
+
+  // https://code.claude.com/docs/en/hooks#worktreeremove: "Claude Code discards a WorktreeRemove hook's JSON output
+  // fields, such as `systemMessage` and `continue`."
+  it('is silent for the JSON fields of a WorktreeRemove command past the cap', () => {
+    expect(ids(echo({ systemMessage: long }), 'WorktreeRemove')).toEqual([])
+    expect(ids(context(long, 'additionalContext', 'WorktreeRemove'), 'WorktreeRemove')).toEqual([])
+  })
+
+  // https://code.claude.com/docs/en/hooks#postcompact: "Claude Code discards a PostCompact hook's `systemMessage` and
+  // `continue` fields." The docs say nothing about `additionalContext` there, so it stays measured.
+  it('is silent for the systemMessage of a PostCompact command past the cap', () => {
+    expect(ids(echo({ systemMessage: long }), 'PostCompact')).toEqual([])
+    expect(ids(context(long, 'additionalContext', 'PostCompact'), 'PostCompact')).toEqual([
+      'overCap',
+    ])
+  })
+
+  it('still reports a systemMessage past the cap on an event outside the set', () => {
+    expect(ids(echo({ systemMessage: long }), 'SessionStart')).toEqual(['overCap'])
   })
 })
 

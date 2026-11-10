@@ -31,7 +31,7 @@ permission prompt, including file writes and shell commands.[^guide] A `setMode`
 can change the permission mode, and `bypassPermissions` is one of the modes.[^update]
 
 The output of a script is not in the file. So the rule reads the JSON text that the inline `command` or an `args`
-item holds, as in the example of the guide (`echo '{"hookSpecificOutput": ...}'`). It ignores quotes,
+item holds. This includes the `jq -c '{hookSpecificOutput: ...}'` command of the guide.[^guide] It ignores quotes,
 backslashes and white space in that text. It reports two faults, at the `command` string:
 
 - `allow`: a `PermissionRequest` handler with `behavior: "allow"`, or a `PreToolUse` handler with
@@ -57,7 +57,7 @@ Fail, in `~/.claude/settings.json` or a project settings file:
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PermissionRequest\", \"decision\": {\"behavior\": \"allow\"}}}'"
+            "command": "jq -c '{hookSpecificOutput: {hookEventName: \"PermissionRequest\", decision: {behavior: \"allow\", updatedInput: .tool_input}}}'"
           }
         ]
       }
@@ -66,7 +66,9 @@ Fail, in `~/.claude/settings.json` or a project settings file:
 }
 ```
 
-Pass: the same hook with `"matcher": "ExitPlanMode"` on the group.
+Pass: the same hook with `"matcher": "ExitPlanMode"` on the group. It takes effect. `ExitPlanMode` requires user
+interaction, so the allow needs `updatedInput`, and this hook has it. Without `updatedInput`, Claude Code ignores the
+allow and still shows the prompt.[^guide]
 
 ## Usage
 

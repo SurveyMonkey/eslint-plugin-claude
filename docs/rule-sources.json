@@ -1612,6 +1612,26 @@
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PreCompact",
+      "hash": "0b6a520ebaa975775cb73d2ce79f365efd3a9693f03a48e1c0c743c5c4916435"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PostCompact",
+      "hash": "7dbf9cbfc17d83108bfd24ec3a116498b3ec826c1d0e26fa467678184082f5ba"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Setup decision control",
+      "hash": "e3a7810e41f3e7dc2dc1941e04ba5a1f653af0d770b79ac225f58533578d37c6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "WorktreeRemove",
+      "hash": "02ae067e5a87ff5c14a4828d7d824e9734988f375c84f1596868034bc893c0a6"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Annotate a result for the auto mode classifier",
       "hash": "87b27a8f2922e014918c15a0f7ccfa0e249858f009ce229f751de1af3b0ea8bd"
     }
