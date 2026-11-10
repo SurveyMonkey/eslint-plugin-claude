@@ -78,6 +78,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'claude-md-location',
     'claude-md-max-bytes',
     'claude-md-max-lines',
+    'claude-md-on-demand-max-chars',
     'claude-md-procedure-to-skill',
     'claude-md-symlink',
     'command-legacy-format',

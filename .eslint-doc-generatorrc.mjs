@@ -295,6 +295,7 @@ const GROUPS = [
       'claude-md-location',
       'claude-md-max-bytes',
       'claude-md-max-lines',
+      'claude-md-on-demand-max-chars',
       'claude-md-procedure-to-skill',
       'claude-md-symlink',
       'memory-agent-memory-local-untracked',
