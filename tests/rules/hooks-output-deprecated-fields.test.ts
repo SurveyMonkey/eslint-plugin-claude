@@ -82,7 +82,7 @@ describe(`${name}: updatedMCPToolOutput`, () => {
       '/repo/.claude/settings.json',
     )
     expect(message?.message).toBe(
-      'The hooks reference says to prefer "updatedToolOutput" over "updatedMCPToolOutput". "updatedToolOutput" works for all tools.',
+      'The hooks reference says to prefer "updatedToolOutput" over "updatedMCPToolOutput". "updatedToolOutput" also works for built-in tools.',
     )
   })
 
