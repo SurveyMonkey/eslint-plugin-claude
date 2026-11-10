@@ -1,6 +1,6 @@
 // PowerShell prints a `command` that is only quoted strings, and does not run it. A hook such as
 // `"command": "\"C:\\Tools\\guard.exe\""` then starts no program, so a guard hook does not guard
-// (docs/rules/hooks-powershell-quoted-program.md). The docs give three fixes. The rule
+// (docs/rules/hooks-powershell-quoted-program.md). That rule doc gives the fixes. The rule
 // reads shell form only, because `shell` has no effect with `args`. With no `shell` key, the
 // shell is PowerShell only on Windows with no Git Bash. So the rule then needs the option
 // `platforms`.
