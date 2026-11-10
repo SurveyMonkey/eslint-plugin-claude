@@ -1,7 +1,8 @@
 // On macOS, Linux and WSL, Claude Code leaves the Glob and Grep tools out of the default tool set.
 // An allow rule in a settings file does not bring them back
-// (docs/rules/permissions-glob-grep-allow.md). `permissions-path-rule-tool` reads `Glob(path)`,
-// and `permissions-dead-allow` owns a bare rule that a bare `deny` or `ask` rule covers.
+// (docs/rules/permissions-glob-grep-allow.md). `Glob(*)` and `Grep(*)` count as bare rules.
+// `permissions-path-rule-tool` reads `Glob(path)`, and `permissions-dead-allow` owns a bare rule
+// that a bare `deny` or `ask` rule covers.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
@@ -27,7 +28,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'inert' }> = {
     return settingsListener(context, (entries) => {
       const bare = entries.filter(
         ({ list, rule: { tool, specifier } }) =>
-          list === 'allow' && specifier === null && (tool === 'Glob' || tool === 'Grep'),
+          list === 'allow' &&
+          (specifier === null || specifier === '*') &&
+          (tool === 'Glob' || tool === 'Grep'),
       )
       if (bare.length === 0) {
         return

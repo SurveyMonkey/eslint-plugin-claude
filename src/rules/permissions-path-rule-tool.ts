@@ -1,6 +1,7 @@
 // Claude Code checks file permissions against `Edit(path)` and `Read(path)`
 // rules only. It accepts a path rule for another file tool and never
-// consults it (docs/rules/permissions-path-rule-tool.md).
+// consults it (docs/rules/permissions-path-rule-tool.md). `Tool(*)` is the bare tool, so it
+// gets no report.
 import type { Rule } from 'eslint'
 import { PATH_RULE_REPLACEMENT } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -28,7 +29,12 @@ const rule: Rule.RuleModule = {
       for (const entry of parsedEntries(entries)) {
         const { tool, specifier } = entry.rule
         const replacement = PATH_RULE_REPLACEMENT.get(tool)
-        if (replacement !== undefined && specifier !== null && parameterOf(entry) === null) {
+        if (
+          replacement !== undefined &&
+          specifier !== null &&
+          specifier !== '*' &&
+          parameterOf(entry) === null
+        ) {
           context.report({
             loc: entry.loc,
             messageId: 'neverConsulted',

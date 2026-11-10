@@ -1,6 +1,7 @@
 // The permissions page, "Read and Edit": Claude Code checks file permissions
 // against `Edit(path)` and `Read(path)` rules only. The error reference
-// names `Write`, `NotebookEdit`, `MultiEdit` and `Glob`.
+// names `Write`, `NotebookEdit`, `MultiEdit` and `Glob`. The permissions page adds `Grep`, and
+// says that a rule with "a path other than `*`" never matches.
 import { describe, expect, it } from 'vitest'
 import { pluginSkill } from '../plugin-fixture.test-support.ts'
 import { jsonTester, lintJson, markdownTester, ruleOf } from '../rule-tester.test-support.ts'
@@ -19,9 +20,17 @@ jsonTester.run('permissions-path-rule-tool', rule, {
       code: settings({ allow: ['Write', 'NotebookEdit', 'MultiEdit', 'Glob'], deny: ['Write'] }),
       filename: '.claude/settings.json',
     },
-    // The docs name no replacement for `Grep` and `LSP`.
+    // The docs name no replacement for `LSP`.
     {
-      code: settings({ allow: ['Grep(src/**)', 'LSP(src/**)'] }),
+      code: settings({ allow: ['LSP(src/**)'] }),
+      filename: '.claude/settings.json',
+    },
+    // The docs say that `Bash(*)` is equivalent to `Bash`, and that the block covers a path other
+    // than `*`. So `Tool(*)` reads as the bare tool.
+    {
+      code: settings({
+        allow: ['Write(*)', 'NotebookEdit(*)', 'MultiEdit(*)', 'Glob(*)', 'Grep(*)'],
+      }),
       filename: '.claude/settings.json',
     },
     // A deny or ask parameter rule is for `permissions-param-rule`.
@@ -36,12 +45,15 @@ jsonTester.run('permissions-path-rule-tool', rule, {
   invalid: [
     // An empty specifier is still a path rule, and Claude Code never consults it.
     {
-      code: settings({ deny: ['Write()', 'Write(*)'] }),
+      code: settings({ deny: ['Write()'] }),
       filename: '.claude/settings.json',
-      errors: [
-        { messageId: 'neverConsulted', data: { tool: 'Write', replacement: 'Edit' } },
-        { messageId: 'neverConsulted', data: { tool: 'Write', replacement: 'Edit' } },
-      ],
+      errors: [{ messageId: 'neverConsulted', data: { tool: 'Write', replacement: 'Edit' } }],
+    },
+    // The permissions page: "A `Grep(docs/**)` deny rule doesn't stop Grep from searching `docs`."
+    {
+      code: settings({ deny: ['Grep(docs/**)'] }),
+      filename: '.claude/settings.json',
+      errors: [{ messageId: 'neverConsulted', data: { tool: 'Grep', replacement: 'Read' } }],
     },
     {
       code: settings({ allow: ['Write(docs/**)'] }),
@@ -87,7 +99,7 @@ const skill = (fields: string, filename = '.claude/skills/s/SKILL.md') => ({
 markdownTester.run('permissions-path-rule-tool in skill files', rule, {
   valid: [
     skill('allowed-tools: Edit(docs/**) Read(docs/**) Write NotebookEdit Glob\n'),
-    skill('allowed-tools: Grep(src/**) LSP(src/**)\n'),
+    skill('allowed-tools: LSP(src/**) Write(*) Grep(*)\n'),
     skill('disallowed-tools: Write(path:x)\n'),
     skill('allowed-tools: Write(docs/**\n'),
   ],
@@ -107,6 +119,10 @@ markdownTester.run('permissions-path-rule-tool in skill files', rule, {
     {
       ...skill('disallowed-tools:\n  - Glob(src/**)\n', '.claude/commands/c.md'),
       errors: [{ messageId: 'neverConsulted', data: { tool: 'Glob', replacement: 'Read' } }],
+    },
+    {
+      ...skill('allowed-tools: Grep(src/**)\n'),
+      errors: [{ messageId: 'neverConsulted', data: { tool: 'Grep', replacement: 'Read' } }],
     },
     {
       ...skill('allowed-tools: [NotebookEdit(a.ipynb)]\n', pluginSkill()),

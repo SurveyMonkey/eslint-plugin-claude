@@ -25,6 +25,12 @@ describe(`${name}: the reports`, () => {
     }
   })
 
+  it('reads Glob(*) and Grep(*) as the bare rules: Tool(*) is equivalent to the bare tool', () => {
+    for (const file of EVERY_FILE) {
+      expect(ids(perms({ allow: ['Glob(*)', 'Grep(*)'] }), file), file).toEqual(['inert', 'inert'])
+    }
+  })
+
   it('names the tool and the way to get it back', () => {
     const [message] = lintJson(name, perms({ allow: ['Grep'] }), PROJECT)
     expect(message?.message).toContain('`Grep`')
@@ -41,7 +47,7 @@ describe(`${name}: the reports`, () => {
 
 describe(`${name}: the silent cases`, () => {
   it('is silent for a rule with a specifier, which other rules read', () => {
-    expect(ids(perms({ allow: ['Glob(src/**)', 'Grep(src/**)', 'Glob(*)'] }))).toEqual([])
+    expect(ids(perms({ allow: ['Glob(src/**)', 'Grep(src/**)'] }))).toEqual([])
   })
 
   it('is silent in deny and ask, and for another tool', () => {
@@ -61,6 +67,11 @@ describe(`${name}: the allow rule that permissions-dead-allow owns`, () => {
   it('is silent when a bare deny or ask rule of the tool covers the allow rule', () => {
     expect(ids(perms({ allow: ['Glob'], deny: ['Glob'] }))).toEqual([])
     expect(ids(perms({ allow: ['Grep'], ask: ['Grep'] }))).toEqual([])
+  })
+
+  it('is silent when a deny rule covers the allow rule of Glob(*), as it does a bare rule', () => {
+    expect(ids(perms({ allow: ['Glob(*)'], deny: ['Glob'] }))).toEqual([])
+    expect(ids(perms({ allow: ['Grep(*)'], ask: ['Grep(*)'] }))).toEqual([])
   })
 
   it('still reports when the deny rule is for the other tool', () => {

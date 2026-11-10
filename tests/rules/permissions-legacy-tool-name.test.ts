@@ -47,6 +47,13 @@ describe(`${name}: the reports`, () => {
     }
   })
 
+  it('reports MultiEdit(*) as it reports a bare MultiEdit: Tool(*) is equivalent to the bare tool', () => {
+    expect(ids(perms({ deny: ['MultiEdit(*)'], allow: ['MultiEdit(*)'] }))).toEqual([
+      'multiEdit',
+      'multiEdit',
+    ])
+  })
+
   it('reports a bare Task, and Task in allow, ask and deny', () => {
     for (const list of ['allow', 'ask', 'deny']) {
       expect(ids(perms({ [list]: ['Task', 'Task(Explore)'] })), list).toEqual(['task', 'task'])
