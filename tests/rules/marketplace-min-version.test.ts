@@ -14,7 +14,7 @@ const tooNew = (feature: string, since: string, minVersion: string) => ({
   messageId: 'tooNew' as const,
   data: { feature, since, minVersion },
 })
-// A marketplace with one field of each kind that needs a version.
+// A marketplace with each field that needs a version. The entry `metadata` needs none.
 const everything = manifest(
   { metadata: { pluginRoot: './plugins' } },
   { name: 'a', source: './a', metadata: {} },
@@ -40,7 +40,7 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
     { code: everything, filename, options: [{ minVersion: '3.0.0' }] },
     { code: everything, filename, options: [{ minVersion: '10.0.0' }] },
     // No source gives a version for the entry key `metadata`, so it is silent at any version.
-    ...['1.0.0', '2.0.0', '2.1.221'].map((minVersion) => ({
+    ...['1.0.0', '2.0.0', '2.1.221', '2.1.222', '3.0.0'].map((minVersion) => ({
       code: manifest(
         {},
         { name: 'a', source: './a', metadata: {} },
@@ -157,6 +157,13 @@ jsonTester.run('marketplace-min-version (invalid)', rule, {
       code: manifest({}, { name: 'a', source: archive }),
       filename,
       options: [{ minVersion: '2.1.221' }],
+      errors: [{ messageId: 'tooNew' }],
+    },
+    // A patch part with fewer digits than the field: 99 is older than 224, as a number.
+    {
+      code: manifest({}, { name: 'a', source: archive }),
+      filename,
+      options: [{ minVersion: '2.1.99' }],
       errors: [{ messageId: 'tooNew' }],
     },
     // Every field of the table, in file order.
