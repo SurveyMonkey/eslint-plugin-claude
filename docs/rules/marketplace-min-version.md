@@ -42,13 +42,13 @@ The marketplace reference gives the versions of all fields and source types in t
 | Top-level `metadata.pluginRoot`     | 2.1.239 |
 
 The report is on the key, or for a source type, on the value of its `source` member. The rule
-compares each part of the version as a number, so `2.1.99` is older than `2.1.222`. When a key
+compares each part of the version as a number, so `2.1.99` is older than `2.1.224`. When a key
 occurs twice, the rule reads the last, as `JSON.parse` does. A value of the wrong type is a fault
 for `marketplace-schema` and `marketplace-source-schema`. The rule reports the key anyway for a
 field, and reports no source type that it cannot read. The source types are in
 `src/data/marketplace-source-types.ts`.
 
-The entry key `metadata` is not in the table. The marketplace reference gives no version for it,
+The `metadata` key of a plugin entry is not in the table. The marketplace reference gives no version for it,
 and the changelog has no entry for it. The rule does not check it.
 
 The top-level `renames` map is not in the table. The reference pages do not state the version that
@@ -56,8 +56,8 @@ added it. The changelog has one entry for `renames`, under 2.1.193: "Improved pl
 marketplace `renames` maps are now followed automatically". It does not say which version added
 the map, so the rule does not check `renames`.
 
-The docs list no `claude plugin validate` message for these cases. The versions were read on
-2026-10-10 for Claude Code 2.1.288.
+The docs list no `claude plugin validate` message for these cases. The versions of the marketplace reference were read
+on 2026-10-10 for Claude Code 2.1.288.
 
 Fail, with `minVersion` set to `2.1.200`:
 

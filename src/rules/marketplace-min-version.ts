@@ -1,11 +1,11 @@
 // Some fields and source types of a marketplace need a Claude Code version.
 // With the option `minVersion`, the rule reports each one that a newer version
 // than `minVersion` introduced. With no option, the rule makes no report
-// (docs/rules/marketplace-min-version.md). The versions of `metadata.pluginRoot`, `headers`,
-// `headersHelper` and the `command` source are from the marketplace reference ("Top-level
-// fields", "Plugin entries" and "Plugin sources"). The version of the `archive` source is from the
-// Claude Code changelog. Review them on or before 2027-04-10, the `stale_after` date of the rule
-// doc.
+// (docs/rules/marketplace-min-version.md). The marketplace reference gives the versions of
+// `metadata.pluginRoot`, `headers`, `headersHelper` and the `command` source. It lists them under
+// "Top-level fields", "Plugin entries" and "Plugin sources". The Claude Code changelog gives the
+// version of the `archive` source. Review them on or before 2027-04-10, the `stale_after` date of
+// the rule doc.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { PLUGIN_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -31,7 +31,7 @@ const SOURCE_TYPES: ReadonlyMap<string, string> = new Map([
 ])
 
 /** True when version `a` is older than version `b`. Both are `major.minor.patch`.
- *  The comparison is numeric: `2.1.99` is older than `2.1.222`. */
+ *  The comparison is numeric: `2.1.99` is older than `2.1.224`. */
 function older(a: string, b: string): boolean {
   const left = a.split('.').map(Number)
   const right = b.split('.').map(Number)

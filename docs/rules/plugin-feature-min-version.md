@@ -33,7 +33,7 @@ is older than the version that added it:
 
 | Feature                           | Added in | What older versions do                                                    | Source                         |
 | --------------------------------- | -------- | ------------------------------------------------------------------------- | ------------------------------ |
-| `"."` as a `skills` path          | v2.1.221 | Manifest validation fails. Use `"./"`, which means the same.[^path-rules] | Path rules                     |
+| `"."` as a `skills` path          | v2.1.221 | Manifest validation fails. Use `"./"`, which means the same.[^path-rules] | Path rules, changelog          |
 | `options` on a `userConfig` field | v2.1.271 | The plugin fails to load.[^options]                                       | Limit a field to fixed options |
 
 The rule reports these places:
@@ -62,7 +62,7 @@ The rule makes no report in these cases:
 
 When a key appears twice, the rule reads the last one, as `JSON.parse` does.
 
-Fail, with `minVersion` set to `2.1.200`: `"skills": "."`, or a `userConfig`
+Fail, with `minVersion` set to `2.1.200`: `"skills": "."` or a `userConfig`
 field with `"options": ["a", "b"]`.
 
 Pass: `"skills": "./"`.
