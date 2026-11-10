@@ -374,8 +374,8 @@ describe('hyphenate', () => {
     ['a\u{AD}b', 'a-b'],
     ['x\u{2800}y', 'x-y'],
     ['x\u{200D}y', 'x-y'],
-    // The three folders of the 2.1.319 probe, again on 2.1.322. The family emoji is 15 code units
-    // with `family-`, the Devanagari word is four, and the red heart with U+FE0F is two.
+    // The three folders of the 2.1.319 probe, again on 2.1.322. The family emoji is eight code
+    // units. The Devanagari word is four, and the red heart with U+FE0F is two.
     ['family-\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}', 'family---------'],
     ['\u{915}\u{94D}\u{200D}\u{937}', '----'],
     ['x\u{2764}\u{FE0F}y', 'x--y'],

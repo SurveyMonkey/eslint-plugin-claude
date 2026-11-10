@@ -216,8 +216,8 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // A project skill folder with a refused name does not load, so it has no name with hyphens.
     { code: bare, filename: put('hyphproj/.claude/skills/a<b/SKILL.md', bare) },
     { code: bare, filename: put('hyphproj/.claude/skills/a-b/SKILL.md', bare) },
-    // Claude Code 2.1.322 kept a plugin command file name, a plugin `name` field and a project
-    // skill folder name as written. Only a plugin skill folder name gets the hyphens.
+    // Claude Code 2.1.322 kept a plugin command file name and a plugin `name` field as written.
+    // It kept a project skill folder name too. Only a plugin skill folder name gets the hyphens.
     { code: bare, filename: put('hyphnear/commands/a.b.md', bare) },
     { code: bare, filename: put('hyphnear/commands/a-b.md', bare) },
     {
@@ -555,8 +555,9 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
-    // Claude Code 2.1.322 loaded a plugin skill folder `a.b` as `a-b`, and four folders `a.b`, `a-b`,
-    // `caf<U+00E9>` and `caf<U+00E8>` as two command names. Each pair gives a report in each file.
+    // Claude Code 2.1.322 loaded a plugin skill folder `a.b` as `a-b`. It loaded the four folders
+    // `a.b`, `a-b`, `caf<U+00E9>` and `caf<U+00E8>` as two command names. Each pair gives a report
+    // in each file.
     {
       code: bare,
       filename: put('hyphdot/skills/a.b/SKILL.md', bare),
