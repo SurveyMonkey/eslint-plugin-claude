@@ -1,6 +1,5 @@
-// When a subdirectory CLAUDE.md or a rules file that loads on demand is over a per-file size
-// limit, Claude gets only the start of it. The limit is 40,000 characters for a 200K context
-// window, as `wc -m` counts them
+// When a file that loads on demand is over a per-file size limit, Claude gets only the start of
+// it. The limit is 40,000 characters for a 200K context window, as `wc -m` counts them
 // (https://code.claude.com/docs/en/memory#claude-ignores-the-end-of-my-subdirectory-claude-md).
 // The rule finds the start folder from the git top, so each case builds a tree on disk. The
 // globs are in tests/configs.test.ts.
@@ -140,7 +139,7 @@ describe(`${RULE}: the start folder`, () => {
     expect(ids(lint('app/.claude/CLAUDE.md', chars(40001), files))).toEqual(['tooLong'])
   })
 
-  it('takes the folder of the file as the start when no .git is above it', () => {
+  it('takes the folder that holds the file or its .claude/ as the start, with no .git', () => {
     expect(lint('pkg/CLAUDE.md', chars(40001), {}, false)).toEqual([])
     expect(lint('pkg/.claude/rules/a.md', chars(40001), {}, false)).toEqual([])
     expect(ids(lint('pkg/.claude/rules/a.md', `${SCOPED}${chars(40001)}`, {}, false))).toEqual([

@@ -1,11 +1,14 @@
 // The size of an instruction file that loads on demand (docs/rules/claude-md-on-demand-max-chars.md).
 // When such a file is over a per-file limit, Claude gets only the start of it. These files load
-// on demand: a CLAUDE.md or CLAUDE.local.md in a subfolder of the start folder, and the files
-// that they import; a rule file in the `.claude/rules/` of a subfolder; and a rule file with
-// `paths` in the project `.claude/rules/`. The start folder is the git top above the folder that
-// holds the file, else that folder, as in `claude-md-combined-size`. The rule counts characters
-// as `wc -m` does: one for each code point. It makes no report for a path that it cannot read,
-// and it does not read `~/.claude/rules/` (ADR 001, Decision 14).
+// on demand:
+// - a CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md in a subfolder of the start folder;
+// - the files that such a file imports;
+// - a rule file in the `.claude/rules/` of a subfolder;
+// - a rule file with `paths` in the project `.claude/rules/`.
+// The home of a file is its folder, or the folder that holds its `.claude/`. The start folder is
+// the git top above the home, else the home, as in `claude-md-combined-size`. The docs check the
+// size with `wc -m`, so the rule counts one character for each code point. It makes no report
+// for a path that it cannot read. It reads no file in `~/.claude/rules/` (ADR 001, Decision 14).
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
@@ -102,7 +105,8 @@ const rule: MarkdownRuleDefinition<{
         scoped = isScopedRule(readFrontmatter(sourceCode, node)?.data.paths)
       },
       'root:exit'() {
-        // A project rule with no `paths` loads at launch, and so does the root CLAUDE.md file.
+        // The CLAUDE.md files of the start folder load at launch, and so does a project rule
+        // file with no `paths`.
         if (!nested && !(kind === 'rule' && scoped)) {
           return
         }
@@ -115,7 +119,8 @@ const rule: MarkdownRuleDefinition<{
             data: { size: String(size), max: String(max) },
           })
         }
-        // The docs name the imports of a CLAUDE.md file, and not those of a rule file.
+        // The docs name the imports of a CLAUDE.md or CLAUDE.local.md file, and not those of a
+        // rule file.
         if (kind === 'rule') {
           return
         }
