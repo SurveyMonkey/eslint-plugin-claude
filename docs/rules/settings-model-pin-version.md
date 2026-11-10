@@ -41,7 +41,8 @@ The rule reports the `model` value of `.claude/settings.json` when it is an alia
 value `default` is not an alias.[^aliases] The rule makes no report in these cases:
 
 - The same file pins the alias in `env`. `opus` needs `ANTHROPIC_DEFAULT_OPUS_MODEL` with a value.
-  `opusplan` needs the variables of Opus and Sonnet. `best` is the model of `opus`, so it needs the Opus variable only.
+  `opusplan` needs the variables of Opus and Sonnet. `best` is the model of `opus`, so it needs
+  the Opus variable only.
 - The value is a full model ID, a provider ID, or any other text that is not an alias.
 
 The part reads only the shared project file. A managed file holds a policy, and the local file

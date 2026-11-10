@@ -99,6 +99,14 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       code: env({ CLAUDE_CODE_USE_BEDROCK: '1' }, { model: 'best', alwaysThinkingEnabled: false }),
       filename: project,
     },
+    // A pin that the rule cannot read leaves `best` unjudged: it does not fall back to the alias.
+    {
+      code: env(
+        { ANTHROPIC_DEFAULT_OPUS_MODEL: 'my-deployment' },
+        { model: 'best', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+    },
     {
       code: env(
         { CLAUDE_CODE_USE_BEDROCK: '1' },
@@ -243,7 +251,7 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       errors: [{ messageId: 'thinkingOff' as const }],
     })),
     // `best` is the model of `opus`: its Anthropic API model, or the pin of `opus`. A pin of
-    // `fable` does not apply to it.
+    // `fable` does not apply to it: Haiku 4.5 does not always think, and the rule still reports.
     ...['best', 'best[1m]'].map((model) => ({
       code: settings({ model, alwaysThinkingEnabled: false }),
       filename: project,
@@ -251,7 +259,7 @@ jsonTester.run('settings-model-capability (valid)', rule, {
     })),
     {
       code: env(
-        { ANTHROPIC_DEFAULT_FABLE_MODEL: 'claude-fable-5-2' },
+        { ANTHROPIC_DEFAULT_FABLE_MODEL: 'claude-haiku-4-5' },
         { model: 'best', alwaysThinkingEnabled: false },
       ),
       filename: project,
