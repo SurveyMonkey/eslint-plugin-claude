@@ -1718,6 +1718,12 @@ const TREE: Record<string, string> = {
   // `rules-max-lines`: a rule file of 201 lines. The same text outside `.claude/rules/`.
   'packages/rm/.claude/rules/long.md': LONG,
   'packages/rm/docs/long.md': LONG,
+  // `claude-md-on-demand-max-chars`: files of 40,001 characters. The tree has no `.git`, so the
+  // start folder is the folder of each file. A rule file with `paths` loads on demand and reports.
+  // A rule file with no `paths` and a CLAUDE.md file load at launch.
+  'packages/od/.claude/rules/api.md': `${SCOPED_RULE}${'x'.repeat(40001)}`,
+  'packages/od/.claude/rules/all.md': 'x'.repeat(40001),
+  'packages/od/sub/CLAUDE.md': 'x'.repeat(40001),
   // `memory-index-max-size`: the index of a subagent. The same text in a topic file and in a
   // file that is not below `.claude/agent-memory/<name>/`.
   'packages/mi/.claude/agent-memory/rev/MEMORY.md': LONG,
@@ -3216,6 +3222,7 @@ const MEMORY_RULES = [
 const MEMORY_WARN_RULES = [
   'claude-md-import-external',
   'claude-md-max-lines',
+  'claude-md-on-demand-max-chars',
   'claude-md-symlink',
   'memory-auto-memory-directory-committed',
   'memory-index-max-size',
@@ -4532,6 +4539,8 @@ const EXPECTED = [
   'packages/lmi/CLAUDE.md: claude/claude-md-max-lines@1',
   // `rules-max-lines` reads Markdown below `.claude/rules/`, and no other file.
   'packages/rm/.claude/rules/long.md: claude/rules-max-lines@1',
+  // `claude-md-on-demand-max-chars` reads a scoped rule file with no `.git` above it.
+  'packages/od/.claude/rules/api.md: claude/claude-md-on-demand-max-chars@1',
   // `memory-index-max-size` reads the `MEMORY.md` of a subagent, and no other file.
   'packages/mi/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-max-size@1',
   // `claude-md-import-external` reads CLAUDE.md files, and no other file.
@@ -6654,6 +6663,9 @@ describe('configs', () => {
     expect(blocks('claude-md-import-external')).toEqual([['markdown/gfm', ['**/CLAUDE.md']]])
     expect(blocks('claude-md-max-lines')).toEqual([
       ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
+    ])
+    expect(blocks('claude-md-on-demand-max-chars')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md']],
     ])
     expect(blocks('claude-md-symlink')).toEqual([['markdown/gfm', ['**/CLAUDE.md']]])
     expect(blocks('memory-auto-memory-directory-committed')).toEqual([['json/json', PROJECT_FILES]])
