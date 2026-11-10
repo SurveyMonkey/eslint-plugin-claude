@@ -395,6 +395,7 @@ describe(`${RULE} (silent)`, () => {
       ['a .. right after ./', './../outside.json'],
       ['a .. at the end', './servers/..'],
       ['a .. and a bundle-like name', './a/../x.mcp'],
+      ['a .. and a bundle name before .json', './a/../x.mcpb.json'],
     ])('reports %s in both fields', (_title, text) => {
       for (const field of ['mcpServers', 'lspServers']) {
         const messages = lintServers({ [field]: text })
@@ -419,19 +420,27 @@ describe(`${RULE} (silent)`, () => {
       ])
     })
 
-    it('reads the last of two mcpServers keys, as JSON.parse does', () => {
-      const open = '{"plugins": [{"source": "./plugins/p", '
-      const dir = tree(NO_MANIFEST)
-      expect(lint(dir, `${open}"mcpServers": "./a/../x", "mcpServers": "./x.json"}]}`)).toEqual([])
-      expect(
-        lint(dir, `${open}"mcpServers": "./x.json", "mcpServers": "./a/../x"}]}`),
-      ).toHaveLength(1)
-    })
+    it.each(['mcpServers', 'lspServers'])(
+      'reads the last of two %s keys, as JSON.parse does',
+      (field) => {
+        const open = '{"plugins": [{"source": "./plugins/p", '
+        const dir = tree(NO_MANIFEST)
+        expect(lint(dir, `${open}"${field}": "./a/../x", "${field}": "./x.json"}]}`)).toEqual([])
+        expect(lint(dir, `${open}"${field}": "./x.json", "${field}": "./a/../x"}]}`)).toHaveLength(
+          1,
+        )
+      },
+    )
 
     it('gives no server report when the source has a plugin.json', () => {
       expect(
         lintServers({ mcpServers: './a/../x.json', lspServers: './a/../y.json' }, PLUGIN),
       ).toEqual([])
+    })
+
+    it('gives no server report when the plugin.json of the source does not parse', () => {
+      const broken = { 'plugins/p/.claude-plugin/plugin.json': '{' }
+      expect(lintServers({ mcpServers: './a/../x.json' }, broken)).toEqual([])
     })
 
     it.each([
@@ -451,7 +460,7 @@ describe(`${RULE} (silent)`, () => {
       ['a .mcpb path', './../x.mcpb'],
       ['a .dxt path', './a/../x.dxt'],
       ['an https URL', 'https://example.com/../x.json'],
-      ['an http URL', 'http://example.com/a/../x.mcpb'],
+      ['an http URL', 'http://example.com/a/../x.json'],
     ])('gives no mcpServers report for %s', (_title, text) => {
       expect(lintServers({ mcpServers: text })).toEqual([])
       expect(lintServers({ mcpServers: ['./a/../x.json', text] })).toHaveLength(1)
@@ -472,6 +481,7 @@ describe(`${RULE} (silent)`, () => {
     it('gives no server report for a source that is missing, a file or not relative', () => {
       expect(lintServers({ mcpServers: './a/../x.json' }, {})).toEqual([])
       expect(lintServers({ mcpServers: './a/../x.json' }, { plugins: 'a file' })).toEqual([])
+      expect(lintServers({ mcpServers: './a/../x.json' }, { 'plugins/p': 'a file' })).toEqual([])
       expect(lintServers({ mcpServers: './a/../x.json' }, NO_MANIFEST, 'plugins/p')).toEqual([])
     })
 
