@@ -88,6 +88,8 @@ describe(`${RULE}: the files that load on demand`, () => {
     for (const file of ['CLAUDE.md', '.claude/CLAUDE.md', 'CLAUDE.local.md']) {
       expect(lint(file, chars(40001)), file).toEqual([])
     }
+    // `paths` scopes a rule file only. A CLAUDE.md file with `paths` still loads at launch.
+    expect(lint('CLAUDE.md', `${SCOPED}${chars(40001)}`)).toEqual([])
   })
 
   it('reports a rule file in the .claude/rules/ of a subfolder, with or without paths', () => {
@@ -114,10 +116,17 @@ describe(`${RULE}: the files that load on demand`, () => {
     expect(lint('.claude/rules/a.md', `---\npaths: ""\n---\n${chars(40001)}`)).toEqual([])
     // YAML that does not parse sets no scope.
     expect(lint('.claude/rules/a.md', `---\npaths: [\n---\n${chars(40001)}`)).toEqual([])
+    // A `rules/` folder below the project `.claude/rules/` is not a subfolder `.claude/rules/`.
+    expect(lint('.claude/rules/x/rules/a.md', chars(40001))).toEqual([])
   })
 
   it('does not check a file that is not a CLAUDE.md or rule file', () => {
-    for (const file of ['pkg/AGENTS.md', 'pkg/docs/notes.md', 'pkg/claude.md']) {
+    for (const file of [
+      'pkg/AGENTS.md',
+      'pkg/AGENTS.local.md',
+      'pkg/docs/notes.md',
+      'pkg/claude.md',
+    ]) {
       expect(lint(file, chars(40001)), file).toEqual([])
     }
   })
@@ -166,6 +175,25 @@ describe(`${RULE}: imports`, () => {
     expect(messages[0]?.message).toContain('`pkg/b.md`')
   })
 
+  it('reports each import at its own place, after an import that it leaves', () => {
+    const files = { 'pkg/sub/CLAUDE.md': big, 'pkg/a.md': 'x', 'pkg/b.md': big }
+    const messages = lint('pkg/CLAUDE.md', '@sub/CLAUDE.md @a.md @b.md\n', files)
+    expect(ids(messages)).toEqual(['importTooLong'])
+    expect(messages[0]).toMatchObject({ line: 1, column: 22, endLine: 1, endColumn: 27 })
+    expect(messages[0]?.message).toContain('`pkg/b.md`')
+  })
+
+  it('reads imports to four hops, and not to five', () => {
+    const chain = { 'pkg/1.md': '@2.md\n', 'pkg/2.md': '@3.md\n', 'pkg/3.md': '@4.md\n' }
+    // `pkg/4.md` is at hop four, and loads.
+    expect(ids(lint('pkg/CLAUDE.md', '@1.md\n', { ...chain, 'pkg/4.md': big }))).toEqual([
+      'importTooLong',
+    ])
+    // `pkg/5.md` is at hop five, and does not load.
+    const five = { ...chain, 'pkg/4.md': '@5.md\n', 'pkg/5.md': big }
+    expect(lint('pkg/CLAUDE.md', '@1.md\n', five)).toEqual([])
+  })
+
   it('names the configured limit at another value of max', () => {
     const messages = lintMemory(
       RULE,
@@ -185,8 +213,13 @@ describe(`${RULE}: imports`, () => {
   })
 
   it('leaves an imported CLAUDE.md or rule file to its own check', () => {
-    const files = { 'pkg/sub/CLAUDE.md': big, '.claude/rules/r.md': big }
-    expect(lint('pkg/CLAUDE.md', '@sub/CLAUDE.md @../.claude/rules/r.md\n', files)).toEqual([])
+    const files = {
+      'pkg/sub/CLAUDE.md': big,
+      'pkg/sub/CLAUDE.local.md': big,
+      '.claude/rules/r.md': big,
+    }
+    const code = '@sub/CLAUDE.md @sub/CLAUDE.local.md @../.claude/rules/r.md\n'
+    expect(lint('pkg/CLAUDE.md', code, files)).toEqual([])
   })
 
   it('does not follow the imports of a rule file', () => {
