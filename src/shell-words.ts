@@ -115,18 +115,39 @@ function closingTick(line: string, start: number): number {
 /** True when a `}` or a nested `${` comes after `from` in `line`, before a `)` that ends the
  *  level. The scan skips each substitution, backtick pair, quote and escaped character. A `)` that
  *  closes a plain `(` does not end the level. So a `${...}` expansion with two substitutions in it
- *  stays open, as in `closingParen`. */
-function braceBeforeParen(line: string, from: number): boolean {
+ *  stays open, as in `closingParen`.
+ *
+ *  `known` holds the result of each index that an earlier scan of `line` read with no open plain
+ *  parenthesis. A later scan that reads such an index gets the result of the earlier scan. So a
+ *  scan stops at a known index, and the text after it is read once. Many substitutions in one
+ *  `${...}` then take linear time. The scan does not keep an index in a plain parenthesis, because
+ *  a scan that starts there can give another result. */
+function braceBeforeParen(line: string, from: number, known: Map<number, boolean>): boolean {
   // The open plain parentheses. In an expansion, a plain parenthesis is text.
   let depth = 0
+  // The indexes that this scan reads with no open plain parenthesis.
+  const passed: number[] = []
+  const done = (result: boolean) => {
+    for (const at of passed) {
+      known.set(at, result)
+    }
+    return result
+  }
   for (let i = from; i < line.length; i++) {
     const char = line.charAt(i)
+    if (depth === 0) {
+      const result = known.get(i)
+      if (result !== undefined) {
+        return done(result)
+      }
+      passed.push(i)
+    }
     if (char === '}' || (char === '$' && opensExpansion(line, i))) {
       // A nested `${` ends at its own `}`, before the outer one. A `)` in it or after it is text.
-      return true
+      return done(true)
     }
     if (char === ')' && depth === 0) {
-      return false
+      return done(false)
     }
     if (char === '\\') {
       i++
@@ -143,7 +164,7 @@ function braceBeforeParen(line: string, from: number): boolean {
       depth += char === '(' ? 1 : -1
     }
   }
-  return false
+  return done(false)
 }
 
 /** A simple command: its words, and whether its standard output is the output of the line. It is not when a
@@ -190,6 +211,8 @@ export function scanCommands(line: string): Command[] {
   // here-document. bash refuses such a `${` out of a here-document.
   let braces = 0
   const outer: number[] = []
+  // The results of `braceBeforeParen` on this line, by index. Each later scan uses them again.
+  const known = new Map<number, boolean>()
   let tickBraces = 0
   const endWord = () => {
     if (open) {
@@ -284,7 +307,7 @@ export function scanCommands(line: string): Command[] {
       const frame = outer.pop() ?? 0
       // When `frame` is 0, the result is 0. So only a `)` in an open expansion starts the scan, which
       // can read to the end of the line.
-      braces = frame > 0 && braceBeforeParen(line, i + 1) ? frame : 0
+      braces = frame > 0 && braceBeforeParen(line, i + 1, known) ? frame : 0
     } else if (char === '`') {
       endCommand()
       ticks = !ticks

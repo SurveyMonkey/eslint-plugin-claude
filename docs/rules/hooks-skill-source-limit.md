@@ -33,7 +33,9 @@ past a limit runs with none of its frontmatter hooks. The debug log has the text
 The rule adds up the frontmatter hooks of each `SKILL.md` of one source:
 
 - A source is one `.claude/` directory, with its `skills/` folder, or one plugin, with its
-  `skills/` folder.
+  `skills/` folder. In a plugin, the `skills` key of `plugin.json` adds the folders that its
+  paths give.[^fields] The rule counts these skills too, and lints each one. A skill that is in
+  `skills/` and also on a path counts once.
 - A hook is each handler object in the `hooks` list of a matcher group. Claude Code skips an
   event name that it does not know, so the hooks under that name add nothing.[^lifecycle] The
   rule uses the event list of `hooks-event-name-known`, without its `additionalEvents` option.
@@ -75,7 +77,10 @@ the other skills of the source.
   `skills` key. The rule does not count it.
 - Command files. A file in `.claude/commands/` takes the skill frontmatter, with `hooks`. The
   docs name skills only in the limit, so the rule does not count the hooks of a command.
-- The skills that a `skills` key of `plugin.json` adds. The rule reads the `skills/` folder only.
+- A `skills` path that names the plugin root, or a `plugin.json` that does not parse to an
+  object or that the rule cannot read. The rule reads no listed folder for it.
+- The `skills` key of a `marketplace.json` entry. When `strict` is unset or `true`, Claude Code
+  adds the entry `skills` to those of `plugin.json`.[^entry] The rule reads `plugin.json` only.
 - A nested `.claude/skills/` folder as part of the project source. The rule counts a folder such
   as `packages/web/.claude/skills/` as a source of its own. The docs do not say if Claude Code
   adds it to the project source.
@@ -137,3 +142,5 @@ not say that Claude Code stops there.
 [^limits]: [Hooks reference: Limits on skill hooks](https://code.claude.com/docs/en/hooks#limits-on-skill-hooks)
 [^lifecycle]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)
 [^symlinks]: [Extend Claude with skills: Choose where skills load](https://code.claude.com/docs/en/skills#choose-where-skills-load)
+[^fields]: [Plugin manifest reference: Fields](https://code.claude.com/docs/en/plugins/manifest-reference#fields)
+[^entry]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
