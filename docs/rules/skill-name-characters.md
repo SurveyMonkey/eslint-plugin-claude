@@ -54,8 +54,8 @@ rule extends the samples to these two classes:
 
 The rule refuses each character of the two classes, also one that the probe did not try. The
 probe also showed that Claude Code takes these characters near the classes: U+2801, U+FFFD,
-U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. The rule reports no
-character outside the classes above and the 2.1.322 rules below.
+U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. The rule
+reports no character outside the classes above and the 2.1.322 rules below.
 
 Claude Code 2.1.319 took some characters of the hidden class in a probe. Revision 38 of UAX #31
 gives contexts for some of them.[^uax31-38] Revision 39 and later do not hold these contexts.
@@ -96,8 +96,8 @@ rule, set from probes of Claude Code 2.1.319.
 Claude Code refused a joiner outside these cases. Examples are U+200C between two Latin letters,
 U+200D after a Tamil virama, and U+200C after a Sinhala virama. Others are a joiner before a Latin
 letter, a joiner between two scripts and U+200D between Arabic letters. It also refused a red
-heart with U+FE0E. The rule reports each one. A probe of Claude Code 2.1.322 gave the same result for each
-joiner case of these lists.
+heart with U+FE0E. The rule reports each one. A probe of Claude Code 2.1.322 gave the same result
+for each joiner and emoji case above.
 
 A probe of Claude Code 2.1.322 gives the rules below. The probe made a project skill folder for
 each of a set of names. No public source gives these limits, so each one is a choice of the rule.
@@ -136,6 +136,9 @@ space cannot hide in the text.
 The rule does not report a folder in the `skills/` directory of a plugin. Claude Code changes the
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It
 still reports the `name` field of a plugin skill, and the file or folder name of a plugin command.
+One exception is a lone surrogate in the `name` of a plugin `skills/` folder.
+`claude plugin validate` 2.1.322 fails it as a YAML parse error, so the rule does not report that
+`name`. The tool does not read a plugin-root `SKILL.md`, so the rule reports its `name`.
 
 The docs give examples, not a full list. The rule does not read the `name` field of a command
 file. A command gets its name from its path, and the docs give the `name` effect for a skill only.

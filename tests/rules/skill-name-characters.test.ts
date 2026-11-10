@@ -122,8 +122,8 @@ const BAD: [name: string, code: string, kind: string][] = [
   ['x\u261D\uFE0F\u{1F3FB}y', 'U+FE0F', HIDDEN],
   // Claude Code 2.1.322 refused a joiner before U+0958.
   ['\u0915\u094D\u200D\u0958', 'U+200D', HIDDEN],
-  // Claude Code 2.1.322 refused U+20E3 outside a keycap emoji. It refused a mark at the start, and
-  // a mark of the Hebrew script after a Latin letter.
+  // Claude Code 2.1.322 refused U+20E3 outside a keycap emoji. It refused a mark at the start and
+  // after a hyphen, and a mark of the Hebrew script after a Latin letter.
   ['a\u20E3b', 'U+20E3', KEYCAP],
   ['x1\u20E3y', 'U+20E3', KEYCAP],
   ['\u0301ab', 'U+0301', NO_BASE],
@@ -133,9 +133,9 @@ const BAD: [name: string, code: string, kind: string][] = [
 
 // Names with no character of the classes of the rule. They hold one plain space between words, or
 // letters of other scripts. Claude Code 2.1.319 took a character near each refused class: U+2801,
-// U+FFFD, U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. It also took an
-// emoji sequence with U+200D, U+FE0F or tag characters, and a joiner in a Devanagari, Bengali,
-// Sinhala or Arabic word.
+// U+FFFD, U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. It
+// also took an emoji sequence with U+200D, U+FE0F or tag characters, and a joiner in a
+// Devanagari, Bengali, Sinhala or Arabic word.
 const GOOD = [
   'deploy',
   'deploy app',
@@ -163,7 +163,7 @@ const GOOD = [
   '\u0628\u200C\u0628',
   '\u0628\u064E\u200C\u0628',
   // Claude Code 2.1.322 took these marks: eight in a row, U+0301 after a digit, U+20DD, a keycap
-  // of `#`, and a mark of one script after a letter of another script.
+  // of `#`, and a mark after a letter of the same script or of another script.
   `a${'\u0301'.repeat(8)}b`,
   'a1\u0301b',
   'a\u20DDb',

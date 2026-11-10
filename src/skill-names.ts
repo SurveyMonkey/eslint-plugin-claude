@@ -19,7 +19,7 @@
  *  - Six blank-like characters that are in neither class: U+2800, U+FFFC, U+1D159, U+13441,
  *    U+13442 and U+16FE4.
  *  Claude Code took these characters near the classes: U+2801, U+FFFD, U+2423, U+2588,
- *  U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule refuses each `Cf` and
+ *  U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. The rule refuses each `Cf` and
  *  `Default_Ignorable_Code_Point` character, also one that the probe did not try. This is a
  *  choice of the rule. `takenAt` gives the characters of the classes that Claude Code took.
  *
@@ -170,8 +170,9 @@ function markKind(chars: string[], index: number): string | undefined {
   if (!MARK.test(char)) {
     return undefined
   }
-  // The walk stops after `MARK_LIMIT` marks, so a long run costs linear time in all. A mark
-  // that stops the walk early is a fault, as the base check or the limit check refuses it.
+  // The walk looks back at most `MARK_LIMIT` + 1 marks, so a long run costs linear time in all.
+  // From the eleventh mark of a run, the walk stops on a mark, so the base check refuses it.
+  // The tenth mark gets the limit check. `firstFault` gives the ninth mark first.
   let start = index
   while (start > 0 && index - start <= MARK_LIMIT && MARK.test(chars[start - 1] as string)) {
     start--

@@ -175,15 +175,15 @@ describe('firstFault', () => {
     )
   })
 
-  // The run of marks is long. The rule must report each mark after the eighth, and must do so
-  // in linear time.
+  // The run of marks is long. The rule must report each mark after the eighth.
   it('refuses each mark after the eighth of a long run', () => {
     expect(escapeName(`a${'\u0301'.repeat(11)}`)).toBe(
       `a${'\u0301'.repeat(8)}${'<U+0301>'.repeat(3)}`,
     )
   })
 
-  // A name of 30000 marks took 8 seconds before the walk of `markKind` had a limit.
+  // With no limit on the walk of `markKind`, the cost is quadratic. 30000 marks then took about
+  // 10 seconds. The timeout catches that case.
   it('escapes a very long run of marks in linear time', () => {
     const text = `a${'\u0301'.repeat(30000)}`
     expect(escapeName(text)).toBe(`a${'\u0301'.repeat(8)}${'<U+0301>'.repeat(29992)}`)
