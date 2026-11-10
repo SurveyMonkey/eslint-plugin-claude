@@ -428,6 +428,11 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
       ...named('a​b', path.join(plugin, 'SKILL.md')),
       errors: [{ messageId: 'name', data: { name: 'a<U+200B>b', ...at('U+200B', ZERO_WIDTH) } }],
     },
+    // A valid surrogate pair is not a lone surrogate, so the rule reports the `<` after it.
+    {
+      ...named('\u{1F600}<b', path.join(plugin, 'skills', 's', 'SKILL.md')),
+      errors: [{ messageId: 'name', data: { name: '\u{1F600}<U+003C>b', ...at('U+003C', ANGLE) } }],
+    },
     // `claude plugin validate` 2.1.322 does not read a plugin-root `SKILL.md`. So the rule
     // reports a lone surrogate in its `name`.
     {
