@@ -27,7 +27,7 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 ## Rule details
 
 In version 2.1.63, Claude Code renamed the Task tool to Agent. Existing `Task(...)` references in settings and agent
-definitions still work as aliases.[^task] `MultiEdit` is a legacy tool. `Edit` rules apply to all built-in tools that edit files.[^cover]
+definitions still work as aliases.[^task] `MultiEdit` is a legacy tool.[^never-match] `Edit` rules apply to all built-in tools that edit files.[^cover]
 
 The rule reports a rule in `allow`, `ask` or `deny` that names:
 
@@ -85,3 +85,4 @@ The `recommended` and `strict` configs set no option, so they report `Task`.
 
 [^task]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)
 [^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
+[^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)

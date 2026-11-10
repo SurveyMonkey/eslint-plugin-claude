@@ -48,7 +48,7 @@ sandbox `.` or `./` path there resolves under `~/.claude`.[^anchors][^prefixes] 
 does not read it (ADR 001, Decision 14). The rule does not check them.
 
 The docs do not say how a managed file resolves `./x`, so the sandbox part is silent there. The permission part
-reads managed files, because the warning of the docs holds for every source.[^anchors]
+reads managed files, because the warning of the docs holds for every source.[^patterns][^anchors]
 
 Fail:
 

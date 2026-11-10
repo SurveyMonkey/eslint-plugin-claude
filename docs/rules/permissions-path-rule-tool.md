@@ -34,7 +34,8 @@ The rule reports a rule with parentheses for one of those four tools. The messag
 `Edit(path)` covers `Write`, `NotebookEdit` and `MultiEdit`. `Read(path)` covers `Glob`.
 
 The rule does not report `Grep(path)` or `LSP(path)`. The tools table says that `Read` rules apply to both tools.[^tools] The
-docs do not say that Claude Code never consults a path rule for them.
+permissions page says that a `Grep(path)` rule does not match.[^never-match] The rule does not check this yet.
+The errors page names neither tool. No docs page says that an `LSP(path)` rule does not match.
 
 The rule accepts a deny or ask rule in the `param:value` form.
 [`permissions-param-rule`](permissions-param-rule.md) reads those. It skips a string that does not parse.
