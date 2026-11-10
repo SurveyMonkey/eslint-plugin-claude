@@ -1645,6 +1645,28 @@
       "hash": "7ac132b5b7125d6292a172e246ef35281aeeb689d28451989d7398f003bbb9b7"
     }
   ],
+  "hooks-powershell-quoted-program": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PowerShell started no program",
+      "hash": "d6be8ecd3705c3419709d5c1be4191315b6d5a0da8491363c06fa0fad5509edc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Reference scripts by path in PowerShell hooks",
+      "hash": "ce682d36ddde4bb55db521cd4da80b4cd3d383e312d0d845336971926aa58247"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Failed hooks on Windows without Git Bash",
+      "hash": "e008b0aa195442e6969b7bfbad83f97b736c86441bf5e5b68a67d1e49fb5f9bd"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "hash": "7ac132b5b7125d6292a172e246ef35281aeeb689d28451989d7398f003bbb9b7"
+    }
+  ],
   "hooks-prefer-exec-form": [
     {
       "url": "https://code.claude.com/docs/en/hooks",

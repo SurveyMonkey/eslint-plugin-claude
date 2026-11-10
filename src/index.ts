@@ -110,6 +110,7 @@ import * as hooksOutputSchema from './rules/hooks-output-schema.ts'
 import * as hooksOutputSize from './rules/hooks-output-size.ts'
 import * as hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
 import * as hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
+import * as hooksPowershellQuotedProgram from './rules/hooks-powershell-quoted-program.ts'
 import * as hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
 import * as hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
 import * as hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
@@ -527,6 +528,7 @@ const modules = [
   { target: hooksOutputSize.target, default: hooksOutputSize.default },
   { target: hooksPlaceholderQuoted.target, default: hooksPlaceholderQuoted.default },
   { target: hooksPowershellPlaceholder.target, default: hooksPowershellPlaceholder.default },
+  { target: hooksPowershellQuotedProgram.target, default: hooksPowershellQuotedProgram.default },
   { target: hooksPreferExecForm.target, default: hooksPreferExecForm.default },
   {
     target: hooksPromptOnPermissionRequest.target,
@@ -1211,6 +1213,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-output-size': 'off',
   'hooks-placeholder-quoted': 'warn',
   'hooks-powershell-placeholder': 'error',
+  'hooks-powershell-quoted-program': 'error',
   'hooks-prefer-exec-form': 'warn',
   'hooks-prompt-on-permission-request': 'warn',
   'hooks-ps1-needs-powershell-shell': 'warn',
