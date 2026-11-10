@@ -1,7 +1,7 @@
 // The settings reference, `permissions.blockWritesOutsideWorkingDirectories`: "A `true` in any file
-// applies, so a repository can turn the block on for itself but can't lift yours." `false` is "the
-// same as unset; the block still applies if another file sets `true`":
-// https://code.claude.com/docs/en/settings-reference#permissionsblockwritesoutsideworkingdirectories
+// the session loads applies, so a repository can turn the block on for itself but can't lift
+// yours." `false` is "the same as unset; the block still applies if another file sets `true`":
+// https://code.claude.com/docs/en/settings-reference#permissions-blockwritesoutsideworkingdirectories
 // A value that is not a Boolean is for `permissions-schema`.
 import { describe, expect, it } from 'vitest'
 import { lintJson } from '../rule-tester.test-support.ts'
@@ -56,6 +56,12 @@ describe(`${name}: the reports`, () => {
         '{"permissions":{"blockWritesOutsideWorkingDirectories":false,"blockWritesOutsideWorkingDirectories":true}}',
       ),
     ).toEqual([])
+  })
+
+  it('reads the last of two permissions objects, as JSON.parse does', () => {
+    const key = '"blockWritesOutsideWorkingDirectories"'
+    expect(ids(`{"permissions":{${key}:false},"permissions":{}}`)).toEqual([])
+    expect(ids(`{"permissions":{},"permissions":{${key}:false}}`)).toEqual(['sameAsUnset'])
   })
 })
 
