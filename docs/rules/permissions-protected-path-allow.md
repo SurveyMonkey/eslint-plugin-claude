@@ -35,7 +35,9 @@ settings. An entry such as `Edit(.claude/**)` does not change the result.[^prote
 
 The protected directories are `.git`, `.config/git`, `.vscode`, `.idea`, `.husky`, `.cargo`, `.devcontainer`, `.yarn`,
 `.mvn` and `.claude`. The protected files include `.gitconfig`, `.bashrc`, `.zshrc`, `.envrc`, `.npmrc`, `lefthook.yml`,
-`.mcp.json` and `.claude.json`. The rule holds the lists of the docs. It does not list a directory that you load with `--plugin-dir`.
+`.mcp.json` and `.claude.json`. The rule holds the lists of the docs. It does not list a directory that you load with
+`--plugin-dir`. It does not list a file that you pass with `--settings`, `--mcp-config` or `--agents`. The docs protect
+these paths for the session that you start with them.[^protected] A repository file does not show them, so the rule cannot see them.
 
 The docs name exceptions under `.claude`, "such as" these. The rule does not report a pattern at or under
 `.claude/worktrees`, `.claude/plans`, `.claude/jobs/<id>/tmp`, `.claude/projects/<project>/memory`,

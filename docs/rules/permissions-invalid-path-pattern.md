@@ -27,9 +27,9 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 ## Rule details
 
-`Read` and `Edit` rules use gitignore pattern syntax.[^read] The docs say what happens to a pattern that Claude Code
+`Read` and `Edit` rules use gitignore pattern syntax.[^patterns] The docs say what happens to a pattern that Claude Code
 cannot use. "A deny or ask rule whose path isn't usable as a gitignore pattern still guards that exact path. An allow
-rule with an unusable pattern doesn't approve anything."[^read]
+rule with an unusable pattern doesn't approve anything."[^special]
 
 The docs do not say which patterns are unusable. The changelog of Claude Code gives one example: an unclosed `[`. It
 records the fix under 2.1.260. The live docs page of the changelog is too large to cite. Read the entry in the
@@ -43,7 +43,7 @@ The rule reports a `Read` or `Edit` specifier with a `[` that has no `]` to clos
 
 A `]` right after `[`, `[!` or `[^` is a member of the class, as in gitignore. So `Read([]].ts)` is silent, and
 `Read([]a)` is a report. A backslash escapes the next character, so `Read(a\[b)` is silent. Claude Code writes such
-escapes itself when you approve a path.[^read] A stray `]` is silent. Parentheses need no escape.[^read]
+escapes itself when you approve a path.[^special] A stray `]` is silent. Parentheses need no escape.[^special]
 
 The rule is silent in these cases:
 
@@ -87,5 +87,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^patterns]: [Configure permissions: How path patterns match](https://code.claude.com/docs/en/permissions#how-path-patterns-match)
+[^special]: [Configure permissions: Special characters and ! negation](https://code.claude.com/docs/en/permissions#special-characters-and--negation)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)

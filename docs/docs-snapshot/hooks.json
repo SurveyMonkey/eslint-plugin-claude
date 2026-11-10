@@ -1251,10 +1251,10 @@
       "text": "#### PreCompact output\n\nWhen a PreCompact hook exits 0 and doesn't block, Claude Code uses its stdout as instructions for the compaction summary. Keep that stdout under 10,000 characters per hook. Claude Code cuts longer output at the cap and appends a marker."
     },
     {
-      "heading": "Windows PowerShell tool",
-      "id": "windows-powershell-tool",
-      "hash": "5c0ca89b32e223f575be430216cdf9fa415086260a185102bc6faec65d93167b",
-      "text": "## Windows PowerShell tool\n\nOn Windows, you can run individual hooks in PowerShell by setting `\"shell\": \"powershell\"` on a command hook. Claude Code auto-detects `pwsh.exe`, the PowerShell 7 and later executable, and falls back to `powershell.exe` for Windows PowerShell 5.1.\n\n```json theme={null}\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"shell\": \"powershell\",\n            \"command\": \"Write-Host 'File written'\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```"
+      "heading": "Reference scripts by path in PowerShell hooks",
+      "id": "reference-scripts-by-path-in-powershell-hooks",
+      "hash": "ce682d36ddde4bb55db521cd4da80b4cd3d383e312d0d845336971926aa58247",
+      "text": "### Reference scripts by path in PowerShell hooks\n\nTo reference the project root from a PowerShell shell-form command, write `${CLAUDE_PROJECT_DIR}` or `$env:CLAUDE_PROJECT_DIR`. Claude Code rewrites the `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}`, and `${CLAUDE_PLUGIN_DATA}` placeholders in a PowerShell shell-form command to PowerShell's `${env:NAME}` form, whether the hook is defined in `settings.json`, a plugin, or a skill. PowerShell then resolves the value from the exported environment after parsing, so the placeholder works inside double-quoted strings but not inside single-quoted strings, where PowerShell never expands variables.\n\nDon't write the bare `$CLAUDE_PROJECT_DIR` spelling in a PowerShell hook. PowerShell parses it as an undefined local variable and resolves it to `$null`, which leaves the script path without its project-root prefix. Claude Code doesn't rewrite that form; it logs a warning in the [debug log](#debug-hooks) instead.\n\nThe example below shows a `settings.json` hook that runs a project script with the `$env:` form:\n\n```json theme={null}\n{\n  \"type\": \"command\",\n  \"shell\": \"powershell\",\n  \"command\": \"& \\\"$env:CLAUDE_PROJECT_DIR\\\\.claude\\\\hooks\\\\check.ps1\\\"\"\n}\n```"
     },
     {
       "heading": "PowerShell started no program",

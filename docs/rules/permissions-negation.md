@@ -30,7 +30,7 @@ It reads no hidden drop-in, because Claude Code ignores it.
 A `Read` or `Edit` deny or ask pattern that starts with `!` is a gitignore negation. It carves the paths that it matches
 out of the `path` or `./path` rules listed before it. In one `deny` list, `Read(*.env)` followed by
 `Read(!sample.env)` blocks every `.env` file except `sample.env`. The carve-out reaches only rules from the same
-source.[^read]
+source.[^special]
 
 The rule reports a `!` rule in four cases. Each report names the rule:
 
@@ -39,12 +39,12 @@ The rule reports a `!` rule in four cases. Each report names the rule:
   [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
 - **A `!` before an anchor**, as in `Read(!~/notes/public/**)`. Claude Code reads a `!` pattern relative to the current
   directory, even when `/`, `~/` or `//` follows the `!`. So it cannot reach a rule that starts with one of those
-  anchors.[^read] The rule checks this case before the next.
-- **A `!` that carves nothing.** A `!` rule listed first carves nothing out.[^read] The rule reports a `!` rule when no
+  anchors.[^special] The rule checks this case before the next.
+- **A `!` that carves nothing.** A `!` rule listed first carves nothing out.[^special] The rule reports a `!` rule when no
   rule of the form `path` or `./path` comes before it in the same list. A rule that starts with `/`, `~/` or `//` does not
   count, because a `!` pattern cannot reach it.
 - **A `!` inside a directory that an earlier rule blocks whole.** With `Read(secrets/**)` and
-  `Read(!secrets/public/**)`, Claude Code still blocks `secrets/public`.[^read] The rule reports a `!` path that is
+  `Read(!secrets/public/**)`, Claude Code still blocks `secrets/public`.[^special] The rule reports a `!` path that is
   inside the directory of an earlier `<directory>/**` rule. It drops a `./` at the start of each path. It does not build a
   gitignore matcher, so it compares the text of the paths. It names a directory by the text before `/**`, and it does not read `secrets/*.md` as a directory.
 
@@ -92,5 +92,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^special]: [Configure permissions: Special characters and ! negation](https://code.claude.com/docs/en/permissions#special-characters-and--negation)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)

@@ -27,7 +27,7 @@ The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on a
 ## Rule details
 
 The docs use `permissions.deny` for files that hold API keys, secrets or environment values. Their example denies `Read(./.env)`,
-`Read(./.env.*)` and `Read(./secrets/**)`.[^deny] A `Read` deny rule also blocks the Edit and Write tools on the same path.[^read]
+`Read(./.env.*)` and `Read(./secrets/**)`.[^deny] A `Read` deny rule also blocks the Edit and Write tools on the same path.[^cover]
 
 The rule lints the shared file `.claude/settings.json`. It asks the git index, through `src/git-state.ts`, for the files that the
 project tracks. The project is the folder that holds `.claude/`. The rule looks for:
@@ -36,7 +36,7 @@ project tracks. The project is the folder that holds `.claude/`. The rule looks 
 - a tracked file below `secrets/` in that folder
 
 It reports the items that no `Read` deny rule covers, in one report on the `permissions` value. A rule covers an item when its
-gitignore pattern matches the path or a directory above it.[^read] The rule counts the deny lists of both project files.
+gitignore pattern matches the path or a directory above it.[^patterns][^depth] The rule counts the deny lists of both project files.
 A `Read` deny rule with no specifier covers every file. The report names the rules of the docs example that fit the items.
 
 ### What the rule does not read
@@ -77,4 +77,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissionsdeny)
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
+[^patterns]: [Configure permissions: How path patterns match](https://code.claude.com/docs/en/permissions#how-path-patterns-match)
+[^depth]: [Configure permissions: How deep a pattern matches](https://code.claude.com/docs/en/permissions#how-deep-a-pattern-matches)
