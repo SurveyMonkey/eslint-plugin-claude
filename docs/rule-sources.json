@@ -753,6 +753,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Rule frontmatter reference",
+      "hash": "192f4f6c21dd9ebf78af85a47f6641298021ae259f3d45b20411498c8789168d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
       "heading": "When Claude Code reads AGENTS.md",
       "hash": "e7e1069355b9c0cb306afab90d73ff29685594e1f19c3e752936f0c4ae72a176"
     }
