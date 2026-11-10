@@ -28,16 +28,20 @@ PowerShell prints a `command` that is only quoted strings, such as `"command": "
 does not run it.[^no-program] So the hook starts no program, and a guard hook does not guard. The fixes of the
 docs:[^no-program]
 
-- To run a `.ps1`, `.cmd` or `.bat` file, or a `.exe` whose path has a variable, set `"shell": "powershell"`
-  and put `&` before the quoted path.
+- To run a `.ps1`, `.cmd` or `.bat` file, or a `.exe` whose path has a variable: set `"shell": "powershell"`.
+  Then put `&` before the quoted path.
 - To run one `.exe` at a path without `$`, remove the inner quotes from `command`. Then put the program in
-  `command` and its arguments in `args`, to use exec form.[^windows]
-- To print text, such as JSON, keep the quoted string. The rule does not report it.
+  `command` and its arguments in `args`, to use exec form. Write `"args": []` if the program takes no
+  arguments. Add `"onFailure": "block"`, so that the call stops when the program fails.[^windows]
+- To print text, such as JSON, set `"shell": "powershell"`, and keep the quoted string. The rule does not
+  report it.
+- To run a script for Bash, apply the fix of the docs for a hook for Bash.[^windows]
 
-The rule reports a `command` hook in shell form (no `args`) whose `command` is only one or more quoted strings,
-with white space between them. The first string must be a program path. With `&` or `.` before the string, the
-command is not only quoted strings, so it gets no report. The rule reads the quote rules of PowerShell: `''` in
-a single-quoted string, and `""` and the backtick in a double-quoted string. It reports once for each handler,
+The rule reports a `command` hook in shell form (no `args` array). Its `command` must be only one or more
+quoted strings, with white space between them. The first string must be a program path. With `&` or `.`
+before the string, the command is not only quoted strings, so it gets no report. The rule reads the quote
+rules of PowerShell. In a single-quoted string, `''` is one quote. In a double-quoted string, `""` is one
+quote, and a backtick and the next character give that character. The rule reports once for each handler,
 at the `command` string.
 
 A program path has one of the forms that the docs show:
@@ -47,6 +51,9 @@ A program path has one of the forms that the docs show:
 - It starts with `$HOME` or an `$env:` variable, then `\` or `/`.[^no-program]
 - It starts with `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_PLUGIN_DATA}`, then `\` or
   `/`.[^ps-paths]
+
+The last two forms apply to a double-quoted string only. A placeholder works in double quotes only, because
+PowerShell expands no variable in single quotes.[^ps-paths]
 
 ### The shell
 
@@ -60,8 +67,11 @@ with `"shell": "bash"` gets no report.
 - A path that ends in `.com`, or that starts with `~`, `./` or `../`, and has no other form of the list. No
   docs block shows these forms in a PowerShell hook.
 - `$HOME`, `$env:` or a path placeholder with no path after it, such as `"$HOME"`.
+- `$HOME`, `$env:` or a path placeholder in a single-quoted string, with no other form of the list.
+- The `${env:NAME}` form, a UNC path such as `\\server\share\guard`, and a name with no other form, such as
+  `"guard"`.
 - A command with other text next to the strings, such as `"C:\Tools\guard.exe" --fix`.
-- A hook in exec form (with `args`). Claude Code ignores `shell` there.[^fields]
+- A hook in exec form (with an `args` array). Claude Code ignores `shell` there.[^fields]
 - A `command` that is not a string, and a handler that is not a `command` hook.
 
 The rule reads the same files as [`hooks-config-schema`](hooks-config-schema.md).
