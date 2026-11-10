@@ -844,10 +844,14 @@ describe('scanCommands', () => {
       [' ) #c}'],
       ['echo', 'hi'],
     ])
+  })
+
+  it(`reads the \`)\` of a \`case\` pattern after a plain parenthesis of a \${...} expansion`, () => {
     // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. A plain `(` of an outer
-    // expansion, or of one that ended, does not hide the `)` of a `case` pattern. bash 3.2.57
-    // refuses the `case` pattern in the expansion.
+    // expansion, of one that ended, or that a `)` closed, does not hide the `)` of a `case`
+    // pattern. bash 3.2.57 refuses the `case` pattern in the expansion.
     for (const text of [
+      `echo \${x:-( ) $(case a in a) echo RAN;; esac)}; echo hi`,
       `echo \${a:-(} \${x:-$(case a in a) echo RAN;; esac)}; echo hi`,
       `echo \${a:-( $(echo \${x:-$(case a in a) echo RAN;; esac)}) )}; echo hi`,
       `echo \${a:-( \`echo \${x:-$(case a in a) echo RAN;; esac)}\` )}; echo hi`,
