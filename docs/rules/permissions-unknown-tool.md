@@ -28,13 +28,13 @@ The rule also lints the managed settings files: `managed-settings.json` and each
 
 A permission rule names a tool by its canonical name.[^tools] The name is case-sensitive. A rule for another name
 never matches a tool. The label that the transcript shows can differ from the canonical name. The label
-`Stop Task` is the tool `TaskStop`, and a rule written as `Stop Task` does not match.[^wildcards]
+`Stop Task` is the tool `TaskStop`, and a rule written as `Stop Task` does not match.[^match-all]
 
 The rule reads the tool name of each rule in `permissions.allow`, `permissions.ask` and `permissions.deny`. It
 accepts the 46 tools of the tools table, and these names that the table does not list:
 
 - `Task`, the old name of `Agent`[^task]
-- `MultiEdit`, a legacy tool[^read]
+- `MultiEdit`, a legacy tool[^never-match]
 - `Cd`, the rule name of the `/cd` command[^cd]
 
 The list is in `src/data/tool-names.ts`, as of Claude Code 2.1.287. The docs also exempt the name of a tool that Claude Code
@@ -104,7 +104,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^tools]: [Tools reference: Configure tools with permission rules and hooks](https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks)
 [^wildcards]: [Configure permissions: Tool name wildcards](https://code.claude.com/docs/en/permissions#tool-name-wildcards)
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^match-all]: [Configure permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)
+[^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)
 [^task]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)
 [^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)

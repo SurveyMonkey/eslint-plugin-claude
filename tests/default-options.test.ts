@@ -3,7 +3,7 @@
 // (ADR 003), and `pnpm docs:check` fails when a doc does not agree with it. This test checks
 // what `docs:check` does not: one options object, no default that is not an option, a
 // description on each option, and no default in `create`.
-// The test expects 79 rules with options. A new rule with options makes it fail until its author
+// The test expects 80 rules with options. A new rule with options makes it fail until its author
 // changes the count.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -16,6 +16,7 @@ const RULES = path.resolve(import.meta.dirname, '../src/rules')
  *  (issue #235, ruling 11). An empty list and an unset option both turn the check off. */
 const PLATFORMS_IN_CREATE = new Set([
   'hooks-exec-form-windows-shim',
+  'hooks-powershell-quoted-program',
   'hooks-ps1-needs-powershell-shell',
   'sandbox-platform-limits',
   'settings-defaultshell-powershell-tool',
@@ -29,7 +30,7 @@ const withOptions = Object.entries(plugin.rules).flatMap(([name, rule]) => {
 
 describe('default options', () => {
   it('finds each rule with a schema option', () => {
-    expect(withOptions).toHaveLength(79)
+    expect(withOptions).toHaveLength(81)
     expect([...PLATFORMS_IN_CREATE].every((name) => name in plugin.rules)).toBe(true)
   })
 

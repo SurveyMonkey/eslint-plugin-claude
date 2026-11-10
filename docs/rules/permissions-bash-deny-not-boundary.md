@@ -31,7 +31,7 @@ It reads no hidden drop-in, because Claude Code ignores it.
 A Bash rule matches the command text that Claude writes. It does not match the same program in another form, so a `deny` or
 `ask` rule is not a security boundary.[^limits] `Bash(rm *)` stops `rm -rf build/`. It does not stop `/bin/rm -rf build/` or
 `bash -c 'rm -rf build/'`.[^limits][^debug] A `Read` or `Edit` deny rule does not apply to a command that reads files without
-naming them, such as `grep -r pattern .`, or to a subprocess that opens files itself.[^read][^deny] For a hard guarantee, the docs
+naming them, such as `grep -r pattern .`, or to a subprocess that opens files itself.[^cover][^deny] For a hard guarantee, the docs
 name the sandbox and a `PreToolUse` hook.[^debug][^limits]
 
 The rule makes one report for a file, at its first such rule. It counts a `Bash` or `Monitor` rule in `deny` or `ask`, and a
@@ -77,5 +77,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^limits]: [Configure permissions: What a Bash rule doesn't match](https://code.claude.com/docs/en/permissions#bash-rule-limits)
 [^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissionsdeny)
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
 [^debug]: [Debug your configuration: Check common causes](https://code.claude.com/docs/en/debug-your-config#check-common-causes)

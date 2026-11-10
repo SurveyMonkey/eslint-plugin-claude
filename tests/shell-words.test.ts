@@ -742,6 +742,14 @@ describe('scanCommands', () => {
     expect(Date.now() - start).toBeLessThan(5000)
   })
 
+  it(`reads many substitutions in one \${...} expansion in linear time`, () => {
+    // Each `)` in the expansion starts a scan for a `}`. With no `known` map, each scan reads the
+    // text after its `)` again. That took about 1.5 s on one machine, and this line about 3 ms.
+    const start = Date.now()
+    expect(scanCommands(`echo \${a:-${'$(a)'.repeat(8000)}}`)).toHaveLength(16_001)
+    expect(Date.now() - start).toBeLessThan(500)
+  })
+
   it(`goes on with a \${...} expansion after a new line in it`, () => {
     // bash 5.3 prints `x #y`, then `hi`.
     expect(commandsOf(`echo \${a:-x\n #y}; echo hi`)).toEqual([

@@ -8,7 +8,8 @@ import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { HOOK_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
 import { fromData, handlersOf } from '../hooks-config.ts'
-import { classifySkillFile } from '../skill-files.ts'
+import { listedSkills, listingPlugin, readPluginAt } from '../plugin-manifest.ts'
+import { classifySkillFile, type SkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import {
   frontmatterOfFile,
@@ -105,13 +106,21 @@ const rule: MarkdownRuleDefinition<{
     },
   },
   create(context) {
-    const file = classifySkillFile(context.filename)
+    const self = path.resolve(context.filename)
+    const classified = classifySkillFile(context.filename)
+    // A skill folder that a manifest `skills` path gives is not in `skills/`, so the
+    // classification does not know it.
+    const listing =
+      classified === null && path.basename(self) === 'SKILL.md' ? listingPlugin(self) : undefined
+    const file: SkillFile | null =
+      listing === undefined
+        ? classified
+        : { kind: 'skill', plugin: true, names: [listing.skill.folder] }
     // The rule does not count a plugin-root skill. See the rule doc.
     if (file?.kind !== 'skill' || file.names.length === 0) {
       return {}
     }
     const [{ maxHooks, maxMatcherChars }] = context.options
-    const self = path.resolve(context.filename)
     // Claude Code loads a skill once, when several folder links point at it. For a plugin skill,
     // a probe of Claude Code 2.1.310 shows this. See the rule doc.
     const selfReal = realOf(self)
@@ -119,8 +128,18 @@ const rule: MarkdownRuleDefinition<{
     if (selfReal === UNREADABLE) {
       return {}
     }
-    const root = scopeRoot(self, file)
+    const root = listing === undefined ? scopeRoot(self, file) : listing.plugin.root
     const bound = repositoryRoot(root)
+    // In a plugin, the skills that the paths of the manifest `skills` key give add to `skills/`.
+    // A manifest that the rule cannot read gives no paths. The rule reads the other skills only
+    // for a skill with a hook.
+    const othersOf = () => {
+      const plugin = listing?.plugin ?? (file.plugin ? readPluginAt(root) : undefined)
+      return [
+        ...skillFiles(path.join(root, 'skills'), bound),
+        ...(plugin === undefined ? [] : listedSkills(plugin).map((skill) => skill.file)),
+      ]
+    }
     const { sourceCode } = context
     return {
       root(node) {
@@ -142,9 +161,10 @@ const rule: MarkdownRuleDefinition<{
         // The real paths of the skills that the sum holds. A null `selfReal` is a file that is
         // not on disk.
         const seen = new Set<string>(selfReal === null ? [] : [selfReal])
-        // This file is in `seen`, so the loop skips it and each link to it.
-        for (const other of skillFiles(path.join(root, 'skills'), bound)) {
-          // `skillFiles` gives only the files whose real path it can read.
+        // This file is in `seen`, so the loop skips it and each link to it. A skill in `skills/`
+        // that a manifest path also gives counts once.
+        for (const other of othersOf()) {
+          // `skillFiles` and `listedSkills` give only the files whose real path they can read.
           const real = realOf(other) as string
           if (seen.has(real)) {
             continue

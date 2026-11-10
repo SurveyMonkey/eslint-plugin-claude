@@ -108,5 +108,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^scripts]: [Hooks reference: Reference scripts by path](https://code.claude.com/docs/en/hooks#reference-scripts-by-path)
 [^form]: [Hooks reference: Exec form and shell form](https://code.claude.com/docs/en/hooks#exec-form-and-shell-form)
-[^ps]: [Hooks reference: Windows PowerShell tool](https://code.claude.com/docs/en/hooks#windows-powershell-tool)
+[^ps]: [Hooks reference: Reference scripts by path in PowerShell hooks](https://code.claude.com/docs/en/hooks#reference-scripts-by-path-in-powershell-hooks)
 [^guide]: [Automate actions with hooks: Hook error in output](https://code.claude.com/docs/en/hooks-guide#hook-error-in-output)

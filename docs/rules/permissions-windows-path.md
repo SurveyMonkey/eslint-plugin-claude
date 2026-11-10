@@ -29,7 +29,7 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 On Windows, Claude Code normalizes a path to POSIX form before it matches. `C:\Users\alice` becomes `/c/Users/alice`.
 So a rule uses `//c/**/.env` to match `.env` files anywhere on the `C:` drive, and `//**/.env` to match across all
-drives.[^read] A `Cd` rule shares the `//`, `~/` and `/` anchors of the `Read` and `Edit` rules.[^cd]
+drives.[^anchors] A `Cd` rule shares the `//`, `~/` and `/` anchors of the `Read` and `Edit` rules.[^cd]
 The docs do not say what happens to a rule that has a drive letter or a backslash. The inventory row says the same.
 The docs state the normalization for `Read` and `Edit` rules only. The rule applies the same test to `Cd`.
 
@@ -45,7 +45,7 @@ The rule is silent in these cases:
 
 - The path is in POSIX form: `Read(//c/Users/alice/**)`, `Edit(/c/Users/alice)` and `Read(~/Documents/*.pdf)`.
 - A backslash escapes a character of a gitignore pattern, as in `Read(./\[2024-06\] Reports/**)`,
-  `Read(a\*b)` or `Read(a\\b)`. Claude Code writes such an escape itself when you approve a path.[^read]
+  `Read(a\*b)` or `Read(a\\b)`. Claude Code writes such an escape itself when you approve a path.[^special]
 - The rule is a parameter rule in `deny` or `ask`, as in `Read(offset:5)`.
   [`permissions-param-rule`](permissions-param-rule.md) reads those.
 - The tool is not `Read`, `Edit` or `Cd`. A path rule for `Write`, `NotebookEdit`, `MultiEdit` or `Glob` is for
@@ -83,5 +83,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^read]: [Configure permissions: Read and Edit](https://code.claude.com/docs/en/permissions#read-and-edit)
+[^anchors]: [Configure permissions: Where a pattern anchors](https://code.claude.com/docs/en/permissions#where-a-pattern-anchors)
+[^special]: [Configure permissions: Special characters and ! negation](https://code.claude.com/docs/en/permissions#special-characters-and--negation)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)

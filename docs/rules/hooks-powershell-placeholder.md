@@ -103,5 +103,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^ps]: [Hooks reference: Windows PowerShell tool](https://code.claude.com/docs/en/hooks#windows-powershell-tool)
+[^ps]: [Hooks reference: Reference scripts by path in PowerShell hooks](https://code.claude.com/docs/en/hooks#reference-scripts-by-path-in-powershell-hooks)
 [^fields]: [Hooks reference: Command hook fields](https://code.claude.com/docs/en/hooks#command-hook-fields)

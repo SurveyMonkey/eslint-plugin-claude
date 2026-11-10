@@ -108,6 +108,8 @@ const hooksFaults = {
   // A bare `$CLAUDE_PROJECT_DIR` in a PowerShell command (`hooks-powershell-placeholder`).
   PostCompact: [
     { hooks: [{ type: 'command', shell: 'powershell', command: '& $CLAUDE_PROJECT_DIR\\x.ps1' }] },
+    // A PowerShell command that is only a quoted path (`hooks-powershell-quoted-program`).
+    { hooks: [{ type: 'command', shell: 'powershell', command: '"C:\\Tools\\guard.exe"' }] },
   ],
   // A matcher on an event without matcher support (`hooks-matcher-unsupported-event`).
   // A matcher that names an MCP server and no tool (`hooks-matcher-mcp-name`).
@@ -263,6 +265,10 @@ hooks:
         - type: command
           shell: powershell
           command: '& $CLAUDE_PROJECT_DIR\\x.ps1'
+    - hooks:
+        - type: command
+          shell: powershell
+          command: '"C:\\Tools\\guard.exe"'
   PreToolUse:
     - matcher: mcp__memory
       hooks:
@@ -1718,6 +1724,12 @@ const TREE: Record<string, string> = {
   // `rules-max-lines`: a rule file of 201 lines. The same text outside `.claude/rules/`.
   'packages/rm/.claude/rules/long.md': LONG,
   'packages/rm/docs/long.md': LONG,
+  // `claude-md-on-demand-max-chars`: files of 40,001 characters. The tree has no `.git`, so the
+  // start folder is the folder of each file. A rule file with `paths` loads on demand and reports.
+  // A rule file with no `paths` and a CLAUDE.md file load at launch.
+  'packages/od/.claude/rules/api.md': `${SCOPED_RULE}${'x'.repeat(40001)}`,
+  'packages/od/.claude/rules/all.md': 'x'.repeat(40001),
+  'packages/od/sub/CLAUDE.md': 'x'.repeat(40001),
   // `memory-index-max-size`: the index of a subagent. The same text in a topic file and in a
   // file that is not below `.claude/agent-memory/<name>/`.
   'packages/mi/.claude/agent-memory/rev/MEMORY.md': LONG,
@@ -3216,6 +3228,7 @@ const MEMORY_RULES = [
 const MEMORY_WARN_RULES = [
   'claude-md-import-external',
   'claude-md-max-lines',
+  'claude-md-on-demand-max-chars',
   'claude-md-symlink',
   'memory-auto-memory-directory-committed',
   'memory-index-max-size',
@@ -3435,10 +3448,10 @@ const STRICT_ONLY_EXPECTED = [
   ),
   // The JSON files hold three more command handlers than the YAML files: an allow, a pipe in exec form and a script.
   ...['packages/hk/.claude/agents/hk.md', 'packages/hk/.claude/skills/hk/SKILL.md'].flatMap(
-    (file) => times(22, `${file}: claude/hooks-committed-command-review@1`),
+    (file) => times(23, `${file}: claude/hooks-committed-command-review@1`),
   ),
   ...['packages/hk/.claude/settings.json', 'packages/hk/plugin/hooks/hooks.json'].flatMap((file) =>
-    times(25, `${file}: claude/hooks-committed-command-review@1`),
+    times(26, `${file}: claude/hooks-committed-command-review@1`),
   ),
   ...[
     'packages/hk/.claude/settings.json',
@@ -4009,6 +4022,7 @@ const EXPECTED = [
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/agents/hk.md: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/agents/hk.md: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/.claude/hooks.json: claude/hooks-no-standalone-file@2',
   'packages/hk/.claude/hooks/hooks.json: claude/hooks-no-standalone-file@2',
@@ -4096,6 +4110,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.json: claude/hooks-script-exists@2',
   'packages/hk/.claude/settings.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/.claude/settings.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/settings.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/settings.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/.claude/settings.local.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-config-schema@2',
@@ -4122,6 +4137,7 @@ const EXPECTED = [
   'packages/hk/.claude/settings.local.json: claude/hooks-script-exists@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-script-exists@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/settings.local.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/settings.local.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/.claude/skills/ev/SKILL.md: claude/hooks-event-name-known@2',
   'packages/hk/.claude/skills/ev/SKILL.md: claude/skill-description-present@1',
@@ -4143,6 +4159,7 @@ const EXPECTED = [
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-syntax@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-powershell-placeholder@2',
+  'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-powershell-quoted-program@2',
   'packages/hk/.claude/skills/hk/SKILL.md: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-command-removed-cli-flag@2',
@@ -4163,6 +4180,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/managed-settings.d/10-a.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/managed-settings.d/10-a.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/managed-settings.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/managed-settings.json: claude/hooks-config-schema@2',
@@ -4183,6 +4201,7 @@ const EXPECTED = [
   'packages/hk/managed-settings.json: claude/hooks-matcher-syntax@2',
   'packages/hk/managed-settings.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/managed-settings.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/managed-settings.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/managed-settings.json: claude/hooks-prompt-on-permission-request@1',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-command-removed-cli-flag@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-config-schema@2',
@@ -4202,6 +4221,7 @@ const EXPECTED = [
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-syntax@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-matcher-unsupported-event@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-powershell-placeholder@2',
+  'packages/hk/plugin/hooks/hooks.json: claude/hooks-powershell-quoted-program@2',
   'packages/hk/plugin/hooks/hooks.json: claude/hooks-prompt-on-permission-request@1',
   'packages/x/.claude/settings.json: claude/hooks-event-name-known@2',
   'packages/x/.claude/settings.local.json: claude/hooks-event-name-known@2',
@@ -4532,6 +4552,8 @@ const EXPECTED = [
   'packages/lmi/CLAUDE.md: claude/claude-md-max-lines@1',
   // `rules-max-lines` reads Markdown below `.claude/rules/`, and no other file.
   'packages/rm/.claude/rules/long.md: claude/rules-max-lines@1',
+  // `claude-md-on-demand-max-chars` reads a scoped rule file with no `.git` above it.
+  'packages/od/.claude/rules/api.md: claude/claude-md-on-demand-max-chars@1',
   // `memory-index-max-size` reads the `MEMORY.md` of a subagent, and no other file.
   'packages/mi/.claude/agent-memory/rev/MEMORY.md: claude/memory-index-max-size@1',
   // `claude-md-import-external` reads CLAUDE.md files, and no other file.
@@ -5762,6 +5784,7 @@ const HOOKS_RULES: { name: string; blocks: string[][]; severity?: 'warn'; strict
   },
   { name: 'hooks-placeholder-quoted', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   { name: 'hooks-powershell-placeholder', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
+  { name: 'hooks-powershell-quoted-program', blocks: [HOOKS_JSON, HOOKS_MARKDOWN] },
   { name: 'hooks-prefer-exec-form', blocks: [HOOKS_JSON, HOOKS_MARKDOWN], severity: 'warn' },
   {
     name: 'hooks-prompt-on-permission-request',
@@ -6654,6 +6677,9 @@ describe('configs', () => {
     expect(blocks('claude-md-import-external')).toEqual([['markdown/gfm', ['**/CLAUDE.md']]])
     expect(blocks('claude-md-max-lines')).toEqual([
       ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/AGENTS.md']],
+    ])
+    expect(blocks('claude-md-on-demand-max-chars')).toEqual([
+      ['markdown/gfm', ['**/CLAUDE.md', '**/CLAUDE.local.md', '**/.claude/rules/**/*.md']],
     ])
     expect(blocks('claude-md-symlink')).toEqual([['markdown/gfm', ['**/CLAUDE.md']]])
     expect(blocks('memory-auto-memory-directory-committed')).toEqual([['json/json', PROJECT_FILES]])
