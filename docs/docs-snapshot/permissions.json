@@ -413,16 +413,16 @@
       "text": "### Read and Edit\n\nTo block Claude's file tools from reading a file or directory, add a `Read` deny rule for its path, such as `Read(./.env)` or `Read(./secrets/**)`; [Exclude sensitive files](/docs/en/settings-reference#exclude-sensitive-files) has a paste-ready example. If your project has a `.claudeignore` file, it has no effect, so move its entries into `Read` deny rules."
     },
     {
-      "heading": "WebFetch",
-      "id": "webfetch",
-      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128",
-      "text": "### WebFetch\n\nWebFetch rules use a `domain:` prefix and match against the hostname of the requested URL. Matching is case-insensitive, supports `*` wildcards, and strips a trailing `.` from both the rule and the hostname so `example.com.` and `example.com` are treated the same.\n\n* `WebFetch(domain:example.com)` matches requests to `example.com` only. To also cover subdomains such as `api.example.com`, add a `WebFetch(domain:*.example.com)` rule\n* `WebFetch(domain:*.example.com)` matches any subdomain at any depth, such as `api.example.com` or `a.b.example.com`, but not `example.com` itself\n* `WebFetch(domain:*)` matches every domain. It isn't the same as a bare `WebFetch` rule; see [Allow or deny every fetch](#allow-or-deny-every-fetch)\n\nIn any position other than a leading `*.` or a bare `*`, the wildcard matches only the text between two dots. `WebFetch(domain:example.*)` matches `example.org`, where `*` becomes `org`, but not `example.evil.com`, where `*` would have to become `evil.com` and cross a dot. This keeps a trailing wildcard from matching domains an attacker could register.\n\nWildcards in `WebFetch` rules require Claude Code v2.1.172 or later to match fetches."
-    },
-    {
       "heading": "How path patterns match",
       "id": "how-path-patterns-match",
       "hash": "370b9fc8ba2f375397b88665816bd9b2896080d0b1950c0ca63f4996f5f35845",
       "text": "#### How path patterns match\n\nRead and Edit rules both use [gitignore](https://git-scm.com/docs/gitignore) pattern syntax with four distinct pattern types:\n\n| Pattern | Meaning | Example | Matches |\n| - | - | - | - |\n| `//path` | Absolute path from filesystem root | `Read(//Users/alice/secrets/**)` | `/Users/alice/secrets/**` |\n| `~/path` | Path from home directory | `Read(~/Documents/*.pdf)` | `/Users/alice/Documents/*.pdf` |\n| `/path` | Path relative to the settings source | `Edit(/src/**/*.ts)` | `<primary working directory>/src/**/*.ts` in project settings |\n| `path` or `./path` | Path relative to current directory | `Read(*.env)` | `<cwd>/*.env` |\n\n> [!WARNING]\n>\n> A pattern like `/Users/alice/file` isn't an absolute path. The single leading slash anchors at the settings source, not the filesystem root. Use `//Users/alice/file` for absolute paths."
+    },
+    {
+      "heading": "WebFetch",
+      "id": "webfetch",
+      "hash": "cf5566e74bf4ea280939fbfec80d7c4eb868d76309dc58ca66789f75675d9128",
+      "text": "### WebFetch\n\nWebFetch rules use a `domain:` prefix and match against the hostname of the requested URL. Matching is case-insensitive, supports `*` wildcards, and strips a trailing `.` from both the rule and the hostname so `example.com.` and `example.com` are treated the same.\n\n* `WebFetch(domain:example.com)` matches requests to `example.com` only. To also cover subdomains such as `api.example.com`, add a `WebFetch(domain:*.example.com)` rule\n* `WebFetch(domain:*.example.com)` matches any subdomain at any depth, such as `api.example.com` or `a.b.example.com`, but not `example.com` itself\n* `WebFetch(domain:*)` matches every domain. It isn't the same as a bare `WebFetch` rule; see [Allow or deny every fetch](#allow-or-deny-every-fetch)\n\nIn any position other than a leading `*.` or a bare `*`, the wildcard matches only the text between two dots. `WebFetch(domain:example.*)` matches `example.org`, where `*` becomes `org`, but not `example.evil.com`, where `*` would have to become `evil.com` and cross a dot. This keeps a trailing wildcard from matching domains an attacker could register.\n\nWildcards in `WebFetch` rules require Claude Code v2.1.172 or later to match fetches."
     },
     {
       "heading": "Special characters and ! negation",

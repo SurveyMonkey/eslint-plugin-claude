@@ -3770,6 +3770,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "How path patterns match",
+      "hash": "370b9fc8ba2f375397b88665816bd9b2896080d0b1950c0ca63f4996f5f35845"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
       "heading": "How deep a pattern matches",
       "hash": "63a3da33e7cf7d950add92d4c265388c096aaa4a0bdb295d654a8d29b32fbda0"
     }
@@ -3881,6 +3886,11 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "What Read and Edit rules cover",
       "hash": "4b8bd8b8e8c1e6242350ff6bd5b941d62e7bf5ac913de3f083905ffbead91958"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
+      "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
     }
   ],
   "permissions-mcp-rule-parens": [
@@ -4029,6 +4039,16 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
       "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "18a45a9741a04644b8e99263c398e3600f7033321dcaad2be9382539a9902e8e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "File is covered by a Read deny rule",
+      "hash": "5f482b737fa2ea2d07f900a15004ec6a9b5ea044a837f8f3b01a2fe1dd555799"
     }
   ],
   "permissions-rule-syntax": [
