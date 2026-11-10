@@ -33,6 +33,11 @@ jsonTester.run('permissions-path-rule-tool', rule, {
       }),
       filename: '.claude/settings.json',
     },
+    // The `*` reading holds in every list.
+    {
+      code: settings({ deny: ['Write(*)', 'Glob(*)'], ask: ['Grep(*)', 'NotebookEdit(*)'] }),
+      filename: '.claude/settings.json',
+    },
     // A deny or ask parameter rule is for `permissions-param-rule`.
     {
       code: settings({ deny: ['Write(file_path:x)', 'Glob(path:x)'] }),

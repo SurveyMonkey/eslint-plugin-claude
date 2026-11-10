@@ -92,7 +92,7 @@ export const SPECIFIER_TOOLS: readonly string[] = [
  *  the tool whose rule it reads instead. Source: the permissions block "`Write(path)`,
  *  `Glob(path)`, and `Grep(path)` rules don't match"
  *  (https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match).
- *  The block covers "a path other than `*`". */
+ *  That section covers "a path other than `*`". */
 export const PATH_RULE_REPLACEMENT: ReadonlyMap<string, 'Edit' | 'Read'> = new Map([
   ['Write', 'Edit'],
   ['NotebookEdit', 'Edit'],

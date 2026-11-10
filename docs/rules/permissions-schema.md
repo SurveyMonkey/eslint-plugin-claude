@@ -42,7 +42,7 @@ The rule reports these faults:
 - **A list that is not an array.** The report is on the value.
 - **An entry of a list that is not a string.** The report is on the entry.
 - **A `blockReadsOutsideWorkingDirectories`, `blockWritesOutsideWorkingDirectories` or `denyInsteadOfPrompting` that is not `true` or `false`.**
-  `denyInsteadOfPrompting` is a key for a user or managed file. In a project file, `settings-key-scope` also reports the key, and this rule reports a value that is not a Boolean. These are two faults.
+  `denyInsteadOfPrompting` is a key for a user or managed file. In a project file, `settings-key-scope` reports the key for any value. This rule reports a value that is not a Boolean. The two faults are separate.
 
 A rule string that is not a valid permission rule is for `permissions-rule-syntax`, which also
 reports a NUL byte. The rule `permissions-unknown-tool` and its siblings check the rules too.

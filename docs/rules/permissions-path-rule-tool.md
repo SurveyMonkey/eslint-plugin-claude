@@ -33,8 +33,8 @@ startup for the first four.[^warning] A bare name such as `Write` is a rule for 
 The rule reports a rule with a path for one of those five tools. The message names the rule to use instead.
 `Edit(path)` covers `Write`, `NotebookEdit` and `MultiEdit`. `Read(path)` covers `Glob` and `Grep`.
 
-The docs say that `Bash(*)` is equivalent to `Bash`.[^match-all] The block of the rule covers "a path other than `*`".[^never-match]
-So the rule reads `Write(*)` as the bare tool, and reports no rule with the specifier `*`. It still reports an empty specifier, as `Write()`.
+The docs say that `Bash(*)` is equivalent to `Bash`.[^match-all] The permissions page covers "a path other than `*`".[^never-match]
+So the rule reads `Write(*)` as the bare tool, and reports no permission rule with the specifier `*`. It still reports an empty specifier, as `Write()`.
 
 The rule does not report `LSP(path)`. The tools table says that `Read` rules apply to `LSP`.[^tools]
 No docs page says that an `LSP(path)` rule does not match.

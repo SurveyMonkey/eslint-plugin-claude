@@ -32,7 +32,7 @@ definitions still work as aliases.[^task] `MultiEdit` is a legacy tool.[^never-m
 The rule reports a rule in `allow`, `ask` or `deny` that names:
 
 - **`Task`**, bare or with a specifier. The message gives the same rule with `Agent`: `Task(Explore)` becomes `Agent(Explore)`.
-- **`MultiEdit`**, bare or with the specifier `*`. The docs say that `Bash(*)` is equivalent to `Bash`.[^all] So the rule reads `MultiEdit(*)` as the bare tool. The message says to write `Edit`. No docs page shows a parameter form of `MultiEdit`, so the rule skips every other `MultiEdit(...)` rule.
+- **`MultiEdit`**, bare or with the specifier `*`. The docs say that `Bash(*)` is equivalent to `Bash`.[^all] So the rule reads `MultiEdit(*)` as the bare tool. The message says to write `Edit`. No docs page shows a parameter form of `MultiEdit`. So the rule skips every other `MultiEdit(...)` rule.
 
 A client older than v2.1.63 has no `Agent` tool, and it needs `Task`. No file shows which client reads it. So the rule reports `Task`
 when you leave the option `minVersion` unset, because the current docs name `Agent`. With `minVersion` below `2.1.63`, the rule makes no
