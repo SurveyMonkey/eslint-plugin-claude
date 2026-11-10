@@ -38,6 +38,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_DISABLE_BG_STABLE_PATH', '2.1.295'],
   ['CLAUDE_CODE_DISABLE_CFC_PROMPT', '2.1.257'],
   ['CLAUDE_CODE_DISABLE_DANGEROUS_RM_TIMEOUT', '2.1.281'],
+  ['CLAUDE_CODE_DISABLE_FEATURE_FLAGS', '2.1.319'],
   ['CLAUDE_CODE_DISABLE_FILE_MENTIONS', '2.1.299'],
   ['CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT', '2.1.288'],
   ['CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND', '2.1.304'],
@@ -497,7 +498,8 @@ export function removedEnvVarSince(name: string): string | undefined {
  *  finishes a sentence that starts with the variable name. `value` is set when only that value is
  *  a fault. The env vars reference marks `ANTHROPIC_SMALL_FAST_MODEL` and
  *  `ENABLE_PROMPT_CACHING_1H_BEDROCK` as deprecated, and calls `DISABLE_BUG_COMMAND` an older
- *  name and `SLASH_COMMAND_TOOL_CHAR_BUDGET` a legacy name. It names no replacement for
+ *  name and `SLASH_COMMAND_TOOL_CHAR_BUDGET` a legacy name. It says that
+ *  `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` supersedes `DISABLE_GROWTHBOOK`. It names no replacement for
  *  `SLASH_COMMAND_TOOL_CHAR_BUDGET`.
  *  `CLAUDE_CODE_ENABLE_TASKS` set to `0` selects the legacy `TodoWrite` tool. */
 interface DeprecatedEnvVar {
@@ -518,6 +520,13 @@ const DEPRECATED_ENV_VARS = new Map<string, DeprecatedEnvVar>([
   [
     'SLASH_COMMAND_TOOL_CHAR_BUDGET',
     { summary: 'is a legacy name that Claude Code keeps for backward compatibility.' },
+  ],
+  [
+    'DISABLE_GROWTHBOOK',
+    {
+      summary:
+        'is superseded. Use "CLAUDE_CODE_DISABLE_FEATURE_FLAGS", unless a machine on Claude Code v2.1.318 or earlier reads the configuration.',
+    },
   ],
   [
     'CLAUDE_CODE_ENABLE_TASKS',

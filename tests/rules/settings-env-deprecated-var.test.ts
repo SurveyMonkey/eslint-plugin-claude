@@ -3,7 +3,8 @@
 // (https://code.claude.com/docs/en/model-config#environment-variables). The reference marks
 // `ANTHROPIC_SMALL_FAST_MODEL` and `ENABLE_PROMPT_CACHING_1H_BEDROCK` as deprecated. It calls
 // `DISABLE_BUG_COMMAND` an older name, and `SLASH_COMMAND_TOOL_CHAR_BUDGET` a legacy name. It says
-// that `CLAUDE_CODE_ENABLE_TASKS` set to `0` gives the legacy `TodoWrite` tool.
+// that `CLAUDE_CODE_ENABLE_TASKS` set to `0` gives the legacy `TodoWrite` tool. It says that
+// `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` supersedes `DISABLE_GROWTHBOOK`, which still works.
 import { describe, expect, it } from 'vitest'
 import {
   deprecatedEnvSummary,
@@ -27,6 +28,7 @@ const NAMES = [
   'ENABLE_PROMPT_CACHING_1H_BEDROCK',
   'DISABLE_BUG_COMMAND',
   'SLASH_COMMAND_TOOL_CHAR_BUDGET',
+  'DISABLE_GROWTHBOOK',
 ]
 
 jsonTester.run('settings-env-deprecated-var (valid)', rule, {
@@ -37,6 +39,7 @@ jsonTester.run('settings-env-deprecated-var (valid)', rule, {
         ANTHROPIC_DEFAULT_HAIKU_MODEL: 'haiku',
         ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION: 'us-east-1',
         DISABLE_FEEDBACK_COMMAND: '1',
+        CLAUDE_CODE_DISABLE_FEATURE_FLAGS: '1',
         ENABLE_PROMPT_CACHING_1H: '1',
       }),
       filename,
@@ -106,6 +109,12 @@ describe('settings-env-deprecated-var: messages', () => {
     expect(text('ANTHROPIC_SMALL_FAST_MODEL')).toContain('ANTHROPIC_DEFAULT_HAIKU_MODEL')
     expect(text('ENABLE_PROMPT_CACHING_1H_BEDROCK')).toContain('"ENABLE_PROMPT_CACHING_1H"')
     expect(text('DISABLE_BUG_COMMAND')).toContain('DISABLE_FEEDBACK_COMMAND')
+  })
+
+  it('names the new variable, and the version limit, for the superseded name', () => {
+    expect(text('DISABLE_GROWTHBOOK')).toBe(
+      '"DISABLE_GROWTHBOOK" is superseded. Use "CLAUDE_CODE_DISABLE_FEATURE_FLAGS", unless a machine on Claude Code v2.1.318 or earlier reads the configuration.',
+    )
   })
 
   it('names no replacement for the legacy name, because the docs give none', () => {
