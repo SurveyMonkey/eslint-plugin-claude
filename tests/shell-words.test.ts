@@ -736,6 +736,129 @@ describe('scanCommands', () => {
     }
   })
 
+  it(`keeps the \${...} expansion open after a substitution in a plain parenthesis pair`, () => {
+    // bash 5.3.9 and 3.2.57 print `( ) #c`, then `hi`. The `#` is in the expansion (#800).
+    expect(commandsOf(`echo \${a:-$(x) ( $(y) ) $(z) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['x'],
+      [' ( $'],
+      ['y'],
+      [' ) $'],
+      ['z'],
+      [' #c}'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-( $(y) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['y'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`keeps the \${...} expansion open after a substitution in nested plain parentheses`, () => {
+    // bash 5.3.9 and 3.2.57 print `( ( ) ) #c`, then `hi`, in each case.
+    expect(commandsOf(`echo \${a:-( ( $(true) ) $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( ( $`],
+      ['true'],
+      [' ) $'],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-( ( $(true) ) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( ( $`],
+      ['true'],
+      [' ) ) #c}'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-( $(true) ( ) $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' ( ) $'],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`ends the \${...} expansion at its } after a plain parenthesis pair`, () => {
+    // bash 5.3.9 and 3.2.57 print `( )`, then `hi`. The `)` before the `}` closes the `(`.
+    expect(commandsOf(`echo \${a:-( $(true) )}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' )}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `( )` only. The `#` after the `}` starts a comment.
+    expect(commandsOf(`echo \${a:-( $(true) )} #c; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' )}'],
+    ])
+  })
+
+  it(`counts the plain parentheses of each \${...} expansion apart`, () => {
+    // bash 5.3.9 and 3.2.57 print `( ) ) #c`, then `hi`. The `)` of the nested expansion does
+    // not close the `(` of the outer one.
+    expect(commandsOf(`echo \${a:-( \${b:-)} $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( \${b:-)} $`],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `( ( ) #c`, then `hi`. The `(` of the nested expansion ends
+    // at its `}`.
+    expect(commandsOf(`echo \${a:-( \${b:-(} $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( \${b:-(} $`],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `) ( ) #c`, then `hi`. A `)` before the `(` closes nothing.
+    expect(commandsOf(`echo \${a:-) ( $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-) ( $`],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`keeps the plain parentheses of a \${...} expansion out of a backtick pair or a substitution`, () => {
+    // bash 5.3.9 and 3.2.57 print `( ( ) #c`, then `hi`. The `(` in the backtick pair is in
+    // another expansion.
+    expect(commandsOf(`echo \${a:-( \`echo \${b:-(}\` $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( `],
+      ['echo', `\${b:-(}`],
+      [' $'],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `( ( ) #c`, then `hi`. bash 3.2.57 refuses the inner substitution.
+    expect(commandsOf(`echo \${a:-( $(echo \${b:-(}) $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['echo', `\${b:-(}`],
+      [' $'],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. A plain `(` of an outer
+    // expansion, or of one that ended, does not hide the `)` of a `case` pattern. bash 3.2.57
+    // refuses the `case` pattern in the expansion.
+    for (const text of [
+      `echo \${a:-(} \${x:-$(case a in a) echo RAN;; esac)}; echo hi`,
+      `echo \${a:-( $(echo \${x:-$(case a in a) echo RAN;; esac)}) )}; echo hi`,
+      `echo \${a:-( \`echo \${x:-$(case a in a) echo RAN;; esac)}\` )}; echo hi`,
+      `cat <<'E'\n\${a:-(\nE\necho \${x:-$(case a in a) echo RAN;; esac)}; echo hi`,
+    ]) {
+      const commands = commandsOf(text)
+      expect(commands, text).toContainEqual(['echo', 'RAN'])
+      expect(commands.at(-1), text).toEqual(['echo', 'hi'])
+    }
+  })
+
   it('reads a line of many substitutions out of an expansion in linear time', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)
@@ -747,6 +870,14 @@ describe('scanCommands', () => {
     // text after its `)` again. That took about 1.5 s on one machine, and this line about 3 ms.
     const start = Date.now()
     expect(scanCommands(`echo \${a:-${'$(a)'.repeat(8000)}}`)).toHaveLength(16_001)
+    expect(Date.now() - start).toBeLessThan(500)
+  })
+
+  it(`reads many substitutions in a plain parenthesis pair of a \${...} expansion in linear time`, () => {
+    // Each scan starts with one open plain parenthesis. `known` holds the depth with the index.
+    // The first command, 8000 `a`, 7999 `$`, ` ) #c}` and `echo hi`.
+    const start = Date.now()
+    expect(scanCommands(`echo \${a:-( ${'$(a)'.repeat(8000)} ) #c}; echo hi`)).toHaveLength(16_002)
     expect(Date.now() - start).toBeLessThan(500)
   })
 
