@@ -1,8 +1,9 @@
 // PowerShell prints a `command` that is only quoted strings, and does not run it. A hook such as
 // `"command": "\"C:\\Tools\\guard.exe\""` then starts no program, so a guard hook does not guard
-// (docs/rules/hooks-powershell-quoted-program.md). The fix is `&` before the quoted path. The rule
-// reads shell form only, because `shell` has no effect with `args`. With no `shell` key, the shell
-// is PowerShell only on Windows without Git Bash, so the rule then needs the option `platforms`.
+// (docs/rules/hooks-powershell-quoted-program.md). The docs give three fixes. The rule
+// reads shell form only, because `shell` has no effect with `args`. With no `shell` key, the
+// shell is PowerShell only on Windows with no Git Bash. So the rule then needs the option
+// `platforms`.
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import {
@@ -23,23 +24,34 @@ interface Options {
   platforms?: string[]
 }
 
-/** The endings of a program path that the docs block "PowerShell started no program" names. */
+/** The file types of a program path that the block "PowerShell started no program" names. */
 const ENDING = /\.(?:exe|ps1|cmd|bat)$/i
 /** A drive letter path, as in the docs example `C:\Tools\guard.exe`. */
 const DRIVE = /^[A-Za-z]:[\\/]/
-/** A path under `$HOME`, an `$env:` variable or a path placeholder. The docs block names `$HOME`
- *  and `$env:`. "Reference scripts by path in PowerShell hooks" names the three placeholders. */
+/** A path under `$HOME`, an `$env:` variable or a path placeholder. The block "PowerShell started
+ *  no program" names `$HOME` and `$env:`. "Reference scripts by path in PowerShell hooks" names
+ *  the three placeholders. That block also says that a placeholder works in double quotes only.
+ *  PowerShell expands no variable in single quotes. So this form applies to a double-quoted string
+ *  only. */
 const ROOT = new RegExp(`^(?:\\$HOME|\\$env:\\w+|\\$\\{(?:${PATH_VARIABLES.join('|')})\\})[\\\\/]`)
 
-/** True when `text` has a form of a program path that the docs show. */
-const isProgramPath = (text: string) => ENDING.test(text) || DRIVE.test(text) || ROOT.test(text)
+/** One PowerShell quoted string: its quote character and its value. */
+interface Quoted {
+  quote: string
+  value: string
+}
 
-/** The values of the quoted strings of `line`, when `line` holds only PowerShell quoted strings
- *  with white space between them. Else undefined. In a single-quoted string `''` is one quote. In a
- *  double-quoted string `""` is one quote, and a backtick escapes the next character. A string
- *  that is not closed, or text next to a closing quote, gives undefined. */
-function quotedStrings(line: string): string[] | undefined {
-  const strings: string[] = []
+/** True when a quoted string has a form of a program path that the docs show. */
+const isProgramPath = ({ quote, value }: Quoted) =>
+  ENDING.test(value) || DRIVE.test(value) || (quote === '"' && ROOT.test(value))
+
+/** The quoted strings of `line`, when `line` holds only PowerShell quoted strings with white
+ *  space between them. Else undefined. In a single-quoted string `''` is one quote. In a
+ *  double-quoted string `""` is one quote. There, a backtick and the next character give that
+ *  character. The rule does not read escapes such as `` `n ``. A string with no end quote, or
+ *  text next to an end quote, gives undefined. */
+function quotedStrings(line: string): Quoted[] | undefined {
+  const strings: Quoted[] = []
   let i = 0
   for (;;) {
     while (/\s/.test(line.charAt(i))) {
@@ -74,7 +86,7 @@ function quotedStrings(line: string): string[] | undefined {
     if (i < line.length && !/\s/.test(line.charAt(i))) {
       return undefined
     }
-    strings.push(value)
+    strings.push({ quote, value })
   }
 }
 
@@ -115,9 +127,9 @@ const rule: Rule.RuleModule = {
         ) {
           continue
         }
-        const path = quotedStrings(line.value)?.[0]
-        if (path !== undefined && isProgramPath(path)) {
-          context.report({ loc: line.loc, messageId, data: { path } })
+        const first = quotedStrings(line.value)?.[0]
+        if (first !== undefined && isProgramPath(first)) {
+          context.report({ loc: line.loc, messageId, data: { path: first.value } })
         }
       }
     })

@@ -25,8 +25,15 @@ const ids = (handler: object, platforms?: string[], file = FILES.project) =>
 const power = (text: string, fields: Record<string, unknown> = {}) =>
   ids(command({ command: text, shell: 'powershell', ...fields }))
 const dir = (variable: string) => `\${${variable}}`
+/** The path that the message names, for a `command` with `"shell": "powershell"`. */
+const pathOf = (text: string) =>
+  lintJson(
+    name,
+    settings(hooks('Stop', [command({ shell: 'powershell', command: text })])),
+    FILES.project,
+  ).map((message) => /to run "(.*)"\.$/s.exec(message.message)?.[1])
 
-describe(`${name}: the docs example`, () => {
+describe(`${name}: the docs example and the probe`, () => {
   it('reports a quoted .exe path with shell powershell', () => {
     expect(power('"C:\\Tools\\guard.exe"')).toEqual(['quoted'])
   })
@@ -56,8 +63,9 @@ describe(`${name}: the program path forms of the docs`, () => {
     }
   })
 
-  it('reports a drive letter path with no ending', () => {
+  it('reports a drive letter path with no file type, in any case', () => {
     expect(power('"D:/tools/guard"')).toEqual(['quoted'])
+    expect(power('"d:\\tools\\guard"')).toEqual(['quoted'])
   })
 
   it('reports a path under $HOME, an $env: variable or a path placeholder', () => {
@@ -74,6 +82,30 @@ describe(`${name}: the program path forms of the docs`, () => {
 
   it('is silent for the forms that no docs block shows', () => {
     for (const text of ['"guard.com"', '"~\\bin\\guard"', '"./guard"', '"../bin/guard"']) {
+      expect(power(text), text).toEqual([])
+    }
+  })
+
+  it('reads $HOME, $env: and a path placeholder in double quotes only', () => {
+    // The docs say that a placeholder works in double quotes only. PowerShell expands no
+    // variable in single quotes.
+    for (const text of [
+      "'$HOME\\bin\\guard'",
+      "'$env:CLAUDE_PROJECT_DIR\\.claude\\hooks\\guard'",
+      `'${dir('CLAUDE_PLUGIN_ROOT')}/bin/guard'`,
+    ]) {
+      expect(power(text), text).toEqual([])
+    }
+    expect(power(`'${dir('CLAUDE_PLUGIN_ROOT')}\\bin\\guard.exe'`)).toEqual(['quoted'])
+  })
+
+  it('is silent for a text with a path form after its start, or a file type before its end', () => {
+    for (const text of [
+      '"Saved to $HOME/out.txt"',
+      '"see notes.bat.txt"',
+      '"A: ok"',
+      '"note x:\\y"',
+    ]) {
       expect(power(text), text).toEqual([])
     }
   })
@@ -98,10 +130,10 @@ describe(`${name}: the quoted strings`, () => {
 
   it('reads the quote rules of PowerShell', () => {
     // A doubled quote and a backtick stay inside a double-quoted string.
-    expect(power('"C:\\a""b.exe"')).toEqual(['quoted'])
-    expect(power('"C:\\a`"b.exe"')).toEqual(['quoted'])
+    expect(pathOf('"C:\\a""b.exe"')).toEqual(['C:\\a"b.exe'])
+    expect(pathOf('"C:\\a`"b.exe"')).toEqual(['C:\\a"b.exe'])
     // A doubled single quote stays inside a single-quoted string, and a backtick is plain there.
-    expect(power("'C:\\it''s.exe'")).toEqual(['quoted'])
+    expect(pathOf("'C:\\it''s.exe'")).toEqual(["C:\\it's.exe"])
     expect(power("'C:\\a`' 'b.exe'")).toEqual(['quoted'])
   })
 
@@ -159,7 +191,7 @@ describe(`${name}: the handler`, () => {
     expect(power('"C:\\Tools\\guard.exe"', { args: 'x' })).toEqual(['quoted'])
   })
 
-  it('is silent with shell bash, and for a handler that is not a command hook', () => {
+  it('is silent with shell bash, for a handler that is not a command hook, and for a command that is not a string', () => {
     expect(power('"C:\\Tools\\guard.exe"', { shell: 'bash' })).toEqual([])
     expect(power('"C:\\Tools\\guard.exe"', { type: 'http' })).toEqual([])
     expect(ids({ type: 'command', shell: 'powershell', command: 1 })).toEqual([])
