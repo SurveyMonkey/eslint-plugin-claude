@@ -30,7 +30,7 @@ const withOptions = Object.entries(plugin.rules).flatMap(([name, rule]) => {
 
 describe('default options', () => {
   it('finds each rule with a schema option', () => {
-    expect(withOptions).toHaveLength(80)
+    expect(withOptions).toHaveLength(81)
     expect([...PLATFORMS_IN_CREATE].every((name) => name in plugin.rules)).toBe(true)
   })
 
