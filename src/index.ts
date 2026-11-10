@@ -60,6 +60,7 @@ import * as claudeMdLocalUntracked from './rules/claude-md-local-untracked.ts'
 import * as claudeMdLocation from './rules/claude-md-location.ts'
 import * as claudeMdMaxBytes from './rules/claude-md-max-bytes.ts'
 import * as claudeMdMaxLines from './rules/claude-md-max-lines.ts'
+import * as claudeMdOnDemandMaxChars from './rules/claude-md-on-demand-max-chars.ts'
 import * as claudeMdProcedureToSkill from './rules/claude-md-procedure-to-skill.ts'
 import * as claudeMdSymlink from './rules/claude-md-symlink.ts'
 import * as commandLegacyFormat from './rules/command-legacy-format.ts'
@@ -109,6 +110,7 @@ import * as hooksOutputSchema from './rules/hooks-output-schema.ts'
 import * as hooksOutputSize from './rules/hooks-output-size.ts'
 import * as hooksPlaceholderQuoted from './rules/hooks-placeholder-quoted.ts'
 import * as hooksPowershellPlaceholder from './rules/hooks-powershell-placeholder.ts'
+import * as hooksPowershellQuotedProgram from './rules/hooks-powershell-quoted-program.ts'
 import * as hooksPreferExecForm from './rules/hooks-prefer-exec-form.ts'
 import * as hooksPromptOnPermissionRequest from './rules/hooks-prompt-on-permission-request.ts'
 import * as hooksPs1NeedsPowershellShell from './rules/hooks-ps1-needs-powershell-shell.ts'
@@ -526,6 +528,7 @@ const modules = [
   { target: hooksOutputSize.target, default: hooksOutputSize.default },
   { target: hooksPlaceholderQuoted.target, default: hooksPlaceholderQuoted.default },
   { target: hooksPowershellPlaceholder.target, default: hooksPowershellPlaceholder.default },
+  { target: hooksPowershellQuotedProgram.target, default: hooksPowershellQuotedProgram.default },
   { target: hooksPreferExecForm.target, default: hooksPreferExecForm.default },
   {
     target: hooksPromptOnPermissionRequest.target,
@@ -948,6 +951,7 @@ const modules = [
   { target: rulesSymlinkExternalScoped.target, default: rulesSymlinkExternalScoped.default },
   { target: claudeMdImportExternal.target, default: claudeMdImportExternal.default },
   { target: claudeMdMaxLines.target, default: claudeMdMaxLines.default },
+  { target: claudeMdOnDemandMaxChars.target, default: claudeMdOnDemandMaxChars.default },
   { target: claudeMdSymlink.target, default: claudeMdSymlink.default },
   {
     target: memoryAutoMemoryDirectoryCommitted.target,
@@ -1209,6 +1213,7 @@ const recommended: Record<RuleName, Severity> = {
   'hooks-output-size': 'off',
   'hooks-placeholder-quoted': 'warn',
   'hooks-powershell-placeholder': 'error',
+  'hooks-powershell-quoted-program': 'error',
   'hooks-prefer-exec-form': 'warn',
   'hooks-prompt-on-permission-request': 'warn',
   'hooks-ps1-needs-powershell-shell': 'warn',
@@ -1469,6 +1474,7 @@ const recommended: Record<RuleName, Severity> = {
   'rules-symlink-external-scoped': 'error',
   'claude-md-import-external': 'warn',
   'claude-md-max-lines': 'warn',
+  'claude-md-on-demand-max-chars': 'warn',
   'claude-md-symlink': 'warn',
   'memory-auto-memory-directory-committed': 'warn',
   'memory-index-max-size': 'warn',

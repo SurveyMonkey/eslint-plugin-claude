@@ -735,6 +735,33 @@
       "hash": "1d06c26594c3e8e6b31b7aa2b402c2dcd79f5d73ed46f3b4b9c70b818d7c9c34"
     }
   ],
+  "claude-md-on-demand-max-chars": [
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Claude ignores the end of my subdirectory CLAUDE.md",
+      "hash": "302335a04d518738b65f54bbbb440030d1ec7e15013ccb0cad641df5bccbb015"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Import additional files",
+      "hash": "4fa85376a3922699a7fd91033ea7faf3ef303ef8ece68982724611addb610126"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Path-specific rules",
+      "hash": "ca3577b1f4cfdeda2fc821620535763f49d78bac6ac33a09f1ad6a6464c470a2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Rule frontmatter reference",
+      "hash": "192f4f6c21dd9ebf78af85a47f6641298021ae259f3d45b20411498c8789168d"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "When Claude Code reads AGENTS.md",
+      "hash": "e7e1069355b9c0cb306afab90d73ff29685594e1f19c3e752936f0c4ae72a176"
+    }
+  ],
   "claude-md-procedure-to-skill": [
     {
       "url": "https://code.claude.com/docs/en/memory",
@@ -1611,6 +1638,28 @@
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Reference scripts by path in PowerShell hooks",
       "hash": "ce682d36ddde4bb55db521cd4da80b4cd3d383e312d0d845336971926aa58247"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Command hook fields",
+      "hash": "7ac132b5b7125d6292a172e246ef35281aeeb689d28451989d7398f003bbb9b7"
+    }
+  ],
+  "hooks-powershell-quoted-program": [
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "PowerShell started no program",
+      "hash": "d6be8ecd3705c3419709d5c1be4191315b6d5a0da8491363c06fa0fad5509edc"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Reference scripts by path in PowerShell hooks",
+      "hash": "ce682d36ddde4bb55db521cd4da80b4cd3d383e312d0d845336971926aa58247"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Failed hooks on Windows without Git Bash",
+      "hash": "e008b0aa195442e6969b7bfbad83f97b736c86441bf5e5b68a67d1e49fb5f9bd"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",

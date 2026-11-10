@@ -283,6 +283,7 @@ default if it has one.
 | [hooks-output-size](docs/rules/hooks-output-size.md)                                         | Keep the context that a hook prints under the output caps                                               |       | 🔒    | ⚙️  |
 | [hooks-placeholder-quoted](docs/rules/hooks-placeholder-quoted.md)                           | Put the path placeholder of a shell-form hook command inside quotes                                     |       | ✅ 🔒 |     |
 | [hooks-powershell-placeholder](docs/rules/hooks-powershell-placeholder.md)                   | Write a path placeholder of a PowerShell hook in a form that PowerShell expands                         | ✅ 🔒 |       |     |
+| [hooks-powershell-quoted-program](docs/rules/hooks-powershell-quoted-program.md)             | Put & before the quoted program path of a PowerShell hook command                                       | ✅ 🔒 |       | ⚙️  |
 | [hooks-prefer-exec-form](docs/rules/hooks-prefer-exec-form.md)                               | Use exec form for a hook that references a path placeholder                                             |       | ✅ 🔒 |     |
 | [hooks-prompt-on-permission-request](docs/rules/hooks-prompt-on-permission-request.md)       | Use a command hook, not a prompt hook, to decide on PermissionRequest                                   |       | ✅ 🔒 |     |
 | [hooks-ps1-needs-powershell-shell](docs/rules/hooks-ps1-needs-powershell-shell.md)           | Set shell powershell on a hook command that runs a .ps1 file                                            |       | ✅ 🔒 | ⚙️  |
@@ -425,6 +426,7 @@ default if it has one.
 | [claude-md-location](docs/rules/claude-md-location.md)                                         | Put a CLAUDE.md file where Claude Code loads it, with its exact name                |       | 🔒    |     |
 | [claude-md-max-bytes](docs/rules/claude-md-max-bytes.md)                                       | Keep a CLAUDE.md file at or under 4 MiB                                             | ✅ 🔒 |       | ⚙️  |
 | [claude-md-max-lines](docs/rules/claude-md-max-lines.md)                                       | Keep an instruction file at or under 200 lines                                      |       | ✅ 🔒 | ⚙️  |
+| [claude-md-on-demand-max-chars](docs/rules/claude-md-on-demand-max-chars.md)                   | Keep an instruction file that loads on demand at or under 40,000 characters         |       | ✅ 🔒 | ⚙️  |
 | [claude-md-procedure-to-skill](docs/rules/claude-md-procedure-to-skill.md)                     | Move a long numbered procedure from CLAUDE.md into a skill or a scoped rule         |       | 🔒    | ⚙️  |
 | [claude-md-symlink](docs/rules/claude-md-symlink.md)                                           | Make a CLAUDE.md a regular file, and import AGENTS.md                               |       | ✅ 🔒 |     |
 | [memory-agent-memory-local-untracked](docs/rules/memory-agent-memory-local-untracked.md)       | Keep the local memory of a subagent out of git                                      |       | ✅ 🔒 |     |
