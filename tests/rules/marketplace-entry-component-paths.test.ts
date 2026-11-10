@@ -28,6 +28,9 @@ const PLUGIN = {
 }
 // A plugin below a marketplace root that is the directory `site` of the repository.
 const SITE = { 'site/plugins/p/.claude-plugin/plugin.json': manifestOf({ name: 'p' }) }
+const NO_MANIFEST: Record<string, string> = { 'plugins/p/x.txt': 'x' }
+const serverMessage = (field: string, text: string) =>
+  `The ${field} path "${text}" has a ".." segment. Claude Code does not read that server file, even when the path stays inside the plugin. Write the path from the plugin root, with no "..".`
 const entry = (fields: Record<string, unknown>, source: unknown = './plugins/p') =>
   marketplaceOf([{ name: 'p', source, ...fields }])
 const messageOf = (field: string, text: string, fault: string) => {
@@ -224,7 +227,7 @@ describe(`${RULE} (silent)`, () => {
     const fields = {
       hooks: './nope.json',
       mcpServers: './nope.json',
-      lspServers: '../nope',
+      lspServers: './nope.json',
       Commands: './nope',
       command: './nope',
       skill: './nope',
@@ -355,5 +358,136 @@ describe(`${RULE} (silent)`, () => {
     const dir = path.join(repo, 'site')
     link(dir, 'plugins/p', '../../plugins/p')
     expect(lint(dir, entry({ commands: './nope' }))).toEqual([])
+  })
+
+  describe('server file paths', () => {
+    const lintServers = (
+      fields: Record<string, unknown>,
+      files = NO_MANIFEST,
+      source = './plugins/p',
+    ) => lint(tree(files), entry(fields, source))
+
+    it('reports a .. part of an mcpServers or lspServers string, with the full message', () => {
+      const code = `{
+  "name": "acme",
+  "plugins": [
+    { "name": "p", "source": "./plugins/p", "mcpServers": "./servers/../x.json" }
+  ]
+}`
+      const messages = lint(tree(NO_MANIFEST), code)
+      expect(messages).toHaveLength(1)
+      expect(messages[0]).toMatchObject({
+        ruleId: `claude/${RULE}`,
+        messageId: 'server',
+        message: serverMessage('mcpServers', './servers/../x.json'),
+        line: 4,
+        column: 59,
+        endColumn: 80,
+      })
+      const lsp = lintServers({ lspServers: './sub/../x.json' })
+      expect(lsp.map((m) => [m.messageId, m.message])).toEqual([
+        ['server', serverMessage('lspServers', './sub/../x.json')],
+      ])
+    })
+
+    it.each([
+      ['a .. in the middle', './servers/../servers/x.json'],
+      ['a .. right after ./', './../outside.json'],
+      ['a .. at the end', './servers/..'],
+      ['a .. and a bundle-like name', './a/../x.mcp'],
+    ])('reports %s in both fields', (_title, text) => {
+      for (const field of ['mcpServers', 'lspServers']) {
+        const messages = lintServers({ [field]: text })
+        expect(messages.map((m) => m.message)).toEqual([serverMessage(field, text)])
+      }
+    })
+
+    it('reports each bad string of an array, and no good string or inline map', () => {
+      const messages = lintServers({
+        mcpServers: [
+          './a/../x.json',
+          './servers/x.json',
+          { srv: { command: 'x' } },
+          './b/../y.json',
+        ],
+        lspServers: ['./ok.json', './c/../z.json'],
+      })
+      expect(messages.map((m) => m.message)).toEqual([
+        serverMessage('mcpServers', './a/../x.json'),
+        serverMessage('mcpServers', './b/../y.json'),
+        serverMessage('lspServers', './c/../z.json'),
+      ])
+    })
+
+    it('reads the last of two mcpServers keys, as JSON.parse does', () => {
+      const open = '{"plugins": [{"source": "./plugins/p", '
+      const dir = tree(NO_MANIFEST)
+      expect(lint(dir, `${open}"mcpServers": "./a/../x", "mcpServers": "./x.json"}]}`)).toEqual([])
+      expect(
+        lint(dir, `${open}"mcpServers": "./x.json", "mcpServers": "./a/../x"}]}`),
+      ).toHaveLength(1)
+    })
+
+    it('gives no server report when the source has a plugin.json', () => {
+      expect(
+        lintServers({ mcpServers: './a/../x.json', lspServers: './a/../y.json' }, PLUGIN),
+      ).toEqual([])
+    })
+
+    it.each([
+      ['an absolute path, which validate fails', '/opt/x.json'],
+      ['a path with no ./ prefix and a ..', 'a/../x.json'],
+      ['a path that starts with ..', '../x.json'],
+      ['a network path', '//host/x.json'],
+      ['a path with a clean ./ start', './servers/x.json'],
+      ['a name with two dots', './servers/a..b.json'],
+    ])('gives no server report for %s', (_title, text) => {
+      for (const field of ['mcpServers', 'lspServers']) {
+        expect(lintServers({ [field]: text })).toEqual([])
+      }
+    })
+
+    it.each([
+      ['a .mcpb path', './../x.mcpb'],
+      ['a .dxt path', './a/../x.dxt'],
+      ['an https URL', 'https://example.com/../x.json'],
+      ['an http URL', 'http://example.com/a/../x.mcpb'],
+    ])('gives no mcpServers report for %s', (_title, text) => {
+      expect(lintServers({ mcpServers: text })).toEqual([])
+      expect(lintServers({ mcpServers: ['./a/../x.json', text] })).toHaveLength(1)
+    })
+
+    it('reads a bundle name for lspServers as a path', () => {
+      expect(lintServers({ lspServers: './a/../x.mcpb' })).toHaveLength(1)
+    })
+
+    it.each([
+      ['a value that is not a string', 3],
+      ['an empty array', []],
+      ['an array of non-strings', [3, null, true]],
+    ])('gives no server report for %s', (_title, value) => {
+      expect(lintServers({ mcpServers: value, lspServers: value })).toEqual([])
+    })
+
+    it('gives no server report for a source that is missing, a file or not relative', () => {
+      expect(lintServers({ mcpServers: './a/../x.json' }, {})).toEqual([])
+      expect(lintServers({ mcpServers: './a/../x.json' }, { plugins: 'a file' })).toEqual([])
+      expect(lintServers({ mcpServers: './a/../x.json' }, NO_MANIFEST, 'plugins/p')).toEqual([])
+    })
+
+    it('reports the server path of a source "." with no plugin.json', () => {
+      expect(
+        lint(tree({ 'x.txt': 'x' }), entry({ mcpServers: './a/../x.json' }, '.')),
+      ).toHaveLength(1)
+    })
+
+    it('keeps the results of the five component fields in an entry with servers', () => {
+      const messages = lintServers({
+        commands: './nope',
+        mcpServers: './a/../x.json',
+        agents: '../x',
+      })
+      expect(messages.map((m) => m.messageId).sort()).toEqual(['missing', 'parent', 'server'])
+    })
   })
 })
