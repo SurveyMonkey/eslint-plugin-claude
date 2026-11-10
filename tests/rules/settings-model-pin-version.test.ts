@@ -55,10 +55,7 @@ jsonTester.run('settings-model-pin-version (valid)', rule, {
     {
       code: settings({
         model: 'best',
-        env: {
-          ANTHROPIC_DEFAULT_FABLE_MODEL: 'claude-fable-5-1',
-          ANTHROPIC_DEFAULT_OPUS_MODEL: 'claude-opus-5-5',
-        },
+        env: { ANTHROPIC_DEFAULT_OPUS_MODEL: 'claude-opus-5-5' },
       }),
       filename: project,
     },
@@ -130,6 +127,15 @@ jsonTester.run('settings-model-pin-version (valid)', rule, {
     { code: settings({ model: 'opus[1m]' }), filename: project, errors: [{ messageId: 'alias' }] },
     { code: settings({ model: 'best' }), filename: project, errors: [{ messageId: 'alias' }] },
     { code: settings({ model: 'opusplan' }), filename: project, errors: [{ messageId: 'alias' }] },
+    // `best` is the model of `opus`, so a Fable pin does not help.
+    {
+      code: settings({
+        model: 'best',
+        env: { ANTHROPIC_DEFAULT_FABLE_MODEL: 'claude-fable-5-2' },
+      }),
+      filename: project,
+      errors: [{ messageId: 'alias' }],
+    },
     // One family of two is not pinned.
     {
       code: settings({
@@ -211,12 +217,18 @@ describe('settings-model-pin-version: messages', () => {
 
   it('names the variable of the family that the file leaves unpinned', () => {
     const code = settings({
-      model: 'best',
-      env: { ANTHROPIC_DEFAULT_FABLE_MODEL: 'claude-fable-5-1' },
+      model: 'opusplan',
+      env: { ANTHROPIC_DEFAULT_OPUS_MODEL: 'claude-opus-5-5' },
     })
     expect(messages(code, project)).toEqual([
-      expect.stringContaining('"ANTHROPIC_DEFAULT_OPUS_MODEL"'),
+      expect.stringContaining('"ANTHROPIC_DEFAULT_SONNET_MODEL"'),
     ])
+  })
+
+  it('asks for the Opus variable only for best', () => {
+    const [message] = messages(settings({ model: 'best' }), project)
+    expect(message).toContain('"ANTHROPIC_DEFAULT_OPUS_MODEL"')
+    expect(message).not.toContain('FABLE')
   })
 
   it('names the entry of the allowlist', () => {

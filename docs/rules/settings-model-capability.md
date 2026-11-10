@@ -61,7 +61,8 @@ that variable, when it is on, on such a model.
   reads it as Opus 5.5. This is a gateway form, and no Claude Code docs page shows it.
 - An alias that the file pins in `env`. The rule judges the pinned model, if it can read the ID.
 - An alias that is not pinned: only when the file selects no provider. The rule then uses the model
-  that the alias has on the Anthropic API.[^aliases] `best`, `opusplan` and `default` are not judged.
+  that the alias has on the Anthropic API.[^aliases] `best` is the model of `opus`, so the rule
+  judges it as `opus`. `opusplan` and `default` are not judged.
 
 ### What the rule does not check
 

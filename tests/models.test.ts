@@ -5,6 +5,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   ADVISOR_ALIASES,
+  ALIAS_FAMILIES,
+  ANTHROPIC_API_ALIASES,
   DEFAULT_VALUE,
   FAMILY_ALIASES,
   familyOf,
@@ -18,6 +20,18 @@ import {
 } from '../src/data/models.ts'
 
 describe('the model aliases', () => {
+  // "Model aliases": `best` "Uses the same model as `opus`".
+  it('resolves best through opus only, and opusplan through opus and sonnet', () => {
+    expect(ALIAS_FAMILIES.get('best')).toEqual(['opus'])
+    expect(ALIAS_FAMILIES.get('opusplan')).toEqual(['opus', 'sonnet'])
+  })
+
+  // "Unless you set ANTHROPIC_DEFAULT_FABLE_MODEL, the fable alias resolves to ... Fable 5.2
+  // everywhere else."
+  it('resolves fable to Fable 5.2 on the Anthropic API', () => {
+    expect(ANTHROPIC_API_ALIASES.get('fable')).toEqual({ family: 'fable', major: 5, minor: 2 })
+  })
+
   it('holds the six aliases of the table, and the special value default', () => {
     for (const alias of ['best', 'fable', 'haiku', 'opus', 'opusplan', 'sonnet']) {
       expect(isModelAlias(alias), alias).toBe(true)

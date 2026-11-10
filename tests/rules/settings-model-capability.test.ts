@@ -82,11 +82,23 @@ jsonTester.run('settings-model-capability (valid)', rule, {
     { code: settings({ model: '', alwaysThinkingEnabled: false }), filename: project },
     { code: settings({ model: 'default', alwaysThinkingEnabled: false }), filename: project },
     { code: settings({ model: 7, alwaysThinkingEnabled: false }), filename: project },
-    // An alias that depends on the provider, or that names two models.
-    ...['best', 'opusplan'].map((model) => ({
-      code: settings({ model, alwaysThinkingEnabled: false }),
+    // An alias that names two models, or that depends on the provider.
+    {
+      code: settings({ model: 'opusplan', alwaysThinkingEnabled: false }),
       filename: project,
-    })),
+    },
+    // `best` is the model of `opus`: a pin that accepts the setting, or a provider, is silent.
+    {
+      code: env(
+        { ANTHROPIC_DEFAULT_OPUS_MODEL: 'claude-opus-4-6' },
+        { model: 'best', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+    },
+    {
+      code: env({ CLAUDE_CODE_USE_BEDROCK: '1' }, { model: 'best', alwaysThinkingEnabled: false }),
+      filename: project,
+    },
     {
       code: env(
         { CLAUDE_CODE_USE_BEDROCK: '1' },
@@ -230,6 +242,34 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       filename: project,
       errors: [{ messageId: 'thinkingOff' as const }],
     })),
+    // `best` is the model of `opus`: its Anthropic API model, or the pin of `opus`. A pin of
+    // `fable` does not apply to it.
+    ...['best', 'best[1m]'].map((model) => ({
+      code: settings({ model, alwaysThinkingEnabled: false }),
+      filename: project,
+      errors: [{ messageId: 'thinkingOff' as const }],
+    })),
+    {
+      code: env(
+        { ANTHROPIC_DEFAULT_FABLE_MODEL: 'claude-fable-5-2' },
+        { model: 'best', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+      errors: [{ messageId: 'thinkingOff' }],
+    },
+    {
+      code: env(
+        { ANTHROPIC_DEFAULT_OPUS_MODEL: 'claude-opus-5-5' },
+        { model: 'best', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+      errors: [{ messageId: 'thinkingOff' }],
+    },
+    {
+      code: env({ CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: '1' }, { model: 'best' }),
+      filename: project,
+      errors: [{ messageId: 'adaptiveOff' }],
+    },
     // `ANTHROPIC_MODEL` comes before the `model` setting.
     {
       code: env(
