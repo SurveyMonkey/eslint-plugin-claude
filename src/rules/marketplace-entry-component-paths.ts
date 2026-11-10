@@ -1,11 +1,12 @@
 // The component paths of an entry in `marketplace.json` follow the plugin path
 // rules: a `./` prefix, no `..`, no backslash, a path that exists, and a path
 // that does not resolve out of the marketplace through a link
-// (docs/rules/marketplace-entry-component-paths.md). A server file path of
-// `mcpServers` or `lspServers` is a second check: a `./` path with a `..` part. The rule resolves each
+// (docs/rules/marketplace-entry-component-paths.md). The rule resolves each
 // path from the real source directory that `sourceReader` gives, with
 // `placeOf` (src/plugin-links.ts). It reads the disk with the repository as
-// the bound, and makes no report for a part that it cannot read.
+// the bound, and makes no report for a part that it cannot read. The rule
+// also reports a `./` server file path of `mcpServers` or `lspServers` with a
+// `..` part. That check reads the text only, and does not resolve the path.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
@@ -22,8 +23,9 @@ const name = 'marketplace-entry-component-paths' as const
 // `hooks` and `mcpServers` also take inline configuration, and `commands` also takes an object map.
 const COMPONENT_FIELDS = ['commands', 'agents', 'skills', 'outputStyles', 'themes']
 
-// An MCP bundle is a `.mcpb` or `.dxt` file (manifest reference, "mcpServers"). Claude Code
-// does not read it as a server file. A bundle URL has no `./` start, so `serverPaths` drops it.
+// An MCP bundle is a `.mcpb` or `.dxt` file (manifest reference, "mcpServers"). The docs list
+// it apart from a `.json` server file, so the rule skips it. A URL has no `./` start, so
+// `serverPaths` drops it.
 const BUNDLE = /\.(?:mcpb|dxt)$/
 
 type MessageIds = 'start' | 'parent' | 'backslash' | 'missing' | 'escapes' | 'server'
@@ -111,7 +113,7 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
           if (!('dir' in source) || !Array.isArray(entriesOf(source.dir))) {
             continue
           }
-          // With a `plugin.json`, `marketplace-entry-manifest-only-fields` reports the server field.
+          // With a `plugin.json`, `marketplace-entry-manifest-only-fields` reports the field.
           if (source.kind === 'no-manifest') {
             for (const { field, item } of servers) {
               context.report({ node: item, messageId: 'server', data: { field, path: item.value } })

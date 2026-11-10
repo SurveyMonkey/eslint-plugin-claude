@@ -51,21 +51,23 @@ a path, on the string:
   rules allow a link to another place in the same marketplace, so the rule reports a link
   that leaves the marketplace root only.[^symlinks]
 
-The rule also reads the entry fields `mcpServers` and `lspServers`. Each takes a path to a server
-file.[^server] Claude Code does not read a server file when its path is absolute or has a `..`
-part. It loads the rest of the plugin, without the servers of that file. A `..` part counts even
-when the path stays inside the plugin.[^server] The rule reports a string that starts with `./` and
-has a `..` segment. It has its own message, and reports on the string. It makes this check only
-when the source has no `plugin.json`. With a `plugin.json`,
+The rule also reads the entry fields `mcpServers` and `lspServers`. Each can take a path to a
+server file.[^server] Claude Code does not read a server file when its path is absolute or has a
+`..` part. It loads the rest of the plugin, without the servers of that file. A `..` part counts
+even when the path stays inside the plugin.[^server] The rule reports a string that starts with
+`./` and has a `..` segment. It has its own message, and reports on the string. It makes this check
+only when the source has no `plugin.json`. With a `plugin.json`,
 [`marketplace-entry-manifest-only-fields`](marketplace-entry-manifest-only-fields.md) reports the
-field. The check needs the source, so an unreadable source gives no report. The rule skips these
-values:
+field. The check needs the `plugin.json` state of the source. So a source that the rule cannot
+read, or a `plugin.json` that it cannot read, gives no report. The rule skips these values:
 
-- **A path with no `./` start.** In a marketplace entry, `claude plugin validate` fails an absolute
-  path, such as `/opt/x.json`, with `must start with "./"`. It passes `./servers/../servers/x.json`
-  and `./../outside.json`. The rule reports the paths that validate passes (Claude Code 2.1.322).
-- **A bundle or a URL.** An `mcpServers` value that ends in `.mcpb` or `.dxt`, or that is a URL,
-  is a bundle. Claude Code does not read it as a server file.
+- **A path with no `./` start.** In a marketplace entry, `claude plugin validate` fails it with
+  `must start with "./"`. Examples are `/opt/x.json`, `../x.json` and `servers/../x.json`. Validate
+  passes `./servers/../servers/x.json` and `./../outside.json`. The rule reports the `..` paths that
+  validate passes (Claude Code 2.1.322).
+- **A bundle.** An `mcpServers` value that ends in `.mcpb` or `.dxt` is a bundle. The docs list a
+  bundle apart from a `.json` server file, so the rule skips it.
+- **A URL.** A URL has no `./` start.
 - **An inline server map.** It is not a path.
 
 The rule makes no report in these cases:
