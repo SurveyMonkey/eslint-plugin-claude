@@ -4186,6 +4186,11 @@
       "hash": "e5ffd38ff97736c7b598a74a0c079bbf1b50742c7336ecce1c89daf371ca2ae9"
     },
     {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.denyInsteadOfPrompting",
+      "hash": "78a074f5b2694f99933c70adf8c38d19620e4a9cdac696affa5d29c4caea5e71"
+    },
+    {
       "url": "https://code.claude.com/docs/en/managed-settings",
       "heading": "Keys that fail closed",
       "hash": "e09a851dda7a737ad090155c901a2cf9855f749f50c950791f9c62e0503769a9"

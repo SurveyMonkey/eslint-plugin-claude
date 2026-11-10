@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-schema, which reports a key in permissions that Claude Code does not read, a list that is not an array of strings, and a blockReadsOutsideWorkingDirectories or blockWritesOutsideWorkingDirectories that is not a Boolean.
+description: The ESLint rule claude/permissions-schema, which reports a key in permissions that Claude Code does not read, a list that is not an array of strings, and a blockReadsOutsideWorkingDirectories, blockWritesOutsideWorkingDirectories or denyInsteadOfPrompting that is not a Boolean.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -24,7 +24,7 @@ generated:
 
 ## Rule details
 
-The `permissions` object has nine keys:[^keys]
+The `permissions` object has ten keys:[^keys]
 
 | Key                                               | Type                             | Checked by                                      |
 | ------------------------------------------------- | -------------------------------- | ----------------------------------------------- |
@@ -33,6 +33,7 @@ The `permissions` object has nine keys:[^keys]
 | `blockReadsOutsideWorkingDirectories`             | Boolean                          | this rule[^block]                               |
 | `blockWritesOutsideWorkingDirectories`            | Boolean                          | this rule[^keys]                                |
 | `defaultMode`                                     | one of seven strings             | `permissions-default-mode-value`                |
+| `denyInsteadOfPrompting`                          | Boolean                          | this rule[^deny-prompt]                         |
 | `disableBypassPermissionsMode`, `disableAutoMode` | the string `"disable"`           | `permissions-disable-mode-value`                |
 
 The rule reports these faults:
@@ -40,7 +41,8 @@ The rule reports these faults:
 - **A key that is not in the list.** Claude Code does not read it. The report is on the key.
 - **A list that is not an array.** The report is on the value.
 - **An entry of a list that is not a string.** The report is on the entry.
-- **A `blockReadsOutsideWorkingDirectories` or `blockWritesOutsideWorkingDirectories` that is not `true` or `false`.**
+- **A `blockReadsOutsideWorkingDirectories`, `blockWritesOutsideWorkingDirectories` or `denyInsteadOfPrompting` that is not `true` or `false`.**
+  `denyInsteadOfPrompting` is a key for a user or managed file. In a project file, `settings-key-scope` also reports the key, and this rule reports a value that is not a Boolean. These are two faults.
 
 A rule string that is not a valid permission rule is for `permissions-rule-syntax`, which also
 reports a NUL byte. The rule `permissions-unknown-tool` and its siblings check the rules too.
@@ -106,5 +108,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^keys]: [All settings: permissions](https://code.claude.com/docs/en/settings-reference#permissions)
 [^dirs]: [All settings: permissions.additionalDirectories](https://code.claude.com/docs/en/settings-reference#permissionsadditionaldirectories)
 [^block]: [All settings: permissions.blockReadsOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissionsblockreadsoutsideworkingdirectories)
+[^deny-prompt]: [All settings: permissions.denyInsteadOfPrompting](https://code.claude.com/docs/en/settings-reference#permissionsdenyinsteadofprompting)
 [^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)
 [^broken]: [Settings files and precedence: Fix a broken settings file](https://code.claude.com/docs/en/settings#fix-a-broken-settings-file)
