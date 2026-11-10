@@ -192,6 +192,30 @@ describe(`${name}: JSON output that Claude Code discards`, () => {
     ])
   })
 
+  // Each sentence names `systemMessage` for the event. `additionalContext` stays measured where the sentence
+  // does not name it.
+  it.each([
+    ['Notification', 'hooks#notification'],
+    ['MessageDisplay', 'hooks#messagedisplay'],
+    ['ConfigChange', 'hooks#configchange'],
+    ['WorktreeCreate', 'hooks#worktreecreate'],
+    ['Elicitation', 'hooks#elicitation'],
+    ['ElicitationResult', 'hooks#elicitationresult'],
+  ])('is silent for the systemMessage of a %s command past the cap (%s)', (event) => {
+    expect(ids(echo({ systemMessage: long }), event)).toEqual([])
+    expect(ids(context(long, 'additionalContext', event), event)).toEqual(['overCap'])
+  })
+
+  // "Claude Code discards their JSON output fields, such as `systemMessage` ..." (hooks#instructionsloaded,
+  // hooks#sessionend), and "Claude Code ignores the hook's output and exit code" (hooks#stopfailure).
+  it.each(['InstructionsLoaded', 'SessionEnd', 'StopFailure'])(
+    'is silent for the JSON fields of a %s command past the cap',
+    (event) => {
+      expect(ids(echo({ systemMessage: long }), event)).toEqual([])
+      expect(ids(context(long, 'additionalContext', event), event)).toEqual([])
+    },
+  )
+
   it('still reports a systemMessage past the cap on an event outside the set', () => {
     expect(ids(echo({ systemMessage: long }), 'SessionStart')).toEqual(['overCap'])
   })

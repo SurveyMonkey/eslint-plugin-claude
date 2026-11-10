@@ -35,11 +35,15 @@ Claude Code handles the stdout of a `PreCompact` hook in a different way. When t
 Claude Code uses that stdout as instructions for the compaction summary. It cuts output past 10,000 characters per hook
 and appends a marker.[^precompact] It does not save the output to a file.[^json-output]
 
-Claude Code keeps no JSON output of some events. It discards every JSON field of a `Setup` or `WorktreeRemove` hook.[^setup][^worktreeremove]
-It discards the `systemMessage` and `continue` fields of a `PostCompact` hook.[^postcompact] It discards the
-`systemMessage` and `continue` fields of a `PreCompact` hook, and the docs name no JSON field of `PreCompact` that it
-keeps.[^precompact-fields] The rule measures no JSON field of `PreCompact`, `Setup` or `WorktreeRemove`, and no
-`systemMessage` of `PostCompact`. A cap does not apply to text that Claude Code discards.
+Claude Code keeps no JSON output of some events. It discards every JSON field of a `Setup`, `WorktreeRemove`,
+`InstructionsLoaded`, `SessionEnd` or `StopFailure` hook.[^setup][^worktreeremove][^instructionsloaded][^sessionend][^stopfailure]
+It discards the `systemMessage` and `continue` fields of a `PreCompact` hook, and the docs name no JSON field of
+`PreCompact` that it keeps.[^precompact-fields] It discards the `systemMessage` and `continue` fields of a
+`PostCompact`, `Notification`, `MessageDisplay`, `ConfigChange` or `WorktreeCreate` hook.[^postcompact][^notification][^messagedisplay][^configchange][^worktreecreate]
+It discards the `reason`, `systemMessage` and `continue` fields of an `Elicitation` or `ElicitationResult` hook.[^elicitation][^elicitationresult]
+The rule measures no JSON field of `PreCompact`, `Setup`, `WorktreeRemove`, `InstructionsLoaded`, `SessionEnd` or
+`StopFailure`. For the other events in this paragraph, it measures no `systemMessage`. A cap does not apply to text
+that Claude Code discards.
 
 Claude Code also caps the `classifierContext` notes of one tool call at 2,000 characters, and truncates the rest.[^classifier]
 The cap is shared across every hook that responds to that call. The rule cannot add the notes of several hooks, so it
@@ -115,4 +119,13 @@ cuts the text and saves no file. At another value, the message says "The configu
 [^postcompact]: [Hooks reference: PostCompact](https://code.claude.com/docs/en/hooks#postcompact)
 [^setup]: [Hooks reference: Setup decision control](https://code.claude.com/docs/en/hooks#setup-decision-control)
 [^worktreeremove]: [Hooks reference: WorktreeRemove](https://code.claude.com/docs/en/hooks#worktreeremove)
+[^instructionsloaded]: [Hooks reference: InstructionsLoaded](https://code.claude.com/docs/en/hooks#instructionsloaded)
+[^sessionend]: [Hooks reference: SessionEnd](https://code.claude.com/docs/en/hooks#sessionend)
+[^stopfailure]: [Hooks reference: StopFailure](https://code.claude.com/docs/en/hooks#stopfailure)
+[^notification]: [Hooks reference: Notification](https://code.claude.com/docs/en/hooks#notification)
+[^messagedisplay]: [Hooks reference: MessageDisplay](https://code.claude.com/docs/en/hooks#messagedisplay)
+[^configchange]: [Hooks reference: ConfigChange](https://code.claude.com/docs/en/hooks#configchange)
+[^worktreecreate]: [Hooks reference: WorktreeCreate](https://code.claude.com/docs/en/hooks#worktreecreate)
+[^elicitation]: [Hooks reference: Elicitation](https://code.claude.com/docs/en/hooks#elicitation)
+[^elicitationresult]: [Hooks reference: ElicitationResult](https://code.claude.com/docs/en/hooks#elicitationresult)
 [^classifier]: [Hooks reference: Annotate a result for the auto mode classifier](https://code.claude.com/docs/en/hooks#annotate-a-result-for-the-auto-mode-classifier)

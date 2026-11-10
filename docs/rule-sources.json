@@ -1632,6 +1632,51 @@
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "InstructionsLoaded",
+      "hash": "7ce6d1db930c21b1bd83c63d53a82d597a43b454c1fae8120c7b0368ee1af4aa"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "SessionEnd",
+      "hash": "12f1a1ef0825f36ad01ae1bafa8e6c8453269646d6c0b3c7ab10c476b7bfa2ef"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "StopFailure",
+      "hash": "78a5692db4c2cc73d1a043cbc6b695f9f7107f499c7b8823d85e873eb42f57f2"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Notification",
+      "hash": "5b85525b1ed793e3469a3922edfa07daa61a12263606ce4321c8b170236c326a"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "MessageDisplay",
+      "hash": "70f8084f670c25fd18f8f7d6c57afa620afcd842b860e1ed6cd62bfc376d400c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "ConfigChange",
+      "hash": "8db5dc894ae3d8c04d4f866ea132ce1c3ccbfe24986aace0e7b2214e3289547c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "WorktreeCreate",
+      "hash": "8943e380b4e5956718d6f2760fb2d1f3cb782231ab794f4cedd57fe622e9b805"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "Elicitation",
+      "hash": "1e371b483aa2c0b5cdba27bf95419cbf3a5cc437486095bbe26290a2c3c2979c"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "heading": "ElicitationResult",
+      "hash": "8fc2966ceda1074169d83a8e2e76eca7349a7ad08a253bd03289f2d7b3930fd3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Annotate a result for the auto mode classifier",
       "hash": "87b27a8f2922e014918c15a0f7ccfa0e249858f009ce229f751de1af3b0ea8bd"
     }
