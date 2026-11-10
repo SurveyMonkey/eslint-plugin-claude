@@ -101,14 +101,14 @@ before U+0958, U+0D3A or a vowel sign, and after U+0D3C. It refused U+200C after
 U+10EC2.
 
 A probe of Claude Code 2.1.322 gives the rules below. The probe made a project skill folder for
-each of 142 names. No public source gives these limits, so each one is a choice of the rule.
+each of a set of names. No public source gives these limits, so each one is a choice of the rule.
 
 - U+20E3 (combining enclosing keycap) outside a keycap emoji of the RGI set. The probe refused
-  it after a letter, a digit or a mark, and at the start. It took the other enclosing marks
-  that it tried, such as U+20DD.
-- A lone surrogate in a frontmatter `name`, such as the YAML escape `"\uD800"`. The YAML reader
-  of Claude Code did not read such a value, and ignored all of the frontmatter. The skill loaded
-  with its folder name. A folder name cannot hold a lone surrogate.
+  it after a letter, a digit or a mark, and at the start. It took U+20DD, U+20DE, U+20DF,
+  U+20E0, U+20E2 and U+20E4 after `a`.
+- A lone surrogate in a frontmatter `name`, such as the YAML escape `"\uD800"`. Claude Code
+  could not read such a value. It then ignored all of the frontmatter, and the skill loaded with
+  its folder name. A folder name cannot hold a lone surrogate.
 - A combining mark (`M`) with no letter or number (`L` or `N`) before it. The probe refused a
   mark at the start, and after a space, a hyphen, `.`, `_`, `:`, `!`, `$`, `^`, U+FFFD or an
   emoji. The rule counts a Hangul vowel or final jamo as a mark.
@@ -116,11 +116,11 @@ each of 142 names. No public source gives these limits, so each one is a choice 
 - A mark outside the Inherited script, after a character of the Latin or the Common script. The
   probe refused U+05B8 (Hebrew), U+093F (Devanagari) and U+1161 (Hangul) after `a`. It refused
   U+093F after `1` and after U+00B2. It took each probed Inherited mark after `a`, such as U+0301
-  and U+064B. It also took each probed mark of one script after a letter of another script, such
-  as U+093F after a Bengali letter.
+  and U+064B. It also took each probed mark after a letter that is not Latin, such as U+093F
+  after a Bengali letter.
 
-The rule reports the first refused character. A mark after a refused character, such as a vowel
-sign after a refused joiner, is also refused, and the message escapes both.
+The rule reports the first refused character. A joiner is not a letter, so the rule also refuses
+a mark after a refused joiner. The message then escapes both.
 
 The rule reports these cases:
 

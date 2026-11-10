@@ -167,6 +167,14 @@ describe('firstFault', () => {
     expect(escapeName(text)).toBe(shown)
   })
 
+  // Claude Code 2.1.319 refused U+200C after nine Arabic marks. The rule reports the ninth mark
+  // first. The joiner is not in an Arabic word, so the rule refuses it too.
+  it('refuses U+200C after nine Arabic marks', () => {
+    expect(escapeName(`\u0628${'\u064E'.repeat(9)}\u200C\u0628`)).toBe(
+      `\u0628${'\u064E'.repeat(8)}<U+064E><U+200C>\u0628`,
+    )
+  })
+
   // Claude Code 2.1.322 refused a project skill folder with each of these names. Its debug log
   // said `<name> is not offered`. U+20E3 loaded only in a keycap emoji.
   const KEYCAP = 'a keycap mark outside a keycap emoji'
