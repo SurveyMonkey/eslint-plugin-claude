@@ -6,7 +6,7 @@
  *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so this module counts it
  *  as a zero-width space. `kindAt` checks a plain space before it reads the classes.
  *
- *  The last two classes come from a probe of Claude Code 2.1.319. The docs give no list for
+ *  The next two classes come from a probe of Claude Code 2.1.319. The docs give no list for
  *  them. The debug log of the probe says that a name may not hold "hidden, direction-changing
  *  or blank-like characters". Claude Code refused each of these in a project skill folder:
  *  - Each probed `Cf` character: U+00AD, U+200C, U+200D, U+2060, U+2061, U+2062, U+2063,
@@ -22,23 +22,23 @@
  *  `Default_Ignorable_Code_Point` character, also one that the probe did not try. This is a
  *  choice of the rule. `takenAt` gives the characters of the classes that Claude Code took.
  *
- *  The other two classes come from a probe of Claude Code 2.1.322:
- *  - A lone surrogate. The YAML reader of Claude Code did not read a `name` with the escape
- *    `\uD800` or `\uDC00`, and ignored all of the frontmatter. A folder name cannot hold one.
+ *  The last two classes come from a probe of Claude Code 2.1.322:
  *  - U+20E3. Claude Code refused it after a letter, a digit, a mark and at the start. It took
- *    U+20E3 in a keycap emoji, and took U+20DD, U+20DE, U+20DF, U+20E0, U+20E2 and U+20E4. */
+ *    U+20E3 in a keycap emoji, and took U+20DD, U+20DE, U+20DF, U+20E0, U+20E2 and U+20E4.
+ *  - A lone surrogate. Claude Code could not read a `name` with the YAML escape `\uD800` or
+ *    `\uDC00`. It then ignored all of the frontmatter. A folder name cannot hold one. */
 const CLASSES: [RegExp, string][] = [
   [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
   [/\p{Cc}/u, 'a control character'],
   [/\p{Co}/u, 'a private-use character'],
   [/\p{Cn}/u, 'an unassigned character'],
-  [/\p{Cs}/u, 'a lone surrogate'],
   [/\p{Bidi_Control}/u, 'a character that changes the text direction'],
   [/\p{Z}/u, 'a blank that is not a plain space'],
   [/[<>]/u, 'an angle bracket'],
   [/[\p{Cf}\p{Default_Ignorable_Code_Point}]/u, 'a hidden character'],
   [/[\u{2800}\u{FFFC}\u{1D159}\u{13441}\u{13442}\u{16FE4}]/u, 'a blank-like character'],
   [/\u{20E3}/u, 'a keycap mark outside a keycap emoji'],
+  [/\p{Cs}/u, 'a lone surrogate'],
 ]
 
 /** An emoji sequence of the RGI emoji set (UTS #51, ED-27), such as a family of people joined
@@ -162,8 +162,8 @@ function takenAt(chars: string[]): Set<number> {
  *  - A mark outside the Inherited script is a fault after a base of the Latin or the Common
  *    script. The probes refused U+05B8, U+093F, U+0483, U+1161 and U+1D165 after `a`. They
  *    refused U+093F after `1`, U+00B2 and U+FF41. They took each Inherited mark after `a`, such
- *    as U+0301 and U+064B. They took each probed mark of one script after a letter of another
- *    script, such as U+093F after U+0995, and U+0483 after U+03B1. */
+ *    as U+0301 and U+064B. They took each probed mark after a letter that is not Latin. Examples
+ *    are U+093F after U+0995, and U+0483 after U+03B1. */
 function markKind(chars: string[], index: number): string | undefined {
   const char = chars[index] as string
   if (!MARK.test(char)) {
