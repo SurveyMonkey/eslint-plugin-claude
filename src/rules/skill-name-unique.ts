@@ -35,8 +35,8 @@ function fold(text: string): string {
 /** `name`, or null when it folds to an empty string. `firstFault` refuses each non-empty name of
  *  such characters. A name of spaces has a space at its start. Each other character that `fold`
  *  removes is in a class of `firstFault`. Claude Code 2.1.319 refuses a project skill folder
- *  of soft hyphens. It loads a plugin skill folder of soft hyphens with one hyphen for each, and
- *  `hyphenate` does the same. */
+ *  of soft hyphens. A plugin skill folder name gets `hyphenate` first, so it never folds to an
+ *  empty string. */
 function comparable(name: string): string | null {
   return fold(name) === '' ? null : name
 }
@@ -52,8 +52,8 @@ function shownPath(relative: string): string {
  *  load such a skill or command, and `skill-name-characters` reports it. The rule compares
  *  no such name. The check is for each part alone: a space at the edge of one part is a
  *  fault. A plugin skill folder is the exception. Claude Code loads it with hyphens in place
- *  of the refused characters, and `skill-name-characters` does not report it. When such a
- *  folder has no loaded `name`, `skillName` gives it its name with hyphens. */
+ *  of the refused characters, and `skill-name-characters` does not report it. When a plugin
+ *  skill folder has no loaded `name`, `skillName` gives it the result of `hyphenate`. */
 function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
@@ -67,10 +67,10 @@ function loadedName(value: unknown): string | null {
 
 /** The name that Claude Code gives a skill, or null when the rule compares no name for it.
  *  A project skill folder that Claude Code refuses means no load, so the result is null.
- *  Else the name is the field `name` when it is loaded, or the folder name. In a plugin
- *  folder name, each refused character becomes a hyphen. This step comes before `fold`,
- *  because `fold` removes some of these characters. The result holds no refused character.
- *  A folder name that folds to an empty string gives null (see `comparable`). */
+ *  Else the name is the field `name` when it is loaded, or the folder name. A plugin folder
+ *  name gets `hyphenate`, which keeps only ASCII letters, digits, `_` and `-`. This step comes
+ *  before `fold`, because `fold` removes some characters. A project folder name stays as it
+ *  is. A folder name that folds to an empty string gives null (see `comparable`). */
 function skillName(
   fields: Record<string, unknown> | null,
   folder: string,
@@ -79,7 +79,7 @@ function skillName(
   if (!plugin && refused([folder])) {
     return null
   }
-  return loadedName(fields?.name) ?? comparable(hyphenate(folder))
+  return loadedName(fields?.name) ?? comparable(plugin ? hyphenate(folder) : folder)
 }
 
 interface Entry {
@@ -121,8 +121,8 @@ function skillFilesOf(root: string, plugin: boolean, bound: string): string[] {
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. A project skill or a command with a refused folder or file name has no entry. A
- *  plugin skill with a refused folder name has an entry: its loaded `name`, else its folder
- *  name with hyphens. A skill name that folds to an empty string has no entry. */
+ *  plugin skill has an entry: its loaded `name`, else the result of `hyphenate` for its folder
+ *  name. A skill name that folds to an empty string has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   // A skill file that the rule cannot read has no name to compare.
   const skills = skillFilesOf(root, plugin, bound).flatMap((file) => {

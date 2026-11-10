@@ -109,6 +109,8 @@ for (const tree of [
   'hyphsp',
   'hyphmix',
   'hyphrn',
+  'hyphcafe',
+  'hyphnear',
 ]) {
   put(`${tree}/.claude-plugin/plugin.json`, `{"name":"${tree}"}`)
 }
@@ -214,9 +216,19 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     // A project skill folder with a refused name does not load, so it has no name with hyphens.
     { code: bare, filename: put('hyphproj/.claude/skills/a<b/SKILL.md', bare) },
     { code: bare, filename: put('hyphproj/.claude/skills/a-b/SKILL.md', bare) },
-    // The docs do not name a dot, so a dot in a plugin skill folder stays a dot.
-    { code: bare, filename: put('hyphdot/skills/a.b/SKILL.md', bare) },
-    { code: bare, filename: put('hyphdot/skills/a-b/SKILL.md', bare) },
+    // Claude Code 2.1.322 kept a plugin command file name, a plugin `name` field and a project
+    // skill folder name as written. Only a plugin skill folder name gets the hyphens.
+    { code: bare, filename: put('hyphnear/commands/a.b.md', bare) },
+    { code: bare, filename: put('hyphnear/commands/a-b.md', bare) },
+    {
+      code: named('caf\u{e9}'),
+      filename: put('hyphnear/skills/s/SKILL.md', named('caf\u{e9}')),
+    },
+    { code: bare, filename: put('hyphnear/skills/caf-/SKILL.md', bare) },
+    { code: bare, filename: put('projfold/.claude/skills/a.b/SKILL.md', bare) },
+    { code: bare, filename: put('projfold/.claude/skills/a-b/SKILL.md', bare) },
+    { code: bare, filename: put('projfold/.claude/skills/caf\u{e9}/SKILL.md', bare) },
+    { code: bare, filename: put('projfold/.claude/skills/caf\u{e8}/SKILL.md', bare) },
     // Each space of a run in a plugin skill folder becomes a hyphen. `a  b` is `a--b`, not `a-b`.
     { code: bare, filename: put('hyphsp/skills/a-b/SKILL.md', bare) },
     // A plain space next to a no-break space becomes a hyphen too, so `a<U+00A0><U+0020>b` is
@@ -540,6 +552,52 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         {
           messageId: 'duplicate',
           data: { name: 'A-B', others: '`skills/a<U+00A0>b/SKILL.md`' },
+        },
+      ],
+    },
+    // Claude Code 2.1.322 loaded a plugin skill folder `a.b` as `a-b`, and four folders `a.b`, `a-b`,
+    // `caf<U+00E9>` and `caf<U+00E8>` as two command names. Each pair gives a report in each file.
+    {
+      code: bare,
+      filename: put('hyphdot/skills/a.b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a-b/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphdot/skills/a-b/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'a-b', others: '`skills/a.b/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphcafe/skills/caf\u{e9}/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'caf-', others: '`skills/caf\u{e8}/SKILL.md`' },
+        },
+      ],
+    },
+    {
+      code: bare,
+      filename: put('hyphcafe/skills/caf\u{e8}/SKILL.md', bare),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'caf-', others: '`skills/caf\u{e9}/SKILL.md`' },
         },
       ],
     },

@@ -237,29 +237,12 @@ export function escapeName(text: string): string {
     .join('')
 }
 
-/** True when the character at `index` of `chars` is a plain space next to a blank. A blank is a
- *  plain space or another `\p{Z}` character. `hyphenate` asks only about a space that `kindAt`
- *  takes, and such a space is not at the start or the end. */
-function besideBlank(chars: string[], index: number): boolean {
-  const blank = /\p{Z}/u
-  return (
-    chars[index] === ' ' &&
-    (blank.test(chars[index - 1] as string) || blank.test(chars[index + 1] as string))
-  )
-}
-
-/** `text` with each character that `CLASSES` and `kindAt` refuse as one `-`. The docs say that
- *  these characters become hyphens in the command name of a plugin skill folder. The docs refuse
- *  a blank other than one plain space between words. The rule reads this as: a plain space next
- *  to another blank becomes a hyphen too. `kindAt` takes such a space in two cases. The blank is
- *  before it, or the blank after it is not a plain space. The function does not join a run of
- *  hyphens. Each other character that `kindAt` takes stays. */
+/** `text` as the command name of a plugin skill folder. Each UTF-16 code unit that is not an
+ *  ASCII letter, an ASCII digit, `_` or `-` becomes one `-`. The docs say only that the refused
+ *  characters become hyphens. A probe of Claude Code 2.1.322 gave this wider rule. It loaded
+ *  `caf\u{E9}` as `caf-`, `a.b` and `a b` as `a-b`, and `a\u{F0000}b` as `a--b`. It kept `_`
+ *  and the letter case. The fold is for a plugin skill folder only. The probe kept a project
+ *  skill folder, a plugin command file and a plugin `name` field as written. */
 export function hyphenate(text: string): string {
-  const chars = [...text]
-  const taken = takenAt(chars)
-  return chars
-    .map((char, index) =>
-      kindAt(chars, index, taken) === undefined && !besideBlank(chars, index) ? char : '-',
-    )
-    .join('')
+  return text.replace(/[^A-Za-z0-9_-]/g, '-')
 }

@@ -337,9 +337,10 @@ describe('firstFault', () => {
   })
 })
 
-// The docs say that the refused characters of a plugin skill folder become hyphens. `hyphenate`
-// changes each one to one hyphen. It also changes a plain space next to another blank. Other
-// characters stay.
+// The docs say that the refused characters of a plugin skill folder become hyphens. Probes of
+// Claude Code 2.1.319 and 2.1.322 (`claude -p --plugin-dir`, the init message) gave each expected
+// value here. Each UTF-16 code unit that is not an ASCII letter, an ASCII digit, `_` or `-` became
+// one hyphen.
 describe('hyphenate', () => {
   it.each([
     ['deploy', 'deploy'],
@@ -351,23 +352,21 @@ describe('hyphenate', () => {
     ['a\u{A0}b', 'a-b'],
     ['a\u{202E}b', 'a-b'],
     ['a\tb', 'a-b'],
-    // A private-use character above U+FFFF is one character, so it gives one hyphen.
-    ['a\u{F0000}b', 'a-b'],
+    // A private-use character above U+FFFF is two UTF-16 code units, so it gives two hyphens.
+    ['a\u{F0000}b', 'a--b'],
     [' a', '-a'],
     ['a ', 'a-'],
-    ['a b', 'a b'],
-    // The docs refuse a blank other than one plain space between words. The rule reads this as:
-    // each space of a run of blanks becomes a hyphen.
+    // Claude Code 2.1.322 loaded a plugin folder `a b` as `a-b`, and `a< b` as `a--b`.
+    ['a b', 'a-b'],
     ['a  b', 'a--b'],
     ['a   b', 'a---b'],
     ['a  ', 'a--'],
     ['  a', '--a'],
     ['a\u{A0} b', 'a--b'],
     ['a \u{A0}b', 'a--b'],
-    // An angle bracket is not a blank. A plain space next to it stays.
-    ['a< b', 'a- b'],
-    // The docs do not name a dot, so it stays.
-    ['a.b', 'a.b'],
+    ['a< b', 'a--b'],
+    // Claude Code 2.1.322 loaded a plugin folder `a.b` as `a-b`.
+    ['a.b', 'a-b'],
     // Claude Code 2.1.319 loaded a plugin folder of soft hyphens as `-`, and two as `--`. It
     // loaded `a\u{AD}b` as `a-b`, `x\u{2800}y` as `x-y` and `x\u{200D}y` as `x-y`.
     ['\u{AD}', '-'],
@@ -375,7 +374,47 @@ describe('hyphenate', () => {
     ['a\u{AD}b', 'a-b'],
     ['x\u{2800}y', 'x-y'],
     ['x\u{200D}y', 'x-y'],
+    // The three folders of the 2.1.319 probe, again on 2.1.322. The family emoji is 15 code units
+    // with `family-`, the Devanagari word is four, and the red heart with U+FE0F is two.
+    ['family-\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}', 'family---------'],
+    ['\u{915}\u{94D}\u{200D}\u{937}', '----'],
+    ['x\u{2764}\u{FE0F}y', 'x--y'],
+    ['a\u{34F}b', 'a-b'],
+    ['a\u{3164}b', 'a-b'],
+    // A letter that Claude Code takes in a project folder becomes a hyphen in a plugin folder.
+    ['caf\u{E9}', 'caf-'],
+    ['cafe\u{301}', 'cafe-'],
+    ['\u{3B1}', '-'],
+    ['\u{65E5}\u{672C}', '--'],
+    ['x\u{1F600}y', 'x--y'],
+    // The kinds of combining mark that `firstFault` refuses, in a plugin folder.
+    ['\u{301}ab', '-ab'],
+    [`a${'\u{301}'.repeat(8)}b`, 'a--------b'],
+    [`a${'\u{301}'.repeat(9)}b`, 'a---------b'],
+    ['a\u{93F}b', 'a-b'],
+    ['a\u{20E3}b', 'a-b'],
+    ['\u{20E3}', '-'],
+    // Claude Code 2.1.322 kept the letter case, the digits and `_`.
+    ['ABC', 'ABC'],
+    ['a_b', 'a_b'],
+    ['a0b', 'a0b'],
   ])('gives %j as %j', (text, loaded) => {
     expect(hyphenate(text)).toBe(loaded)
   })
+
+  // Claude Code 2.1.322 loaded a plugin folder `a<c>b` for each printable ASCII character `c`
+  // other than `/`. These are the characters that it kept.
+  const KEPT = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
+  it.each(
+    Array.from({ length: 0x7f - 0x20 }, (_, index) => String.fromCharCode(0x20 + index)).filter(
+      (char) => char !== '/',
+    ),
+  )('gives a%sb as Claude Code 2.1.322 does', (char) => {
+    expect(hyphenate(`a${char}b`)).toBe(KEPT.includes(char) ? `a${char}b` : 'a-b')
+  })
+
+  // A fold that walks back over a run of marks costs quadratic time. The timeout catches that case.
+  it('folds a very long run of marks in linear time', () => {
+    expect(hyphenate(`a${'\u0301'.repeat(30000)}b`)).toBe(`a${'-'.repeat(30000)}b`)
+  }, 3000)
 })
