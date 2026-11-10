@@ -155,9 +155,8 @@ describe(`${name}: PreCompact stdout`, () => {
 })
 
 describe(`${name}: JSON output that Claude Code discards`, () => {
-  // https://code.claude.com/docs/en/hooks#json-output: the output cap applies "except for PreCompact stdout".
   // https://code.claude.com/docs/en/hooks#precompact: "Claude Code discards a PreCompact hook's `systemMessage` and
-  // `continue` fields." The docs name no field of PreCompact JSON that Claude Code keeps.
+  // `continue` fields." The docs name no string field of PreCompact JSON that Claude Code adds to the context.
   const long = 'x'.repeat(10_001)
 
   it('is silent for each JSON field of a PreCompact command past the cap', () => {
@@ -174,6 +173,8 @@ describe(`${name}: JSON output that Claude Code discards`, () => {
   it('is silent for the JSON fields of a Setup command past the cap', () => {
     expect(ids(echo({ systemMessage: long }), 'Setup')).toEqual([])
     expect(ids(context(long, 'additionalContext', 'Setup'), 'Setup')).toEqual([])
+    expect(ids(context(long, 'initialUserMessage', 'Setup'), 'Setup')).toEqual([])
+    expect(ids(context('x'.repeat(2_001), 'classifierContext', 'Setup'), 'Setup')).toEqual([])
   })
 
   // https://code.claude.com/docs/en/hooks#worktreeremove: "Claude Code discards a WorktreeRemove hook's JSON output
@@ -181,6 +182,10 @@ describe(`${name}: JSON output that Claude Code discards`, () => {
   it('is silent for the JSON fields of a WorktreeRemove command past the cap', () => {
     expect(ids(echo({ systemMessage: long }), 'WorktreeRemove')).toEqual([])
     expect(ids(context(long, 'additionalContext', 'WorktreeRemove'), 'WorktreeRemove')).toEqual([])
+    expect(ids(context(long, 'initialUserMessage', 'WorktreeRemove'), 'WorktreeRemove')).toEqual([])
+    expect(
+      ids(context('x'.repeat(2_001), 'classifierContext', 'WorktreeRemove'), 'WorktreeRemove'),
+    ).toEqual([])
   })
 
   // https://code.claude.com/docs/en/hooks#postcompact: "Claude Code discards a PostCompact hook's `systemMessage` and
@@ -213,6 +218,8 @@ describe(`${name}: JSON output that Claude Code discards`, () => {
     (event) => {
       expect(ids(echo({ systemMessage: long }), event)).toEqual([])
       expect(ids(context(long, 'additionalContext', event), event)).toEqual([])
+      expect(ids(context(long, 'initialUserMessage', event), event)).toEqual([])
+      expect(ids(context('x'.repeat(2_001), 'classifierContext', event), event)).toEqual([])
     },
   )
 
