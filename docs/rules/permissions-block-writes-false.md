@@ -27,9 +27,10 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 ## Rule details
 
-In the settings reference, the key has the scope "Any file". "A `true` in any file applies, so a repository can turn the
-block on for itself but can't lift yours." The value `false` is "the same as unset; the block still applies if another
-file sets `true`".[^block] To lift the block, remove the key from every settings file that sets it.[^block]
+In the settings reference, the key has the scope "Any file". "A `true` in any file the session loads applies, so a
+repository can turn the block on for itself but can't lift yours." The value `false` is "the same as unset; the block
+still applies if another file sets `true`".[^block] To lift the block, remove the key from every settings file that sets
+it.[^block]
 
 The rule reports a `permissions.blockWritesOutsideWorkingDirectories` value that is the Boolean `false`. The report is on
 the value. The fix is to remove the key. The rule reads each file alone. A `false` in a file with no `true` anywhere is

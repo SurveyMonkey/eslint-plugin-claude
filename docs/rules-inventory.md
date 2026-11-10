@@ -30,7 +30,7 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 444 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 445 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -835,7 +835,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 ### Permissions and sandbox
 
-Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 79 rules: 57 in `recommended` (37 error, 20 warn) and 22 `off`.
+Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 80 rules: 58 in `recommended` (38 error, 20 warn) and 22 `off`.
 
 The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list). `permissions-mcp-rule-parens` stays on settings files, because the docs state the skip for a settings file only (ruling 17). A managed settings file is a settings file. So the grammar rules, `permissions-mcp-rule-parens` and `permissions-skill-rule` also lint `managed-settings.json` and each `managed-settings.d/*.json` drop-in (round 11 ruling 3). They do not lint a hidden drop-in. The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). `hooks-if-condition` runs the shared parser for hook `if` itself. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-restrict-which-tools-a-subagent-can-use]. So `agent-tools-known` owns both agent fields.
 
