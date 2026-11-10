@@ -74,6 +74,8 @@ const PROVIDER = [
   'us.anthropic.claude-opus-4-8',
   'anthropic/claude-opus-4-8',
   'my-gateway/claude-opus-5-5',
+  'my-gw/claude-3-5-sonnet',
+  'my-gw/claude-3.5-sonnet',
   'claude-sonnet-4-5@20250929',
 ]
 

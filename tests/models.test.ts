@@ -161,6 +161,25 @@ describe('the family of a value', () => {
     }
   })
 
+  it('reads the family of a dotted version-first ID, as of its hyphen form', () => {
+    expect(familyOf('claude-3.5-sonnet')).toBe('sonnet')
+    expect(familyOf('claude-3-5-sonnet')).toBe('sonnet')
+    expect(familyOf('claude-3.7-sonnet-latest')).toBe('sonnet')
+    expect(familyOf('claude-3.5-haiku[1m]')).toBe('haiku')
+    expect(familyOf('my-gw/claude-3.5-sonnet')).toBe('sonnet')
+  })
+
+  it('has no family for a dot that is not a minor version', () => {
+    for (const value of [
+      'claude-3.-sonnet',
+      'claude-.5-sonnet',
+      'claude-3.5.-sonnet',
+      'claude-3..5-sonnet',
+    ]) {
+      expect(familyOf(value), value).toBeUndefined()
+    }
+  })
+
   it('reads a family word that ends the value', () => {
     expect(familyOf('claude-opus')).toBe('opus')
     expect(familyOf('claude-opus[1m]')).toBe('opus')
@@ -185,6 +204,9 @@ describe('the provider forms', () => {
       'anthropic/claude-opus-4-8',
       'my-gateway/claude-opus-5-5',
       'claude-sonnet-4-5@20250929',
+      'claude-3-5-sonnet',
+      'claude-3.5-sonnet',
+      'my-gw/claude-3.5-sonnet',
     ]) {
       expect(hasProviderForm(value), value).toBe(true)
     }

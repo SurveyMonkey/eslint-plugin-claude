@@ -54,6 +54,8 @@ describe('agent-model-value', () => {
       'us.anthropic.claude-opus-4-8',
       'arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/abc',
       'anthropic.claude-sonnet-5',
+      'my-gw/claude-3-5-sonnet',
+      'my-gw/claude-3.5-sonnet',
     ]) {
       expect(lint(`model: ${value}\n`)).toEqual([])
     }
