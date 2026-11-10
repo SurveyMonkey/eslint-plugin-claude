@@ -41,8 +41,8 @@ The docs of the sub-agents page give the first three versions.[^fields] The page
 `manual` alias under v2.1.200 for the CLI flag and for `defaultMode`. The rule applies the same version to the
 subagent field.
 
-The [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records `yes`, `no`, `on`, `off`, `1` and `0`
-as values for skill and plugin frontmatter Booleans under v2.1.218, besides `true` and `false`. No agent page lists these forms, so the rule applies the version to agent files by inference. The Boolean rules in this plugin accept them, and this rule reports
+The [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records v2.1.218 as the version that adds
+`yes`, `no`, `on`, `off`, `1` and `0`. They are values for skill and plugin frontmatter Booleans, besides `true` and `false`. No agent page lists these forms, so the rule applies the version to agent files by inference. The Boolean rules in this plugin accept them, and this rule reports
 them when `minVersion` is below v2.1.218. The rule reads a quoted `"true"` or `"false"` as a form that it does not
 report, because no source says how older versions read it.
 

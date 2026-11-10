@@ -1,6 +1,6 @@
 // The hooks reference says that `PreToolUse` "previously used top-level `decision` and `reason` fields, but these
 // are deprecated for this event" (https://code.claude.com/docs/en/hooks#pretooluse-decision-control). For
-// `updatedMCPToolOutput` it says "Prefer `updatedToolOutput`, which works for all tools"
+// `updatedMCPToolOutput` it says "Prefer `updatedToolOutput`, which also works for built-in tools"
 // (https://code.claude.com/docs/en/hooks#posttooluse-decision-control). The input field `team_name` is
 // "Deprecated" on the task and teammate events (https://code.claude.com/docs/en/hooks#taskcreated-input).
 // The rule reads JSON that a command prints, and the text of a repository script.
