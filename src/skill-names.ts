@@ -1,7 +1,8 @@
 // This module holds the name checks of the skill rules. It also holds the text that
 // shows a name in a message. Each skill rule that prints a name uses `escapeName`.
 
-/** Each class of characters that the rule refuses, with the text of the message.
+/** Each class of characters that the rule refuses, with the text of the message. `markKind`
+ *  gives the faults of a combining mark.
  *  The docs name the first seven classes (skills, "Characters a skill name can't hold").
  *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so this module counts it
  *  as a zero-width space. `kindAt` checks a plain space before it reads the classes.
@@ -156,8 +157,8 @@ function takenAt(chars: string[]): Set<number> {
 /** The fault of the mark at `index` of `chars`, or undefined. No public source gives these
  *  limits. They are choices of the rule, set from probes of Claude Code 2.1.322. The base is the
  *  character before the run of marks.
- *  - The base must be a letter or a number (`L` or `N`). The probes refused a mark at the start,
- *    and after a space, `-`, `.`, `_`, `:`, `!`, `$`, `^`, U+FFFD and U+1F600.
+ *  - The base must be a letter or a number (`L` or `N`). The probes refused a mark at the start.
+ *    They also refused a mark after a space, `-`, `.`, `_`, `:`, `!`, `$`, `^`, U+FFFD and U+1F600.
  *  - A run of more than eight marks is a fault. See `MARK_LIMIT`.
  *  - A mark outside the Inherited script is a fault after a base of the Latin or the Common
  *    script. The probes refused U+05B8, U+093F, U+0483, U+1161 and U+1D165 after `a`. They

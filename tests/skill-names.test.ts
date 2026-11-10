@@ -175,6 +175,14 @@ describe('firstFault', () => {
     )
   })
 
+  // The run of marks is long. The rule must report each mark after the eighth, and must do so
+  // in linear time.
+  it('refuses each mark after the eighth of a long run', () => {
+    expect(escapeName(`a${'\u0301'.repeat(11)}`)).toBe(
+      `a${'\u0301'.repeat(8)}${'<U+0301>'.repeat(3)}`,
+    )
+  })
+
   // Claude Code 2.1.322 refused a project skill folder with each of these names. Its debug log
   // said `<name> is not offered`. U+20E3 loaded only in a keycap emoji.
   const KEYCAP = 'a keycap mark outside a keycap emoji'
@@ -283,6 +291,7 @@ describe('firstFault', () => {
     ['U+1CD0 after a Latin letter', 'a\u1CD0b'],
     ['U+0951 after a Latin letter', 'a\u0951b'],
     ['a keycap of U+0023', 'x#\uFE0F\u20E3y'],
+    ['a keycap of U+0031', 'x1\uFE0F\u20E3y'],
     ['a Hebrew point after a Hebrew letter', '\u05D0\u05B8b'],
     ['a Devanagari vowel sign after a Devanagari letter', '\u0915\u093F'],
     ['three Devanagari marks', '\u0915\u093C\u0940\u0902'],
