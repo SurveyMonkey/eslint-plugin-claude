@@ -2972,8 +2972,8 @@
   "mcp-remote-url-empty": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
-      "heading": "Server status detail",
-      "hash": "444d8e0e50f718a35cf8d0d832a8efff5301b843db22212169a8f2f373ba857e"
+      "heading": "Connection failures and unconfigured servers",
+      "hash": "121267d131a5046f8fa05267e966db0e63bc3ffd23dedd64595d3f74f2a42670"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-mcp",
