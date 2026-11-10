@@ -183,6 +183,12 @@ describe('firstFault', () => {
     )
   })
 
+  // A name of 30000 marks took 8 seconds before the walk of `markKind` had a limit.
+  it('escapes a very long run of marks in linear time', () => {
+    const text = `a${'\u0301'.repeat(30000)}`
+    expect(escapeName(text)).toBe(`a${'\u0301'.repeat(8)}${'<U+0301>'.repeat(29992)}`)
+  }, 3000)
+
   // Claude Code 2.1.322 refused a project skill folder with each of these names. Its debug log
   // said `<name> is not offered`. U+20E3 loaded only in a keycap emoji.
   const KEYCAP = 'a keycap mark outside a keycap emoji'

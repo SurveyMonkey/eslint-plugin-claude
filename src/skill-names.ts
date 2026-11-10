@@ -170,8 +170,10 @@ function markKind(chars: string[], index: number): string | undefined {
   if (!MARK.test(char)) {
     return undefined
   }
+  // The walk stops after `MARK_LIMIT` marks, so a long run costs linear time in all. A mark
+  // that stops the walk early is a fault, as the base check or the limit check refuses it.
   let start = index
-  while (start > 0 && MARK.test(chars[start - 1] as string)) {
+  while (start > 0 && index - start <= MARK_LIMIT && MARK.test(chars[start - 1] as string)) {
     start--
   }
   const base = chars[start - 1] ?? ''
