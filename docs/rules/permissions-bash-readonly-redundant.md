@@ -37,9 +37,10 @@ final `*` (`Bash(ls *)`, `Bash(ls:*)`). The rule leaves out `git`: the docs say 
 
 The docs say that some arguments still prompt. So the rule checks less than issue 15 asks for:
 
-- `find` and `cd` get a report for the bare command only. In Manual mode, `find` with an unquoted glob prompts.[^read-only]
+- `find`, `cd` and `which` get a report for the bare command only. In Manual mode, `find` with an unquoted glob prompts.[^read-only]
   `find` with an action such as `-exec`, `-delete` or `-fprint`, or with `-files0-from`, prompts even under `Bash(find *)`.[^find-actions]
-  `cd` to a path out of the working directories prompts. The docs do not say how a prefix rule acts on a call that prompts,
+  `cd` to a path out of the working directories prompts. `which` with a flag such as `-i`, `--read-alias` or `--read-functions` prompts.[^read-only]
+  The docs do not say how a prefix rule acts on a call that prompts,
   so the rule reports only the bare command.[^read-only]
 - A rule with more words than the command, as `Bash(cat /etc/hosts)`, is silent. The rule does not judge the arguments.
 

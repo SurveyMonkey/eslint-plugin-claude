@@ -45,9 +45,10 @@ export const READ_ONLY_COMMANDS: readonly string[] = [
  *  an unquoted glob (https://code.claude.com/docs/en/permissions#read-only-commands), and for an
  *  action such as `-exec`, `-delete` or `-fprint` and for `-files0-from`
  *  (https://code.claude.com/docs/en/permissions#exec-wrappers-and-find-actions). `cd` prompts for
- *  a target out of the working directories. The docs do not say how a prefix rule acts on those
+ *  a target out of the working directories. `which` prompts for a flag such as `-i`,
+ *  `--read-alias` or `--read-functions`. The docs do not say how a prefix rule acts on those
  *  calls, so a rule for them is redundant only when it names the bare command. */
-export const READ_ONLY_WITH_PROMPTS: readonly string[] = ['find', 'cd']
+export const READ_ONLY_WITH_PROMPTS: readonly string[] = ['find', 'cd', 'which']
 
 /** The commands that fetch a URL: "use deny rules to stop `curl`, `wget`, and similar commands"
  *  (https://code.claude.com/docs/en/permissions#read-only-commands, the warning on rules that
