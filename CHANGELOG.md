@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.13.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.12.0...v0.13.0) (2026-11-10)
+
+
+### Features
+
+* **hooks:** count manifest skills folders, and scan nested substitutions in linear time ([#777](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/777)) ([91d8d7d](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/91d8d7d1761351c0599e8567222b6afb51862c5d)), closes [#593](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/593) [#594](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/594)
+* **hooks:** report a PowerShell hook command that is only a quoted path ([#775](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/775)) ([4673629](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/467362953b28732bf40ef2a77f52831244d62ce6)), closes [#627](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/627)
+* **memory:** report an on-demand memory file over the size limit ([#778](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/778)) ([cfa6a46](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/cfa6a4670c47d2a5ff906ba4f296fd2ec6648d07)), closes [#623](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/623)
+
+
+### Bug Fixes
+
+* correct six rule messages and value sets from the docs ([#756](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/756)) ([9434548](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/94345482761042462f7c18fbb47233b053bd81e7))
+* **deps:** pin patched katex, minimatch and zod ([#774](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/774)) ([5b1ad6d](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/5b1ad6d012f3043e5e41e13df93e7ed02d98b9d1))
+* measure PreCompact, read sandbox wildcards, match bare globs ([#757](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/757)) ([1a35a2f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/1a35a2fce1d6990526422ff470e3ec61a8795992))
+* refuse hidden skill name characters and correct three settings checks ([#759](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/759)) ([eea8909](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/eea890906e0148e1d3ba39e52d33943f8556e6a1)), closes [#589](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/589) [#590](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/590) [#591](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/591) [#738](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/738)
+* **settings:** add permissions.denyInsteadOfPrompting to scope data ([#785](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/785)) ([48673ef](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/48673efdfbb86d83b18a8f90458579c1d6dcc506))
+* **settings:** add the first version of CLAUDE_CODE_DROP_UNAVAILABLE_DEFERRED_TOOL ([#740](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/740)) ([c770608](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/c7706084e35f8695fe5992538e60252943e705f3))
+* **settings:** match the new keys, env variables and versions of the docs ([#737](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/737)) ([8ab8158](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/8ab8158e99f6c319ef4e1d2efc152addcc86b8a7))
+
 ## [0.12.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.11.1...v0.12.0) (2026-10-27)
 
 
