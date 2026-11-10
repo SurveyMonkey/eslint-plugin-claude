@@ -250,6 +250,10 @@ describe('the first versions of the variables, against the env vars reference', 
     expect(row).toContain('Requires Claude Code v2.1.319 or later')
   })
 
+  it('keeps the version limit of the DISABLE_GROWTHBOOK message in the env vars reference', () => {
+    expect(VARIABLES).toContain('unless a machine on v2.1.318 or earlier reads the configuration')
+  })
+
   it('leaves out the three variables with a sentence for one part', () => {
     for (const name of ['BASH_DEFAULT_TIMEOUT_MS', 'BASH_MAX_TIMEOUT_MS', 'MCP_DISCOVERY_CACHE']) {
       expect(envFirstVersion(name), name).toBeUndefined()
