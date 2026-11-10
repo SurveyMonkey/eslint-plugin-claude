@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-env-deprecated-var, which reports an env variable that Claude Code deprecates or keeps as a legacy name, such as ANTHROPIC_SMALL_FAST_MODEL, ENABLE_PROMPT_CACHING_1H_BEDROCK, DISABLE_BUG_COMMAND, SLASH_COMMAND_TOOL_CHAR_BUDGET, and CLAUDE_CODE_ENABLE_TASKS set to 0.
+description: The ESLint rule claude/settings-env-deprecated-var, which reports an env variable that Claude Code deprecates or keeps as a legacy name, such as ANTHROPIC_SMALL_FAST_MODEL, ENABLE_PROMPT_CACHING_1H_BEDROCK, DISABLE_BUG_COMMAND, SLASH_COMMAND_TOOL_CHAR_BUDGET, DISABLE_GROWTHBOOK, and CLAUDE_CODE_ENABLE_TASKS set to 0.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -25,16 +25,17 @@ generated:
 ## Rule details
 
 Claude Code still reads each variable in this table. The env vars reference marks two of them as
-deprecated, and calls two of them an older or legacy name.[^vars] The names are in
+deprecated. It calls three of them an older, legacy or superseded name.[^vars] The names are in
 `src/data/settings-env.ts`.
 
-| Variable                              | What the docs say                                                                                     |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `ANTHROPIC_SMALL_FAST_MODEL`          | Deprecated. Use `ANTHROPIC_DEFAULT_HAIKU_MODEL`.[^vars][^model]                                       |
-| `ENABLE_PROMPT_CACHING_1H_BEDROCK`    | Deprecated. Use `ENABLE_PROMPT_CACHING_1H`.[^vars]                                                    |
-| `DISABLE_BUG_COMMAND`                 | An older name of `DISABLE_FEEDBACK_COMMAND`.[^vars]                                                   |
-| `SLASH_COMMAND_TOOL_CHAR_BUDGET`      | A legacy name that Claude Code keeps for backward compatibility. The docs name no replacement.[^vars] |
-| `CLAUDE_CODE_ENABLE_TASKS` set to `0` | Selects the legacy `TodoWrite` tool in place of the Task tools.[^vars]                                |
+| Variable                              | What the docs say                                                                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ANTHROPIC_SMALL_FAST_MODEL`          | Deprecated. Use `ANTHROPIC_DEFAULT_HAIKU_MODEL`.[^vars][^model]                                                                                  |
+| `ENABLE_PROMPT_CACHING_1H_BEDROCK`    | Deprecated. Use `ENABLE_PROMPT_CACHING_1H`.[^vars]                                                                                               |
+| `DISABLE_BUG_COMMAND`                 | An older name of `DISABLE_FEEDBACK_COMMAND`.[^vars]                                                                                              |
+| `SLASH_COMMAND_TOOL_CHAR_BUDGET`      | A legacy name that Claude Code keeps for backward compatibility. The docs name no replacement.[^vars]                                            |
+| `DISABLE_GROWTHBOOK`                  | Superseded by `CLAUDE_CODE_DISABLE_FEATURE_FLAGS`, which needs v2.1.319 or later. Keep the old name for a machine on v2.1.318 or earlier.[^vars] |
+| `CLAUDE_CODE_ENABLE_TASKS` set to `0` | Selects the legacy `TodoWrite` tool in place of the Task tools.[^vars]                                                                           |
 
 The report is on the variable name. The message names the replacement when the docs give one.
 Each variable gets one report. When a file has two keys of one name, the rule reads the last, as
