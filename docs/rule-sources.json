@@ -1261,8 +1261,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "How deep a pattern matches",
+      "hash": "63a3da33e7cf7d950add92d4c265388c096aaa4a0bdb295d654a8d29b32fbda0"
     }
   ],
   "hooks-matcher-bash-without-powershell": [
@@ -1609,8 +1609,8 @@
   "hooks-powershell-placeholder": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Windows PowerShell tool",
-      "hash": "5c0ca89b32e223f575be430216cdf9fa415086260a185102bc6faec65d93167b"
+      "heading": "Reference scripts by path in PowerShell hooks",
+      "hash": "ce682d36ddde4bb55db521cd4da80b4cd3d383e312d0d845336971926aa58247"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1631,8 +1631,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
-      "heading": "Windows PowerShell tool",
-      "hash": "5c0ca89b32e223f575be430216cdf9fa415086260a185102bc6faec65d93167b"
+      "heading": "Reference scripts by path in PowerShell hooks",
+      "hash": "ce682d36ddde4bb55db521cd4da80b4cd3d383e312d0d845336971926aa58247"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
@@ -3019,8 +3019,8 @@
   "mcp-timeout-min": [
     {
       "url": "https://code.claude.com/docs/en/mcp",
-      "heading": "Push messages with channels",
-      "hash": "6d181168c0f9a9f31ff416a2b8c3b3cc1afa655dbd110d33cd75f2725fb0dfb3"
+      "heading": "Time limits on MCP tool calls",
+      "hash": "2f5440593b3e0f2f915f77c89c60ff74777300086250ebda2758f575fd5e154f"
     }
   ],
   "mcp-tool-name-format": [
@@ -3304,8 +3304,13 @@
   "permissions-allow-dir-depth": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "Where a pattern anchors",
+      "hash": "21ed42851b111a89353e934e35be2176fde4c29710601b1b0051a4ac8ba2d88f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "How deep a pattern matches",
+      "hash": "63a3da33e7cf7d950add92d4c265388c096aaa4a0bdb295d654a8d29b32fbda0"
     }
   ],
   "permissions-allow-unrestricted": [
@@ -3499,8 +3504,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "What Read and Edit rules cover",
+      "hash": "4b8bd8b8e8c1e6242350ff6bd5b941d62e7bf5ac913de3f083905ffbead91958"
     },
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
@@ -3760,8 +3765,13 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "What Read and Edit rules cover",
+      "hash": "4b8bd8b8e8c1e6242350ff6bd5b941d62e7bf5ac913de3f083905ffbead91958"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "How deep a pattern matches",
+      "hash": "63a3da33e7cf7d950add92d4c265388c096aaa4a0bdb295d654a8d29b32fbda0"
     }
   ],
   "permissions-disable-mode-value": [
@@ -3847,8 +3857,13 @@
   "permissions-invalid-path-pattern": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "How path patterns match",
+      "hash": "370b9fc8ba2f375397b88665816bd9b2896080d0b1950c0ca63f4996f5f35845"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Special characters and ! negation",
+      "hash": "46dc25440d03aebc675bb5e4998f0e1a1f9bc63a12d939e2536c85dfbc654e77"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -3864,8 +3879,8 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "What Read and Edit rules cover",
+      "hash": "4b8bd8b8e8c1e6242350ff6bd5b941d62e7bf5ac913de3f083905ffbead91958"
     }
   ],
   "permissions-mcp-rule-parens": [
@@ -3900,8 +3915,8 @@
   "permissions-negation": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "Special characters and ! negation",
+      "hash": "46dc25440d03aebc675bb5e4998f0e1a1f9bc63a12d939e2536c85dfbc654e77"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -3936,8 +3951,13 @@
   "permissions-path-anchor": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "How path patterns match",
+      "hash": "370b9fc8ba2f375397b88665816bd9b2896080d0b1950c0ca63f4996f5f35845"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Where a pattern anchors",
+      "hash": "21ed42851b111a89353e934e35be2176fde4c29710601b1b0051a4ac8ba2d88f"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -3948,8 +3968,8 @@
   "permissions-path-rule-tool": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
+      "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -4002,8 +4022,13 @@
   "permissions-read-deny-notebook": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "What Read and Edit rules cover",
+      "hash": "4b8bd8b8e8c1e6242350ff6bd5b941d62e7bf5ac913de3f083905ffbead91958"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
+      "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
     }
   ],
   "permissions-rule-syntax": [
@@ -4156,8 +4181,13 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "Match all uses of a tool",
+      "hash": "18a45a9741a04644b8e99263c398e3600f7033321dcaad2be9382539a9902e8e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
+      "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
@@ -4219,8 +4249,13 @@
   "permissions-windows-path": [
     {
       "url": "https://code.claude.com/docs/en/permissions",
-      "heading": "Read and Edit",
-      "hash": "1b2cb3ff2526c28305e1b311b9af3aa4b66f6de2e5bf8b1098a5befb1c3ca0dc"
+      "heading": "Where a pattern anchors",
+      "hash": "21ed42851b111a89353e934e35be2176fde4c29710601b1b0051a4ac8ba2d88f"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Special characters and ! negation",
+      "hash": "46dc25440d03aebc675bb5e4998f0e1a1f9bc63a12d939e2536c85dfbc654e77"
     },
     {
       "url": "https://code.claude.com/docs/en/permissions",
