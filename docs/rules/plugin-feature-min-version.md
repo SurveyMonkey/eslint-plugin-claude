@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/plugin-feature-min-version, which with the option minVersion reports a plugin.json feature that needs a Claude Code newer than minVersion, namely skills ".", metadata and userConfig options, with its option, examples and sources.
+description: The ESLint rule claude/plugin-feature-min-version, which with the option minVersion reports a plugin.json feature that needs a Claude Code newer than minVersion, namely skills "." and userConfig options, with its option, examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [11]
@@ -34,15 +34,19 @@ is older than the version that added it:
 | Feature                           | Added in | What older versions do                                                    | Source                         |
 | --------------------------------- | -------- | ------------------------------------------------------------------------- | ------------------------------ |
 | `"."` as a `skills` path          | v2.1.221 | Manifest validation fails. Use `"./"`, which means the same.[^path-rules] | Path rules                     |
-| The `metadata` key                | v2.1.222 | The docs state that the key needs v2.1.222 or later.[^metadata]           | `metadata`                     |
 | `options` on a `userConfig` field | v2.1.271 | The plugin fails to load.[^options]                                       | Limit a field to fixed options |
 
 The rule reports these places:
 
 - Each `"."` string in the `skills` key, whether it is the value or an element of an array. The
   report is on the string.
-- The `metadata` member, whatever its value.
 - The `options` member of each field in `userConfig`.
+
+The changelog lists the `"."` path under 2.1.221. Its entry says: "Changed plugins to accept `"."`
+as a `skills` path". See the [Claude Code changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
+
+The `metadata` key is not checked. The manifest reference gives no version for it. The changelog has
+no entry for it.
 
 The directory listing fields (`icon`, `documentationUrl` and others) are not checked. Before
 v2.1.281, `claude plugin validate` prints an `Unknown field` warning for them, so a `--strict`
@@ -58,7 +62,7 @@ The rule makes no report in these cases:
 
 When a key appears twice, the rule reads the last one, as `JSON.parse` does.
 
-Fail, with `minVersion` set to `2.1.200`: `"skills": "."`, `"metadata": {}`, or a `userConfig`
+Fail, with `minVersion` set to `2.1.200`: `"skills": "."`, or a `userConfig`
 field with `"options": ["a", "b"]`.
 
 Pass: `"skills": "./"`.
@@ -93,6 +97,5 @@ numbers, such as `2.1.221`.
 ## Sources
 
 [^path-rules]: [Plugin manifest reference: Path rules](https://code.claude.com/docs/en/plugins/manifest-reference#path-rules)
-[^metadata]: [Plugin manifest reference: metadata](https://code.claude.com/docs/en/plugins/manifest-reference#metadata)
 [^options]: [Plugin manifest reference: Limit a field to fixed options](https://code.claude.com/docs/en/plugins/manifest-reference#limit-a-field-to-fixed-options)
 [^listing]: [Plugin manifest reference: Directory listing fields](https://code.claude.com/docs/en/plugins/manifest-reference#directory-listing-fields)

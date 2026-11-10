@@ -29,11 +29,13 @@ each one that needs a version newer than the option `minVersion`. With no `minVe
 makes no report. The `recommended` and `strict` configs set no option. They turn the rule on, with
 no effect, until a team sets the version that it supports.
 
-The versions are from the marketplace reference.[^top][^entries][^sources]
+The marketplace reference gives the versions of all fields and source types in the table, except
+`archive`.[^top][^entries][^sources] The changelog gives the version of `archive`. It lists
+"Added `archive` plugin source" under 2.1.224. See the
+[Claude Code changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
 
 | Field or source                     | Needs   |
 | ----------------------------------- | ------- |
-| Entry `metadata`                    | 2.1.222 |
 | `archive` source                    | 2.1.224 |
 | `command` source                    | 2.1.229 |
 | Entry `headers` and `headersHelper` | 2.1.238 |
@@ -46,9 +48,13 @@ for `marketplace-schema` and `marketplace-source-schema`. The rule reports the k
 field, and reports no source type that it cannot read. The source types are in
 `src/data/marketplace-source-types.ts`.
 
+The entry key `metadata` is not in the table. The marketplace reference gives no version for it,
+and the changelog has no entry for it. The rule does not check it.
+
 The top-level `renames` map is not in the table. The reference pages do not state the version that
-added it. The Claude Code changelog notes that version 2.1.193 follows `renames` maps. The docs
-watch does not follow that page, so the rule does not check `renames`.
+added it. The changelog has one entry for `renames`, under 2.1.193: "Improved plugin auto-rename:
+marketplace `renames` maps are now followed automatically". It does not say which version added
+the map, so the rule does not check `renames`.
 
 The docs list no `claude plugin validate` message for these cases. The versions were read on
 2026-10-10 for Claude Code 2.1.288.

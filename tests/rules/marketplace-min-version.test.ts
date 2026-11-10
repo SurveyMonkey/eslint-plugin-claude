@@ -31,7 +31,6 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
     { code: everything, filename, options: [{ minVersion: '2.1.239' }] },
     // A version equal to the version of a field is silent, for each field.
     ...[
-      ['2.1.222', manifest({}, { name: 'a', source: './a', metadata: {} })],
       ['2.1.224', manifest({}, { name: 'a', source: archive })],
       ['2.1.229', manifest({}, { name: 'a', source: command })],
       ['2.1.238', manifest({}, { name: 'a', source: './a', headers: {}, headersHelper: 'x' })],
@@ -40,6 +39,16 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
     { code: everything, filename, options: [{ minVersion: '2.2.0' }] },
     { code: everything, filename, options: [{ minVersion: '3.0.0' }] },
     { code: everything, filename, options: [{ minVersion: '10.0.0' }] },
+    // No source gives a version for the entry key `metadata`, so it is silent at any version.
+    ...['1.0.0', '2.0.0', '2.1.221'].map((minVersion) => ({
+      code: manifest(
+        {},
+        { name: 'a', source: './a', metadata: {} },
+        { name: 'b', source: 'b', metadata: 'x' },
+      ),
+      filename,
+      options: [{ minVersion }],
+    })),
     // A marketplace with no field that needs a version.
     {
       code: manifest(
@@ -87,19 +96,6 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
 jsonTester.run('marketplace-min-version (invalid)', rule, {
   valid: [],
   invalid: [
-    {
-      code: manifest({}, { name: 'a', source: './a', metadata: {} }),
-      filename,
-      options: [{ minVersion: '2.1.99' }],
-      errors: [
-        {
-          messageId: 'tooNew',
-          data: { feature: 'entry field "metadata"', since: '2.1.222', minVersion: '2.1.99' },
-          line: 1,
-          column: 54,
-        },
-      ],
-    },
     // Each field and each source type, at a version just below its own.
     {
       code: manifest({ metadata: { pluginRoot: './plugins' } }, { name: 'a', source: 'a' }),
@@ -146,19 +142,19 @@ jsonTester.run('marketplace-min-version (invalid)', rule, {
     },
     // The compare is numeric on each part: a major, a minor and a patch part below the field.
     {
-      code: manifest({}, { name: 'a', source: './a', metadata: {} }),
+      code: manifest({}, { name: 'a', source: archive }),
       filename,
       options: [{ minVersion: '1.9.999' }],
       errors: [{ messageId: 'tooNew' }],
     },
     {
-      code: manifest({}, { name: 'a', source: './a', metadata: {} }),
+      code: manifest({}, { name: 'a', source: archive }),
       filename,
       options: [{ minVersion: '2.0.999' }],
       errors: [{ messageId: 'tooNew' }],
     },
     {
-      code: manifest({}, { name: 'a', source: './a', metadata: {} }),
+      code: manifest({}, { name: 'a', source: archive }),
       filename,
       options: [{ minVersion: '2.1.221' }],
       errors: [{ messageId: 'tooNew' }],
@@ -170,7 +166,6 @@ jsonTester.run('marketplace-min-version (invalid)', rule, {
       options: [{ minVersion: '2.1.0' }],
       errors: [
         { ...tooNew('"metadata.pluginRoot" field', '2.1.239', '2.1.0'), line: 1, column: 28 },
-        { ...tooNew('entry field "metadata"', '2.1.222', '2.1.0'), line: 1, column: 92 },
         { ...tooNew('"archive" source', '2.1.224', '2.1.0'), line: 1, column: 138 },
         { ...tooNew('entry field "headers"', '2.1.238', '2.1.0'), line: 1, column: 193 },
         { ...tooNew('entry field "headersHelper"', '2.1.238', '2.1.0'), line: 1, column: 215 },
@@ -215,7 +210,7 @@ jsonTester.run('marketplace-min-version (invalid)', rule, {
     },
     // Two keys of one name. The rule reads the last, as `JSON.parse` does.
     {
-      code: '{"plugins": [{"name": "p", "source": "./p", "source": {"source": "archive"}, "metadata": 1, "metadata": {}}]}',
+      code: '{"plugins": [{"name": "p", "source": "./p", "source": {"source": "archive"}, "headers": 1, "headers": {}}]}',
       filename,
       options: [{ minVersion: '2.1.0' }],
       errors: [{ messageId: 'tooNew' }, { messageId: 'tooNew' }],

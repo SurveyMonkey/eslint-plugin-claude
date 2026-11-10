@@ -1,10 +1,11 @@
 // Some fields and source types of a marketplace need a Claude Code version.
 // With the option `minVersion`, the rule reports each one that a newer version
 // than `minVersion` introduced. With no option, the rule makes no report
-// (docs/rules/marketplace-min-version.md). The versions are from the
-// marketplace reference ("Top-level fields", "Plugin entries" and "Plugin
-// sources"), read on 2026-10-10 for Claude Code 2.1.288. Review them on or
-// before 2027-04-10, the `stale_after` date of the rule doc.
+// (docs/rules/marketplace-min-version.md). The versions of `metadata.pluginRoot`, `headers`,
+// `headersHelper` and the `command` source are from the marketplace reference ("Top-level
+// fields", "Plugin entries" and "Plugin sources"). The version of the `archive` source is from the
+// Claude Code changelog. Review them on or before 2027-04-10, the `stale_after` date of the rule
+// doc.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { PLUGIN_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -16,7 +17,6 @@ type Options = [{ minVersion?: string }]
 
 // The first version of each entry field.
 const ENTRY_FIELDS = [
-  ['metadata', '2.1.222'],
   ['headers', '2.1.238'],
   ['headersHelper', '2.1.238'],
 ] as const
