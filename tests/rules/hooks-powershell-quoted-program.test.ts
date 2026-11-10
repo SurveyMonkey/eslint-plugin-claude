@@ -33,7 +33,7 @@ const pathOf = (text: string) =>
     FILES.project,
   ).map((message) => /to run "(.*)"\.$/s.exec(message.message)?.[1])
 
-describe(`${name}: the docs example and the probe`, () => {
+describe(`${name}: the docs example and the validate probe`, () => {
   it('reports a quoted .exe path with shell powershell', () => {
     expect(power('"C:\\Tools\\guard.exe"')).toEqual(['quoted'])
   })
