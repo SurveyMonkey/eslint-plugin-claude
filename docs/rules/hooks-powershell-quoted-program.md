@@ -32,17 +32,19 @@ docs:[^no-program]
   Then put `&` before the quoted path.
 - To run one `.exe` at a path without `$`, remove the inner quotes from `command`. Then put the program in
   `command` and its arguments in `args`, to use exec form. Write `"args": []` if the program takes no
-  arguments. Add `"onFailure": "block"`, so that the call stops when the program fails.[^windows]
+  arguments. Add `"onFailure": "block"`. Then the tool call stops when the program fails, is missing or times
+  out.[^windows]
 - To print text, such as JSON, set `"shell": "powershell"`, and keep the quoted string. The rule does not
   report it.
-- To run a script for Bash, apply the fix of the docs for a hook for Bash.[^windows]
+- To run a script for Bash, install Git for Windows, or set `CLAUDE_CODE_GIT_BASH_PATH`. Then start a new
+  session.[^windows]
 
 The rule reports a `command` hook in shell form (no `args` array). Its `command` must be only one or more
 quoted strings, with white space between them. The first string must be a program path. With `&` or `.`
 before the string, the command is not only quoted strings, so it gets no report. The rule reads the quote
 rules of PowerShell. In a single-quoted string, `''` is one quote. In a double-quoted string, `""` is one
-quote, and a backtick and the next character give that character. The rule reports once for each handler,
-at the `command` string.
+quote, and a backtick and the next character give that character. The rule does not read escapes such as
+`` `n ``. The rule reports once for each handler, at the `command` string.
 
 A program path has one of the forms that the docs show:
 
@@ -68,6 +70,8 @@ with `"shell": "bash"` gets no report.
   docs block shows these forms in a PowerShell hook.
 - `$HOME`, `$env:` or a path placeholder with no path after it, such as `"$HOME"`.
 - `$HOME`, `$env:` or a path placeholder in a single-quoted string, with no other form of the list.
+- A path that starts with another variable, such as `$CLAUDE_PROJECT_DIR` or `$PSScriptRoot`, with no other
+  form of the list.
 - The `${env:NAME}` form, a UNC path such as `\\server\share\guard`, and a name with no other form, such as
   `"guard"`.
 - A command with other text next to the strings, such as `"C:\Tools\guard.exe" --fix`.
