@@ -54,6 +54,7 @@ const IDS = [
   'claude-fable-5-1',
   'claude-opus-4-6[1m]',
   'claude-sonnet-4-5',
+  'claude-3.5-sonnet',
 ]
 const BAD = [
   'gpt-5',

@@ -56,7 +56,7 @@ const rule: JSONRuleDefinition<{
       variable:
         'The "env" block sets "{{name}}", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
       oauthToken:
-        'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token", and do not store it in a settings file.',
+        'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token".',
       header:
         'The "env" block sets "ANTHROPIC_CUSTOM_HEADERS" with the header "{{header}}", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
     },

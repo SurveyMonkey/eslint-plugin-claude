@@ -174,7 +174,7 @@ jsonTester.run('settings-env-credential (invalid)', rule, {
       errors: [
         {
           message:
-            'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token", and do not store it in a settings file.',
+            'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token".',
         },
       ],
     },

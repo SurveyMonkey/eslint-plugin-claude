@@ -175,6 +175,9 @@ describe('the family of a value', () => {
       'claude-.5-sonnet',
       'claude-3.5.-sonnet',
       'claude-3..5-sonnet',
+      'claude-3.5.1-sonnet',
+      'claude-3x5-sonnet',
+      'claude-3_5-sonnet',
     ]) {
       expect(familyOf(value), value).toBeUndefined()
     }

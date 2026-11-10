@@ -74,11 +74,11 @@ export function withoutSuffix(value: string): string {
 }
 
 // The family is a word of the ID between hyphens: `claude-opus-5-5`, `claude-3-5-haiku-latest`.
-// A version before the family can have a dot as its minor separator: `claude-3.5-sonnet`. This is
-// the gateway form that `modelVersionOf` reads.
 // A provider ID embeds it: `us.anthropic.claude-opus-4-8`. The page says that a custom ID that
 // embeds a family name "counts as a specific entry for that family". The rule treats a provider ID
 // the same way. A letter or a digit before `claude-` is part of another word.
+// A version before the family can have a dot as its minor separator: `claude-3.5-sonnet`. This is
+// a gateway form, and no Claude Code docs page shows it. `modelVersionOf` also reads it.
 const ID_FAMILY = new RegExp(
   `(?:^|[^a-z0-9])claude-(?:\\d+(?:\\.\\d+)?-)*(${FAMILY_ALIASES.join('|')})(?:-|[^a-z0-9]|$)`,
 )

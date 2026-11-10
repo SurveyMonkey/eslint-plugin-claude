@@ -233,6 +233,7 @@ describe(`${name}: a family alias with a same-family ID`, () => {
     expect(ids({ availableModels: ['sonnet', 'claude-3-5-sonnet'] })).toEqual(['narrowed'])
     expect(ids({ availableModels: ['sonnet', 'claude-3.5-sonnet'] })).toEqual(['narrowed'])
     expect(ids({ availableModels: ['sonnet', 'my-gw/claude-3.5-sonnet'] })).toEqual(['narrowed'])
+    expect(ids({ availableModels: ['sonnet', 'claude-3.5-haiku'] })).toEqual([])
   })
 
   it('reports one alias entry once, and each narrowed family', () => {
