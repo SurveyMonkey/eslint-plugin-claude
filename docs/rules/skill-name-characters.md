@@ -54,8 +54,8 @@ rule extends the samples to these two classes:
 
 The rule refuses each character of the two classes, also one that the probe did not try. The
 probe also showed that Claude Code takes these characters near the classes: U+2801, U+FFFD,
-U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule reports no
-character outside the classes above.
+U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. The rule
+reports no character outside the classes above and the 2.1.322 rules below.
 
 Claude Code 2.1.319 took some characters of the hidden class in a probe. Revision 38 of UAX #31
 gives contexts for some of them.[^uax31-38] Revision 39 and later do not hold these contexts.
@@ -96,7 +96,30 @@ rule, set from probes of Claude Code 2.1.319.
 Claude Code refused a joiner outside these cases. Examples are U+200C between two Latin letters,
 U+200D after a Tamil virama, and U+200C after a Sinhala virama. Others are a joiner before a Latin
 letter, a joiner between two scripts and U+200D between Arabic letters. It also refused a red
-heart with U+FE0E. The rule reports each one.
+heart with U+FE0E. The rule reports each one. A probe of Claude Code 2.1.322 gave the same result
+for each joiner and emoji case above.
+
+A probe of Claude Code 2.1.322 gives the rules below. The probe made a project skill folder for
+each of a set of names. No public source gives these limits, so each one is a choice of the rule.
+
+- U+20E3 (combining enclosing keycap) outside a keycap emoji of the RGI set. The probe refused
+  it after a letter, a digit or a mark, and at the start. It took U+20DD, U+20DE, U+20DF,
+  U+20E0, U+20E2 and U+20E4 after `a`.
+- A lone surrogate in a frontmatter `name`, such as the YAML escape `"\uD800"`. Claude Code
+  could not read such a value. It then ignored all of the frontmatter, and the skill loaded with
+  its folder name. A folder name cannot hold a lone surrogate.
+- A combining mark (`M`) with no letter or number (`L` or `N`) before it. The probe refused a
+  mark at the start. It also refused a mark after a space, a hyphen, `.`, `_`, `:`, `!`, `$`,
+  `^`, U+FFFD or an emoji. The rule counts a Hangul vowel or final jamo as a mark.
+- More than eight marks after one letter or number. The probe took eight, and refused nine.
+- A mark outside the Inherited script, after a character of the Latin or the Common script. The
+  probe refused U+05B8 (Hebrew), U+093F (Devanagari) and U+1161 (Hangul) after `a`. It refused
+  U+093F after `1` and after U+00B2. It took each probed Inherited mark after `a`, such as U+0301
+  and U+064B. It also took each probed mark after a letter that is not Latin, such as U+093F
+  after a Bengali letter.
+
+The rule reports the first refused character. A joiner is not a letter, so the rule also refuses
+a mark after a refused joiner. The message then escapes both.
 
 The rule reports these cases:
 
@@ -113,6 +136,9 @@ space cannot hide in the text.
 The rule does not report a folder in the `skills/` directory of a plugin. Claude Code changes the
 characters to hyphens in the command name of such a skill, and the skill loads.[^characters] It
 still reports the `name` field of a plugin skill, and the file or folder name of a plugin command.
+One exception is a lone surrogate in the `name` of a plugin `skills/` folder.
+`claude plugin validate` 2.1.322 fails it as a YAML parse error, so the rule does not report that
+`name`. The tool does not read a plugin-root `SKILL.md`, so the rule reports its `name`.
 
 The docs give examples, not a full list. The rule does not read the `name` field of a command
 file. A command gets its name from its path, and the docs give the `name` effect for a skill only.

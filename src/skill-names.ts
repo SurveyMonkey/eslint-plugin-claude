@@ -1,12 +1,13 @@
 // This module holds the name checks of the skill rules. It also holds the text that
 // shows a name in a message. Each skill rule that prints a name uses `escapeName`.
 
-/** Each class of characters that the rule refuses, with the text of the message.
+/** Each class of characters that the rule refuses, with the text of the message. `markKind`
+ *  gives the faults of a combining mark.
  *  The docs name the first seven classes (skills, "Characters a skill name can't hold").
  *  U+FEFF has the Unicode name ZERO WIDTH NO-BREAK SPACE, so this module counts it
  *  as a zero-width space. `kindAt` checks a plain space before it reads the classes.
  *
- *  The last two classes come from a probe of Claude Code 2.1.319. The docs give no list for
+ *  The next two classes come from a probe of Claude Code 2.1.319. The docs give no list for
  *  them. The debug log of the probe says that a name may not hold "hidden, direction-changing
  *  or blank-like characters". Claude Code refused each of these in a project skill folder:
  *  - Each probed `Cf` character: U+00AD, U+200C, U+200D, U+2060, U+2061, U+2062, U+2063,
@@ -18,9 +19,15 @@
  *  - Six blank-like characters that are in neither class: U+2800, U+FFFC, U+1D159, U+13441,
  *    U+13442 and U+16FE4.
  *  Claude Code took these characters near the classes: U+2801, U+FFFD, U+2423, U+2588,
- *  U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. The rule refuses each `Cf` and
+ *  U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. The rule refuses each `Cf` and
  *  `Default_Ignorable_Code_Point` character, also one that the probe did not try. This is a
- *  choice of the rule. `takenAt` gives the characters of the classes that Claude Code took. */
+ *  choice of the rule. `takenAt` gives the characters of the classes that Claude Code took.
+ *
+ *  The last two classes come from a probe of Claude Code 2.1.322:
+ *  - U+20E3. Claude Code refused it after a letter, a digit, a mark and at the start. It took
+ *    U+20E3 in a keycap emoji, and took U+20DD, U+20DE, U+20DF, U+20E0, U+20E2 and U+20E4.
+ *  - A lone surrogate. Claude Code could not read a `name` with the YAML escape `\uD800` or
+ *    `\uDC00`. It then ignored all of the frontmatter. A folder name cannot hold one. */
 const CLASSES: [RegExp, string][] = [
   [/[\u{200B}\u{FEFF}]/u, 'a zero-width space'],
   [/\p{Cc}/u, 'a control character'],
@@ -31,6 +38,8 @@ const CLASSES: [RegExp, string][] = [
   [/[<>]/u, 'an angle bracket'],
   [/[\p{Cf}\p{Default_Ignorable_Code_Point}]/u, 'a hidden character'],
   [/[\u{2800}\u{FFFC}\u{1D159}\u{13441}\u{13442}\u{16FE4}]/u, 'a blank-like character'],
+  [/\u{20E3}/u, 'a keycap mark outside a keycap emoji'],
+  [/\p{Cs}/u, 'a lone surrogate'],
 ]
 
 /** An emoji sequence of the RGI emoji set (UTS #51, ED-27), such as a family of people joined
@@ -39,10 +48,15 @@ const CLASSES: [RegExp, string][] = [
 // biome-ignore lint/complexity/useRegexLiterals: tsc refuses a `v` literal for es2022.
 const EMOJI = new RegExp('\\p{RGI_Emoji}', 'gv')
 
-/** A mark or a Hangul jamo after an emoji sequence. The rule then refuses the sequence. No public
- *  source gives this limit. It is a choice of the rule, set from probes of Claude Code 2.1.319.
- *  The probes refused a red heart with U+FE0F before U+0301, and before U+1161. */
-const AFTER_EMOJI = /^[\p{M}\u{1160}-\u{11FF}\u{D7B0}-\u{D7FF}]/u
+/** A combining mark (`M`), or a Hangul vowel or final jamo. The rule counts each one as a mark.
+ *  The rule refuses an emoji sequence before a mark. No public source gives this limit. It is a
+ *  choice of the rule, set from probes of Claude Code 2.1.319. The probes refused a red heart with
+ *  U+FE0F before U+0301, and before U+1161. */
+const MARK = /^[\p{M}\u{1160}-\u{11FF}\u{D7B0}-\u{D7FF}]/u
+
+/** The most marks in a row that the rule takes. A probe of Claude Code 2.1.322 took eight marks
+ *  after one letter, and refused nine. */
+const MARK_LIMIT = 8
 
 /** A skin tone. The rule refuses it after U+FE0F. This is a choice of the rule, set from a probe
  *  of Claude Code 2.1.319. It refused a name with U+261D, U+FE0F and U+1F3FB. */
@@ -112,7 +126,7 @@ const SCRIPT_JOINER = new RegExp(
 /** True when the rule refuses the emoji sequence `sequence` before the text `rest`. A mark or a
  *  Hangul jamo after it is a fault, and so is a skin tone after U+FE0F. */
 function refusedBefore(sequence: string, rest: string): boolean {
-  return AFTER_EMOJI.test(rest) || (sequence.endsWith('\u{FE0F}') && TONE.test(rest))
+  return MARK.test(rest) || (sequence.endsWith('\u{FE0F}') && TONE.test(rest))
 }
 
 /** The indexes of `chars` that the rule takes in an emoji sequence or in a script joiner. Some of
@@ -140,16 +154,52 @@ function takenAt(chars: string[]): Set<number> {
   return taken
 }
 
+/** The fault of the mark at `index` of `chars`, or undefined. No public source gives these
+ *  limits. They are choices of the rule, set from probes of Claude Code 2.1.322. The base is the
+ *  character before the run of marks.
+ *  - The base must be a letter or a number (`L` or `N`). The probes refused a mark at the start.
+ *    They also refused a mark after a space, `-`, `.`, `_`, `:`, `!`, `$`, `^`, U+FFFD and U+1F600.
+ *  - A run of more than eight marks is a fault. See `MARK_LIMIT`.
+ *  - A mark outside the Inherited script is a fault after a base of the Latin or the Common
+ *    script. The probes refused U+05B8, U+093F, U+0483, U+1161 and U+1D165 after `a`. They
+ *    refused U+093F after `1`, U+00B2 and U+FF41. They took each Inherited mark after `a`, such
+ *    as U+0301 and U+064B. They took each probed mark after a letter that is not Latin. Examples
+ *    are U+093F after U+0995, and U+0483 after U+03B1. */
+function markKind(chars: string[], index: number): string | undefined {
+  const char = chars[index] as string
+  if (!MARK.test(char)) {
+    return undefined
+  }
+  // The walk looks back at most `MARK_LIMIT` + 1 marks, so a long run costs linear time in all.
+  // From the eleventh mark of a run, the walk stops on a mark, so the base check refuses it.
+  // The tenth mark gets the limit check. `firstFault` gives the ninth mark first.
+  let start = index
+  while (start > 0 && index - start <= MARK_LIMIT && MARK.test(chars[start - 1] as string)) {
+    start--
+  }
+  const base = chars[start - 1] ?? ''
+  if (!/^[\p{L}\p{N}]$/u.test(base)) {
+    return 'a combining mark with no letter or number before it'
+  }
+  if (index - start >= MARK_LIMIT) {
+    return 'more than eight combining marks in a row'
+  }
+  return /^[\p{sc=Latin}\p{sc=Common}]$/u.test(base) && !/^\p{sc=Inherited}$/u.test(char)
+    ? 'a combining mark outside the Inherited script, after a Latin or Common character'
+    : undefined
+}
+
 /** The text of the class of the character at `index` of `chars`, or
  *  undefined when Claude Code takes the character. A plain space is a fault
- *  at the start or the end, or before another space. `taken` is the result of `takenAt`. */
+ *  at the start or the end, or before another space. A mark is a fault in the
+ *  cases of `markKind`. `taken` is the result of `takenAt`. */
 function kindAt(chars: string[], index: number, taken: Set<number>): string | undefined {
   const char = chars[index] as string
   if (taken.has(index)) {
     return undefined
   }
   if (char !== ' ') {
-    return CLASSES.find(([pattern]) => pattern.test(char))?.[1]
+    return CLASSES.find(([pattern]) => pattern.test(char))?.[1] ?? markKind(chars, index)
   }
   return index === 0 || index === chars.length - 1 || chars[index + 1] === ' '
     ? 'a space at the start or end, or next to another space'

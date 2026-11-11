@@ -47,6 +47,11 @@ const SPACE = 'a space at the start or end, or next to another space'
 const ANGLE = 'an angle bracket'
 const HIDDEN = 'a hidden character'
 const BLANK_LIKE = 'a blank-like character'
+const KEYCAP = 'a keycap mark outside a keycap emoji'
+const NO_BASE = 'a combining mark with no letter or number before it'
+const TOO_MANY = 'more than eight combining marks in a row'
+const SCRIPT = 'a combining mark outside the Inherited script, after a Latin or Common character'
+const SURROGATE = 'a lone surrogate'
 const BAD: [name: string, code: string, kind: string][] = [
   ['a​b', 'U+200B', ZERO_WIDTH],
   ['a﻿b', 'U+FEFF', ZERO_WIDTH],
@@ -115,13 +120,22 @@ const BAD: [name: string, code: string, kind: string][] = [
   // Claude Code 2.1.319 refused U+200C after an alef, and U+FE0F before a skin tone.
   ['\u0627\u200C\u0628', 'U+200C', HIDDEN],
   ['x\u261D\uFE0F\u{1F3FB}y', 'U+FE0F', HIDDEN],
+  // Claude Code 2.1.322 refused a joiner before U+0958.
+  ['\u0915\u094D\u200D\u0958', 'U+200D', HIDDEN],
+  // Claude Code 2.1.322 refused U+20E3 outside a keycap emoji. It refused a mark at the start and
+  // after a hyphen, and a mark of the Hebrew script after a Latin letter.
+  ['a\u20E3b', 'U+20E3', KEYCAP],
+  ['x1\u20E3y', 'U+20E3', KEYCAP],
+  ['\u0301ab', 'U+0301', NO_BASE],
+  ['a-\u0301b', 'U+0301', NO_BASE],
+  ['a\u05B8b', 'U+05B8', SCRIPT],
 ]
 
 // Names with no character of the classes of the rule. They hold one plain space between words, or
 // letters of other scripts. Claude Code 2.1.319 took a character near each refused class: U+2801,
-// U+FFFD, U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301, U+05D0 and U+1F600. It also took an
-// emoji sequence with U+200D, U+FE0F or tag characters, and a joiner in a Devanagari, Bengali,
-// Sinhala or Arabic word.
+// U+FFFD, U+2423, U+2588, U+1D158, U+1D15A, U+2FFF, U+0301 after `x`, U+05D0 and U+1F600. It
+// also took an emoji sequence with U+200D, U+FE0F or tag characters, and a joiner in a
+// Devanagari, Bengali, Sinhala or Arabic word.
 const GOOD = [
   'deploy',
   'deploy app',
@@ -148,6 +162,15 @@ const GOOD = [
   '\u0DA4\u0DCA\u200D\u0DBA',
   '\u0628\u200C\u0628',
   '\u0628\u064E\u200C\u0628',
+  // Claude Code 2.1.322 took these marks: eight in a row, U+0301 after a digit, U+20DD, a keycap
+  // of `#`, and a mark after a letter of the same script or of another script.
+  `a${'\u0301'.repeat(8)}b`,
+  'a1\u0301b',
+  'a\u20DDb',
+  'x#\uFE0F\u20E3y',
+  '\u0430\u0483b',
+  '\u0995\u093Cb',
+  '\uAC00\u11A8b',
 ]
 
 // Names at and over the limit of 256 characters. A file or folder name over 255 bytes cannot be
@@ -192,6 +215,10 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     named('\u{1F600}'.repeat(LIMIT)),
     // Claude Code changes a plugin skill folder name, so its length is not a fault. The `name` is.
     { code: '# S\n', filename: path.join(plugin, 'skills', long(LIMIT + 1), 'SKILL.md') },
+    // `claude plugin validate` 2.1.322 fails a lone surrogate in the `name` of a plugin
+    // `skills/` folder, as a YAML parse error. The rule then makes no report on that `name`.
+    named('a\uD800b', path.join(plugin, 'skills', 's', 'SKILL.md')),
+    named(`<${long(LIMIT)}\uDC00`, path.join(plugin, 'skills', 's', 'SKILL.md')),
     // A command file has no `name` that counts.
     named(long(LIMIT + 1), commandAt('c.md')),
     // Not a skill or command file.
@@ -240,6 +267,66 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
         },
       ],
     })),
+    // Claude Code 2.1.322 refused a joiner before a vowel sign. The joiner is not a letter, so the
+    // vowel sign is a fault too, and the message escapes both.
+    {
+      code: '# S\n',
+      filename: skillIn('\u0915\u094D\u200D\u093F'),
+      errors: [
+        {
+          messageId: 'folder',
+          data: { name: '\u0915\u094D<U+200D><U+093F>', ...at('U+200D', HIDDEN) },
+        },
+      ],
+    },
+    // The message escapes only the ninth mark. Claude Code 2.1.322 took eight and refused nine.
+    {
+      code: '# S\n',
+      filename: skillIn(`a${'\u0301'.repeat(9)}b`),
+      errors: [
+        {
+          messageId: 'folder',
+          data: { name: `a${'\u0301'.repeat(8)}<U+0301>b`, ...at('U+0301', TOO_MANY) },
+        },
+      ],
+    },
+    // A YAML escape can put a lone surrogate in a `name`, but a folder name cannot hold one. The
+    // YAML reader of Claude Code 2.1.322 did not read such a `name`, and ignored the frontmatter.
+    {
+      ...named('a\uD800b'),
+      errors: [
+        { messageId: 'name', data: { name: 'a<U+D800>b', ...at('U+D800', SURROGATE) }, line: 2 },
+      ],
+    },
+    {
+      ...named('a\uDC00b'),
+      errors: [
+        { messageId: 'name', data: { name: 'a<U+DC00>b', ...at('U+DC00', SURROGATE) }, line: 2 },
+      ],
+    },
+    // Claude Code 2.1.322 also did not read a `name` with U+DBFF or U+DFFF.
+    {
+      ...named('a\uDBFFb'),
+      errors: [
+        { messageId: 'name', data: { name: 'a<U+DBFF>b', ...at('U+DBFF', SURROGATE) }, line: 2 },
+      ],
+    },
+    {
+      ...named('a\uDFFFb'),
+      errors: [
+        { messageId: 'name', data: { name: 'a<U+DFFF>b', ...at('U+DFFF', SURROGATE) }, line: 2 },
+      ],
+    },
+    {
+      ...named('ab\uDC00\uD800'),
+      errors: [
+        {
+          messageId: 'name',
+          data: { name: 'ab<U+DC00><U+D800>', ...at('U+DC00', SURROGATE) },
+          line: 2,
+        },
+      ],
+    },
     // The report on a `name` is on its value.
     {
       code: '---\nname: a<b\n---\n',
@@ -340,6 +427,17 @@ markdownTester.run('skill-name-characters', ruleOf('skill-name-characters'), {
     {
       ...named('a​b', path.join(plugin, 'SKILL.md')),
       errors: [{ messageId: 'name', data: { name: 'a<U+200B>b', ...at('U+200B', ZERO_WIDTH) } }],
+    },
+    // A valid surrogate pair is not a lone surrogate, so the rule reports the `<` after it.
+    {
+      ...named('\u{1F600}<b', path.join(plugin, 'skills', 's', 'SKILL.md')),
+      errors: [{ messageId: 'name', data: { name: '\u{1F600}<U+003C>b', ...at('U+003C', ANGLE) } }],
+    },
+    // `claude plugin validate` 2.1.322 does not read a plugin-root `SKILL.md`. So the rule
+    // reports a lone surrogate in its `name`.
+    {
+      ...named('a\uD800b', path.join(plugin, 'SKILL.md')),
+      errors: [{ messageId: 'name', data: { name: 'a<U+D800>b', ...at('U+D800', SURROGATE) } }],
     },
     // The message prints a refused character as its code point, in the three messages.
     {

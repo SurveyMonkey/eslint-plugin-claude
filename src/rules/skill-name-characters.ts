@@ -87,6 +87,11 @@ const rule: MarkdownRuleDefinition<{
         if (!fm || !field || typeof value !== 'string') {
           return
         }
+        // `claude plugin validate` 2.1.322 fails a lone surrogate in a plugin `skills/` folder, as
+        // a YAML parse error. It does not read a plugin-root `SKILL.md`, which has no folder name.
+        if (file.plugin && file.names.length > 0 && /\p{Cs}/u.test(value)) {
+          return
+        }
         const fault = firstFault(value)
         if (fault !== null) {
           context.report({
