@@ -459,6 +459,12 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     expect(ids(entry('./app/[ab]/[z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
   })
 
+  it('reads a hyphen right after a range as a plain character', () => {
+    expect(ids(entry('./app/[a-c-b]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[a-c-b-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[z--]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
   it('reports a negated set, because the rule reads the range and not the negation', () => {
     expect(ids(entry('./app/[!z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
     expect(ids(entry('./app/[^z-a]'), OLD_LINUX)).toEqual(['reversedRange'])

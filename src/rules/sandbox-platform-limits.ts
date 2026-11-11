@@ -1,8 +1,8 @@
 // Seven limits of the sandbox depend on the platform or on the Claude Code version
 // (docs/rules/sandbox-platform-limits.md). No file shows the platform of a team or the oldest
-// client that reads it. So each part has an option, and a part with no option makes no report:
-// `platforms` for the four platform parts, `minVersion` for the two version parts, and both
-// options for the part of a reversed range.
+// client that reads it. So each part needs an option, and a part with no option makes no report.
+// `platforms` turns on the four platform parts, and `minVersion` the two version parts. The part
+// of a reversed range needs both options.
 //   - On Linux and WSL2, only a trailing `/**` works in `allowWrite` and `denyWrite`. The paths of
 //     the `Edit` permission rules feed those lists, so the same limit applies to `*` and `?` there.
 //     A `[` in those lists is part of a real directory name. The `/sandbox` warning names no `[` in
@@ -10,12 +10,12 @@
 //   - On Linux and WSL2, a wildcard in `denyRead` or `allowRead` works only after the first
 //     directory name of the full path. So `/**/*.pem` covers nothing.
 //   - Linux and WSL2 ignore `allowUnixSockets`.
-//   - Before v2.1.304, sandboxed commands on Linux and WSL2 failed to start while `denyRead` or
-//     `allowRead` held a bracket expression with a reversed range, such as `[user-id]`.
-//   - Before v2.1.224, a trailing `/` on a `denyRead` or `denyWrite` entry went to the sandbox.
-//   - Before v2.1.229, a bracketed IPv6 entry of a domain list or a `WebFetch` rule is not read.
 //   - `failIfUnavailable: true` stops Claude Code at startup on native Windows. The rule does not
 //     check `sandbox.enabled` for this part: the docs say Claude Code does not start there.
+//   - Before v2.1.224, a trailing `/` on a `denyRead` or `denyWrite` entry went to the sandbox.
+//   - Before v2.1.229, a bracketed IPv6 entry of a domain list or a `WebFetch` rule is not read.
+//   - Before v2.1.304, sandboxed commands on Linux and WSL2 failed to start with a reversed range
+//     in brackets, such as `[user-id]`, in `denyRead` or `allowRead`.
 // The part for WSL1 is not checked: the value `wsl` of `platforms` means WSL2, the only WSL
 // that the sandbox supports.
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -81,11 +81,13 @@ interface Item {
   escaped: boolean
 }
 
-/** True when `path` holds a bracket expression with a reversed range: a `-` between two
- *  characters, where the left character has a higher code point than the right one, as in
- *  `[user-id]` (`r` is after `i`). A `\` escapes the next character, so `\[` opens no expression.
- *  A `-` first or last is a plain character. A leading `!` or `^` is not part of the set, and a
- *  range inside a larger set counts. An expression with no closing `]` is plain text. */
+/** True when `path` holds a bracket expression with a reversed range. In such a range, the
+ *  character before the `-` has a higher code point than the character after it, as in
+ *  `[user-id]`. A `\` escapes the next character, so `\[` opens no expression. A `-` first or
+ *  last is a plain character. A `!` or `^` at the start is not part of the set. A range inside a
+ *  larger set counts. A `-` right after a range is a plain character, so `[a-c-b]` holds no
+ *  reversed range. A `]` right after the `[` closes the set. An expression with no closing `]`
+ *  is plain text. */
 function hasReversedRange(path: string): boolean {
   const chars = Array.from(path)
   for (let at = 0; at < chars.length; at++) {
@@ -111,6 +113,8 @@ function hasReversedRange(path: string): boolean {
           if ((left.char.codePointAt(0) as number) > (right.char.codePointAt(0) as number)) {
             return true
           }
+          // The next range starts after the right end of this one.
+          item += 2
         }
       }
       at = end
