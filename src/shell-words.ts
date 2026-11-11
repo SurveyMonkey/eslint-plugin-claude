@@ -219,8 +219,16 @@ export function scanCommands(line: string): Command[] {
   // The results of `braceBeforeParen` on this line. Each later scan uses them again.
   const known = new Map<number, boolean>()
   let tickExpansions: number[] = []
+  // True when a `case` word starts a command at this level, and no `esac` word ended it. Then the
+  // next `)` can be the `)` of a pattern, so the scan after it starts with no open plain
+  // parenthesis. A parenthesis starts a new level, and keeps the value of the outer level.
+  let inCase = false
+  const outerCase: boolean[] = []
   const endWord = () => {
     if (open) {
+      if (words.length === 0) {
+        inCase = word === 'case' || (inCase && word !== 'esac')
+      }
       words.push(word)
       word = ''
       open = false
@@ -310,17 +318,23 @@ export function scanCommands(line: string): Command[] {
       substitutions += line.charAt(i - 1) === '$' ? 1 : 0
       outer.push(expansions)
       expansions = []
+      outerCase.push(inCase)
+      inCase = false
     } else if (char === ')') {
       endCommand()
+      const pattern = inCase
+      inCase = outerCase.pop() === true
       const before = levels.pop()
       substitutions -= before === '$' ? 1 : 0
       closed = before === '$' || before === '<' || before === '>'
       const frame = outer.pop() ?? []
       // When `frame` is empty, the result is empty. So only a `)` in an open expansion starts the
       // scan, which can read to the end of the line. The scan starts with the open plain
-      // parentheses of the inner expansion.
+      // parentheses of the inner expansion. After the `)` of a `case` pattern, a plain parenthesis
+      // can hide the `)` of the substitution, so the scan starts with none.
       expansions =
-        frame.length > 0 && braceBeforeParen(line, i + 1, frame.at(-1) as number, known)
+        frame.length > 0 &&
+        braceBeforeParen(line, i + 1, pattern ? 0 : (frame.at(-1) as number), known)
           ? frame
           : []
     } else if (char === '`') {

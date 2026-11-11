@@ -863,6 +863,35 @@ describe('scanCommands', () => {
     }
   })
 
+  it(`reads the \`)\` of a \`case\` pattern in a plain parenthesis of a \${...} expansion`, () => {
+    // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. The `(` is open at the `$(`, `<(`
+    // or `${b:-$(`. bash 3.2.57 refuses the `case` pattern in the expansion.
+    for (const text of [
+      `echo \${x:-( $(case a in a) echo RAN;; esac)}; echo hi`,
+      `echo \${x:-( $(case a in a) echo RAN;; esac) \${y} )}; echo hi`,
+      `cat \${x:-( <(case a in a) echo RAN;; esac) \${y} )}; echo hi`,
+      `echo \${x:-( ( $(case a in a) echo RAN;; esac) )}; echo hi`,
+      `echo \${x:-) ( $(case a in a) echo RAN;; esac) \${y} )}; echo hi`,
+      `echo \${a:-( \${b:-$(case a in a) echo RAN;; esac)} )}; echo hi`,
+      `echo \${x:-$(cat <<'E'\n\${b:-$(y) ( (\nE\ncase a in a) echo RAN;; esac)}; echo hi`,
+    ]) {
+      const commands = commandsOf(text)
+      expect(commands, text).toContainEqual(['echo', 'RAN'])
+      expect(commands.at(-1), text).toEqual(['echo', 'hi'])
+    }
+    // bash 5.3.9 and 3.2.57 print `( RAN ) #c`, then `hi`. The `esac` ends the `case`, so the `)`
+    // after it keeps the `(` open.
+    expect(commandsOf(`echo \${a:-( $(case a in (a) echo RAN;; esac) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['case', 'a', 'in'],
+      ['a'],
+      ['echo', 'RAN'],
+      ['esac'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+  })
+
   it('reads a line of many substitutions out of an expansion in linear time', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)
@@ -878,7 +907,8 @@ describe('scanCommands', () => {
   })
 
   it(`reads many substitutions in a plain parenthesis pair of a \${...} expansion in linear time`, () => {
-    // Each scan starts with one open plain parenthesis. `known` holds the depth with the index.
+    // Each scan starts with one open plain parenthesis. `known` also holds the result of a scan at
+    // that depth.
     // The first command, 8000 `a`, 7999 `$`, ` ) #c}` and `echo hi`.
     const start = Date.now()
     expect(scanCommands(`echo \${a:-( ${'$(a)'.repeat(8000)} ) #c}; echo hi`)).toHaveLength(16_002)
