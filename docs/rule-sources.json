@@ -3721,6 +3721,13 @@
       "hash": "e5ffd38ff97736c7b598a74a0c079bbf1b50742c7336ecce1c89daf371ca2ae9"
     }
   ],
+  "permissions-block-writes-false": [
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.blockWritesOutsideWorkingDirectories",
+      "hash": "5d7f116e61c3debed653fad4f8ae218562f9840f06816c58d49c0e55ad58d364"
+    }
+  ],
   "permissions-bypass-mode-committed": [
     {
       "url": "https://code.claude.com/docs/en/settings-reference",

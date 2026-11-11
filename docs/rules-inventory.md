@@ -23,14 +23,14 @@ with fixtures that show it reports and stays silent when it must. Its ID in a co
 
 ## Summary
 
-- **460 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
-  and not-built rows. 343 rules go in `recommended`: 205 at `error` and 138 at
+- **461 candidate rules** in 9 groups. Each count in this Summary leaves out the dropped, merged
+  and not-built rows. 344 rules go in `recommended`: 206 at `error` and 138 at
   `warn`. 117 rules ship `off`, and `strict` turns them on at `warn`.
-- **Silent failure is the largest category.** 144 rules have the category `no-op`. The file loads,
+- **Silent failure is the largest category.** 145 rules have the category `no-op`. The file loads,
   but Claude Code ignores a key, a hook or a whole file with no error. 77 more rules catch a
   file that fails to load. A lint rule is the only feedback for most of these.
 - **`claude plugin validate` covers little of this.** 16 rules are `partial`: validate reports
-  some of their cases. The other 444 it does not report at all. Validate runs only on plugin and
+  some of their cases. The other 445 it does not report at all. Validate runs only on plugin and
   marketplace directories. It does not read `.claude/` in a project, settings, `.mcp.json`,
   `.lsp.json` or CLAUDE.md.
 - **Every rule cites the docs.** Each row links to the page and heading that source it.
@@ -120,7 +120,7 @@ It is in the Subagents and output styles group.
 | Category | `meta.type` | Meaning | Rules |
 |----------|-------------|---------|-------|
 | `load` | `problem` | The file or component fails to load, or Claude Code shows an error. | 77 |
-| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 144 |
+| `no-op` | `problem` | The config loads, but Claude Code ignores it with no error. | 145 |
 | `security` | `problem` | Committed config that grants access, runs a command or leaks a secret. | 46 |
 | `consistency` | `problem` | Two files or entries disagree, collide or shadow each other. | 33 |
 | `portability` | `problem` | The config fails on one OS, one version range or with one other setting. | 41 |
@@ -138,7 +138,7 @@ A `limit` rule with a number takes it as an optional rule option, with the docs 
   [Claude Code docs](https://code.claude.com/docs), for any team. A rule goes here only when the
   Claude Code docs are its source.
 - `strict` extends `recommended`, then turns on at `warn` each rule that is still off. So every
-  one of the 460 rules is on. A rule keeps its `recommended` severity where one is set. Use
+  one of the 461 rules is on. A rule keeps its `recommended` severity where one is set. Use
   `strict` to test the full set, not as a CI gate.
 
 A rule outside `recommended` ships `off`, and only `strict` turns it on. The Preset column in
@@ -175,11 +175,11 @@ A few rules differ from the table on purpose. Each one says why in its group's n
 | Marketplace manifest | 25 | 13 | 3 | 41 |
 | CLAUDE.md, rules and memory | 12 | 10 | 16 | 38 |
 | Settings | 18 | 19 | 15 | 52 |
-| Permissions and sandbox | 37 | 20 | 22 | 79 |
+| Permissions and sandbox | 38 | 20 | 22 | 80 |
 | MCP and LSP servers | 34 | 11 | 11 | 56 |
-| **Total** | **205** | **138** | **117** | **460** |
+| **Total** | **206** | **138** | **117** | **461** |
 
-By severity, 205 rules are `error` and 255 are `warn`: the 138 `recommended` `warn` rules and
+By severity, 206 rules are `error` and 255 are `warn`: the 138 `recommended` `warn` rules and
 the 117 `off` rules that `strict` turns on at `warn`.
 
 The `Validate` column in each table says whether `claude plugin validate` already reports part
@@ -835,7 +835,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 ### Permissions and sandbox
 
-Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 79 rules: 57 in `recommended` (37 error, 20 warn) and 22 `off`.
+Rules for `permissions.*`, `disableAutoMode`, `ignorePatterns`, `autoMode`, and `sandbox.*` in any `.claude/settings*.json` or committed user or managed settings file, plus the shared permission-rule grammar. 80 rules: 58 in `recommended` (38 error, 20 warn) and 22 `off`.
 
 The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permissions-tool-name-glob`, `permissions-specifier-unsupported`, `permissions-path-rule-tool`, `permissions-param-rule`) also apply to the other places that hold a permission rule: skill `allowed-tools` (as an allow list) and `disallowed-tools` (as a deny list). `permissions-mcp-rule-parens` stays on settings files, because the docs state the skip for a settings file only (ruling 17). A managed settings file is a settings file. So the grammar rules, `permissions-mcp-rule-parens` and `permissions-skill-rule` also lint `managed-settings.json` and each `managed-settings.d/*.json` drop-in (round 11 ruling 3). They do not lint a hidden drop-in. The skills group has no separate syntax rule for `allowed-tools` (see Cross-group merges). `hooks-if-condition` runs the shared parser for hook `if` itself. Agent `tools` and `disallowedTools` are not permission rules: `tools` takes tool names, `Agent(type)` and `mcp__` patterns, and only `disallowedTools` takes a specifier, which still removes the whole tool [^sub-agents-restrict-which-tools-a-subagent-can-use]. So `agent-tools-known` owns both agent fields.
 
@@ -882,6 +882,7 @@ The grammar rules (`permissions-rule-syntax`, `permissions-unknown-tool`, `permi
 | `permissions-glob-grep-allow` | A bare `Glob` or `Grep` `allow` rule in a settings file does not restore those tools on macOS, Linux, or WSL. Windows is unaffected. The docs state this for every version. `Glob(*)` and `Grep(*)` count as bare rules, because `Bash(*)` is equivalent to `Bash` [^permissions-match-all-uses-of-a-tool]. Not checked: `Glob(path)` and `Grep(path)`, which `permissions-path-rule-tool` reports. It skips a rule that a bare `deny` or `ask` rule of the tool covers (`permissions-dead-allow`). | recommended | warn | portability | – | [^tools-reference-glob-tool-behavior] [^permissions-match-all-uses-of-a-tool] |
 | `permissions-additional-directories-path` | `additionalDirectories` entries are local paths: no UNC (`\\server\share`) or `/net/<host>` network paths, no NUL byte (the changelog, 2.1.251, says Claude Code skips the entry). Reads the text of the entry only (ADR 001, Decision 14). Not checked: `\\wsl$`, `\\wsl.localhost`, `\\?\` and `\\.\` paths, `//server/share`, a link that reaches a network location, and a `/net/<host>` path under the automount directory of a session, because the file cannot show them. | recommended | error | load | – | [^permissions-working-directories] [^errors-working-directory-is-a-network-path] [^changelog-claude-code-changelog] |
 | `permissions-block-reads-false` | `blockReadsOutsideWorkingDirectories: false` equals unset and cannot lift a `true` from another file. Reports the literal `false` in any file, on the value. A value that is not a Boolean is for `permissions-schema`. | recommended | error | no-op | – | [^settings-reference-permissions-blockreadsoutsideworkingdirectories] |
+| `permissions-block-writes-false` | `blockWritesOutsideWorkingDirectories: false` equals unset and cannot lift a `true` from another file. Reports the literal `false` in any file, on the value. A value that is not a Boolean is for `permissions-schema`. | recommended | error | no-op | – | [^settings-reference-permissions-blockwritesoutsideworkingdirectories] |
 | `permissions-legacy-tool-name` | Rules name `MultiEdit` (use `Edit`) or `Task` (renamed `Agent` in v2.1.63; `Task(...)` still works as an alias). The sub-agents page states the rename version. A client older than v2.1.63 has no `Agent` tool, so with `minVersion` below `2.1.63` the `Task` half gives no report (unset keeps it, because the current docs name `Agent`); the `MultiEdit` half always reports. Skips `MultiEdit(path)`, which `permissions-path-rule-tool` reports; only a bare `MultiEdit` and `MultiEdit(*)` get a report. `Bash(*)` is equivalent to `Bash` [^permissions-match-all-uses-of-a-tool]. No docs page shows a parameter form. Settings files and managed files only; the `tools` field of an agent is for `agent-tools-known`. | recommended | warn | deprecated | – | [^permissions-what-read-and-edit-rules-cover] [^permissions-writepath-globpath-and-greppath-rules-dont-match] [^permissions-match-all-uses-of-a-tool] [^sub-agents-restrict-which-subagents-can-be-spawned] |
 | `permissions-ignore-patterns` | Top-level `ignorePatterns` is deprecated: `permissions.deny` replaces it (settings reference, "permissions.deny"). The rule reports the key at the top level, for any value, in a project, local or managed file; `settings-schema` skips the key (mid-round ruling 19). The docs do not say that Claude Code ignores the key, so the message says deprecated and no more. It names `permissions.deny` `Read` rules and gives no path, because the anchor of a path differs by source. It skips a hidden drop-in. | recommended | warn | deprecated | – | [^settings-reference-permissions-deny] |
 | `permissions-auto-mode-project-ignored` | Not built. `settings-key-scope` already reports `autoMode` and `autoMode.classifyAllShell` in `.claude/settings.json` and `.claude/settings.local.json` (`src/data/settings-keys.ts` lists both as User or managed), so a rule here would report the same line twice. The docs say that the classifier does not read `autoMode` from the two project files. A second rule can take over the key only with a `reportedBy` entry in `src/data/settings-keys.ts` and a change to the tests of `settings-key-scope`. | recommended | error | no-op | – | [^settings-reference-automode] [^auto-mode-config-where-the-classifier-reads-configuration] [^changelog-claude-code-changelog] |
@@ -1602,6 +1603,7 @@ Other names a rule may contain:
 [^permissions-working-directories]: [Configure permissions: Working directories](https://code.claude.com/docs/en/permissions#working-directories)
 [^errors-working-directory-is-a-network-path]: [Error reference: Working directory is a network path](https://code.claude.com/docs/en/errors#working-directory-is-a-network-path)
 [^settings-reference-permissions-blockreadsoutsideworkingdirectories]: [All settings: permissions.blockReadsOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissionsblockreadsoutsideworkingdirectories)
+[^settings-reference-permissions-blockwritesoutsideworkingdirectories]: [All settings: permissions.blockWritesOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissionsblockwritesoutsideworkingdirectories)
 [^settings-reference-permissions-denyinsteadofprompting]: [All settings: permissions.denyInsteadOfPrompting](https://code.claude.com/docs/en/settings-reference#permissionsdenyinsteadofprompting)
 [^settings-reference-automode]: [All settings: autoMode](https://code.claude.com/docs/en/settings-reference#automode)
 [^auto-mode-config-where-the-classifier-reads-configuration]: [Configure auto mode: Where the classifier reads configuration](https://code.claude.com/docs/en/auto-mode-config#where-the-classifier-reads-configuration)

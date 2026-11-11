@@ -256,6 +256,7 @@ it('gives each rule a doc and a URL that names it', () => {
     'permissions-bash-stripped-wrapper',
     'permissions-bash-wildcard-before-subcommand',
     'permissions-block-reads-false',
+    'permissions-block-writes-false',
     'permissions-bypass-mode-committed',
     'permissions-cd-allowlist',
     'permissions-dead-allow',
