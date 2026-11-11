@@ -23,7 +23,9 @@ const env = (value: object) => obj({ env: value })
 // A credential that must never appear in a message.
 const SECRET = 'sk-ant-secret-0123456789'
 
-const VARIABLES = ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'CLAUDE_CODE_OAUTH_TOKEN']
+// The env vars page says to generate this one with `claude setup-token`. It has its own message.
+const OAUTH = 'CLAUDE_CODE_OAUTH_TOKEN'
+const VARIABLES = ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', OAUTH]
 
 jsonTester.run('settings-env-credential (valid)', rule, {
   valid: [
@@ -123,7 +125,7 @@ jsonTester.run('settings-env-credential (invalid)', rule, {
         filename,
         errors: [
           {
-            messageId: 'variable' as const,
+            messageId: (name === OAUTH ? 'oauthToken' : 'variable') as 'oauthToken' | 'variable',
             data: { name },
             line: 1,
             column: 19,
@@ -164,7 +166,28 @@ jsonTester.run('settings-env-credential (invalid)', rule, {
         errors: [{ messageId: 'header' as const, data: { header }, line: 1, column: 36 }],
       })),
     ),
-    // The text of each message. It names `apiKeyHelper`, and holds no value.
+    // The text of each message. A key or a header names `apiKeyHelper`. The OAuth token names
+    // `claude setup-token`. No message holds a value.
+    {
+      code: env({ CLAUDE_CODE_OAUTH_TOKEN: SECRET }),
+      filename: project,
+      errors: [
+        {
+          message:
+            'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token".',
+        },
+      ],
+    },
+    {
+      code: env({ ANTHROPIC_API_KEY: SECRET }),
+      filename: project,
+      errors: [
+        {
+          message:
+            'The "env" block sets "ANTHROPIC_API_KEY", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
+        },
+      ],
+    },
     {
       code: env({ ANTHROPIC_AUTH_TOKEN: SECRET }),
       filename: project,
@@ -201,7 +224,7 @@ jsonTester.run('settings-env-credential (invalid)', rule, {
       filename: project,
       errors: [
         { messageId: 'variable' as const },
-        { messageId: 'variable' as const },
+        { messageId: 'oauthToken' as const },
         { messageId: 'header' as const },
       ],
     },
@@ -236,14 +259,17 @@ describe('settings-env-credential message', () => {
     )
 
   it.each([
-    env({ ANTHROPIC_API_KEY: SECRET }),
-    env({ CLAUDE_CODE_OAUTH_TOKEN: SECRET }),
-    env({ ANTHROPIC_CUSTOM_HEADERS: `Authorization: Bearer ${SECRET}` }),
-  ])('never prints the value: %s', (code) => {
+    [env({ ANTHROPIC_API_KEY: SECRET }), 'apiKeyHelper'],
+    [env({ ANTHROPIC_AUTH_TOKEN: SECRET }), 'apiKeyHelper'],
+    [env({ CLAUDE_CODE_OAUTH_TOKEN: SECRET }), 'claude setup-token'],
+    [env({ ANTHROPIC_CUSTOM_HEADERS: `Authorization: Bearer ${SECRET}` }), 'apiKeyHelper'],
+  ])('never prints the value, and gives the advice: %s', (code, advice) => {
     const messages = lint(code)
     expect(messages).toHaveLength(1)
     expect(messages[0]?.message).not.toContain(SECRET)
     expect(messages[0]?.message).not.toContain('sk-ant')
-    expect(messages[0]?.message).toContain('apiKeyHelper')
+    expect(messages[0]?.message).toContain(advice)
+    // Only the OAuth token gets the other advice.
+    expect(messages[0]?.message.includes('apiKeyHelper')).toBe(advice === 'apiKeyHelper')
   })
 })

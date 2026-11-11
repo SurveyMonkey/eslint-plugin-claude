@@ -229,6 +229,13 @@ describe(`${name}: a family alias with a same-family ID`, () => {
     expect(ids({ availableModels: ['sonnet[1m]', 'claude-sonnet-4-5'] })).toEqual(['narrowed'])
   })
 
+  it('narrows with a dotted version-first ID, as with its hyphen form', () => {
+    expect(ids({ availableModels: ['sonnet', 'claude-3-5-sonnet'] })).toEqual(['narrowed'])
+    expect(ids({ availableModels: ['sonnet', 'claude-3.5-sonnet'] })).toEqual(['narrowed'])
+    expect(ids({ availableModels: ['sonnet', 'my-gw/claude-3.5-sonnet'] })).toEqual(['narrowed'])
+    expect(ids({ availableModels: ['sonnet', 'claude-3.5-haiku'] })).toEqual([])
+  })
+
   it('reports one alias entry once, and each narrowed family', () => {
     expect(
       ids({
@@ -386,6 +393,24 @@ describe(`${name}: ANTHROPIC_CUSTOM_MODEL_OPTION`, () => {
     expect(
       idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: custom }, availableModels: ['opus'] }),
     ).toEqual([])
+  })
+
+  it('is silent when a family alias covers a dotted version-first option', () => {
+    for (const option of ['claude-3-5-sonnet', 'claude-3.5-sonnet', 'my-gw/claude-3.5-sonnet']) {
+      expect(
+        idsManaged({ env: { ANTHROPIC_CUSTOM_MODEL_OPTION: option }, availableModels: ['sonnet'] }),
+        option,
+      ).toEqual([])
+    }
+  })
+
+  it('reports a family alias that is not the family of a dotted option', () => {
+    expect(
+      idsManaged({
+        env: { ANTHROPIC_CUSTOM_MODEL_OPTION: 'claude-3.5-sonnet' },
+        availableModels: ['opus'],
+      }),
+    ).toEqual(['customOption'])
   })
 
   it('reports an entry that is no prefix of the option, and a prefix inside a segment', () => {

@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-env-credential, which reports a credential in the env block of a settings file, ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, CLAUDE_CODE_OAUTH_TOKEN, or an Authorization or X-Api-Key line in ANTHROPIC_CUSTOM_HEADERS, and names apiKeyHelper.
+description: The ESLint rule claude/settings-env-credential, which reports a credential in the env block of a settings file, ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, CLAUDE_CODE_OAUTH_TOKEN, or an Authorization or X-Api-Key line in ANTHROPIC_CUSTOM_HEADERS, and names apiKeyHelper, or claude setup-token for the OAuth token.
 owner: brianespinosa
 created: 2026-10-08
 related_issues: [14]
@@ -27,6 +27,8 @@ generated:
 Values in `env` are plain text in the settings file, and they reach every subprocess that Claude
 Code starts.[^env] The settings reference says to use `apiKeyHelper` for an API credential.[^env]
 The helper runs a command and sends its output as the credential, so the file holds no secret.[^helper]
+For `CLAUDE_CODE_OAUTH_TOKEN`, the message says to generate a token with
+`claude setup-token`.[^vars]
 
 The rule reports an `env` block that sets one of these:
 
@@ -34,7 +36,7 @@ The rule reports an `env` block that sets one of these:
 | -------------------------- | -------------------------------------------------------------------------------------------------- |
 | `ANTHROPIC_API_KEY`        | An API key, sent as the `X-Api-Key` header[^vars]                                                  |
 | `ANTHROPIC_AUTH_TOKEN`     | A value for the `Authorization` header[^vars]                                                      |
-| `CLAUDE_CODE_OAUTH_TOKEN`  | An OAuth access token for claude.ai[^vars]                                                         |
+| `CLAUDE_CODE_OAUTH_TOKEN`  | An OAuth access token for claude.ai. Generate one with `claude setup-token`[^vars]                 |
 | `ANTHROPIC_CUSTOM_HEADERS` | `Name: Value` lines. The rule reports a line named `Authorization` or `X-Api-Key`[^vars][^managed] |
 
 A header line is a credential when its name is `Authorization` or `X-Api-Key`. The name is the

@@ -14,6 +14,10 @@ import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'settings-env-credential' as const
 
+// The env vars page says to generate this token with `claude setup-token`. `apiKeyHelper` gives an
+// API key, so this variable has its own message.
+const OAUTH_TOKEN_VAR = 'CLAUDE_CODE_OAUTH_TOKEN'
+
 /** The credential header that a `Name: Value` line of `value` names, if any. The first line
  *  that names one and has text after the colon counts. A header name is the text before the
  *  first colon. HTTP header names have no letter case, so the match has none. */
@@ -37,7 +41,10 @@ function credentialHeader(value: string): string | undefined {
   return undefined
 }
 
-const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'variable' | 'header' }> = {
+const rule: JSONRuleDefinition<{
+  RuleOptions: []
+  MessageIds: 'variable' | 'oauthToken' | 'header'
+}> = {
   meta: {
     type: 'problem',
     docs: {
@@ -48,6 +55,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'variable' | 'head
     messages: {
       variable:
         'The "env" block sets "{{name}}", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
+      oauthToken:
+        'The "env" block sets "CLAUDE_CODE_OAUTH_TOKEN", a credential, in a settings file. Generate a token with "claude setup-token".',
       header:
         'The "env" block sets "ANTHROPIC_CUSTOM_HEADERS" with the header "{{header}}", a credential, in a settings file. Use "apiKeyHelper" to get a credential at run time.',
     },
@@ -70,7 +79,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'variable' | 'head
             continue
           }
           if (CREDENTIAL_ENV_VARS.includes(variable) && value.value.trim() !== '') {
-            context.report({ node: member.name, messageId: 'variable', data: { name: variable } })
+            context.report(
+              variable === OAUTH_TOKEN_VAR
+                ? { node: member.name, messageId: 'oauthToken' }
+                : { node: member.name, messageId: 'variable', data: { name: variable } },
+            )
           } else if (variable === CUSTOM_HEADERS_VAR) {
             const header = credentialHeader(value.value)
             if (header !== undefined) {

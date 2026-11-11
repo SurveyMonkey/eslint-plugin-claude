@@ -54,6 +54,7 @@ const IDS = [
   'claude-fable-5-1',
   'claude-opus-4-6[1m]',
   'claude-sonnet-4-5',
+  'claude-3.5-sonnet',
 ]
 const BAD = [
   'gpt-5',
@@ -74,6 +75,8 @@ const PROVIDER = [
   'us.anthropic.claude-opus-4-8',
   'anthropic/claude-opus-4-8',
   'my-gateway/claude-opus-5-5',
+  'my-gw/claude-3-5-sonnet',
+  'my-gw/claude-3.5-sonnet',
   'claude-sonnet-4-5@20250929',
 ]
 
