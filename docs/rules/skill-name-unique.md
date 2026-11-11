@@ -76,14 +76,24 @@ folder, so such a `SKILL.md` gets no report. The skills in `skills/` still compa
 A folder in the `skills/` directory of a plugin, or a folder that a manifest `skills` path gives, is
 an exception. Claude Code loads it, and the refused characters become hyphens in the command
 name.[^characters] `skill-name-characters` does not report it. A plugin skill with a loaded `name`
-has that name. Without a loaded `name`, the rule compares the folder name with one hyphen in place
-of each refused character. The docs refuse a blank other than one plain space between words. The
-rule reads this as: a plain space next to another blank becomes a hyphen too. The rule puts in the
-hyphens before it removes the differences above. A plugin folder `a<b` and a plugin folder `a-b`
-give a report in each file. A plugin folder `a<U+0020><U+0020>b` or `a<U+00A0><U+0020>b` is `a--b`.
-The rule changes only the characters that `skill-name-characters` refuses, and each plain space next
-to another blank. The docs give no other mapping, so a plugin folder `a.b` and a plugin folder `a-b`
-give no report.
+has that name. Without a loaded `name`, the rule puts the hyphens in the folder name, and then
+compares it. The rule puts in the hyphens before it removes the differences above.
+
+The docs name only the refused characters. A probe of Claude Code 2.1.322 showed a wider change.
+Each UTF-16 code unit that is not an ASCII letter, an ASCII digit, `_` or `-` became one hyphen.
+The rule uses this probe result, because no docs text gives the full mapping. Examples:
+
+- A plugin folder `a<b`, `a.b` or `a b` is `a-b`.
+- A plugin folder `a<U+0020><U+0020>b` is `a--b`.
+- A plugin folder `caf<U+00E9>` is `caf-`. So is `caf<U+00E8>`.
+- A plugin folder `a<U+F0000>b` is `a--b`, because U+F0000 is two code units.
+- A family emoji of three people is eight code units, so it gives eight hyphens.
+
+So a plugin folder `a.b` and a plugin folder `a-b` give a report in each file. The probe kept the
+letter case, the digits and `_`. The rule still compares the names without case. The probe kept
+a plugin command file name, a plugin `name` field and a project skill folder name as they are.
+`claude plugin validate` 2.1.322 passed a plugin with the skill folders `a.b`, `a-b`,
+`caf<U+00E9>` and `caf<U+00E8>`. Claude Code loaded the four skills under two command names.
 
 The rule compares no empty name. A `name` field that is empty is not a loaded name, and the
 skill then goes by its folder name. A command name, with its folders joined by `:`, has no name to
@@ -91,9 +101,8 @@ compare when it is empty.
 
 Claude Code 2.1.319 refuses a project skill folder of soft hyphens, and loads no skill from it.
 It loads a plugin skill folder of soft hyphens. Each soft hyphen becomes one hyphen, so
-`/plugin:-` and `/plugin:--` are two names. `skill-name-characters` refuses a soft hyphen, so the
-rule changes it to a hyphen in a plugin folder name. A plugin folder `<U+00AD>` and a plugin
-folder `-` give a report in each file.
+`/plugin:-` and `/plugin:--` are two names. A plugin folder `<U+00AD>` and a plugin folder `-`
+give a report in each file.
 
 A letter from another alphabet that looks like a Latin letter is a different name. `my_app` and
 `my-app` are different names.
