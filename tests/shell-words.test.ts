@@ -874,6 +874,7 @@ describe('scanCommands', () => {
       `echo \${x:-) ( $(case a in a) echo RAN;; esac) \${y} )}; echo hi`,
       `echo \${a:-( \${b:-$(case a in a) echo RAN;; esac)} )}; echo hi`,
       `echo \${x:-$(cat <<'E'\n\${b:-$(y) ( (\nE\ncase a in a) echo RAN;; esac)}; echo hi`,
+      `echo \${x:-( $(case a in (b) ;; a) echo RAN;; esac)}; echo hi`,
     ]) {
       const commands = commandsOf(text)
       expect(commands, text).toContainEqual(['echo', 'RAN'])
@@ -887,6 +888,28 @@ describe('scanCommands', () => {
       ['a'],
       ['echo', 'RAN'],
       ['esac'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`keeps a plain parenthesis pair of a \${...} expansion when no \`case\` starts the substitution`, () => {
+    // bash 5.3.9 and 3.2.57 print `( ) #c`, then `hi`. The `case` of the outer level is not in
+    // the substitution.
+    expect(commandsOf(`case a in (a) echo \${x:-( $(true) ) #c};; esac; echo hi`)).toEqual([
+      ['case', 'a', 'in'],
+      ['a'],
+      ['echo', `\${x:-( $`],
+      ['true'],
+      [' ) #c}'],
+      ['esac'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `( case ) #c`, then `hi`. A `case` word after `echo` starts no
+    // `case` statement.
+    expect(commandsOf(`echo \${x:-( $(echo case) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${x:-( $`],
+      ['echo', 'case'],
       [' ) #c}'],
       ['echo', 'hi'],
     ])
