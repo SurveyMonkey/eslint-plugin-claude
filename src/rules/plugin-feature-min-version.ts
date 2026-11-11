@@ -12,8 +12,6 @@ const name = 'plugin-feature-min-version' as const
 
 // The first version that accepts `"."` as a `skills` path.
 const SKILLS_DOT = '2.1.221'
-// The first version that accepts the `metadata` key.
-const METADATA = '2.1.222'
 // The first version that loads a plugin with `options` on a `userConfig` field.
 const OPTIONS = '2.1.271'
 
@@ -21,7 +19,7 @@ type Options = [{ minVersion?: string }]
 
 const rule: JSONRuleDefinition<{
   RuleOptions: Options
-  MessageIds: 'skillsDot' | 'metadata' | 'options'
+  MessageIds: 'skillsDot' | 'options'
 }> = {
   meta: {
     type: 'problem',
@@ -34,8 +32,6 @@ const rule: JSONRuleDefinition<{
     messages: {
       skillsDot:
         'The `skills` path "." fails manifest validation on Claude Code before v2.1.221. Use "./" for the plugin root, or set the option `minVersion` to 2.1.221 or later.',
-      metadata:
-        'The `metadata` key needs Claude Code v2.1.222 or later. Remove it, or set the option `minVersion` to 2.1.222 or later.',
       options:
         'The `options` of a `userConfig` field needs Claude Code v2.1.271 or later. Before that, the plugin fails to load. Remove it, or set the option `minVersion` to 2.1.271 or later.',
     },
@@ -54,10 +50,6 @@ const rule: JSONRuleDefinition<{
               context.report({ node: path, messageId: 'skillsDot' })
             }
           }
-        }
-        const metadata = lastMember(node.body, 'metadata')
-        if (metadata !== undefined && supportsBefore(minVersion, METADATA)) {
-          context.report({ node: metadata, messageId: 'metadata' })
         }
         const fields = lastMember(node.body, 'userConfig')?.value
         if (fields?.type === 'Object' && supportsBefore(minVersion, OPTIONS)) {

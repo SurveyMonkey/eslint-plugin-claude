@@ -281,12 +281,6 @@
       "text": "### `dependencies`\n\nPlugins that must be enabled for this one to work. Each entry is `\"name\"`, `\"name@marketplace\"`, or `{ \"name\": \"...\", \"marketplace\": \"...\", \"version\": \"...\" }`. Bare names resolve against this plugin's own marketplace. See [dependency constraints](/docs/en/plugins/dependencies)."
     },
     {
-      "heading": "metadata",
-      "id": "metadata",
-      "hash": "89c36d3366fab2549af8b2e7979b1b279873f81dc89669642ef74a08b1f1170a",
-      "text": "### `metadata`\n\nA free-form object for your own data, such as catalog or entitlement fields. Claude Code doesn't read it."
-    },
-    {
       "heading": "Limit a field to fixed options",
       "id": "limit-a-field-to-fixed-options",
       "hash": "c4d761fb39ce76f46b40622daff6ec9628d568295b8beee32d3306a107a57ed9",
