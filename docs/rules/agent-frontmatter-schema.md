@@ -55,7 +55,7 @@ The SDK has a `prompt` key that a file does not take.[^sdk] A key with no value 
 
 The subagent docs do not say which Boolean forms Claude Code reads. The rule accepts the forms
 that the skills reference lists: `true`, `false`, `yes`, `no`, `on`, `off`, `1` and `0`, in any
-letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` work. It checks that `model` is a string that is not blank, and no more. The set of valid
+letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` work, as the [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records. It checks that `model` is a string that is not blank, and no more. The set of valid
 model ids differs by provider and by gateway.
 
 The rule checks local agents in `.claude/agents/` and plugin agents. A plugin agent is in the

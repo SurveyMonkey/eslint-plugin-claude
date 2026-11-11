@@ -41,7 +41,7 @@ misspelled field, and shows no error.[^osfields] The rule reports these faults:
 
 The output style docs do not say which Boolean forms Claude Code reads. The rule accepts the forms
 that the skills reference lists: `true`, `false`, `yes`, `no`, `on`, `off`, `1` and `0`, in any
-letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` work. A form such as
+letter case.[^skillsref] Before Claude Code v2.1.218, only `true` and `false` work, as the [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records. A form such as
 `yes` has no effect in an older version. A key with no value is the same as an absent key, and the rule ignores it.
 
 The rule checks a style file in `.claude/output-styles/` and in the `output-styles/` directory of a

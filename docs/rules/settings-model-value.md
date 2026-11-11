@@ -24,8 +24,9 @@ generated:
 
 ## Rule details
 
-Claude Code does not check a model value at startup. A mistyped value in the `model` setting
-produces an error on the first request.[^model] The rule finds the typo in the file.
+Claude Code does not reject a mistyped value up front. A mistyped value in the `model` setting
+produces an error on the first request.[^model] On the Anthropic API, a value that nearly spells
+a model name or alias can also produce a startup warning. The rule finds the typo in the file.
 
 The aliases and the ID forms are in `src/data/models.ts`, with the Claude Code version of the
 last review. A model alias is `default`, `best`, `fable`, `sonnet`, `opus`, `haiku` or

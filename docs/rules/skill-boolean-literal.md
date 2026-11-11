@@ -27,13 +27,14 @@ The rule makes no report until the option `minVersion` is set.
 ## Rule details
 
 Boolean fields accept `yes`, `no`, `on`, `off`, `1` and `0` in any letter case, in addition to
-`true` and `false`. Before v2.1.218, Claude Code recognized only `true` and `false`.[^reference]
+`true` and `false`.[^reference] Before v2.1.218, Claude Code recognized only `true` and `false`,
+as the [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records.
 The rule reports a Boolean field that holds another form. An older client does not read the
 field as the author meant.
 
 The rule checks `disable-model-invocation` and `user-invocable`. It does not check `background`.
-That field needs Claude Code v2.1.218 itself,[^reference] so an older client ignores the field
-in any form.
+The [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) records the `background` opt-out under v2.1.218.
+An older client ignores the field in any form.
 
 The rule reads the parsed value, not the source text. YAML reads `true`, `True` and `TRUE` as a
 Boolean, so the rule accepts them. It reports each other value that the Boolean reader accepts:

@@ -33,7 +33,7 @@ const rule: Rule.RuleModule = {
       preToolUseDecision:
         'PreToolUse deprecated the top-level "decision" and "reason". Use "hookSpecificOutput.permissionDecision" and "permissionDecisionReason". The old "approve" and "block" map to "allow" and "deny".',
       updatedMcpToolOutput:
-        'The hooks reference says to prefer "updatedToolOutput" over "updatedMCPToolOutput". "updatedToolOutput" works for all tools.',
+        'The hooks reference says to prefer "updatedToolOutput" over "updatedMCPToolOutput". "updatedToolOutput" also works for built-in tools.',
       teamName:
         'The input field "team_name" is deprecated, and Claude Code will remove it in a future release. Do not read it.',
     },
