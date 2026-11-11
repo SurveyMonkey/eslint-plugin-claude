@@ -410,6 +410,9 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     }
     const [message] = lint(entry('./app/[user-id]'), OLD_LINUX)
     expect([message?.line, message?.column]).toEqual([1, 39])
+    // The first entry starts at column 39, and `"./a/[a-z]",` takes 12 columns.
+    const pair = lint(filesystem({ denyRead: ['./a/[a-z]', './b/[z-a]'] }), OLD_LINUX)
+    expect(pair.map((report) => [report.messageId, report.column])).toEqual([['reversedRange', 51]])
     expect(message?.message).toBe(
       'Before Claude Code v2.1.304, sandboxed commands on Linux and WSL2 failed to start while "denyRead" or "allowRead" held a bracket expression with a reversed range, such as `[user-id]`. Your minVersion is 2.1.303. Raise the minimum version to 2.1.304, or rename the directory.',
     )
@@ -473,8 +476,11 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
   it('is silent for an escaped bracket, an escaped hyphen and an unclosed bracket', () => {
     expect(ids(entry('./app/\\[user-id]'), OLD_LINUX)).toEqual([])
     expect(ids(entry('./app/[z\\-a]'), OLD_LINUX)).toEqual([])
+    // Read as plain characters, `\` sorts after `A`. So this case fails if the escape is lost.
+    expect(ids(entry('./app/[z\\-A]'), OLD_LINUX)).toEqual([])
     expect(ids(entry('./app/[user-id'), OLD_LINUX)).toEqual([])
     expect(ids(entry('./app/[a\\'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[z-a\\'), OLD_LINUX)).toEqual([])
     expect(ids(entry('./app/user-id]'), OLD_LINUX)).toEqual([])
   })
 
@@ -492,8 +498,13 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     expect(ids(entry('./app/[!]'), OLD_LINUX)).toEqual([])
   })
 
+  it('closes a set at a `]` right after the `[`, so the rest is plain text', () => {
+    expect(ids(entry('./app/[]z-a]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[!]z-a]'), OLD_LINUX)).toEqual([])
+  })
+
   it('keeps the other parts: a wildcard report and a range report on one entry', () => {
-    expect(ids(entry('/*/[user-id]'), OLD_LINUX)).toEqual(['readWildcard', 'reversedRange'])
+    expect(ids(entry('/*/[user-id]'), OLD_LINUX).sort()).toEqual(['readWildcard', 'reversedRange'])
   })
 })
 
