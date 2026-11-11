@@ -32,11 +32,11 @@ On macOS, Linux and WSL, Claude Code leaves the Glob and Grep tools out of the d
 rule is no fault there. The docs state this for every version, so the rule has no version option.
 
 The rule reports a bare `Glob` or `Grep` rule in `allow`. The message names the tool and the flags.
+The docs say that `Bash(*)` is equivalent to `Bash`.[^all] So the rule reads `Glob(*)` and `Grep(*)` as bare rules.
 
 ### One report for one fault
 
-- `Glob(path)` is a path rule that Claude Code never consults. `permissions-path-rule-tool` reports it.
-- A `Grep(<specifier>)` rule is not checked, because the docs say nothing about it.
+- `Glob(path)` and `Grep(path)` are path rules that Claude Code never consults. `permissions-path-rule-tool` reports them.
 - An `allow` rule that a bare `deny` or `ask` rule of the same tool covers is for `permissions-dead-allow`. This rule skips it.
   The two rules read the same source: the project pair, or one managed source.
 - `ask` and `deny` rules are not read.
@@ -65,3 +65,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^glob]: [Tools reference: Glob tool behavior](https://code.claude.com/docs/en/tools-reference#glob-tool-behavior)
+[^all]: [Configure permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)

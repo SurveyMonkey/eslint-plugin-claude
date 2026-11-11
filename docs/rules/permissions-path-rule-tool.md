@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-path-rule-tool, which reports a path rule for Write, NotebookEdit, MultiEdit or Glob, because Claude Code checks file permissions against Edit and Read rules only and never consults it.
+description: The ESLint rule claude/permissions-path-rule-tool, which reports a path rule for Write, NotebookEdit, MultiEdit, Glob or Grep, because Claude Code checks file permissions against Edit and Read rules only and never consults it.
 owner: brianespinosa
 created: 2026-10-01
 related_issues: [15]
@@ -27,15 +27,17 @@ The rule also lints the managed settings files: `managed-settings.json` and each
 ## Rule details
 
 Claude Code checks file permissions against `Edit(path)` and `Read(path)` rules only. A path rule for `Write`,
-`NotebookEdit`, `Glob` or the legacy `MultiEdit` tool is accepted and never consulted.[^never-match] Claude Code warns at
-startup.[^warning] A bare name such as `Write` is a rule for the whole tool, and it works.
+`NotebookEdit`, `Glob`, `Grep` or the legacy `MultiEdit` tool is accepted and never consulted.[^never-match] Claude Code warns at
+startup for the first four.[^warning] A bare name such as `Write` is a rule for the whole tool, and it works.
 
-The rule reports a rule with parentheses for one of those four tools. The message names the rule to use instead.
-`Edit(path)` covers `Write`, `NotebookEdit` and `MultiEdit`. `Read(path)` covers `Glob`.
+The rule reports a rule with a path for one of those five tools. The message names the rule to use instead.
+`Edit(path)` covers `Write`, `NotebookEdit` and `MultiEdit`. `Read(path)` covers `Glob` and `Grep`.
 
-The rule does not report `Grep(path)` or `LSP(path)`. The tools table says that `Read` rules apply to both tools.[^tools] The
-permissions page says that a `Grep(path)` rule does not match.[^never-match] The rule does not check this yet.
-The errors page names neither tool. No docs page says that an `LSP(path)` rule does not match.
+The docs say that `Bash(*)` is equivalent to `Bash`.[^match-all] The permissions page covers "a path other than `*`".[^never-match]
+So the rule reads `Write(*)` as the bare tool, and reports no permission rule with the specifier `*`. It still reports an empty specifier, as `Write()`.
+
+The rule does not report `LSP(path)`. The tools table says that `Read` rules apply to `LSP`.[^tools]
+No docs page says that an `LSP(path)` rule does not match.
 
 The rule accepts a deny or ask rule in the `param:value` form.
 [`permissions-param-rule`](permissions-param-rule.md) reads those. It skips a string that does not parse.
@@ -52,7 +54,7 @@ field. It skips a field that is neither a string nor a list. It does not read th
 Fail:
 
 ```json
-{ "permissions": { "deny": ["Write(docs/**)", "Glob(docs/**)"] } }
+{ "permissions": { "deny": ["Write(docs/**)", "Glob(docs/**)", "Grep(docs/**)"] } }
 ```
 
 Fail, in a skill:
@@ -67,7 +69,7 @@ allowed-tools: Write(docs/**)
 Pass:
 
 ```json
-{ "permissions": { "deny": ["Edit(docs/**)", "Read(docs/**)", "Write"] } }
+{ "permissions": { "deny": ["Edit(docs/**)", "Read(docs/**)", "Write", "Grep(*)"] } }
 ```
 
 ## Usage
@@ -82,6 +84,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)
+[^match-all]: [Configure permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)
 [^warning]: [Error reference: Is not matched by file permission checks](https://code.claude.com/docs/en/errors#is-not-matched-by-file-permission-checks)
 [^tools]: [Tools reference: Configure tools with permission rules and hooks](https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks)
 [^skill]: [Extend Claude with skills: Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)

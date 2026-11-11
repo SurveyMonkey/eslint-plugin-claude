@@ -32,7 +32,6 @@ describe(`${name}: the reports`, () => {
       'tail',
       'grep',
       'wc',
-      'which',
       'diff',
       'stat',
       'du',
@@ -44,8 +43,12 @@ describe(`${name}: the reports`, () => {
     }
   })
 
-  it('reports the bare find and the bare cd', () => {
-    expect(ids(allow('Bash(find)', 'Bash(cd)'))).toEqual(['redundant', 'redundant'])
+  it('reports the bare find, the bare cd and the bare which', () => {
+    expect(ids(allow('Bash(find)', 'Bash(cd)', 'Bash(which)'))).toEqual([
+      'redundant',
+      'redundant',
+      'redundant',
+    ])
   })
 
   it('reports a Monitor rule, which has the rules of Bash', () => {
@@ -80,6 +83,10 @@ describe(`${name}: the rules that it leaves alone`, () => {
 
   it('is silent for cd with a target: a target out of the working directories prompts', () => {
     expect(ids(allow('Bash(cd *)', 'Bash(cd /tmp)', 'Bash(cd src)'))).toEqual([])
+  })
+
+  it('is silent for which with an argument: a flag such as -i or --read-alias still prompts', () => {
+    expect(ids(allow('Bash(which *)', 'Bash(which:*)', 'Bash(which node)'))).toEqual([])
   })
 
   it('is silent for a rule with more words than the command', () => {

@@ -32,7 +32,7 @@ it('pins the fetch commands to the sentence of the docs', () => {
 
 it('lists only read-only commands that the docs say prompt for some arguments', () => {
   expect(READ_ONLY_WITH_PROMPTS.filter((name) => !READ_ONLY_COMMANDS.includes(name))).toEqual([])
-  expect(READ_ONLY_WITH_PROMPTS).toEqual(['find', 'cd'])
+  expect(READ_ONLY_WITH_PROMPTS).toEqual(['find', 'cd', 'which'])
 })
 
 it('has no project directory in the absolute roots', () => {

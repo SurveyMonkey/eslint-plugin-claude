@@ -3974,6 +3974,11 @@
       "url": "https://code.claude.com/docs/en/tools-reference",
       "heading": "Glob tool behavior",
       "hash": "387d3b6b3f6b564fa97bbcca31e742d23e78f5cd82aa53dd87a2438a807ef2cf"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "18a45a9741a04644b8e99263c398e3600f7033321dcaad2be9382539a9902e8e"
     }
   ],
   "permissions-ignore-patterns": [
@@ -4015,6 +4020,11 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
       "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "18a45a9741a04644b8e99263c398e3600f7033321dcaad2be9382539a9902e8e"
     }
   ],
   "permissions-mcp-rule-parens": [
@@ -4104,6 +4114,11 @@
       "url": "https://code.claude.com/docs/en/permissions",
       "heading": "Write(path), Glob(path), and Grep(path) rules don't match",
       "hash": "2f35787b341bf49e840a5805a496a8601be7d42d9c7c09b6ce6bc80a73fa25ff"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permissions",
+      "heading": "Match all uses of a tool",
+      "hash": "18a45a9741a04644b8e99263c398e3600f7033321dcaad2be9382539a9902e8e"
     },
     {
       "url": "https://code.claude.com/docs/en/errors",
@@ -4234,6 +4249,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "permissions.blockReadsOutsideWorkingDirectories",
       "hash": "e5ffd38ff97736c7b598a74a0c079bbf1b50742c7336ecce1c89daf371ca2ae9"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.denyInsteadOfPrompting",
+      "hash": "78a074f5b2694f99933c70adf8c38d19620e4a9cdac696affa5d29c4caea5e71"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",

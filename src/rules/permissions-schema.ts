@@ -17,7 +17,11 @@ type MessageId = 'unknownKey' | 'notArray' | 'listWithheld' | 'notString' | 'not
 const LISTS = ['allow', 'ask', 'deny', 'additionalDirectories']
 
 /** The keys that hold a Boolean. */
-const BOOLEANS = ['blockReadsOutsideWorkingDirectories', 'blockWritesOutsideWorkingDirectories']
+const BOOLEANS = [
+  'blockReadsOutsideWorkingDirectories',
+  'blockWritesOutsideWorkingDirectories',
+  'denyInsteadOfPrompting',
+]
 
 /** The lists whose failure makes Claude Code withhold `allow` and `additionalDirectories` in a
  *  managed file. */

@@ -16,7 +16,11 @@ const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
 const MANAGED_FILES = [MANAGED, DROP_IN]
 const PROJECT_FILES = [PROJECT, LOCAL]
 const LISTS = ['allow', 'ask', 'deny', 'additionalDirectories']
-const BOOLEANS = ['blockReadsOutsideWorkingDirectories', 'blockWritesOutsideWorkingDirectories']
+const BOOLEANS = [
+  'blockReadsOutsideWorkingDirectories',
+  'blockWritesOutsideWorkingDirectories',
+  'denyInsteadOfPrompting',
+]
 const NOT_LISTS = ['Bash', 1, true, {}]
 
 const lint = (code: unknown, file = PROJECT) =>
@@ -33,6 +37,7 @@ describe(`${name}: a valid object`, () => {
       additionalDirectories: ['../docs'],
       blockReadsOutsideWorkingDirectories: true,
       blockWritesOutsideWorkingDirectories: true,
+      denyInsteadOfPrompting: true,
       defaultMode: 'acceptEdits',
       disableBypassPermissionsMode: 'disable',
       disableAutoMode: 'disable',
@@ -50,6 +55,7 @@ describe(`${name}: a valid object`, () => {
       additionalDirectories: [],
       blockReadsOutsideWorkingDirectories: false,
       blockWritesOutsideWorkingDirectories: false,
+      denyInsteadOfPrompting: false,
     })
     expect(ids(code)).toEqual([])
   })

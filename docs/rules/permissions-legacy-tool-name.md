@@ -32,11 +32,11 @@ definitions still work as aliases.[^task] `MultiEdit` is a legacy tool.[^never-m
 The rule reports a rule in `allow`, `ask` or `deny` that names:
 
 - **`Task`**, bare or with a specifier. The message gives the same rule with `Agent`: `Task(Explore)` becomes `Agent(Explore)`.
-- **`MultiEdit`**, bare. The message says to write `Edit`. No docs page shows a parameter form of `MultiEdit`, so the rule skips every `MultiEdit(...)` rule.
+- **`MultiEdit`**, bare or with the specifier `*`. The docs say that `Bash(*)` is equivalent to `Bash`.[^all] So the rule reads `MultiEdit(*)` as the bare tool. The message says to write `Edit`. No docs page shows a parameter form of `MultiEdit`. So the rule skips every other `MultiEdit(...)` rule.
 
 A client older than v2.1.63 has no `Agent` tool, and it needs `Task`. No file shows which client reads it. So the rule reports `Task`
 when you leave the option `minVersion` unset, because the current docs name `Agent`. With `minVersion` below `2.1.63`, the rule makes no
-report for `Task`. It still reports a bare `MultiEdit`, because `Edit` applies to every client.
+report for `Task`. It still reports a bare `MultiEdit` and `MultiEdit(*)`, because `Edit` applies to every client.
 
 ### One report for one fault
 
@@ -86,3 +86,4 @@ The `recommended` and `strict` configs set no option, so they report `Task`.
 [^task]: [Create custom subagents: Restrict which subagents can be spawned](https://code.claude.com/docs/en/sub-agents#restrict-which-subagents-can-be-spawned)
 [^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
 [^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)
+[^all]: [Configure permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)

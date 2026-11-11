@@ -66,7 +66,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           }
           const replacement = specifier === null ? 'Agent' : `Agent(${specifier})`
           context.report({ loc: entry.loc, messageId: 'task', data: { replacement } })
-        } else if (tool === 'MultiEdit' && specifier === null) {
+        } else if (tool === 'MultiEdit' && (specifier === null || specifier === '*')) {
           context.report({ loc: entry.loc, messageId: 'multiEdit' })
         }
       }

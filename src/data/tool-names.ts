@@ -89,14 +89,16 @@ export const SPECIFIER_TOOLS: readonly string[] = [
 ]
 
 /** The tools whose path rule Claude Code accepts and never consults, each with
- *  the tool whose rule it reads instead. Source: the "Is not matched by file
- *  permission checks" warning
- *  (https://code.claude.com/docs/en/errors#is-not-matched-by-file-permission-checks). */
+ *  the tool whose rule it reads instead. Source: the permissions block "`Write(path)`,
+ *  `Glob(path)`, and `Grep(path)` rules don't match"
+ *  (https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match).
+ *  That section covers "a path other than `*`". */
 export const PATH_RULE_REPLACEMENT: ReadonlyMap<string, 'Edit' | 'Read'> = new Map([
   ['Write', 'Edit'],
   ['NotebookEdit', 'Edit'],
   ['MultiEdit', 'Edit'],
   ['Glob', 'Read'],
+  ['Grep', 'Read'],
 ])
 
 /** The primary input field of a tool. A `Tool(field:value)` rule cannot match
