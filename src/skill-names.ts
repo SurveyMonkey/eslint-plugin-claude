@@ -238,11 +238,12 @@ export function escapeName(text: string): string {
 }
 
 /** `text` as the command name of a plugin skill folder. Each UTF-16 code unit that is not an
- *  ASCII letter, an ASCII digit, `_` or `-` becomes one `-`. The docs say only that the refused
- *  characters become hyphens. A probe of Claude Code 2.1.322 gave this wider rule. It loaded
- *  `caf\u{E9}` as `caf-`, `a.b` and `a b` as `a-b`, and `a\u{F0000}b` as `a--b`. It kept `_`
- *  and the letter case. The fold is for a plugin skill folder only. The probe kept a project
- *  skill folder, a plugin command file and a plugin `name` field as written. */
+ *  ASCII letter, an ASCII digit, `_` or `-` becomes one `-`. The pattern has no `u` flag, so it
+ *  reads code units, not code points. The docs say only that the refused characters become
+ *  hyphens. A probe of Claude Code 2.1.322 gave this wider rule. It loaded `caf\u{E9}` as `caf-`,
+ *  `a.b` and `a b` as `a-b`, and `a\u{F0000}b` as `a--b`. It kept `_` and the letter case. The
+ *  change is for a plugin skill folder only. The probe kept a project skill folder, a plugin
+ *  command file and a plugin `name` field as written. */
 export function hyphenate(text: string): string {
   return text.replace(/[^A-Za-z0-9_-]/g, '-')
 }

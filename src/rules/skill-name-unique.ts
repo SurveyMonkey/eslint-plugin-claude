@@ -52,8 +52,9 @@ function shownPath(relative: string): string {
  *  load such a skill or command, and `skill-name-characters` reports it. The rule compares
  *  no such name. The check is for each part alone: a space at the edge of one part is a
  *  fault. A plugin skill folder is the exception. Claude Code loads it with hyphens in place
- *  of the refused characters, and `skill-name-characters` does not report it. When a plugin
- *  skill folder has no loaded `name`, `skillName` gives it the result of `hyphenate`. */
+ *  of the refused characters and of other characters, and `skill-name-characters` does not
+ *  report it. When a plugin skill folder has no loaded `name`, `skillName` gives it the result
+ *  of `hyphenate`. */
 function refused(parts: string[]): boolean {
   return parts.some((part) => firstFault(part) !== null)
 }
@@ -121,8 +122,8 @@ function skillFilesOf(root: string, plugin: boolean, bound: string): string[] {
 /** The command name of each skill and command file in the scope at `root`,
  *  read from disk at or below `bound`. The plugin-root `SKILL.md` has no
  *  entry. A project skill or a command with a refused folder or file name has no entry. A
- *  plugin skill has an entry: its loaded `name`, else the result of `hyphenate` for its folder
- *  name. A skill name that folds to an empty string has no entry. */
+ *  readable plugin skill has an entry: its loaded `name`, else the result of `hyphenate` for its
+ *  folder name. A skill name that folds to an empty string has no entry. */
 function scopeEntries(root: string, plugin: boolean, bound: string): Entry[] {
   // A skill file that the rule cannot read has no name to compare.
   const skills = skillFilesOf(root, plugin, bound).flatMap((file) => {
