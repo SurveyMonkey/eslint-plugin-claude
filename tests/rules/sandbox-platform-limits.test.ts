@@ -460,6 +460,8 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     expect(ids(entry('./app/[!z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
     expect(ids(entry('./app/[^z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
     expect(ids(entry('./app/[!a-z]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[!- ]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[^- ]'), OLD_LINUX)).toEqual([])
   })
 
   it('is silent for a hyphen first or last, which is no range', () => {

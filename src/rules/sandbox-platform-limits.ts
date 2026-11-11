@@ -75,6 +75,12 @@ function hasLeadingWildcard(path: string): boolean {
   return /[*?]/.test(first as string)
 }
 
+/** One character of a bracket expression, with its escape state. */
+interface Item {
+  char: string
+  escaped: boolean
+}
+
 /** True when `path` holds a bracket expression with a reversed range: a `-` between two
  *  characters, where the left character has a higher code point than the right one, as in
  *  `[user-id]` (`r` is after `i`). A `\` escapes the next character, so `\[` opens no expression.
@@ -86,7 +92,7 @@ function hasReversedRange(path: string): boolean {
     if (chars[at] === '\\') {
       at++
     } else if (chars[at] === '[') {
-      const set: { char: string; escaped: boolean }[] = []
+      const set: Item[] = []
       let end = at + 1
       if (chars[end] === '!' || chars[end] === '^') {
         end++
@@ -99,13 +105,12 @@ function hasReversedRange(path: string): boolean {
         return false
       }
       for (let item = 0; item + 2 < set.length; item++) {
-        const dash = set[item + 1] as { char: string; escaped: boolean }
+        const dash = set[item + 1] as Item
         if (dash.char === '-' && !dash.escaped) {
-          const [left, right] = [set[item], set[item + 2]].map((part) => part?.char.codePointAt(0))
-          if ((left as number) > (right as number)) {
+          const [left, right] = [set[item], set[item + 2]] as [Item, Item]
+          if ((left.char.codePointAt(0) as number) > (right.char.codePointAt(0) as number)) {
             return true
           }
-          item += 2
         }
       }
       at = end
@@ -173,7 +178,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
     const olderThan = (version: string) => minVersion !== undefined && isBelow(minVersion, version)
     const slash = olderThan('2.1.224')
     const ipv6 = olderThan('2.1.229')
-    const reversed = linux && olderThan('2.1.304')
+    const reversed = olderThan('2.1.304')
     if (!linux && !windows && !slash && !ipv6) {
       return {}
     }
