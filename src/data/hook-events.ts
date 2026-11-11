@@ -270,5 +270,54 @@ export const PLAIN_STDOUT_EVENTS: readonly string[] = [
  *  (https://code.claude.com/docs/en/hooks#json-output: "except for PreCompact stdout"). */
 export const CUT_STDOUT_EVENTS: readonly string[] = ['PreCompact']
 
+/** The JSON output that Claude Code discards, for each event whose section of the hooks reference says so. The value
+ *  `'all'` means every JSON field. A list names the discarded fields only. Claude Code keeps none of that text, so a
+ *  size cap does not apply to it. The sentences, checked on 2026-11-10 (https://code.claude.com/docs/en/hooks):
+ *  - PreCompact (#precompact): "Claude Code discards a PreCompact hook's `systemMessage` and `continue` fields."
+ *    The reference names no string field of PreCompact JSON that Claude Code adds to
+ *    context, so the rule counts the whole object as discarded. Only plain stdout is cut at the cap (#precompact-output).
+ *  - PostCompact (#postcompact): "Claude Code discards a PostCompact hook's `systemMessage` and `continue` fields."
+ *  - Setup (#setup-decision-control): "On every exit code, Claude Code discards a Setup hook's JSON output fields,
+ *    such as `systemMessage`, `continue`, and `hookSpecificOutput.additionalContext`."
+ *  - WorktreeRemove (#worktreeremove): "Claude Code discards a WorktreeRemove hook's JSON output fields, such as
+ *    `systemMessage` and `continue`."
+ *  - InstructionsLoaded (#instructionsloaded): "Claude Code discards their JSON output fields, such as
+ *    `systemMessage` and `continue`."
+ *  - SessionEnd (#sessionend): "Claude Code discards their JSON output fields, such as `systemMessage`."
+ *  - StopFailure (#stopfailure): "Claude Code ignores the hook's output and exit code, apart from `terminalSequence`."
+ *  - Notification (#notification): "Claude Code discards their `systemMessage` and `continue` fields but still emits
+ *    `terminalSequence`".
+ *  - MessageDisplay (#messagedisplay): "Claude Code acts on `displayContent` from their JSON output and discards
+ *    `systemMessage` and `continue`."
+ *  - ConfigChange (#configchange): "Claude Code acts on the blocking decision from a ConfigChange hook's JSON output
+ *    and discards `systemMessage` and `continue`."
+ *  - WorktreeCreate (#worktreecreate): "Claude Code acts on the hook's success and the returned path, and discards
+ *    `systemMessage` and `continue`."
+ *  - Elicitation (#elicitation): "Claude Code discards `reason`, `systemMessage`, and `continue` from an Elicitation
+ *    hook's JSON output, whichever `action` you return."
+ *  - ElicitationResult (#elicitationresult): "Claude Code discards `reason`, `systemMessage`, and `continue` from an
+ *    ElicitationResult hook's JSON output, whichever `action` you return."
+ *
+ *  CwdChanged, DirectoryAdded and FileChanged discard only `continue`, which no size cap measures. They are not in
+ *  the map. */
+export const DISCARDED_JSON_OUTPUT: ReadonlyMap<string, 'all' | readonly string[]> = new Map<
+  string,
+  'all' | readonly string[]
+>([
+  ['PreCompact', 'all'],
+  ['PostCompact', ['systemMessage', 'continue']],
+  ['Setup', 'all'],
+  ['WorktreeRemove', 'all'],
+  ['InstructionsLoaded', 'all'],
+  ['SessionEnd', 'all'],
+  ['StopFailure', 'all'],
+  ['Notification', ['systemMessage', 'continue']],
+  ['MessageDisplay', ['systemMessage', 'continue']],
+  ['ConfigChange', ['systemMessage', 'continue']],
+  ['WorktreeCreate', ['systemMessage', 'continue']],
+  ['Elicitation', ['reason', 'systemMessage', 'continue']],
+  ['ElicitationResult', ['reason', 'systemMessage', 'continue']],
+])
+
 /** The events whose input has the deprecated field `team_name`. */
 export const TEAM_NAME_EVENTS: readonly string[] = ['TaskCreated', 'TaskCompleted', 'TeammateIdle']

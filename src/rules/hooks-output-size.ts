@@ -4,9 +4,14 @@
 // stdout is the exception. Claude Code cuts it at the cap, appends a marker, and saves no file. The docs
 // say no setting raises the output cap. The rule measures the strings that a command prints as literals, inline or from a
 // repository script. The options set a lower limit, and their schemas allow no more than the cap. At another
-// value, the message names the configured limit.
+// value, the message names the configured limit. The rule skips each JSON field that Claude Code discards on the
+// event (DISCARDED_JSON_OUTPUT).
 import type { Rule } from 'eslint'
-import { CUT_STDOUT_EVENTS, PLAIN_STDOUT_EVENTS } from '../data/hook-events.ts'
+import {
+  CUT_STDOUT_EVENTS,
+  DISCARDED_JSON_OUTPUT,
+  PLAIN_STDOUT_EVENTS,
+} from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
 import {
   commandOutput,
@@ -38,25 +43,31 @@ interface Measured {
   cut: boolean
 }
 
-/** The strings that the caps measure in the JSON object `json`. A field is read at the top level and inside
- *  `hookSpecificOutput`. */
-function measuredIn(json: Json): Measured[] {
+/** The strings that the caps measure in the JSON object `json` that a hook of `event` prints. A field is read at the
+ *  top level and inside `hookSpecificOutput`. It is skipped when Claude Code discards it on that event. */
+function measuredIn(json: Json, event: string): Measured[] {
   const holders = [json, objectField(json, 'hookSpecificOutput')]
-  return [...CONTEXT_FIELDS, 'classifierContext'].flatMap((field) =>
-    holders.flatMap((holder) => {
-      const value = holder?.[field]
-      return typeof value === 'string'
-        ? [
-            {
-              what: `"${field}" string`,
-              length: value.length,
-              classifier: field === 'classifierContext',
-              cut: false,
-            },
-          ]
-        : []
-    }),
-  )
+  const discarded = DISCARDED_JSON_OUTPUT.get(event)
+  if (discarded === 'all') {
+    return []
+  }
+  return [...CONTEXT_FIELDS, 'classifierContext']
+    .filter((field) => !discarded?.includes(field))
+    .flatMap((field) =>
+      holders.flatMap((holder) => {
+        const value = holder?.[field]
+        return typeof value === 'string'
+          ? [
+              {
+                what: `"${field}" string`,
+                length: value.length,
+                classifier: field === 'classifierContext',
+                cut: false,
+              },
+            ]
+          : []
+      }),
+    )
 }
 
 const rule: Rule.RuleModule = {
@@ -110,7 +121,7 @@ const rule: Rule.RuleModule = {
         const printed = output.texts.flatMap(({ commands }) => printedBy(commands))
         const strings = printed.flatMap(({ json, text }): Measured[] =>
           json !== undefined
-            ? measuredIn(json)
+            ? measuredIn(json, event)
             : PLAIN_STDOUT_EVENTS.includes(event)
               ? [{ what: 'plain stdout', length: text.length, classifier: false, cut: false }]
               : CUT_STDOUT_EVENTS.includes(event)
