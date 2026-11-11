@@ -10,8 +10,8 @@ const WRAPPERS = ['exec', 'env', 'command', 'nohup']
 /** True when `word` is a `NAME=value` word, which sets a variable for the command. */
 export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 
-/** The reserved words of bash 5.3 (`compgen -k`). A `case` word after one of them can start a
- *  `case` statement, as in `if :; then case`, `! case` or `time -p case`. */
+/** The reserved words of bash 5.3 (`compgen -k`). In a command that starts with one of them, a
+ *  `case` word can start a `case` statement, as in `then case`, `! case` or `time -p case`. */
 const RESERVED = [
   'if',
   'then',
@@ -246,9 +246,9 @@ export function scanCommands(line: string): Command[] {
   // The results of `braceBeforeParen` on this line. Each later scan uses them again.
   const known = new Map<number, boolean>()
   let tickExpansions: number[] = []
-  // True when a `case` word came at this level, as the first word of a command or after a reserved
-  // word. Then a `)` can be the `)` of a pattern, so the scan after it starts with no open plain
-  // parenthesis. That is the scan of a line with no `case`. An `esac` word does not clear the
+  // True when a `case` word came at this level, as the first word of a command, or in a command
+  // that starts with a reserved word. Then a `)` can be the `)` of a pattern, so the scan after it
+  // starts with no open plain parenthesis, as on `main`. An `esac` word does not clear the
   // value: a pattern or a here-document can hold the word `esac`. A parenthesis starts a new level,
   // and keeps the value of the outer level. At its `)`, the outer level also takes the value of
   // the inner level, because the `)` of a pattern can end a level that bash keeps open.
