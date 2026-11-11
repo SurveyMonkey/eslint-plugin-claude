@@ -251,7 +251,8 @@ command makes read-only network calls.
 ### Docs snapshot check
 
 The `docs-snapshot` job in `ci.yml` runs `node scripts/docs-verify.ts <base>` on each pull
-request. It passes at once when the diff does not change `docs/docs-snapshot/` or
+request, and on each merge group of the merge queue. In a merge group run, the base is the parent
+commit of the merge group. It passes at once when the diff does not change `docs/docs-snapshot/` or
 `docs/rule-sources.json`.
 
 Else it compares the head snapshot with the base snapshot. Each base file that the head keeps

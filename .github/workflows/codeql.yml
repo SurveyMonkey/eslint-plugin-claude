@@ -9,6 +9,10 @@ on:
   # ready_for_review starts the run that a draft skipped.
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+  # The merge queue needs each required check on the merge group ref. A
+  # pull_request run does not report on that ref.
+  merge_group:
+    types: [checks_requested]
   schedule:
     - cron: "36 20 * * 5"
 
@@ -16,7 +20,9 @@ permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  # Cancel superseded pull request runs, never runs on main.
+  # Cancel superseded pull request runs, never runs on main. Each merge group
+  # has its own ref (refs/heads/gh-readonly-queue/...), so its own group.
+  # This block does not cancel a merge group run.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -29,7 +35,8 @@ jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     # A draft gets no run, so its required checks do not report. A draft
-    # cannot merge. ready_for_review starts the run.
+    # cannot merge. ready_for_review starts the run. A merge group run has no
+    # pull request payload, so this test lets it run.
     if: github.event_name != 'pull_request' || !github.event.pull_request.draft
     runs-on: ubuntu-latest
     timeout-minutes: 20

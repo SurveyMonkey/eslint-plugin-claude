@@ -1,8 +1,9 @@
 // Stops a pull request that stores a docs change that nobody triaged.
 //
 // Usage: node scripts/docs-verify.ts <base> [root] [--repo owner/name]
-// base is the ref or SHA of the base of the pull request. root defaults to
-// this repository, with the head of the pull request at HEAD.
+// base is the ref or SHA of the base of the pull request, or the parent
+// commit of the merge group. root defaults to this repository, with the head
+// of the pull request or of the merge group at HEAD.
 // A base that is empty, starts with a dash or is not a commit stops the gate.
 // It reads the paths that changed from base to HEAD (`git diff base...HEAD`).
 // It does not detect a rename, so a file moved out of the snapshot counts.
