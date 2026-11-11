@@ -10,7 +10,7 @@
 //   (https://code.claude.com/docs/en/errors#model-is-not-a-recognized-model-id).
 // - "Extended context", "Adaptive reasoning and fixed thinking budgets" and "Extended thinking" of
 //   the same page, for the model versions at the end of this file.
-// Checked on Claude Code 2.1.296 on 2026-10-09. Review these lists on or before 2027-04-09, the
+// Checked on Claude Code 2.1.322 on 2026-11-10. Review these lists on or before 2027-04-09, the
 // `stale_after` date of docs/rules/settings-model-value.md. Review the model versions at the end
 // on or before the `stale_after` date of docs/rules/settings-model-capability.md.
 
@@ -19,8 +19,7 @@
 export const FAMILY_ALIASES: readonly string[] = ['fable', 'opus', 'sonnet', 'haiku']
 
 /** The six aliases of the "Model aliases" table, apart from `default` and the `[1m]` spellings.
- *  `best` is the model that `fable` resolves to, or else the model of `opus`. `opusplan` uses
- *  `opus` in plan mode and `sonnet` after it. */
+ *  `best` is the model of `opus`. `opusplan` uses `opus` in plan mode and `sonnet` after it. */
 const BASE_ALIASES: readonly string[] = [...FAMILY_ALIASES, 'best', 'opusplan']
 
 /** The value that clears a model override. The table says it is "not itself a model alias". The
@@ -175,19 +174,18 @@ export function alwaysAdaptive(model: ModelVersion): boolean {
  *  `sonnet` and `haiku`. The sentence after the table gives `fable`. The model differs on
  *  another provider, so a caller must not use this where a provider is set. */
 export const ANTHROPIC_API_ALIASES: ReadonlyMap<string, ModelVersion> = new Map([
-  ['fable', { family: 'fable', major: 5, minor: 1 }],
+  ['fable', { family: 'fable', major: 5, minor: 2 }],
   ['opus', { family: 'opus', major: 5, minor: 5 }],
   ['sonnet', { family: 'sonnet', major: 5, minor: 5 }],
   ['haiku', { family: 'haiku', major: 5, minor: 5 }],
 ])
 
 /** The families that an alias resolves through. `opusplan` uses Opus and then Sonnet. `best` is
- *  the Fable model where Fable is available, and the Opus model otherwise. `default` is not an
- *  alias, and the other aliases are their own family. */
+ *  the Opus model. `default` is not an alias, and the other aliases are their own family. */
 export const ALIAS_FAMILIES: ReadonlyMap<string, readonly string[]> = new Map([
   ...FAMILY_ALIASES.map((family): [string, readonly string[]] => [family, [family]]),
   ['opusplan', ['opus', 'sonnet']],
-  ['best', ['fable', 'opus']],
+  ['best', ['opus']],
 ])
 
 /** The variable that pins the alias of `family` to a model: `ANTHROPIC_DEFAULT_OPUS_MODEL`. */

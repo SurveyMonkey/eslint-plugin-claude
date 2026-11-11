@@ -96,16 +96,22 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         /** The version of the model that `value` names, if the rule can tell. */
         const resolve = (value: string): ModelVersion | undefined => {
           const base = withoutSuffix(value)
-          if (!ALIAS_FAMILIES.has(base)) {
+          const families = ALIAS_FAMILIES.get(base)
+          if (families === undefined) {
             return modelVersionOf(value)
           }
-          // An alias that the file pins is the pinned model. `best` and `opusplan` name two
-          // models, and have no pin variable of their own, so the rule cannot tell.
-          const pin = textOf(env, pinVariableOf(base))
+          // `opusplan` names two models, so the rule cannot tell. Any other alias has one
+          // family: `best` is the model of `opus`.
+          const [family] = families
+          if (family === undefined || families.length !== 1) {
+            return undefined
+          }
+          // An alias that the file pins is the pinned model.
+          const pin = textOf(env, pinVariableOf(family))
           if (pin) {
             return modelVersionOf(pin)
           }
-          return hasProvider ? undefined : ANTHROPIC_API_ALIASES.get(base)
+          return hasProvider ? undefined : ANTHROPIC_API_ALIASES.get(family)
         }
         if (!chosen) {
           return
