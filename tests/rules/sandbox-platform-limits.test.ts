@@ -413,6 +413,8 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     // The first entry starts at column 39, and `"./a/[a-z]",` takes 12 columns.
     const pair = lint(filesystem({ denyRead: ['./a/[a-z]', './b/[z-a]'] }), OLD_LINUX)
     expect(pair.map((report) => [report.messageId, report.column])).toEqual([['reversedRange', 51]])
+    const both = lint(filesystem({ denyRead: ['./a/[z-a]', './b/[z-a]'] }), OLD_LINUX)
+    expect(both.map((report) => report.column)).toEqual([39, 51])
     expect(message?.message).toBe(
       'Before Claude Code v2.1.304, sandboxed commands on Linux and WSL2 failed to start while "denyRead" or "allowRead" held a bracket expression with a reversed range, such as `[user-id]`. Your minVersion is 2.1.303. Raise the minimum version to 2.1.304, or rename the directory.',
     )
@@ -430,7 +432,7 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     expect(ids(text, [{}])).toEqual([])
   })
 
-  it('is silent in allowWrite and denyWrite, where the same entry is a plain name', () => {
+  it('is silent in allowWrite and denyWrite, which the start failure does not name', () => {
     for (const list of ['allowWrite', 'denyWrite']) {
       expect(ids(entry('./app/[user-id]', list), OLD_LINUX), list).toEqual([])
     }
@@ -471,6 +473,8 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
     expect(ids(entry('./app/[!a-z]'), OLD_LINUX)).toEqual([])
     expect(ids(entry('./app/[!- ]'), OLD_LINUX)).toEqual([])
     expect(ids(entry('./app/[^- ]'), OLD_LINUX)).toEqual([])
+    // Only the first `!` is the negation. The second `!` is the left end of a range.
+    expect(ids(entry('./app/[!!- ]'), OLD_LINUX)).toEqual(['reversedRange'])
   })
 
   it('is silent for a hyphen first or last, which is no range', () => {
@@ -496,6 +500,8 @@ describe(`${name}: reversed bracket range before v2.1.304`, () => {
 
   it('reads an escaped end point of a range', () => {
     expect(ids(entry('./app/[\\z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    // An escaped `]` is a member of the set, and does not close it.
+    expect(ids(entry('./app/[\\]z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
     expect(ids(entry('./app/[a-\\z]'), OLD_LINUX)).toEqual([])
   })
 
