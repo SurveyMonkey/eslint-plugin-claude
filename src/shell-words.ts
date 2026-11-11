@@ -10,6 +10,33 @@ const WRAPPERS = ['exec', 'env', 'command', 'nohup']
 /** True when `word` is a `NAME=value` word, which sets a variable for the command. */
 export const isAssignment = (word: string) => ASSIGNMENT.test(word)
 
+/** The reserved words of bash 5.3 (`compgen -k`). A `case` word after one of them can start a
+ *  `case` statement, as in `if :; then case`, `! case` or `time -p case`. */
+const RESERVED = [
+  'if',
+  'then',
+  'else',
+  'elif',
+  'fi',
+  'case',
+  'esac',
+  'for',
+  'select',
+  'while',
+  'until',
+  'do',
+  'done',
+  'in',
+  'function',
+  'time',
+  '{',
+  '}',
+  '!',
+  '[[',
+  ']]',
+  'coproc',
+]
+
 /** How deep a quote and a substitution may nest before the reader gives up and takes the rest of the line. */
 const MAX_NESTING = 100
 
@@ -219,16 +246,17 @@ export function scanCommands(line: string): Command[] {
   // The results of `braceBeforeParen` on this line. Each later scan uses them again.
   const known = new Map<number, boolean>()
   let tickExpansions: number[] = []
-  // True when a `case` word starts a command at this level, and no `esac` word ended it. Then the
-  // next `)` can be the `)` of a pattern, so the scan after it starts with no open plain
-  // parenthesis. A parenthesis starts a new level, and keeps the value of the outer level.
+  // True when a `case` word came at this level, as the first word of a command or after a reserved
+  // word. Then a `)` can be the `)` of a pattern, so the scan after it starts with no open plain
+  // parenthesis. That is the scan of a line with no `case`. An `esac` word does not clear the
+  // value: a pattern or a here-document can hold the word `esac`. A parenthesis starts a new level,
+  // and keeps the value of the outer level. At its `)`, the outer level also takes the value of
+  // the inner level, because the `)` of a pattern can end a level that bash keeps open.
   let inCase = false
   const outerCase: boolean[] = []
   const endWord = () => {
     if (open) {
-      if (words.length === 0) {
-        inCase = word === 'case' || (inCase && word !== 'esac')
-      }
+      inCase ||= word === 'case' && (words.length === 0 || RESERVED.includes(words[0] as string))
       words.push(word)
       word = ''
       open = false
@@ -322,8 +350,8 @@ export function scanCommands(line: string): Command[] {
       inCase = false
     } else if (char === ')') {
       endCommand()
-      const pattern = inCase
-      inCase = outerCase.pop() === true
+      const pattern: boolean = inCase
+      inCase = outerCase.pop() === true || pattern
       const before = levels.pop()
       substitutions -= before === '$' ? 1 : 0
       closed = before === '$' || before === '<' || before === '>'

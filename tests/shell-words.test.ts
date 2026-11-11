@@ -864,8 +864,10 @@ describe('scanCommands', () => {
   })
 
   it(`reads the \`)\` of a \`case\` pattern in a plain parenthesis of a \${...} expansion`, () => {
-    // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. The `(` is open at the `$(`, `<(`
-    // or `${b:-$(`. bash 3.2.57 refuses the `case` pattern in the expansion.
+    // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. The `(` is open at the `$(` or
+    // `<(`, or in an outer expansion. The here-document line pins the depth in the `known` key.
+    // The last line has a `(b)` pattern before the `a)` pattern. bash 3.2.57 refuses the `case`
+    // pattern in the expansion.
     for (const text of [
       `echo \${x:-( $(case a in a) echo RAN;; esac)}; echo hi`,
       `echo \${x:-( $(case a in a) echo RAN;; esac) \${y} )}; echo hi`,
@@ -880,17 +882,39 @@ describe('scanCommands', () => {
       expect(commands, text).toContainEqual(['echo', 'RAN'])
       expect(commands.at(-1), text).toEqual(['echo', 'hi'])
     }
-    // bash 5.3.9 and 3.2.57 print `( RAN ) #c`, then `hi`. The `esac` ends the `case`, so the `)`
-    // after it keeps the `(` open.
+    // bash 5.3.9 and 3.2.57 print `( RAN ) #c`, then `hi`. The scan does not read the `esac`, so
+    // it reads the `)` after it as the `)` of a pattern. The `#` then starts a comment, as on
+    // `main`. This is a limit.
     expect(commandsOf(`echo \${a:-( $(case a in (a) echo RAN;; esac) ) #c}; echo hi`)).toEqual([
       ['echo', `\${a:-( $`],
       ['case', 'a', 'in'],
       ['a'],
       ['echo', 'RAN'],
       ['esac'],
-      [' ) #c}'],
-      ['echo', 'hi'],
     ])
+  })
+
+  it(`reads the \`)\` of a \`case\` pattern after a reserved word, a nested \`case\` or an \`esac\` word`, () => {
+    // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. bash 3.2.57 refuses each line. A
+    // `case` after a reserved word starts a `case` statement. An `esac` word in a pattern, a
+    // quote, a backtick pair or a here-document does not end it. The `)` of a pattern can end a
+    // level of the scan that bash keeps open.
+    for (const text of [
+      `echo \${a:-( $(echo \${x:-$(case a in b) ;; a) echo RAN;; esac)}) )}; echo hi`,
+      `echo \${x:-( $( (case a in b) :;; a) echo RAN;; esac); \${y} ) )}; echo hi`,
+      `echo \${x:-( $(! case a in a) echo RAN;; esac)}; echo hi`,
+      `echo \${x:-( $(time -p case a in a) echo RAN;; esac)}; echo hi`,
+      `echo \${x:-( $(if :; then case a in a) echo RAN;; esac; fi)}; echo hi`,
+      `echo \${x:-( $(case a in (b) case c in (c) :;; esac;; a) echo RAN;; esac) \${y} )}; echo hi`,
+      `echo \${x:-( $(case a in (b) 'esac';; a) echo RAN;; esac) \${y} )}; echo hi`,
+      `echo \${x:-( $(case esac in a|esac) echo RAN;; esac)}; echo hi`,
+      `echo \${x:-( $(case \`'esac' 2>/dev/null; echo a\` in a) echo RAN;; esac)}; echo hi`,
+      `echo \${x:-( $(cat <<E; case a in\nesac\nE\na) echo RAN;; esac)}; echo hi`,
+    ]) {
+      const commands = commandsOf(text)
+      expect(commands, text).toContainEqual(['echo', 'RAN'])
+      expect(commands.at(-1), text).toEqual(['echo', 'hi'])
+    }
   })
 
   it(`keeps a plain parenthesis pair of a \${...} expansion when no \`case\` starts the substitution`, () => {
