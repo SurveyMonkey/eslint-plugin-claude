@@ -4,12 +4,15 @@
 // (docs/rules/marketplace-entry-component-paths.md). The rule resolves each
 // path from the real source directory that `sourceReader` gives, with
 // `placeOf` (src/plugin-links.ts). It reads the disk with the repository as
-// the bound, and makes no report for a part that it cannot read.
+// the bound, and makes no report for a part that it cannot read. The rule
+// also reports a `./` server file path of `mcpServers` or `lspServers` with a
+// `..` part. That check reads the text only, and does not resolve the path.
 import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, pluginEntries, type ValueNode } from '../marketplace-json.ts'
 import { sourceReader } from '../marketplace-source.ts'
+import { declaredMcpStrings } from '../mcp-servers.ts'
 import { placeOf } from '../plugin-links.ts'
 import { entriesOf, realDirectory, repositoryRoot } from '../skill-tree.ts'
 import { pathFault } from './marketplace-relative-source-format.ts'
@@ -20,7 +23,12 @@ const name = 'marketplace-entry-component-paths' as const
 // `hooks` and `mcpServers` also take inline configuration, and `commands` also takes an object map.
 const COMPONENT_FIELDS = ['commands', 'agents', 'skills', 'outputStyles', 'themes']
 
-type MessageIds = 'start' | 'parent' | 'backslash' | 'missing' | 'escapes'
+// An MCP bundle is a `.mcpb` or `.dxt` file (manifest reference, "mcpServers"). The docs list
+// it apart from a `.json` server file, so the rule skips it. A URL has no `./` start, so
+// `serverPaths` drops it.
+const BUNDLE = /\.(?:mcpb|dxt)$/
+
+type MessageIds = 'start' | 'parent' | 'backslash' | 'missing' | 'escapes' | 'server'
 type StringNode = Extract<ValueNode, { type: 'String' }>
 
 /** The strings of a field value: the value itself, or the strings in an array.
@@ -47,6 +55,19 @@ function textFault(text: string, field: string): MessageIds | undefined {
   return text.startsWith('./') || (field === 'skills' && text === '.') ? undefined : 'start'
 }
 
+/** The server file paths of an entry: the strings of `mcpServers` that are not a bundle,
+ *  and the strings of `lspServers`. A path with no `./` start is not here, because
+ *  `claude plugin validate` fails it in an entry. An inline map is not a string. */
+function serverPaths(entry: ValueNode): { field: string; item: StringNode }[] {
+  const lsp = lastMember(entry, 'lspServers')?.value
+  return [
+    ...declaredMcpStrings(entry)
+      .filter((item) => !BUNDLE.test(item.value))
+      .map((item) => ({ field: 'mcpServers', item })),
+    ...(lsp === undefined ? [] : pathsOf(lsp).map((item) => ({ field: 'lspServers', item }))),
+  ].filter(({ item }) => item.value.startsWith('./') && pathFault(item.value) === 'parent')
+}
+
 const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
   meta: {
     type: 'problem',
@@ -65,6 +86,8 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
         'The {{field}} path "{{path}}" contains a backslash. On macOS and Linux, Claude Code rejects it. Write the path with forward slashes.',
       missing:
         'The {{field}} path "{{path}}" does not exist in the plugin directory, so Claude Code does not load it.',
+      server:
+        'The {{field}} path "{{path}}" has a ".." segment. Claude Code does not read that server file, even when the path stays inside the plugin. Write the path from the plugin root, with no "..".',
       escapes:
         'The {{field}} path "{{path}}" resolves out of the marketplace through a link, so Claude Code drops it. Keep the target of the link inside the marketplace.',
     },
@@ -80,14 +103,21 @@ const rule: JSONRuleDefinition<{ MessageIds: MessageIds }> = {
             const value = lastMember(entry, field)?.value
             return value === undefined ? [] : pathsOf(value).map((item) => ({ field, item }))
           })
+          const servers = serverPaths(entry)
           // The read comes after the key tests, so an entry with no path costs no read.
-          if (paths.length === 0) {
+          if (paths.length === 0 && servers.length === 0) {
             continue
           }
           const source = read(entry)
           // A source that is a file has no directory to resolve a path from.
           if (!('dir' in source) || !Array.isArray(entriesOf(source.dir))) {
             continue
+          }
+          // With a `plugin.json`, `marketplace-entry-manifest-only-fields` reports the field.
+          if (source.kind === 'no-manifest') {
+            for (const { field, item } of servers) {
+              context.report({ node: item, messageId: 'server', data: { field, path: item.value } })
+            }
           }
           const dir = source.dir
           const scopes = { marketplace: realDirectory(root), plugin: dir }

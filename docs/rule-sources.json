@@ -2054,6 +2054,11 @@
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Bare names under pluginRoot",
       "hash": "07dde514fce4d4b7013fc121eaccd235fff84ddafbbdc8ba0cb1ed4e630c2e96"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/errors",
+      "heading": "Server file path not read",
+      "hash": "38e8978c9affed1ed86aa2b261373103a53eb42d281ef0cc2bd9351175d29210"
     }
   ],
   "marketplace-entry-hooks-inline": [

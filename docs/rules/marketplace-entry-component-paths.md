@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/marketplace-entry-component-paths, which reports a commands, agents, skills, outputStyles or themes path in a marketplace.json entry that has no ./ prefix, has a .. segment, contains a backslash, does not exist, or resolves out of the marketplace through a link.
+description: The ESLint rule claude/marketplace-entry-component-paths, which reports a commands, agents, skills, outputStyles or themes path in a marketplace.json entry that has no ./ prefix, has a .. segment, contains a backslash, does not exist, or resolves out of the marketplace through a link, and an mcpServers or lspServers server file path that has a .. segment.
 owner: brianespinosa
 created: 2026-10-07
 related_issues: [12]
@@ -33,10 +33,10 @@ backslash.[^escapes]
 
 The rule reads each object in `plugins` that has a relative `source`.[^relative] It resolves the source from
 the marketplace root, the directory that holds `.claude-plugin/`. A bare name resolves under
-`metadata.pluginRoot`.[^pluginroot] The `plugin.json` of the source does not matter, because the
-entry paths follow the same rules in both cases. The rule checks each string in the five fields.
-A field can hold one string or an array of strings. It reports the first fault of a path, on the
-string:
+`metadata.pluginRoot`.[^pluginroot] The `plugin.json` of the source does not matter for the five
+fields, because the entry paths follow the same rules in both cases. The rule checks each string in
+the five fields. A field can hold one string or an array of strings. It reports the first fault of
+a path, on the string:
 
 - **The path does not start with `./`.** A path with a root slash, a drive letter or a network form
   is also here. The `skills` field also accepts `.`.[^rules]
@@ -51,11 +51,30 @@ string:
   rules allow a link to another place in the same marketplace, so the rule reports a link
   that leaves the marketplace root only.[^symlinks]
 
+The rule also reads the entry fields `mcpServers` and `lspServers`. Each can take a path to a
+server file.[^server] Claude Code does not read a server file when its path is absolute or has a
+`..` part. It loads the rest of the plugin, without the servers of that file. A `..` part counts
+even when the path stays inside the plugin.[^server] The rule reports a string that starts with
+`./` and has a `..` segment. It has its own message, and reports on the string. It makes this check
+only when the source has no `plugin.json`. With a `plugin.json`,
+[`marketplace-entry-manifest-only-fields`](marketplace-entry-manifest-only-fields.md) reports the
+field. The check needs the `plugin.json` state of the source. So a source that the rule cannot
+read, or a `plugin.json` that it cannot read, gives no report. The rule skips these values:
+
+- **A path with no `./` start.** In a marketplace entry, `claude plugin validate` fails it with
+  `must start with "./"`. Examples are `/opt/x.json`, `../x.json` and `servers/../x.json`. Validate
+  passes `./servers/../servers/x.json` and `./../outside.json`. The rule reports the `..` paths that
+  validate passes (Claude Code 2.1.322).
+- **A bundle.** An `mcpServers` value that ends in `.mcpb` or `.dxt` is a bundle. The docs list a
+  bundle apart from a `.json` server file, so the rule skips it.
+- **A URL.** A URL has no `./` start.
+- **An inline server map.** It is not a path.
+
 The rule makes no report in these cases:
 
 - **The value is not a path.** A value that is not a string or an array of strings, an element that
   is not a string, and the object map of `commands` give no report. The rule does not read the
-  fields `hooks`, `mcpServers` and `lspServers`.
+  field `hooks`.
 - **The source is not read.** A source that is not a relative path, a source that
   [`marketplace-relative-source-format`](marketplace-relative-source-format.md) reports, a source
   that does not exist, a source that is a file, and a source that leaves the marketplace root give
@@ -108,3 +127,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^symlinks]: [Host and maintain a marketplace: Share files within a marketplace with symlinks](https://code.claude.com/docs/en/plugins/host-marketplace#share-files-within-a-marketplace-with-symlinks)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)
 [^pluginroot]: [Marketplace reference: Bare names under pluginRoot](https://code.claude.com/docs/en/plugins/marketplace-reference#bare-names-under-pluginroot)
+[^server]: [Error reference: Server file path not read](https://code.claude.com/docs/en/errors#server-file-path-not-read)
