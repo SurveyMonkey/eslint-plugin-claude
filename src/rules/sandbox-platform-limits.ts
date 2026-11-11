@@ -1,7 +1,8 @@
-// Six limits of the sandbox depend on the platform or on the Claude Code version
+// Seven limits of the sandbox depend on the platform or on the Claude Code version
 // (docs/rules/sandbox-platform-limits.md). No file shows the platform of a team or the oldest
-// client that reads it. So each part has an option, and a part with no option makes no report:
-// `platforms` for the four platform parts, and `minVersion` for the two version parts.
+// client that reads it. So each part needs an option, and a part with no option makes no report.
+// `platforms` turns on the four platform parts, and `minVersion` the two version parts. The part
+// of a reversed range needs both options.
 //   - On Linux and WSL2, only a trailing `/**` works in `allowWrite` and `denyWrite`. The paths of
 //     the `Edit` permission rules feed those lists, so the same limit applies to `*` and `?` there.
 //     A `[` in those lists is part of a real directory name. The `/sandbox` warning names no `[` in
@@ -9,10 +10,12 @@
 //   - On Linux and WSL2, a wildcard in `denyRead` or `allowRead` works only after the first
 //     directory name of the full path. So `/**/*.pem` covers nothing.
 //   - Linux and WSL2 ignore `allowUnixSockets`.
-//   - Before v2.1.224, a trailing `/` on a `denyRead` or `denyWrite` entry went to the sandbox.
-//   - Before v2.1.229, a bracketed IPv6 entry of a domain list or a `WebFetch` rule is not read.
 //   - `failIfUnavailable: true` stops Claude Code at startup on native Windows. The rule does not
 //     check `sandbox.enabled` for this part: the docs say Claude Code does not start there.
+//   - Before v2.1.224, a trailing `/` on a `denyRead` or `denyWrite` entry went to the sandbox.
+//   - Before v2.1.229, a bracketed IPv6 entry of a domain list or a `WebFetch` rule is not read.
+//   - Before v2.1.304, sandboxed commands on Linux and WSL2 failed to start with a reversed range
+//     in brackets, such as `[user-id]`, in `denyRead` or `allowRead`.
 // The part for WSL1 is not checked: the value `wsl` of `platforms` means WSL2, the only WSL
 // that the sandbox supports.
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -33,6 +36,7 @@ type MessageId =
   | 'unixSockets'
   | 'trailingSlash'
   | 'ipv6'
+  | 'reversedRange'
   | 'failIfUnavailable'
 
 /** The platforms that the option names. */
@@ -69,6 +73,54 @@ function hasLeadingWildcard(path: string): boolean {
     .replace(/^\/+/, '')
     .split('/')
   return /[*?]/.test(first as string)
+}
+
+/** One character of a bracket expression, with its escape state. */
+interface Item {
+  char: string
+  escaped: boolean
+}
+
+/** True when `path` holds a bracket expression with a reversed range. In such a range, the
+ *  character before the `-` has a higher code point than the character after it. An example is
+ *  `[user-id]`. A `\` escapes the next character, so `\[` opens no expression. A `-` first or
+ *  last is a plain character. A `!` or `^` at the start is not part of the set. A range inside a
+ *  larger set counts. A `-` right after a range is a plain character, so `[a-c-b]` holds no
+ *  reversed range. A `]` right after the `[` closes the set. An expression with no closing `]`
+ *  is plain text. */
+function hasReversedRange(path: string): boolean {
+  const chars = Array.from(path)
+  for (let at = 0; at < chars.length; at++) {
+    if (chars[at] === '\\') {
+      at++
+    } else if (chars[at] === '[') {
+      const set: Item[] = []
+      let end = at + 1
+      if (chars[end] === '!' || chars[end] === '^') {
+        end++
+      }
+      for (; end < chars.length && chars[end] !== ']'; end++) {
+        const escaped = chars[end] === '\\'
+        set.push({ char: chars[escaped ? ++end : end] ?? '', escaped })
+      }
+      if (end >= chars.length) {
+        return false
+      }
+      for (let item = 0; item + 2 < set.length; item++) {
+        const dash = set[item + 1] as Item
+        if (dash.char === '-' && !dash.escaped) {
+          const [left, right] = [set[item], set[item + 2]] as [Item, Item]
+          if ((left.char.codePointAt(0) as number) > (right.char.codePointAt(0) as number)) {
+            return true
+          }
+          // The next range starts after the right end of this one.
+          item += 2
+        }
+      }
+      at = end
+    }
+  }
+  return false
 }
 
 /** True when `host` is an IPv6 address in brackets, with an optional port. A bracket that does not
@@ -114,6 +166,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
         'Claude Code ignores "allowUnixSockets" on Linux and WSL2, because the seccomp filter cannot inspect socket paths. "allowAllUnixSockets" is the only way to permit Unix sockets there, and it opens every Unix socket.',
       trailingSlash:
         'Before Claude Code v2.1.224, a trailing `/` on a "denyRead" or "denyWrite" entry went to the sandbox, and Claude could still read or write paths under the entry. Your minVersion is {{minVersion}}. Raise the minimum version to 2.1.224, or write the entry with no final `/` where a name stays.',
+      reversedRange:
+        'Before Claude Code v2.1.304, sandboxed commands on Linux and WSL2 failed to start while "denyRead" or "allowRead" held a bracket expression with a reversed range, such as `[user-id]`. Your minVersion is {{minVersion}}. Raise the minimum version to 2.1.304, or rename the directory.',
       ipv6: 'A bracketed IPv6 entry needs Claude Code v2.1.229 or later, and your minVersion is {{minVersion}}. Raise the minimum version to 2.1.229.',
       failIfUnavailable:
         'The sandbox does not run on native Windows, so Claude Code exits at startup with "failIfUnavailable" on. Deliver this setting to macOS, Linux and WSL2 machines only.',
@@ -128,6 +182,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
     const olderThan = (version: string) => minVersion !== undefined && isBelow(minVersion, version)
     const slash = olderThan('2.1.224')
     const ipv6 = olderThan('2.1.229')
+    const reversed = olderThan('2.1.304')
     if (!linux && !windows && !slash && !ipv6) {
       return {}
     }
@@ -146,6 +201,15 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
           for (const entry of list(['sandbox', 'filesystem', key])) {
             if (hasLeadingWildcard(entry.value)) {
               context.report({ node: entry, messageId: 'readWildcard' })
+            }
+          }
+        }
+        if (reversed) {
+          for (const key of ['denyRead', 'allowRead']) {
+            for (const entry of list(['sandbox', 'filesystem', key])) {
+              if (hasReversedRange(entry.value)) {
+                context.report({ node: entry, messageId: 'reversedRange', data: { minVersion } })
+              }
             }
           }
         }

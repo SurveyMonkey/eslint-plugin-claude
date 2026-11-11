@@ -1,4 +1,4 @@
-// Six limits of the sandbox depend on the platform or on the Claude Code version:
+// Seven limits of the sandbox depend on the platform or on the Claude Code version:
 // https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes
 // https://code.claude.com/docs/en/settings-reference#where-wildcards-work-in-sandbox-paths
 // https://code.claude.com/docs/en/settings-reference#directory-names-with-brackets-braces-or-parentheses
@@ -390,18 +390,155 @@ describe(`${name}: failIfUnavailable on native Windows`, () => {
   })
 })
 
+describe(`${name}: reversed bracket range before v2.1.304`, () => {
+  const OLD_LINUX = [{ platforms: ['linux'], minVersion: '2.1.303' }]
+  const OLD_WSL = [{ platforms: ['wsl'], minVersion: '2.1.303' }]
+  const entry = (value: string, list = 'denyRead') => filesystem({ [list]: [value] })
+
+  it('reports ./app/[user-id] in denyRead and allowRead, on linux and on wsl', () => {
+    for (const options of [OLD_LINUX, OLD_WSL]) {
+      for (const list of ['denyRead', 'allowRead']) {
+        expect(ids(entry('./app/[user-id]', list), options), list).toEqual(['reversedRange'])
+      }
+    }
+    expect(ids(entry('./app/[post-id]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('reports in every file, at the entry, with the minVersion and the fix in the text', () => {
+    for (const file of EVERY_FILE) {
+      expect(ids(entry('./app/[user-id]'), OLD_LINUX, file), file).toEqual(['reversedRange'])
+    }
+    const [message] = lint(entry('./app/[user-id]'), OLD_LINUX)
+    expect([message?.line, message?.column]).toEqual([1, 39])
+    // The first entry starts at column 39, and `"./a/[a-z]",` takes 12 columns.
+    const pair = lint(filesystem({ denyRead: ['./a/[a-z]', './b/[z-a]'] }), OLD_LINUX)
+    expect(pair.map((report) => [report.messageId, report.column])).toEqual([['reversedRange', 51]])
+    const both = lint(filesystem({ denyRead: ['./a/[z-a]', './b/[z-a]'] }), OLD_LINUX)
+    expect(both.map((report) => report.column)).toEqual([39, 51])
+    expect(message?.message).toBe(
+      'Before Claude Code v2.1.304, sandboxed commands on Linux and WSL2 failed to start while "denyRead" or "allowRead" held a bracket expression with a reversed range, such as `[user-id]`. Your minVersion is 2.1.303. Raise the minimum version to 2.1.304, or rename the directory.',
+    )
+  })
+
+  it('is silent at 2.1.304 or later, with no minVersion, and with no Linux platform', () => {
+    const text = entry('./app/[user-id]')
+    expect(ids(text, [{ platforms: ['linux'], minVersion: '2.1.304' }])).toEqual([])
+    expect(ids(text, [{ platforms: ['linux'], minVersion: '2.2.0' }])).toEqual([])
+    expect(ids(text, LINUX)).toEqual([])
+    expect(ids(text, WSL)).toEqual([])
+    expect(ids(text, [{ minVersion: '2.1.303' }])).toEqual([])
+    expect(ids(text, [{ platforms: ['macos'], minVersion: '2.1.303' }])).toEqual([])
+    expect(ids(text, [{ platforms: ['windows-git-bash'], minVersion: '2.1.303' }])).toEqual([])
+    expect(ids(text, [{}])).toEqual([])
+  })
+
+  it('is silent in allowWrite and denyWrite, which the start failure does not name', () => {
+    for (const list of ['allowWrite', 'denyWrite']) {
+      expect(ids(entry('./app/[user-id]', list), OLD_LINUX), list).toEqual([])
+    }
+  })
+
+  it('is silent for a range in order, and for a one-character range', () => {
+    expect(ids(entry('./app/[a-z]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[a-a]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[slug]'), OLD_LINUX)).toEqual([])
+  })
+
+  it('compares code points: an upper case letter sorts before a lower case letter', () => {
+    expect(ids(entry('./app/[Z-a]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[a-Z]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('reads a character outside the basic plane as one character', () => {
+    expect(ids(entry('./app/[\u{1F600}-\u{1F601}]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[\u{1F601}-\u{1F600}]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('reports a reversed range inside a larger set, and in a later set', () => {
+    expect(ids(entry('./app/[a-cz-x]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[a-cx-z]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[ab]/[z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('reads a hyphen right after a range as a plain character', () => {
+    expect(ids(entry('./app/[a-c-b]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[a-c-b-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[z--]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('reports a negated set, because the rule reads the range and not the negation', () => {
+    expect(ids(entry('./app/[!z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[^z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[!a-z]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[!- ]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[^- ]'), OLD_LINUX)).toEqual([])
+    // Only the first `!` is the negation. The second `!` is the left end of a range.
+    expect(ids(entry('./app/[!!- ]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('is silent for a hyphen first or last, which is no range', () => {
+    expect(ids(entry('./app/[-a]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[a-]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[!-a]'), OLD_LINUX)).toEqual([])
+  })
+
+  it('is silent for an escaped bracket, an escaped hyphen and an unclosed bracket', () => {
+    expect(ids(entry('./app/\\[user-id]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[z\\-a]'), OLD_LINUX)).toEqual([])
+    // Read as plain characters, `\` sorts after `A`. So this case fails if the escape is lost.
+    expect(ids(entry('./app/[z\\-A]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[user-id'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[a\\'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[z-a\\'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/user-id]'), OLD_LINUX)).toEqual([])
+  })
+
+  it('reads an escaped backslash as one character, so the next bracket opens a set', () => {
+    expect(ids(entry('./app/\\\\[user-id]'), OLD_LINUX)).toEqual(['reversedRange'])
+  })
+
+  it('reads an escaped end point of a range', () => {
+    expect(ids(entry('./app/[\\z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    // An escaped `]` is a member of the set, and does not close it.
+    expect(ids(entry('./app/[\\]z-a]'), OLD_LINUX)).toEqual(['reversedRange'])
+    expect(ids(entry('./app/[a-\\z]'), OLD_LINUX)).toEqual([])
+  })
+
+  it('is silent for an empty set, and for a set closed at once', () => {
+    expect(ids(entry('./app/[]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[!]'), OLD_LINUX)).toEqual([])
+  })
+
+  it('closes a set at a `]` right after the `[`, so the rest is plain text', () => {
+    expect(ids(entry('./app/[]z-a]'), OLD_LINUX)).toEqual([])
+    expect(ids(entry('./app/[!]z-a]'), OLD_LINUX)).toEqual([])
+  })
+
+  it('keeps the other parts: a wildcard report and a range report on one entry', () => {
+    expect(ids(entry('/*/[user-id]'), OLD_LINUX).sort()).toEqual(['readWildcard', 'reversedRange'])
+  })
+})
+
 describe(`${name}: the parts together`, () => {
   it('reports each part that its option turns on', () => {
     const text = JSON.stringify({
       sandbox: {
         failIfUnavailable: true,
-        filesystem: { allowWrite: ['/tmp/*'], denyRead: ['/a/'] },
+        filesystem: { allowWrite: ['/tmp/*'], denyRead: ['/a/', './b/[z-a]'] },
         network: { allowUnixSockets: ['/a'], allowedDomains: ['[::1]'] },
       },
     })
     const all = [{ platforms: ['linux', 'windows-no-git-bash'], minVersion: '2.1.100' }]
     expect(ids(text, all).sort()).toEqual(
-      ['failIfUnavailable', 'ipv6', 'trailingSlash', 'unixSockets', 'writeWildcard'].sort(),
+      [
+        'failIfUnavailable',
+        'ipv6',
+        'reversedRange',
+        'trailingSlash',
+        'unixSockets',
+        'writeWildcard',
+      ].sort(),
     )
     expect(ids(text, [{ platforms: ['macos'] }])).toEqual([])
   })

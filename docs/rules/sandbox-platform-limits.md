@@ -27,7 +27,8 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 ## Rule details
 
 No file shows the platform of a team, or the oldest client that reads the file. So each part of the rule has an option, and a
-part with no option makes no report. The `recommended` and `strict` configs set no option, so they report nothing here.
+part with no option makes no report. One part needs both options. The `recommended` and `strict` configs set no option, so
+they report nothing here.
 
 ### Parts that need `platforms`
 
@@ -58,14 +59,44 @@ drop-in.
 | `2.1.224`          | A `denyRead` or `denyWrite` entry that ends in `/`. Before v2.1.224, Claude Code passed the slash to the sandbox, and Claude could still read or write paths under the entry.[^prefixes]                  |
 | `2.1.229`          | A bracketed IPv6 entry, such as `[::1]`, in `allowedDomains` or `deniedDomains`, and in a `WebFetch(domain:...)` rule of `allow` or `deny`. The bracketed form needs v2.1.229 or later.[^allowed] [^ipv6] |
 
+### The part that needs both options
+
+This part needs `linux` or `wsl` in `platforms`, and a `minVersion` below `2.1.304`. Then the rule reports a `denyRead` or
+`allowRead` entry with a reversed range in brackets, such as `./app/[user-id]`. In `[user-id]`, `r` sorts after `i`. The docs
+say: "Before v2.1.304, sandboxed commands on Linux and WSL2 failed to start while `denyRead` or `allowRead` held such an
+entry."[^brackets] Raise `minVersion` to 2.1.304, or rename the directory. With no `minVersion`, the rule cannot tell that the
+client is old, so it reports nothing. With only `macos` or a Windows value in `platforms`, the failure does not apply, so it
+reports nothing.
+
+The docs name only `denyRead` and `allowRead` for the start failure.[^brackets] So the rule does not check `allowWrite` or
+`denyWrite`.
+
+The docs do not define "sorts after". These choices are the rule's own:
+
+- It compares code points. So `[a-Z]` is reversed, and `[Z-a]` is not. A range with the same character at both ends, `[a-a]`,
+  is not reversed.
+- It reports a reversed range inside a larger set, such as `[a-cz-x]`.
+- It reports a negated set, such as `[!z-a]` or `[^z-a]`. The rule reads the range, and not the negation.
+- It does not report a `-` that is first or last in the set, such as `[-a]` or `[a-]`. There is no range.
+- It reads a `-` right after a range as a plain character. So `[a-c-b]` has no reversed range, and `[a-c-b-a]` has one.
+- It closes the set at a `]` right after the `[`, or after a `!` or `^` at the start. So in `[]z-a]`, the `[]` is an empty
+  set, and `z-a]` is plain text. It gets no report.
+- It reads only the first `!` or `^` as the negation. So `[!!- ]` has the range `!- `, and `!` sorts after the space.
+- It reads an escaped `]` as a member of the set. So `[\]z-a]` has the reversed range `z-a`.
+- It does not report an escaped `\[`, an escaped `\-`, or a `[` with no closing `]`.
+
 ### Not checked
 
 - WSL1. The sandbox needs WSL2, and `failIfUnavailable` stops Claude Code there too.[^wsl] The `platforms` values cannot tell WSL1 from WSL2.
 - `ask` rules. The docs name `Edit` allow and deny rules only.[^wildcards]
 - A deny path with a trailing `/**`, which covers the same directory as the path without it.[^wildcards]
-- A `[` in a read list. There it is a pattern on every platform, so it is not a limit of Linux and WSL2.[^brackets]
-- A read entry with a reversed range in brackets, such as `[user-id]`. Before v2.1.304, sandboxed commands on Linux and
-  WSL2 failed to start with such an entry. The rule has no part that needs both options.[^brackets]
+- A `[` with no reversed range in a read list. There it is a pattern on every platform, so it is not a limit of Linux and
+  WSL2.[^brackets]
+- A `Read` deny rule that Claude Code copies to `denyRead`. A `Read` rule and a sandbox path read `/` and `//` in different
+  ways.[^prefixes] The docs do not state how the anchor reads after the copy. So the rule cannot tell when a wildcard at the
+  start of such a rule fails.[^wildcards]
+- A reversed range in a `Read` deny rule. The copy can put such a range in `denyRead`. Then an old client on Linux or WSL2
+  can fail to start, and the rule makes no report. The part of a reversed range reads only the lists of `sandbox.filesystem`.
 
 Fail, with `platforms: ["linux"]`:
 
