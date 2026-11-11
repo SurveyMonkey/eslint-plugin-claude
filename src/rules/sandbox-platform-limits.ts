@@ -82,7 +82,7 @@ interface Item {
 }
 
 /** True when `path` holds a bracket expression with a reversed range. In such a range, the
- *  character before the `-` has a higher code point than the character after it, as in
+ *  character before the `-` has a higher code point than the character after it. An example is
  *  `[user-id]`. A `\` escapes the next character, so `\[` opens no expression. A `-` first or
  *  last is a plain character. A `!` or `^` at the start is not part of the set. A range inside a
  *  larger set counts. A `-` right after a range is a plain character, so `[a-c-b]` holds no

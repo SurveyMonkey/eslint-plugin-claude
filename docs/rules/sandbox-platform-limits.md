@@ -68,8 +68,8 @@ entry."[^brackets] Raise `minVersion` to 2.1.304, or rename the directory. With 
 client is old, so it reports nothing. With only `macos` or a Windows value in `platforms`, the failure does not apply, so it
 reports nothing.
 
-The docs say that such an entry "covers only the directory with exactly that name, in every list on every platform".[^brackets]
-So the rule does not check `allowWrite` or `denyWrite`.
+The docs name only `denyRead` and `allowRead` for the start failure.[^brackets] So the rule does not check `allowWrite` or
+`denyWrite`.
 
 The docs do not define "sorts after". These choices are the rule's own:
 
@@ -79,8 +79,10 @@ The docs do not define "sorts after". These choices are the rule's own:
 - It reports a negated set, such as `[!z-a]` or `[^z-a]`. The rule reads the range, and not the negation.
 - It does not report a `-` that is first or last in the set, such as `[-a]` or `[a-]`. There is no range.
 - It reads a `-` right after a range as a plain character. So `[a-c-b]` has no reversed range, and `[a-c-b-a]` has one.
-- It closes the set at a `]` right after the `[`, or after a `!` or `^` at the start. So `[]z-a]` is an empty set and plain
-  text, and it gets no report.
+- It closes the set at a `]` right after the `[`, or after a `!` or `^` at the start. So in `[]z-a]`, the `[]` is an empty
+  set, and `z-a]` is plain text. It gets no report.
+- It reads only the first `!` or `^` as the negation. So `[!!- ]` has the range `!- `, and `!` sorts after the space.
+- It reads an escaped `]` as a member of the set. So `[\]z-a]` has the reversed range `z-a`.
 - It does not report an escaped `\[`, an escaped `\-`, or a `[` with no closing `]`.
 
 ### Not checked
@@ -88,10 +90,13 @@ The docs do not define "sorts after". These choices are the rule's own:
 - WSL1. The sandbox needs WSL2, and `failIfUnavailable` stops Claude Code there too.[^wsl] The `platforms` values cannot tell WSL1 from WSL2.
 - `ask` rules. The docs name `Edit` allow and deny rules only.[^wildcards]
 - A deny path with a trailing `/**`, which covers the same directory as the path without it.[^wildcards]
-- A `[` in a read list. There it is a pattern on every platform, so it is not a limit of Linux and WSL2.[^brackets]
+- A `[` with no reversed range in a read list. There it is a pattern on every platform, so it is not a limit of Linux and
+  WSL2.[^brackets]
 - A `Read` deny rule that Claude Code copies to `denyRead`. A `Read` rule and a sandbox path read `/` and `//` in different
   ways.[^prefixes] The docs do not state how the anchor reads after the copy. So the rule cannot tell when a wildcard at the
   start of such a rule fails.[^wildcards]
+- A reversed range in a `Read` deny rule. The copy can put such a range in `denyRead`. This is a gap: the part of a reversed
+  range reads only the `denyRead` and `allowRead` entries of `sandbox.filesystem`.
 
 Fail, with `platforms: ["linux"]`:
 
