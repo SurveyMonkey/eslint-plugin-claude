@@ -27,7 +27,8 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 ## Rule details
 
 No file shows the platform of a team, or the oldest client that reads the file. So each part of the rule has an option, and a
-part with no option makes no report. One part needs both options. The `recommended` and `strict` configs set no option, so they report nothing here.
+part with no option makes no report. One part needs both options. The `recommended` and `strict` configs set no option, so
+they report nothing here.
 
 ### Parts that need `platforms`
 
@@ -60,21 +61,26 @@ drop-in.
 
 ### The part that needs both options
 
-With `platforms` holding `linux` or `wsl`, and `minVersion` below `2.1.304`, the rule reports a `denyRead` or `allowRead` entry
-with a bracket expression that has a reversed range, such as `./app/[user-id]`. In `[user-id]`, `r` sorts after `i`. The docs say:
-"Before v2.1.304, sandboxed commands on Linux and WSL2 failed to start while `denyRead` or `allowRead` held such an entry."[^brackets]
-Raise `minVersion` to 2.1.304, or rename the directory. With no `minVersion`, the rule cannot tell that the client is old, so it
-reports nothing. With only `macos` or a Windows value in `platforms`, the failure does not apply, so it reports nothing.
+This part needs `linux` or `wsl` in `platforms`, and a `minVersion` below `2.1.304`. Then the rule reports a `denyRead` or
+`allowRead` entry with a reversed range in brackets, such as `./app/[user-id]`. In `[user-id]`, `r` sorts after `i`. The docs
+say: "Before v2.1.304, sandboxed commands on Linux and WSL2 failed to start while `denyRead` or `allowRead` held such an
+entry."[^brackets] Raise `minVersion` to 2.1.304, or rename the directory. With no `minVersion`, the rule cannot tell that the
+client is old, so it reports nothing. With only `macos` or a Windows value in `platforms`, the failure does not apply, so it
+reports nothing.
 
 The docs say that such an entry "covers only the directory with exactly that name, in every list on every platform".[^brackets]
 So the rule does not check `allowWrite` or `denyWrite`.
 
 The docs do not define "sorts after". These choices are the rule's own:
 
-- It compares code points. So `[a-Z]` is reversed, and `[Z-a]` is not. A range with the same character at both ends, `[a-a]`, is not reversed.
+- It compares code points. So `[a-Z]` is reversed, and `[Z-a]` is not. A range with the same character at both ends, `[a-a]`,
+  is not reversed.
 - It reports a reversed range inside a larger set, such as `[a-cz-x]`.
 - It reports a negated set, such as `[!z-a]` or `[^z-a]`. The rule reads the range, and not the negation.
 - It does not report a `-` that is first or last in the set, such as `[-a]` or `[a-]`. There is no range.
+- It reads a `-` right after a range as a plain character. So `[a-c-b]` has no reversed range, and `[a-c-b-a]` has one.
+- It closes the set at a `]` right after the `[`, or after a `!` or `^` at the start. So `[]z-a]` is an empty set and plain
+  text, and it gets no report.
 - It does not report an escaped `\[`, an escaped `\-`, or a `[` with no closing `]`.
 
 ### Not checked
@@ -83,8 +89,9 @@ The docs do not define "sorts after". These choices are the rule's own:
 - `ask` rules. The docs name `Edit` allow and deny rules only.[^wildcards]
 - A deny path with a trailing `/**`, which covers the same directory as the path without it.[^wildcards]
 - A `[` in a read list. There it is a pattern on every platform, so it is not a limit of Linux and WSL2.[^brackets]
-- A `Read` deny rule that Claude Code copies to `denyRead`. The docs do not state how a `/` or `//` anchor reads after the copy, so
-  the rule cannot tell that a leading wildcard of such a rule fails.[^wildcards]
+- A `Read` deny rule that Claude Code copies to `denyRead`. A `Read` rule and a sandbox path read `/` and `//` in different
+  ways.[^prefixes] The docs do not state how the anchor reads after the copy. So the rule cannot tell when a wildcard at the
+  start of such a rule fails.[^wildcards]
 
 Fail, with `platforms: ["linux"]`:
 
