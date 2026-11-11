@@ -382,7 +382,8 @@ describe('hyphenate', () => {
     ['a\u{34F}b', 'a-b'],
     ['a\u{3164}b', 'a-b'],
     // A character that Claude Code takes in a project folder becomes a hyphen in a plugin folder.
-    // Claude Code 2.1.322 also loaded `\u{FF46}\u{FF4F}\u{FF4F}` as `---` and `\u{661}\u{662}` as `--`.
+    // Claude Code 2.1.322 also loaded `\u{FF46}\u{FF4F}\u{FF4F}` as `---`, and `\u{661}\u{662}`
+    // as `--`.
     ['caf\u{E9}', 'caf-'],
     ['cafe\u{301}', 'cafe-'],
     ['\u{3B1}', '-'],
@@ -418,7 +419,7 @@ describe('hyphenate', () => {
   })
 
   // A `hyphenate` that does one replace for each mark takes quadratic time. For this run, that is
-  // about 80 seconds, so the timeout fails it. One replace of all marks takes some milliseconds.
+  // more than one minute, so the timeout fails it. One replace of all marks takes some milliseconds.
   it('changes a very long run of marks in linear time', () => {
     expect(hyphenate(`a${'\u0301'.repeat(300000)}b`)).toBe(`a${'-'.repeat(300000)}b`)
   }, 3000)
