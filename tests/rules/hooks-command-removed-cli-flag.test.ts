@@ -74,6 +74,8 @@ describe(`${name}: shell form`, () => {
     expect(shell(`echo \${a:-\`true\` #y}; claude --enable-auto-mode`)).toEqual(['removed'])
     // bash 5.3 prints `x #y`, then runs `claude`.
     expect(shell(`echo \${a:-x\n #y}; claude --enable-auto-mode`)).toEqual(['removed'])
+    // bash 5.3.9 and 3.2.57 print `( ) #y`, then run `claude` (#800).
+    expect(shell(`echo \${a:-( $(true) ) #y}; claude --enable-auto-mode`)).toEqual(['removed'])
   })
 
   it('joins a line that ends in a backslash with the next line', () => {
