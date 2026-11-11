@@ -338,9 +338,9 @@ describe('firstFault', () => {
 })
 
 // The docs say that the refused characters of a plugin skill folder become hyphens. Probes of
-// Claude Code 2.1.319 and 2.1.322 (`claude -p --plugin-dir`, the init message) gave each expected
-// value here. Each UTF-16 code unit that is not an ASCII letter, an ASCII digit, `_` or `-` became
-// one hyphen.
+// Claude Code 2.1.319 and 2.1.322 (`claude -p --plugin-dir`, the init message) gave the values that
+// a comment names. Each UTF-16 code unit that is not an ASCII letter, an ASCII digit, `_` or `-`
+// became one hyphen. The other values come from that probed rule.
 describe('hyphenate', () => {
   it.each([
     ['deploy', 'deploy'],
@@ -381,13 +381,17 @@ describe('hyphenate', () => {
     ['x\u{2764}\u{FE0F}y', 'x--y'],
     ['a\u{34F}b', 'a-b'],
     ['a\u{3164}b', 'a-b'],
-    // A letter that Claude Code takes in a project folder becomes a hyphen in a plugin folder.
+    // A character that Claude Code takes in a project folder becomes a hyphen in a plugin folder.
+    // Claude Code 2.1.322 also loaded `\u{FF46}\u{FF4F}\u{FF4F}` as `---` and `\u{661}\u{662}` as `--`.
     ['caf\u{E9}', 'caf-'],
     ['cafe\u{301}', 'cafe-'],
     ['\u{3B1}', '-'],
     ['\u{65E5}\u{672C}', '--'],
     ['x\u{1F600}y', 'x--y'],
-    // The kinds of combining mark that `firstFault` refuses, in a plugin folder.
+    ['\u{FF46}\u{FF4F}\u{FF4F}', '---'],
+    ['\u{661}\u{662}', '--'],
+    // The kinds of combining mark that `firstFault` refuses, and eight marks that it takes, in a
+    // plugin folder.
     ['\u{301}ab', '-ab'],
     [`a${'\u{301}'.repeat(8)}b`, 'a--------b'],
     [`a${'\u{301}'.repeat(9)}b`, 'a---------b'],
@@ -413,8 +417,9 @@ describe('hyphenate', () => {
     expect(hyphenate(`a${char}b`)).toBe(KEPT.includes(char) ? `a${char}b` : 'a-b')
   })
 
-  // A fold that walks back over a run of marks costs quadratic time. The timeout catches that case.
-  it('folds a very long run of marks in linear time', () => {
-    expect(hyphenate(`a${'\u0301'.repeat(30000)}b`)).toBe(`a${'-'.repeat(30000)}b`)
+  // A `hyphenate` that does one replace for each mark takes quadratic time. For this run, that is
+  // about 80 seconds, so the timeout fails it. One replace of all marks takes some milliseconds.
+  it('changes a very long run of marks in linear time', () => {
+    expect(hyphenate(`a${'\u0301'.repeat(300000)}b`)).toBe(`a${'-'.repeat(300000)}b`)
   }, 3000)
 })

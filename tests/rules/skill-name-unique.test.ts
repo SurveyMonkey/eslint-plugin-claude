@@ -111,6 +111,8 @@ for (const tree of [
   'hyphrn',
   'hyphcafe',
   'hyphnear',
+  'hyphab',
+  'hyphwide',
 ]) {
   put(`${tree}/.claude-plugin/plugin.json`, `{"name":"${tree}"}`)
 }
@@ -229,11 +231,16 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
     { code: bare, filename: put('projfold/.claude/skills/a-b/SKILL.md', bare) },
     { code: bare, filename: put('projfold/.claude/skills/caf\u{e9}/SKILL.md', bare) },
     { code: bare, filename: put('projfold/.claude/skills/caf\u{e8}/SKILL.md', bare) },
-    // Each space of a run in a plugin skill folder becomes a hyphen. `a  b` is `a--b`, not `a-b`.
+    // Each space in a plugin skill folder becomes one hyphen, so `a  b` is `a--b`, not `a-b`.
     { code: bare, filename: put('hyphsp/skills/a-b/SKILL.md', bare) },
-    // A plain space next to a no-break space becomes a hyphen too, so `a<U+00A0><U+0020>b` is
-    // `a--b`, not `a-b`.
+    // Each blank becomes one hyphen, so `a<U+00A0><U+0020>b` is `a--b`, not `a-b`.
     { code: bare, filename: put('hyphmix/skills/a-b/SKILL.md', bare) },
+    // Claude Code 2.1.322 loaded a plugin folder `a b` as `a-b`, and `<U+FF46><U+FF4F><U+FF4F>` as
+    // `---`. So they are not the same names as `ab` and `foo`.
+    { code: bare, filename: put('hyphab/skills/a b/SKILL.md', bare) },
+    { code: bare, filename: put('hyphab/skills/ab/SKILL.md', bare) },
+    { code: bare, filename: put('hyphwide/skills/\u{ff46}\u{ff4f}\u{ff4f}/SKILL.md', bare) },
+    { code: bare, filename: put('hyphwide/skills/foo/SKILL.md', bare) },
     // A command file name with a space at the end is refused. Neither file gives a report.
     { code: bare, filename: put('edge2/.claude/commands/a.md', bare) },
     { code: bare, filename: put('edge2/.claude/commands/a .md', bare) },
@@ -488,7 +495,8 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
       ],
     },
     // A plugin skill folder with a refused name and no loaded `name` goes by its folder name. Each
-    // refused character becomes a hyphen. The message prints that name.
+    // character other than an ASCII letter, an ASCII digit, `_` or `-` becomes a hyphen. The
+    // message prints that name.
     {
       code: bare,
       filename: put('hyph/skills/a<b/SKILL.md', bare),
@@ -589,6 +597,8 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         {
           messageId: 'duplicate',
           data: { name: 'caf-', others: '`skills/caf\u{e8}/SKILL.md`' },
+          line: 1,
+          column: 1,
         },
       ],
     },
@@ -599,6 +609,8 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         {
           messageId: 'duplicate',
           data: { name: 'caf-', others: '`skills/caf\u{e9}/SKILL.md`' },
+          line: 1,
+          column: 1,
         },
       ],
     },
@@ -1027,6 +1039,25 @@ describe('the skill folders of the manifest skills paths', () => {
     add('skills/a-b/SKILL.md')
     expect(lint(listed, bare)).toMatchObject([
       { message: expect.stringContaining('`a-b` is also the command name of') },
+    ])
+  })
+
+  // Claude Code 2.1.322 loaded a listed plugin folder `m.n` as `m-n`.
+  it('changes each other character of a listed folder name to a hyphen', () => {
+    const add = tree('lst-dot', '{"name":"l","skills":["./extra"]}')
+    const listed = add('extra/a.b/SKILL.md')
+    const shipped = add('skills/a-b/SKILL.md')
+    expect(lint(listed, bare)).toMatchObject([
+      {
+        messageId: 'duplicate',
+        message:
+          '`a-b` is also the command name of `skills/a-b/SKILL.md`. Claude Code gives that name to only one of them. Rename one.',
+        line: 1,
+        column: 1,
+      },
+    ])
+    expect(lint(shipped, bare)).toMatchObject([
+      { messageId: 'duplicate', message: expect.stringContaining('`extra/a.b/SKILL.md`') },
     ])
   })
 
