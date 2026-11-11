@@ -95,8 +95,8 @@ The docs do not define "sorts after". These choices are the rule's own:
 - A `Read` deny rule that Claude Code copies to `denyRead`. A `Read` rule and a sandbox path read `/` and `//` in different
   ways.[^prefixes] The docs do not state how the anchor reads after the copy. So the rule cannot tell when a wildcard at the
   start of such a rule fails.[^wildcards]
-- A reversed range in a `Read` deny rule. The copy can put such a range in `denyRead`. This is a gap: the part of a reversed
-  range reads only the `denyRead` and `allowRead` entries of `sandbox.filesystem`.
+- A reversed range in a `Read` deny rule. The copy can put such a range in `denyRead`. Then an old client on Linux or WSL2
+  can fail to start, and the rule makes no report. The part of a reversed range reads only the lists of `sandbox.filesystem`.
 
 Fail, with `platforms: ["linux"]`:
 
