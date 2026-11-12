@@ -3391,6 +3391,11 @@
       "hash": "db5eb7de277e5d0a8ae13edbb0af6b533f70f0cdd85c5aadc393e65fe9065803"
     },
     {
+      "url": "https://code.claude.com/docs/en/memory",
+      "heading": "Load from additional directories",
+      "hash": "c181c7baf78ed5ad71dc593dc090ee40d0b3029c1cdacce081865c723c6eb230"
+    },
+    {
       "url": "https://code.claude.com/docs/en/large-codebases",
       "heading": "Grant access across packages or repositories",
       "hash": "4426fb50a81e8d164a0b281f3a26632ddc24392c54ebfcd23eeb359cb7e4c7a5"
