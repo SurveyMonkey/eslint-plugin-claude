@@ -948,6 +948,8 @@ describe('scanCommands', () => {
       `echo \${a:-( $(echo \${x:-$(case a in a) echo RAN;; esac)}) )}; echo hi`,
       `echo \${a:-( \`echo \${x:-$(case a in a) echo RAN;; esac)}\` )}; echo hi`,
       `cat <<'E'\n\${a:-(\nE\necho \${x:-$(case a in a) echo RAN;; esac)}; echo hi`,
+      // A subshell in the arm puts a plain `(` in the scan after the `)` of the pattern.
+      `echo \${x:-$(case a in a) (echo RAN);; esac)}; echo hi`,
     ]) {
       const commands = commandsOf(text)
       expect(commands, text).toContainEqual(['echo', 'RAN'])
