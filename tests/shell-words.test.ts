@@ -1141,8 +1141,8 @@ describe('scanCommands', () => {
   })
 
   it(`reads many substitutions and stray \`)\` in one \${...} expansion in linear time`, () => {
-    // Each scan after the `)` of a substitution reads each `)` as text, to the `}`. `knownText`
-    // holds these results, apart from `known`.
+    // After the `)` of each substitution, a second scan reads each `)` as text, to the `}`.
+    // `knownText` holds these results, apart from `known`.
     // The first command, 8000 `a`, 7999 ` )$`, ` ) #c}` and `echo hi`.
     const start = Date.now()
     const commands = scanCommands(`echo \${a:-${'$(a) )'.repeat(8000)} #c}; echo hi`)
