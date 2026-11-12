@@ -147,7 +147,8 @@ function closingTick(line: string, start: number): number {
  *  `open`. This is how bash reads a `${...}` expansion.
  *
  *  `known` holds the result of each index and count of open plain parentheses that an earlier scan
- *  of `line` read. The result of a scan depends only on these two values. A later scan that reads
+ *  of `line` read. The result of a scan depends only on these two values and on `text`. So the
+ *  caller gives one map for each value of `text`. A later scan that reads
  *  such a pair gets the result of the earlier scan. So a scan stops at a known pair, and the text
  *  after it is read once. Many substitutions in one `${...}` then take linear time. */
 function braceBeforeParen(
