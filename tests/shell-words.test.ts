@@ -933,6 +933,13 @@ describe('scanCommands', () => {
     ]) {
       expect(commandsOf(text), text).toContainEqual(['echo', 'RAN'])
     }
+    // bash 5.3.9 and 3.2.57 print `'${x'`, then `RAN }`. A `\` in a comment joins no lines, so the
+    // new line ends the comment.
+    expect(commandsOf(`(echo $'\\'\${x'\\' $(true) ) #c \\\necho RAN }`)).toContainEqual([
+      'echo',
+      'RAN',
+      '}',
+    ])
     // bash 5.3.9 and 3.2.57 print `) athen #c` and `) thence #c`, then `hi`. These words are not
     // reserved words, so the scan reads them as text.
     for (const word of ['athen', 'thence']) {
