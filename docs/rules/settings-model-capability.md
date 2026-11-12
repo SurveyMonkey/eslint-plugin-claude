@@ -103,7 +103,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^context]: [Model configuration: Extended context](https://code.claude.com/docs/en/model-config#extended-context)
-[^thinking]: [Model configuration: Extended thinking](https://code.claude.com/docs/en/model-config#extended-thinking)
+[^thinking]: [Model configuration: Where you can't turn thinking off](https://code.claude.com/docs/en/model-config#where-you-cant-turn-thinking-off)
 [^adaptive]: [Model configuration: Adaptive reasoning and fixed thinking budgets](https://code.claude.com/docs/en/model-config#adaptive-reasoning-and-fixed-thinking-budgets)
 [^aliases]: [Model configuration: Model aliases](https://code.claude.com/docs/en/model-config#model-aliases)
 [^vars]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)

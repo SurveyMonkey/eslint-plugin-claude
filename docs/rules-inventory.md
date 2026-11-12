@@ -1476,7 +1476,7 @@ Other names a rule may contain:
 [^model-config-add-a-custom-model-option]: [Model configuration: Add a custom model option](https://code.claude.com/docs/en/model-config#add-a-custom-model-option)
 [^model-config-pin-models-for-third-party-deployments]: [Model configuration: Pin models for third-party deployments](https://code.claude.com/docs/en/model-config#pin-models-for-third-party-deployments)
 [^model-config-extended-context]: [Model configuration: Extended context](https://code.claude.com/docs/en/model-config#extended-context)
-[^model-config-extended-thinking]: [Model configuration: Extended thinking](https://code.claude.com/docs/en/model-config#extended-thinking)
+[^model-config-extended-thinking]: [Model configuration: Where you can't turn thinking off](https://code.claude.com/docs/en/model-config#where-you-cant-turn-thinking-off)
 [^output-styles-built-in-output-styles]: [Output styles: Built-in output styles](https://code.claude.com/docs/en/output-styles#built-in-output-styles)
 [^output-styles-change-your-output-style]: [Output styles: Change your output style](https://code.claude.com/docs/en/output-styles#change-your-output-style)
 [^settings-reference-agent]: [All settings: agent](https://code.claude.com/docs/en/settings-reference#agent)
