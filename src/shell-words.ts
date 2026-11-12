@@ -139,6 +139,24 @@ function closingTick(line: string, start: number): number {
   return line.length - 1
 }
 
+/** A reserved word that bash accepts straight after a `)`. A command can come after it. */
+const AFTER_PAREN = /(?:then|do|else|elif)(?![^\s;&|()<>])/y
+
+/** True when a text scan of `braceBeforeParen` stops at `at` in `line`. When the reader misreads a
+ *  `)`, a command can come after each of these: a `;`, `&`, `|` or new line, a `\` before a new
+ *  line, and a word of `AFTER_PAREN` after a blank or a `)`. */
+function textStop(line: string, at: number): boolean {
+  const char = line.charAt(at)
+  if (/[;&|\n]/.test(char)) {
+    return true
+  }
+  if (char === '\\') {
+    return line.charAt(at + 1) === '\n'
+  }
+  AFTER_PAREN.lastIndex = at
+  return /[\s)]/.test(line.charAt(at - 1)) && AFTER_PAREN.test(line)
+}
+
 /** True when a `}` or a nested `${` comes after `from` in `line`, before a `)` that ends the
  *  level. The scan skips each substitution, backtick pair, quote and escaped character. A `)` that
  *  closes a plain `(` does not end the level. `open` is the count of plain parentheses that are
@@ -146,10 +164,10 @@ function closingTick(line: string, start: number): number {
  *  `closingParen`.
  *
  *  When `text` is true, no `)` ends the level, and the scan does not count plain parentheses. This
- *  is how bash reads a `${...}` expansion. A `;`, `&`, `|` or new line ends the scan, with the
- *  result false. bash reads these characters as text in an expansion too. But when the reader
- *  misreads a `)`, as in `$'\')'`, a command can come after them. Then the caller keeps the
- *  result of the scan with `text` false.
+ *  is how bash reads a `${...}` expansion. Only a `}` gives the result true. A nested `${` and each
+ *  stop of `textStop` end the scan, with the result false. bash reads each stop as text in an
+ *  expansion. But when the reader misreads a `)`, as in `$'\')'`, a command can come after a
+ *  stop. Then the caller keeps the result of the scan with `text` false.
  *
  *  `known` holds the result of each index and count of open plain parentheses that an earlier scan
  *  of `line` read. The result of a scan depends only on these two values and on `text`. So the
@@ -181,11 +199,16 @@ function braceBeforeParen(
       return done(result)
     }
     passed.push(key)
-    if (char === '}' || (char === '$' && opensExpansion(line, i))) {
-      // A nested `${` ends at its own `}`, before the outer one. A `)` in it or after it is text.
+    if (char === '}') {
       return done(true)
     }
-    if (text ? /[;&|\n]/.test(char) : char === ')' && depth === 0) {
+    if (char === '$' && opensExpansion(line, i)) {
+      // A nested `${` ends at its own `}`, before the outer one. A `)` in it or after it is text.
+      // The reader then keeps the outer expansion open after the `}` of the nested one. So a text
+      // scan stops here.
+      return done(!text)
+    }
+    if (text ? textStop(line, i) : char === ')' && depth === 0) {
       return done(false)
     }
     if (char === '\\') {
@@ -246,10 +269,11 @@ export function scanCommands(line: string): Command[] {
   // are open in that expansion. A parenthesis or a backtick starts a new level, and keeps the
   // expansions of the outer level until it ends. The reader cannot tell the `)` of a `case`
   // pattern from the `)` that ends a substitution. So after a `)`, `braceBeforeParen` looks for a
-  // `}` or a nested `${` before the `)` that ends the level. When `inCase` is false, a second scan
-  // reads each `)` as text. Only then the outer expansions come back. A new line ends each
-  // expansion when the next line has no `}`, as in the body of a here-document. bash refuses such
-  // a `${` out of a here-document.
+  // `}` or a nested `${` before the `)` that ends the level. When that scan is false, a second scan
+  // can read each `)` as text. When a scan gives true, the outer expansions come back.
+  //
+  // A new line ends each expansion when the next line has no `}`, as in the body of a
+  // here-document. bash refuses such a `${` out of a here-document.
   let expansions: number[] = []
   const outer: number[][] = []
   // The results of `braceBeforeParen` on this line. Each later scan uses them again. A scan that
@@ -258,10 +282,11 @@ export function scanCommands(line: string): Command[] {
   const knownText = new Map<number, boolean>()
   let tickExpansions: number[] = []
   // True when a `case` word came at this level, as the first word of a command, or in a command
-  // that starts with a reserved word. Then a `)` can be the `)` of a pattern, so the scan after it
-  // starts with no open plain parenthesis, as on `main`, and no scan reads each `)` as text. An
-  // `esac` word does not clear the value: a pattern or a here-document can hold the word `esac`. A
-  // parenthesis starts a new level, and keeps the value of the outer level. At its `)`, the outer
+  // that starts with a reserved word. Then a `)` can be the `)` of a pattern. So the scan after it
+  // starts with no open plain parenthesis, as on `main`. Also, no scan reads each `)` as text.
+  //
+  // An `esac` word does not clear the value: a pattern or a here-document can hold the word `esac`.
+  // A parenthesis starts a new level, and keeps the value of the outer level. At its `)`, the outer
   // level also takes the value of the inner level, because the `)` of a pattern can end a level
   // that bash keeps open.
   let inCase = false
@@ -371,13 +396,16 @@ export function scanCommands(line: string): Command[] {
       // When `frame` is empty, the result is empty. So only a `)` in an open expansion starts the
       // scan, which can read to the end of the line. The scan starts with the open plain
       // parentheses of the inner expansion. After the `)` of a `case` pattern, a plain parenthesis
-      // can hide the `)` of the substitution, so the scan starts with none. When the inner level
-      // and this level hold no `case` word, this `)` ends the substitution. bash then reads each
-      // `)` in the expansion as text, to its `}` (#842). So a second scan reads each `)` as text.
+      // can hide the `)` of the substitution, so the scan starts with none.
+      //
+      // When the inner level and this level hold no `case` word, this `)` ends the substitution.
+      // bash then reads each `)` in the expansion as text, to its `}` (#842). So when the first
+      // scan is false, a second scan reads each `)` as text. It runs only when one expansion is
+      // open. A `}` closes only one expansion, so the reader keeps the others open after it.
       expansions =
         frame.length > 0 &&
         (braceBeforeParen(line, i + 1, pattern ? 0 : (frame.at(-1) as number), known, false) ||
-          (!inCase && braceBeforeParen(line, i + 1, 0, knownText, true)))
+          (!inCase && frame.length === 1 && braceBeforeParen(line, i + 1, 0, knownText, true)))
           ? frame
           : []
     } else if (char === '`') {
