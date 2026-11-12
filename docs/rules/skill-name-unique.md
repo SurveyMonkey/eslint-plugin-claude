@@ -125,14 +125,21 @@ before a link to it, and skips `.git` and `node_modules`. It does not follow a l
 path is out of the repository. It reads the file that it lints from the text that ESLint gives.
 
 A skill whose frontmatter does not parse goes by its folder name. The rule reports it on line 1,
-and lists it in the report on the other file. A probe of Claude Code 2.1.322 (#821) gave this
+and lists it in the report on each other file. A probe of Claude Code 2.1.322 (#821) gave this
 result. Claude Code ignored all of the frontmatter, and loaded the skill under its folder name.
 [`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports the parse fault.
+
+YAML that parses to a list, a single value or null sets no field. So the rule also uses the folder
+name for such a skill. No probe covered this case. Outside a plugin,
+[`skill-frontmatter-schema`](skill-frontmatter-schema.md) reports a list or a single value that is
+not null.
 
 The rule does not check these cases:
 
 - The plugin-root `SKILL.md`. It has no folder name, and a plugin that has a `skills/` directory
   does not load it. [`skill-plugin-root-shadowed`](skill-plugin-root-shadowed.md) reports that.
+- The `name` of a skill whose YAML Claude Code reads, but the strict parser does not. An example
+  is a plain value that holds `: ` (issue #288). The rule uses the folder name for such a skill.
 - A skill whose folder name is the name of another skill. The docs say that the folder name also
   invokes the skill. The rule compares the effective name only.
 - A skill `name` in a plugin that has the plugin prefix, such as `my-plugin:review`.

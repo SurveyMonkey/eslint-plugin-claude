@@ -483,6 +483,20 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
+    // YAML that parses to a value that is not a map, or to null, gives no field. So the skill also
+    // goes by its folder name. The rule infers this result: the probe (#821) did not cover it.
+    ...['---\n- a\n---\n', '---\nhello\n---\n', '---\n---\n'].map((code) => ({
+      code,
+      filename: skillAt('bad-sibling', 'dup'),
+      errors: [
+        {
+          messageId: 'duplicate' as const,
+          data: { name: 'dup', others: '`skills/x/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    })),
     {
       code: named('dup'),
       filename: skillAt('bad-sibling', 'x'),

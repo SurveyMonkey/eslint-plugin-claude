@@ -190,7 +190,9 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
         }
         const first = node.children[0]
         // In a probe (#821), Claude Code 2.1.322 ignored frontmatter that does not parse. It
-        // loaded the skill under its folder name. So such a skill keeps `given` as null.
+        // loaded the skill under its folder name. So such a skill keeps `given` as null. YAML
+        // that is not a map sets no field, so it also keeps `given` as null. The strict parser
+        // can refuse YAML that Claude Code reads, so the folder name can then be wrong.
         const fm =
           first?.type === 'yaml' && file.kind === 'skill'
             ? readFrontmatter(context.sourceCode, first)
