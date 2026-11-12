@@ -77,5 +77,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^command]: [Customize your status line: Use the /statusline command](https://code.claude.com/docs/en/statusline#use-the-statusline-command)
+[^command]: [Customize your status line: Use the /statusline command](https://code.claude.com/docs/en/statusline#use-the-/statusline-command)
 [^manual]: [Customize your status line: Manually configure a status line](https://code.claude.com/docs/en/statusline#manually-configure-a-status-line)

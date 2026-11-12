@@ -84,5 +84,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^entry]: [Marketplace reference: Hooks in an entry](https://code.claude.com/docs/en/plugins/marketplace-reference#hooks-in-an-entry)
-[^failures]: [Marketplace reference: Failures that validation doesn't catch](https://code.claude.com/docs/en/plugins/marketplace-reference#failures-that-validation-doesnt-catch)
+[^failures]: [Marketplace reference: Failures that validation doesn't catch](https://code.claude.com/docs/en/plugins/marketplace-reference#failures-that-validation-doesn’t-catch)
 [^manifest]: [Plugin manifest reference: hooks](https://code.claude.com/docs/en/plugins/manifest-reference#hooks)

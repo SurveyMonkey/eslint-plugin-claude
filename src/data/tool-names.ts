@@ -1,5 +1,5 @@
 // The tool names that a permission rule can name. Source: the tools table of
-// the tools reference (https://code.claude.com/docs/en/tools-reference#tools-reference)
+// the tools reference (https://code.claude.com/docs/en/tools-reference#page-title)
 // and its rule format table
 // (https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks),
 // checked on Claude Code 2.1.287. Review this file, with the subagent lists
@@ -91,7 +91,7 @@ export const SPECIFIER_TOOLS: readonly string[] = [
 /** The tools whose path rule Claude Code accepts and never consults, each with
  *  the tool whose rule it reads instead. Source: the permissions block "`Write(path)`,
  *  `Glob(path)`, and `Grep(path)` rules don't match"
- *  (https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match).
+ *  (https://code.claude.com/docs/en/permissions#path-rules-that-never-match).
  *  That section covers "a path other than `*`". */
 export const PATH_RULE_REPLACEMENT: ReadonlyMap<string, 'Edit' | 'Read'> = new Map([
   ['Write', 'Edit'],

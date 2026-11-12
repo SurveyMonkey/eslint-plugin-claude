@@ -91,6 +91,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^lock]: [All settings: permissions.disableBypassPermissionsMode](https://code.claude.com/docs/en/settings-reference#permissionsdisablebypasspermissionsmode)
-[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode)
+[^lock]: [All settings: permissions.disableBypassPermissionsMode](https://code.claude.com/docs/en/settings-reference#permissions-disablebypasspermissionsmode)
+[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissions-defaultmode)
 [^split]: [Deploy managed settings: Split a file-based policy across teams](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams)

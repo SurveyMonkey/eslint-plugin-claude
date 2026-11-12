@@ -75,4 +75,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^behavior]: [Tools reference: EndConversation tool behavior](https://code.claude.com/docs/en/tools-reference#endconversation-tool-behavior)
 [^manage]: [Configure permissions: Manage permissions](https://code.claude.com/docs/en/permissions#manage-permissions)
 [^globs]: [Configure permissions: Tool name wildcards](https://code.claude.com/docs/en/permissions#tool-name-wildcards)
-[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissionsdeny)
+[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissions-deny)

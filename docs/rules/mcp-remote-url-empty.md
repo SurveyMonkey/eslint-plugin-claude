@@ -79,4 +79,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^status]: [Connect Claude Code to tools via MCP: Connection failures and unconfigured servers](https://code.claude.com/docs/en/mcp#connection-failures-and-unconfigured-servers)
-[^managed]: [Control MCP server access for your organization: Deploy managed-mcp.json](https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcpjson)
+[^managed]: [Control MCP server access for your organization: Deploy managed-mcp.json](https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcp-json)

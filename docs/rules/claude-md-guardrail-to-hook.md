@@ -78,5 +78,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^context]: [How Claude remembers your project: Claude isn't following my CLAUDE.md](https://code.claude.com/docs/en/memory#claude-isnt-following-my-claude-md)
+[^context]: [How Claude remembers your project: Claude isn't following my CLAUDE.md](https://code.claude.com/docs/en/memory#claude-isn’t-following-my-claude-md)
 [^follow]: [Extend Claude Code: Compare similar features](https://code.claude.com/docs/en/features-overview#compare-similar-features)

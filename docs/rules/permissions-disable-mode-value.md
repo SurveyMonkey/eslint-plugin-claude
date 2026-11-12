@@ -79,7 +79,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^bypass]: [All settings: permissions.disableBypassPermissionsMode](https://code.claude.com/docs/en/settings-reference#permissionsdisablebypasspermissionsmode)
+[^bypass]: [All settings: permissions.disableBypassPermissionsMode](https://code.claude.com/docs/en/settings-reference#permissions-disablebypasspermissionsmode)
 [^auto]: [All settings: disableAutoMode](https://code.claude.com/docs/en/settings-reference#disableautomode)
 [^broken]: [Settings files and precedence: Fix a broken settings file](https://code.claude.com/docs/en/settings#fix-a-broken-settings-file)
 [^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)

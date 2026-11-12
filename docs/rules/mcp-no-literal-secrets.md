@@ -126,7 +126,7 @@ export default defineConfig([
 
 ## Sources
 
-[^expansion]: [Connect Claude Code to tools via MCP: Environment variable expansion in .mcp.json](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcpjson)
+[^expansion]: [Connect Claude Code to tools via MCP: Environment variable expansion in .mcp.json](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcp-json)
 [^managed]: [Control MCP server access for your organization: Authenticate with per-user credentials](https://code.claude.com/docs/en/managed-mcp#authenticate-with-per-user-credentials)
 [^validate]: [Plugin manifest reference: Validate the manifest](https://code.claude.com/docs/en/plugins/manifest-reference#validate-the-manifest)
 [^oauth]: [Connect Claude Code to tools via MCP: Use pre-configured OAuth credentials](https://code.claude.com/docs/en/mcp#use-pre-configured-oauth-credentials)

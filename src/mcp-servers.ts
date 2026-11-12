@@ -80,7 +80,7 @@ export function mcpFileKind(filename: string): McpFileKind | null {
 /** The kind of the MCP config at `filename`, as `mcpFileKind` gives it. A `managed-mcp.json` is
  *  `project` in all directories. It uses the format of a project `.mcp.json`, and a plugin has
  *  no such component.
- *  (https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcpjson) */
+ *  (https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcp-json) */
 export function mcpConfigKind(filename: string): McpFileKind | null {
   return path.basename(filename) === 'managed-mcp.json' ? 'project' : mcpFileKind(filename)
 }

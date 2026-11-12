@@ -87,4 +87,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^causes]: [Debug your configuration: Check common causes](https://code.claude.com/docs/en/debug-your-config#check-common-causes)
 [^project]: [Connect Claude Code to tools via MCP: Project scope](https://code.claude.com/docs/en/mcp#project-scope)
 [^plugin]: [Add components to a plugin: MCP servers](https://code.claude.com/docs/en/plugins/components#mcp-servers)
-[^managed]: [Control MCP server access for your organization: Deploy managed-mcp.json](https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcpjson)
+[^managed]: [Control MCP server access for your organization: Deploy managed-mcp.json](https://code.claude.com/docs/en/managed-mcp#deploy-managed-mcp-json)

@@ -84,5 +84,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^anchors]: [Configure permissions: Where a pattern anchors](https://code.claude.com/docs/en/permissions#where-a-pattern-anchors)
-[^special]: [Configure permissions: Special characters and ! negation](https://code.claude.com/docs/en/permissions#special-characters-and--negation)
+[^special]: [Configure permissions: Special characters and ! negation](https://code.claude.com/docs/en/permissions#special-characters-and-negation)
 [^cd]: [Configure permissions: Cd](https://code.claude.com/docs/en/permissions#cd)

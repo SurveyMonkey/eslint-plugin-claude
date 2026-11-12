@@ -91,7 +91,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode)
+[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissions-defaultmode)
 [^dontask]: [Choose a permission mode: Allow only pre-approved tools with dontAsk mode](https://code.claude.com/docs/en/permission-modes#allow-only-pre-approved-tools-with-dontask-mode)
 [^bypass]: [Choose a permission mode: Skip all checks with bypassPermissions mode](https://code.claude.com/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode)
 [^vscode]: [Choose a permission mode: Switch permission modes](https://code.claude.com/docs/en/permission-modes#switch-permission-modes)

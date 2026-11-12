@@ -29,9 +29,10 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 The rule reports three forms that Claude Code never honors.
 
-**An `Edit` allow rule for a protected path.** Claude Code never auto-approves a write to a small set of paths. The
-exception is `bypassPermissions` mode, and interactive plan mode when bypass is available.[^protected] The safety check runs before Claude Code evaluates allow rules from
-settings. An entry such as `Edit(.claude/**)` does not change the result.[^protected]
+**An `Edit` allow rule for a protected path.** Each permission mode has its own rule for a write to a protected
+path.[^protected] `default` and `acceptEdits` mode prompt, and `dontAsk` mode denies the write. `auto` mode routes the write to the
+classifier, which decides. `bypassPermissions` mode allows it, and `plan` mode depends on the session.[^protected] The safety check runs before Claude Code
+evaluates allow rules from settings. So an entry such as `Edit(.claude/**)` does not pre-approve the write.[^protected]
 
 The protected directories are `.git`, `.config/git`, `.vscode`, `.idea`, `.husky`, `.cargo`, `.devcontainer`, `.yarn`,
 `.mvn` and `.claude`. The protected files include `.gitconfig`, `.bashrc`, `.zshrc`, `.envrc`, `.npmrc`, `lefthook.yml`,
@@ -128,4 +129,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^critical]: [Choose a permission mode: Critical paths](https://code.claude.com/docs/en/permission-modes#critical-paths)
 [^sandbox]: [Configure the sandboxed Bash tool: Protected paths](https://code.claude.com/docs/en/sandboxing#protected-paths)
 [^prefixes]: [All settings: Sandbox path prefixes](https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes)
-[^allowwrite]: [All settings: sandbox.filesystem.allowWrite](https://code.claude.com/docs/en/settings-reference#sandboxfilesystemallowwrite)
+[^allowwrite]: [All settings: sandbox.filesystem.allowWrite](https://code.claude.com/docs/en/settings-reference#sandbox-filesystem-allowwrite)

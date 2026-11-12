@@ -98,4 +98,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^syntax]: [Connect Claude Code to tools via MCP: Environment variable expansion in .mcp.json](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcpjson)
+[^syntax]: [Connect Claude Code to tools via MCP: Environment variable expansion in .mcp.json](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcp-json)

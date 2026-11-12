@@ -83,7 +83,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#writepath-globpath-and-greppath-rules-dont-match)
+[^never-match]: [Configure permissions: Write(path), Glob(path), and Grep(path) rules don't match](https://code.claude.com/docs/en/permissions#path-rules-that-never-match)
 [^match-all]: [Configure permissions: Match all uses of a tool](https://code.claude.com/docs/en/permissions#match-all-uses-of-a-tool)
 [^warning]: [Error reference: Is not matched by file permission checks](https://code.claude.com/docs/en/errors#is-not-matched-by-file-permission-checks)
 [^tools]: [Tools reference: Configure tools with permission rules and hooks](https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks)

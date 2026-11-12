@@ -71,4 +71,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^block]: [All settings: permissions.blockReadsOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissionsblockreadsoutsideworkingdirectories)
+[^block]: [All settings: permissions.blockReadsOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissions-blockreadsoutsideworkingdirectories)

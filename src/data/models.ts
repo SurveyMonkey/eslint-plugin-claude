@@ -8,8 +8,9 @@
 //   the same page, for the family of an ID and for the `[1m]` suffix.
 // - The errors page, "Model is not a recognized model ID", for the `claude-` prefix
 //   (https://code.claude.com/docs/en/errors#model-is-not-a-recognized-model-id).
-// - "Extended context", "Adaptive reasoning and fixed thinking budgets" and "Extended thinking" of
-//   the same page, for the model versions at the end of this file.
+// - "Extended context" and "Adaptive reasoning and fixed thinking budgets" of the same page, for
+//   the model versions at the end of this file.
+// - "Where you can't turn thinking off" of the same page, for `alwaysThinks`.
 // Checked on Claude Code 2.1.322 on 2026-11-10. Review these lists on or before 2027-04-09, the
 // `stale_after` date of docs/rules/settings-model-value.md. Review the model versions at the end
 // on or before the `stale_after` date of docs/rules/settings-model-capability.md.

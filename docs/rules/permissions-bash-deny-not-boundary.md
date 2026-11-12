@@ -76,6 +76,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^limits]: [Configure permissions: What a Bash rule doesn't match](https://code.claude.com/docs/en/permissions#bash-rule-limits)
-[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissionsdeny)
+[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissions-deny)
 [^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
 [^debug]: [Debug your configuration: Check common causes](https://code.claude.com/docs/en/debug-your-config#check-common-causes)

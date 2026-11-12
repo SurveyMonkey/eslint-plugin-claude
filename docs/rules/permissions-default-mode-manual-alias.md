@@ -89,6 +89,6 @@ The `recommended` and `strict` configs set no option, so they make no report fro
 
 ## Sources
 
-[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode)
+[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissions-defaultmode)
 [^alias]: [Choose a permission mode: Available modes](https://code.claude.com/docs/en/permission-modes#available-modes)
 [^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)

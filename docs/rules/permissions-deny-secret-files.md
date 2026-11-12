@@ -76,7 +76,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissionsdeny)
+[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissions-deny)
 [^cover]: [Configure permissions: What Read and Edit rules cover](https://code.claude.com/docs/en/permissions#what-read-and-edit-rules-cover)
 [^patterns]: [Configure permissions: How path patterns match](https://code.claude.com/docs/en/permissions#how-path-patterns-match)
 [^depth]: [Configure permissions: How deep a pattern matches](https://code.claude.com/docs/en/permissions#how-deep-a-pattern-matches)

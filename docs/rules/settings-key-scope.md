@@ -130,7 +130,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^index]: [All settings: Settings index](https://code.claude.com/docs/en/settings-reference#settings-index)
 [^userscope]: [All settings: worktree.location](https://code.claude.com/docs/en/settings-reference#worktree-location)
-[^committed]: [Settings files and precedence: A committed key doesn't reach teammates](https://code.claude.com/docs/en/settings#a-committed-key-doesnt-reach-teammates)
+[^committed]: [Settings files and precedence: A committed key doesn't reach teammates](https://code.claude.com/docs/en/settings#a-committed-key-doesn’t-reach-teammates)
 [^managed]: [Deploy managed settings: Keys only a managed source can set](https://code.claude.com/docs/en/managed-settings#keys-only-a-managed-source-can-set)
 [^global]: [All settings: Global config settings](https://code.claude.com/docs/en/settings-reference#global-config-settings)
 [^exceptions]: [Settings files and precedence: Exceptions to managed settings precedence](https://code.claude.com/docs/en/settings#exceptions-to-managed-settings-precedence)

@@ -96,6 +96,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^choose]: [Choose a permission mode: Choose the classifier model](https://code.claude.com/docs/en/permission-modes#choose-the-classifier-model)
-[^ignored]: [Choose a permission mode: When your model doesn't review](https://code.claude.com/docs/en/permission-modes#when-your-model-doesnt-review)
+[^ignored]: [Choose a permission mode: When your model doesn't review](https://code.claude.com/docs/en/permission-modes#classifier-model-not-reviewing)
 [^vars]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)
 [^aliases]: [Model configuration: Model aliases](https://code.claude.com/docs/en/model-config#model-aliases)

@@ -83,5 +83,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^invoke]: [Extend Claude with skills: Control who invokes a skill](https://code.claude.com/docs/en/skills#control-who-invokes-a-skill)
-[^name]: [Extend Claude with skills: Where you write the skill's name](https://code.claude.com/docs/en/skills#where-you-write-the-skills-name)
+[^name]: [Extend Claude with skills: Where you write the skill's name](https://code.claude.com/docs/en/skills#where-you-write-the-skill’s-name)
 [^reference]: [Extend Claude with skills: Frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)

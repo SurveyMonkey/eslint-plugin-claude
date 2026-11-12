@@ -90,7 +90,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^strict]: [Marketplace reference: Strict mode](https://code.claude.com/docs/en/plugins/marketplace-reference#strict-mode)
-[^combine]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
+[^combine]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json)
 [^conflict]: [Troubleshoot plugins: Plugin <name> has conflicting manifests](https://code.claude.com/docs/en/plugins/troubleshooting#plugin-has-conflicting-manifests)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)
 [^pluginroot]: [Marketplace reference: Bare names under pluginRoot](https://code.claude.com/docs/en/plugins/marketplace-reference#bare-names-under-pluginroot)

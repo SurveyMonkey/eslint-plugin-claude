@@ -88,6 +88,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^combine]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
+[^combine]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json)
 [^default]: [Plugin manifest reference: How each key combines with its default location](https://code.claude.com/docs/en/plugins/manifest-reference#how-each-key-combines-with-its-default-location)
 [^relative]: [Marketplace reference: Relative path plugin source](https://code.claude.com/docs/en/plugins/marketplace-reference#relative-path-plugin-source)

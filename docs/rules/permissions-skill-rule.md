@@ -78,4 +78,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^access]: [Extend Claude with skills: Restrict Claude's skill access](https://code.claude.com/docs/en/skills#restrict-claudes-skill-access)
+[^access]: [Extend Claude with skills: Restrict Claude's skill access](https://code.claude.com/docs/en/skills#restrict-claude’s-skill-access)

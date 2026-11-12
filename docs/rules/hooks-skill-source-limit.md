@@ -141,6 +141,6 @@ not say that Claude Code stops there.
 
 [^limits]: [Hooks reference: Limits on skill hooks](https://code.claude.com/docs/en/hooks#limits-on-skill-hooks)
 [^lifecycle]: [Hooks reference: Hook lifecycle](https://code.claude.com/docs/en/hooks#hook-lifecycle)
-[^symlinks]: [Extend Claude with skills: Choose where skills load](https://code.claude.com/docs/en/skills#choose-where-skills-load)
+[^symlinks]: [Extend Claude with skills: Choose where skills load](https://code.claude.com/docs/en/skills#where-skills-live)
 [^fields]: [Plugin manifest reference: Fields](https://code.claude.com/docs/en/plugins/manifest-reference#fields)
-[^entry]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-pluginjson)
+[^entry]: [Plugin manifest reference: How entry fields combine with plugin.json](https://code.claude.com/docs/en/plugins/manifest-reference#how-entry-fields-combine-with-plugin-json)
