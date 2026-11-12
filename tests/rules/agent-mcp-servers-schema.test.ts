@@ -19,6 +19,9 @@ markdownTester.run('agent-mcp-servers-schema', ruleOf('agent-mcp-servers-schema'
     ...['stdio', 'http', 'sse', 'ws'].map((type) =>
       file(`mcpServers:\n  - remote:\n      type: ${type}\n      url: https://example.com\n`),
     ),
+    // The mcp page: the `type` field "accepts `streamable-http` as an alias for `http`".
+    // An inline agent server takes "a full MCP server config".
+    file('mcpServers:\n  - remote:\n      type: streamable-http\n      url: https://example.com\n'),
     // Claude Code skips an `sdk` server with a warning. It is not a schema fault.
     file('mcpServers:\n  - app:\n      type: sdk\n'),
     // A server config with no `type`.

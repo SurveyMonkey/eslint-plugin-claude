@@ -63,8 +63,8 @@ export const AGENT_ENUMS: Readonly<Record<string, readonly string[]>> = {
 export const CACHE_TTL_VALUES = ['5m', '1h'] as const
 
 /** The `type` values of a server in `.mcp.json`. Claude Code skips an `sdk`
- *  server with a warning. */
-export const MCP_SERVER_TYPES = ['stdio', 'http', 'sse', 'ws', 'sdk'] as const
+ *  server with a warning. `streamable-http` is an alias for `http`. */
+export const MCP_SERVER_TYPES = ['stdio', 'http', 'sse', 'ws', 'streamable-http', 'sdk'] as const
 
 /** The names of the built-in subagents. Source: the "Built-in subagents"
  *  section (https://code.claude.com/docs/en/sub-agents#built-in-subagents),
