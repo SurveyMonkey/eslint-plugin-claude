@@ -873,7 +873,7 @@ describe('scanCommands', () => {
     // `\'` of `$'\')'`, so the `)` after it ends the substitution too early. Then a `}` comes after
     // a `;`, `&&`, `|`, `&` or new line. A scan that reads each `)` as text gives the expansion
     // back there, and then the reader loses `echo RAN`.
-    for (const separator of ['; ', ' && ', ' | cat; ', ' & ', '\n']) {
+    for (const separator of ['; ', ' && ', ' | ', ' & ', '\n']) {
       const text = `echo \${x:-$(echo $'\\')' \\'${separator}echo RAN)}; echo hi`
       const commands = commandsOf(text)
       expect(commands, text).toContainEqual(['echo', 'RAN'])
