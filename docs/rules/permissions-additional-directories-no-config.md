@@ -41,9 +41,9 @@ The settings files of such a directory are not in the list. A directory added wi
 the advice of the message would not fit.[^config]
 
 The message gives the way to load the files. A directory added with `--add-dir` loads skills, commands and agents. It loads
-`CLAUDE.md` and rules only with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`.[^grant] A rule that sets a `paths` field
-does not load, even with the variable.[^memory-add-dir] Starting Claude Code in that directory
-loads all of it.
+`CLAUDE.md` and rules without `paths` only with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`.[^grant] A rule that sets a `paths` field
+does not load, even with the variable.[^memory-add-dir] If you start Claude Code in that directory,
+it loads all of it.
 
 ### Where a relative entry starts
 

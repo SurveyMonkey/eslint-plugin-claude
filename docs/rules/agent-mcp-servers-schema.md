@@ -31,7 +31,7 @@ faults:
 - **Not a list.** The value is a string or a map.
 - **Bad entry.** An entry is neither a string nor a map with one key.
 - **Bad config.** The config of an inline server is not a map.
-- **Bad type.** The `type` of an inline server is not `stdio`, `http`, `sse`, `ws` or `streamable-http`. The mcp page names `streamable-http` as an alias for `http`.[^sdk]
+- **Bad type.** The `type` of an inline server is not `stdio`, `http`, `sse`, `ws` or `streamable-http`. The mcp page names `streamable-http` as an alias for `http`.[^sdk] The sub-agents page says that an entry is an inline server definition, so the alias applies to an agent file.[^mcp]
 
 An inline server follows the schema of a server in `.mcp.json`. The rule checks only the `type`.
 It does not check `command` or `url`. The rule does not report a server of the type `sdk`. The mcp page says that Claude Code skips such a server.[^sdk] Only an SDK host application can register it. The page says this for `.mcp.json`, `~/.claude.json` and settings. It does not say it for an agent file. The report is on the value of `mcpServers`, because the rule reads
