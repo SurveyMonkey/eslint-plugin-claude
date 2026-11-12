@@ -139,8 +139,9 @@ function takenAt(chars: string[]): Set<number> {
   const text = chars.join('')
   const taken = new Set<number>()
   for (const pattern of [EMOJI, SCRIPT_JOINER]) {
-    // The count of code points before a match grows from the last match. A new count from the
-    // start of the text for each match costs quadratic time on a long run of emoji.
+    // `first` is the count of code points before the match. Each match adds only the code points
+    // after the last match. A count from the start of the text for each match takes quadratic
+    // time.
     let unit = 0
     let first = 0
     for (const match of text.matchAll(pattern)) {
