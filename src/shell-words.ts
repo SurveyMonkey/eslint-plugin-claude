@@ -143,7 +143,8 @@ function closingTick(line: string, start: number): number {
  *  level. The scan skips each substitution, backtick pair, quote and escaped character. A `)` that
  *  closes a plain `(` does not end the level. `open` is the count of plain parentheses that are
  *  open at `from`. So a `${...}` expansion with two substitutions in it stays open, as in
- *  `closingParen`.
+ *  `closingParen`. When `text` is true, no `)` ends the level, and a parenthesis does not change
+ *  `open`. This is how bash reads a `${...}` expansion.
  *
  *  `known` holds the result of each index and count of open plain parentheses that an earlier scan
  *  of `line` read. The result of a scan depends only on these two values. A later scan that reads
@@ -154,6 +155,7 @@ function braceBeforeParen(
   from: number,
   open: number,
   known: Map<number, boolean>,
+  text: boolean,
 ): boolean {
   // The open plain parentheses. In an expansion, a plain parenthesis is text.
   let depth = open
@@ -177,7 +179,7 @@ function braceBeforeParen(
       // A nested `${` ends at its own `}`, before the outer one. A `)` in it or after it is text.
       return done(true)
     }
-    if (char === ')' && depth === 0) {
+    if (char === ')' && depth === 0 && !text) {
       return done(false)
     }
     if (char === '\\') {
@@ -191,7 +193,7 @@ function braceBeforeParen(
       i = closingTick(line, i)
     } else if (char === '(' && /[$<>]/.test(line.charAt(i - 1))) {
       i = closingParen(line, i)
-    } else if (char === '(' || char === ')') {
+    } else if (!text && (char === '(' || char === ')')) {
       depth += char === '(' ? 1 : -1
     }
   }
@@ -243,8 +245,10 @@ export function scanCommands(line: string): Command[] {
   // here-document. bash refuses such a `${` out of a here-document.
   let expansions: number[] = []
   const outer: number[][] = []
-  // The results of `braceBeforeParen` on this line. Each later scan uses them again.
+  // The results of `braceBeforeParen` on this line. Each later scan uses them again. A scan that
+  // reads each `)` as text gives other results, so it has a map of its own.
   const known = new Map<number, boolean>()
+  const knownText = new Map<number, boolean>()
   let tickExpansions: number[] = []
   // True when a `case` word came at this level, as the first word of a command, or in a command
   // that starts with a reserved word. Then a `)` can be the `)` of a pattern, so the scan after it
@@ -357,12 +361,16 @@ export function scanCommands(line: string): Command[] {
       closed = before === '$' || before === '<' || before === '>'
       const frame = outer.pop() ?? []
       // When `frame` is empty, the result is empty. So only a `)` in an open expansion starts the
-      // scan, which can read to the end of the line. The scan starts with the open plain
-      // parentheses of the inner expansion. After the `)` of a `case` pattern, a plain parenthesis
-      // can hide the `)` of the substitution, so the scan starts with none.
+      // scan, which can read to the end of the line. When no level holds a `case`, this `)` ends
+      // the substitution. bash then reads each `)` in the expansion as text, to its `}` (#842).
+      // Else, the scan starts with the open plain parentheses of the inner expansion. After the
+      // `)` of a `case` pattern, a plain parenthesis can hide the `)` of the substitution, so the
+      // scan starts with none.
       expansions =
         frame.length > 0 &&
-        braceBeforeParen(line, i + 1, pattern ? 0 : (frame.at(-1) as number), known)
+        (inCase
+          ? braceBeforeParen(line, i + 1, pattern ? 0 : (frame.at(-1) as number), known, false)
+          : braceBeforeParen(line, i + 1, 0, knownText, true))
           ? frame
           : []
     } else if (char === '`') {

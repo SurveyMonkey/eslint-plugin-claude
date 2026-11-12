@@ -798,6 +798,98 @@ describe('scanCommands', () => {
     ])
   })
 
+  it(`reads a \`)\` that closes no plain parenthesis of a \${...} expansion as text (#842)`, () => {
+    // bash 5.3.9 and 3.2.57 print `( ) ) #c`, then `hi`. The second `)` is text.
+    expect(commandsOf(`echo \${a:-( $(true) ) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' ) ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `( ) ) ) #c`, then `hi`, and `( ) ) ) ) #c`, then `hi`.
+    expect(commandsOf(`echo \${a:-( $(true) ) ) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' ) ) ) #c}'],
+      ['echo', 'hi'],
+    ])
+    expect(commandsOf(`echo \${a:-( $(true) ) ) ) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' ) ) ) ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `) #c`, `) ) #c` and `) ) ) #c`, then `hi`, in each case. No
+    // plain `(` comes before the substitution.
+    for (const strays of [' )', ' ) )', ' ) ) )']) {
+      expect(commandsOf(`echo \${a:-$(true)${strays} #c}; echo hi`)).toEqual([
+        ['echo', `\${a:-$`],
+        ['true'],
+        [`${strays} #c}`],
+        ['echo', 'hi'],
+      ])
+    }
+    // bash 5.3.9 and 3.2.57 print `( ) ) ) #c`, then `hi`. A second substitution comes after
+    // the stray `)`.
+    expect(commandsOf(`echo \${a:-( $(true) ) ) $(true) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['true'],
+      [' ) ) $'],
+      ['true'],
+      [' ) #c}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `( ) ) ) #c`, then `hi`. The quoted `)` is in the
+    // substitution.
+    expect(commandsOf(`echo \${a:-( $(echo ")") ) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['echo', ')'],
+      [' ) ) #c}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`reads a stray \`)\` of a \${...} expansion in a substitution in an expansion as text (#842)`, () => {
+    // bash 5.3.9 prints `( ) ) #c #d`, then `hi`. bash 3.2.57 refuses the inner expansion.
+    expect(commandsOf(`echo \${a:-$(echo \${b:-( $(true) ) ) #c}) #d}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['echo', `\${b:-( $`],
+      ['true'],
+      [' ) ) #c}'],
+      [' #d}'],
+      ['echo', 'hi'],
+    ])
+    // bash 5.3.9 prints `) #c ) #d`, then `hi`. bash 3.2.57 refuses the inner expansion.
+    expect(commandsOf(`echo \${a:-$(echo \${b:-$(true) ) #c}) ) #d}; echo hi`)).toEqual([
+      ['echo', `\${a:-$`],
+      ['echo', `\${b:-$`],
+      ['true'],
+      [' ) #c}'],
+      [' ) #d}'],
+      ['echo', 'hi'],
+    ])
+  })
+
+  it(`reads a stray \`)\` of a \${...} expansion in double quotes as text`, () => {
+    // bash 5.3.9 and 3.2.57 print `(  ) ) #c`, then `hi`, for the first two lines. For the third
+    // line, bash 5.3.9 prints `(  ) ) #c` and bash 3.2.57 prints `( ) ) #c`, then `hi`.
+    for (const text of [
+      `echo "\${a:-( $(true) ) ) #c}"; echo hi`,
+      `echo \${a:-"( $(true) ) ) #c"}; echo hi`,
+      `echo \${a:-( "$(true)" ) ) #c}; echo hi`,
+    ]) {
+      expect(commandsOf(text), text).toEqual([
+        ['echo', `\${a:-( $(true) ) ) #c}`],
+        ['echo', 'hi'],
+      ])
+    }
+    // bash 5.3.9 prints `( ) #c ) #d`, then `hi`. bash 3.2.57 refuses the inner expansion.
+    expect(commandsOf(`echo "\${a:-( $(echo \${b:-$(true) ) #c}) ) #d}"; echo hi`)).toEqual([
+      ['echo', `\${a:-( $(echo \${b:-$(true) ) #c}) ) #d}`],
+      ['echo', 'hi'],
+    ])
+  })
+
   it(`counts the plain parentheses of each \${...} expansion apart`, () => {
     // bash 5.3.9 and 3.2.57 print `( ) ) #c`, then `hi`. The `)` of the nested expansion does
     // not close the `(` of the outer one.
@@ -939,6 +1031,41 @@ describe('scanCommands', () => {
     ])
   })
 
+  it(`keeps the \`main\` result after a stray \`)\` of a \${...} expansion when a level holds a \`case\``, () => {
+    // bash 5.3.9 runs `echo RAN`, then `echo hi`, in each case. bash 3.2.57 refuses the `case`
+    // pattern in the expansion. The `)` of the pattern ends the level of the substitution in the
+    // scan. So the `)` of `$(true)` can end a level that bash keeps open.
+    for (const text of [
+      `echo \${x:-$(case a in a) echo \${y} $(true); echo RAN;; esac)}; echo hi`,
+      `echo \${x:-$(true) $(case a in a) echo RAN;; esac)}; echo hi`,
+    ]) {
+      const commands = commandsOf(text)
+      expect(commands, text).toContainEqual(['echo', 'RAN'])
+      expect(commands.at(-1), text).toEqual(['echo', 'hi'])
+    }
+    // bash 5.3.9 prints `( RAN ) ) #c`, then `hi`. bash 3.2.57 refuses the `case` pattern. The
+    // scan reads the `)` after `esac` as the `)` of a pattern, as on `main`. This is a limit.
+    expect(commandsOf(`echo \${a:-( $(case a in a) echo RAN;; esac) ) ) #c}; echo hi`)).toEqual([
+      ['echo', `\${a:-( $`],
+      ['case', 'a', 'in', 'a'],
+      ['echo', 'RAN'],
+      ['esac'],
+    ])
+    // bash 5.3.9 and 3.2.57 print `( ) ) #c`, then `hi`, in each case. The outer level holds a
+    // `case`, so the stray `)` ends the expansion, as on `main`. This is a limit.
+    expect(commandsOf(`case a in a) echo \${x:-( $(true) ) ) #c};; esac; echo hi`)).toEqual([
+      ['case', 'a', 'in', 'a'],
+      ['echo', `\${x:-( $`],
+      ['true'],
+    ])
+    expect(commandsOf(`case a in (a) echo \${x:-( $(true) ) ) #c};; esac; echo hi`)).toEqual([
+      ['case', 'a', 'in'],
+      ['a'],
+      ['echo', `\${x:-( $`],
+      ['true'],
+    ])
+  })
+
   it('reads a line of many substitutions out of an expansion in linear time', () => {
     const start = Date.now()
     expect(scanCommands(`echo ${'$(a)'.repeat(50_000)}`)).toHaveLength(100_000)
@@ -959,6 +1086,16 @@ describe('scanCommands', () => {
     // The first command, 8000 `a`, 7999 `$`, ` ) #c}` and `echo hi`.
     const start = Date.now()
     expect(scanCommands(`echo \${a:-( ${'$(a)'.repeat(8000)} ) #c}; echo hi`)).toHaveLength(16_002)
+    expect(Date.now() - start).toBeLessThan(500)
+  })
+
+  it(`reads many substitutions and stray \`)\` in one \${...} expansion in linear time`, () => {
+    // Each scan after a `)` reads each `)` as text, to the `}`. `known` holds these results apart.
+    // The first command, 8000 `a`, 7999 ` ) $`, ` ) #c}` and `echo hi`.
+    const start = Date.now()
+    const commands = scanCommands(`echo \${a:-${'$(a) )'.repeat(8000)} #c}; echo hi`)
+    expect(commands).toHaveLength(16_002)
+    expect(commands.at(-1)?.words).toEqual(['echo', 'hi'])
     expect(Date.now() - start).toBeLessThan(500)
   })
 
