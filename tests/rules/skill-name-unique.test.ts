@@ -263,8 +263,6 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
       code: named('x'),
       filename: path.join(scratch, 'dead', '.claude', 'skills', 'x', 'SKILL.md'),
     },
-    // The frontmatter of this file does not parse, so the rule reads nothing from it.
-    { code: '---\nname: [unclosed\n---\n', filename: skillAt('bad-sibling', 'dup') },
     // Not a skill or command file.
     { code: named('build'), filename: at('dup-name', 'docs', 'SKILL.md') },
     { code: named('build'), filename: at('dup-name', '.claude', 'agents', 'build.md') },
@@ -381,6 +379,19 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
+    // A command file takes its name from its path, also when its frontmatter does not parse.
+    {
+      code: '---\nname: [unclosed\n---\n\n# Deploy command\n',
+      filename: at('cmd-with-name', '.claude', 'commands', 'deploy.md'),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'deploy', others: '`skills/deploy/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
     // The path of a command file, with `/` as `:`.
     {
       code: '# Deploy command\n',
@@ -457,7 +468,21 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         { messageId: 'duplicate', data: { name: 'blank', others: '`skills/blank/SKILL.md`' } },
       ],
     },
-    // A skill whose frontmatter does not parse still has its folder name.
+    // A probe of Claude Code 2.1.322 (#821) ignored frontmatter that does not parse, and loaded
+    // the skill under its folder name. So the clash is real, and each file gets a report. The
+    // file with frontmatter that does not parse gets it at line 1.
+    {
+      code: '---\nname: [unclosed\n---\n',
+      filename: skillAt('bad-sibling', 'dup'),
+      errors: [
+        {
+          messageId: 'duplicate',
+          data: { name: 'dup', others: '`skills/x/SKILL.md`' },
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
     {
       code: named('dup'),
       filename: skillAt('bad-sibling', 'x'),

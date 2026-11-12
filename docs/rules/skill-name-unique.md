@@ -122,8 +122,12 @@ the first directory at or above the scope that has a `.git` entry. Without one, 
 the plugin root. The rule reads a `plugin.json` for a plugin only. A project `.claude/` has no
 manifest for the rule. The rule follows a link to a directory once, lists the real directory
 before a link to it, and skips `.git` and `node_modules`. It does not follow a link whose real
-path is out of the repository. It reads the file that it lints from the text that ESLint gives. It ignores a file whose frontmatter does not parse. For
-another file with frontmatter that does not parse, it uses the folder name.
+path is out of the repository. It reads the file that it lints from the text that ESLint gives.
+
+A skill whose frontmatter does not parse goes by its folder name. The rule reports it on line 1,
+and lists it in the report on the other file. A probe of Claude Code 2.1.322 (#821) gave this
+result. Claude Code ignored all of the frontmatter, and loaded the skill under its folder name.
+[`frontmatter-yaml-portable`](frontmatter-yaml-portable.md) reports the parse fault.
 
 The rule does not check these cases:
 
