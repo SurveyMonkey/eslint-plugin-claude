@@ -92,5 +92,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^reference]: [Explore the .claude directory: File reference](https://code.claude.com/docs/en/claude-directory#file-reference)
-[^keybindings]: [Customize keyboard shortcuts: Customize keyboard shortcuts](https://code.claude.com/docs/en/keybindings#customize-keyboard-shortcuts)
+[^keybindings]: [Customize keyboard shortcuts: Customize keyboard shortcuts](https://code.claude.com/docs/en/keybindings#page-title)
 [^causes]: [Debug your configuration: Check common causes](https://code.claude.com/docs/en/debug-your-config#check-common-causes)

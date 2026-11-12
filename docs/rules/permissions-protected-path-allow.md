@@ -128,4 +128,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^critical]: [Choose a permission mode: Critical paths](https://code.claude.com/docs/en/permission-modes#critical-paths)
 [^sandbox]: [Configure the sandboxed Bash tool: Protected paths](https://code.claude.com/docs/en/sandboxing#protected-paths)
 [^prefixes]: [All settings: Sandbox path prefixes](https://code.claude.com/docs/en/settings-reference#sandbox-path-prefixes)
-[^allowwrite]: [All settings: sandbox.filesystem.allowWrite](https://code.claude.com/docs/en/settings-reference#sandboxfilesystemallowwrite)
+[^allowwrite]: [All settings: sandbox.filesystem.allowWrite](https://code.claude.com/docs/en/settings-reference#sandbox-filesystem-allowwrite)

@@ -491,7 +491,7 @@ export const COMMAND_OBJECT_KEYS: readonly string[] = [
 ]
 /** The values of `permissions.defaultMode`. Source: the entry for `permissions.defaultMode` in
  *  the settings reference
- *  (https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode), checked on Claude
+ *  (https://code.claude.com/docs/en/settings-reference#permissions-defaultmode), checked on Claude
  *  Code 2.1.296 on 2026-10-10. `manual` is an alias for `default`. Review this list with the
  *  lists above, on or before the `stale_after` date of
  *  `docs/rules/permissions-default-mode-value.md`. */

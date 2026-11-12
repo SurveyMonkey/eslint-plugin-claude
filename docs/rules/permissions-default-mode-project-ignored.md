@@ -73,6 +73,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissionsdefaultmode)
+[^mode]: [All settings: permissions.defaultMode](https://code.claude.com/docs/en/settings-reference#permissions-defaultmode)
 [^ignored]: [Settings files and precedence: A value you set is ignored](https://code.claude.com/docs/en/settings#a-value-you-set-is-ignored)
 [^start]: [Choose a permission mode: Which mode a session starts in](https://code.claude.com/docs/en/permission-modes#which-mode-a-session-starts-in)

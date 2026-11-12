@@ -142,7 +142,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^http]: [Connect Claude Code to tools via MCP: Option 1: Add a remote HTTP server](https://code.claude.com/docs/en/mcp#option-1-add-a-remote-http-server)
-[^edit]: [Connect to MCP servers: Edit .mcp.json directly](https://code.claude.com/docs/en/mcp-quickstart#edit-mcpjson-directly)
+[^edit]: [Connect to MCP servers: Edit .mcp.json directly](https://code.claude.com/docs/en/mcp-quickstart#edit-mcp-json-directly)
 [^quickstart]: [Connect to MCP servers: Troubleshooting](https://code.claude.com/docs/en/mcp-quickstart#troubleshooting)
 [^validate]: [Plugin manifest reference: Validate the manifest](https://code.claude.com/docs/en/plugins/manifest-reference#validate-the-manifest)
 [^plugin]: [Troubleshoot plugins: Server is configured but never connects](https://code.claude.com/docs/en/plugins/troubleshooting#server-is-configured-but-never-connects)

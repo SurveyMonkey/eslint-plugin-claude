@@ -80,4 +80,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^import]: [How Claude remembers your project: Import additional files](https://code.claude.com/docs/en/memory#import-additional-files)
-[^notshown]: [Explore the .claude directory: What's not shown](https://code.claude.com/docs/en/claude-directory#whats-not-shown)
+[^notshown]: [Explore the .claude directory: What's not shown](https://code.claude.com/docs/en/claude-directory#what’s-not-shown)

@@ -106,8 +106,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^keys]: [All settings: permissions](https://code.claude.com/docs/en/settings-reference#permissions)
-[^dirs]: [All settings: permissions.additionalDirectories](https://code.claude.com/docs/en/settings-reference#permissionsadditionaldirectories)
-[^block]: [All settings: permissions.blockReadsOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissionsblockreadsoutsideworkingdirectories)
-[^deny-prompt]: [All settings: permissions.denyInsteadOfPrompting](https://code.claude.com/docs/en/settings-reference#permissionsdenyinsteadofprompting)
+[^dirs]: [All settings: permissions.additionalDirectories](https://code.claude.com/docs/en/settings-reference#permissions-additionaldirectories)
+[^block]: [All settings: permissions.blockReadsOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissions-blockreadsoutsideworkingdirectories)
+[^deny-prompt]: [All settings: permissions.denyInsteadOfPrompting](https://code.claude.com/docs/en/settings-reference#permissions-denyinsteadofprompting)
 [^closed]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)
 [^broken]: [Settings files and precedence: Fix a broken settings file](https://code.claude.com/docs/en/settings#fix-a-broken-settings-file)

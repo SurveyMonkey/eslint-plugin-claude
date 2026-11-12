@@ -72,4 +72,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^block]: [All settings: permissions.blockWritesOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissionsblockwritesoutsideworkingdirectories)
+[^block]: [All settings: permissions.blockWritesOutsideWorkingDirectories](https://code.claude.com/docs/en/settings-reference#permissions-blockwritesoutsideworkingdirectories)

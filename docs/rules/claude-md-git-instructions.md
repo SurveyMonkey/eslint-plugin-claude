@@ -87,5 +87,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^compete]: [How Claude remembers your project: Claude isn't following my CLAUDE.md](https://code.claude.com/docs/en/memory#claude-isnt-following-my-claude-md)
+[^compete]: [How Claude remembers your project: Claude isn't following my CLAUDE.md](https://code.claude.com/docs/en/memory#claude-isn’t-following-my-claude-md)
 [^variable]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)

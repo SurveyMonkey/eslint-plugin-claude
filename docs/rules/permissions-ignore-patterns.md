@@ -58,4 +58,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissionsdeny)
+[^deny]: [All settings: permissions.deny](https://code.claude.com/docs/en/settings-reference#permissions-deny)

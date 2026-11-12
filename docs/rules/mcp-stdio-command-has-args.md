@@ -87,5 +87,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^edit]: [Connect to MCP servers: Edit .mcp.json directly](https://code.claude.com/docs/en/mcp-quickstart#edit-mcpjson-directly)
+[^edit]: [Connect to MCP servers: Edit .mcp.json directly](https://code.claude.com/docs/en/mcp-quickstart#edit-mcp-json-directly)
 [^stdio]: [Connect Claude Code to tools via MCP: Option 3: Add a local stdio server](https://code.claude.com/docs/en/mcp#option-3-add-a-local-stdio-server)

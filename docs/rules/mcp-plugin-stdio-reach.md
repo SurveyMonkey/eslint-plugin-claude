@@ -94,6 +94,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 ## Sources
 
-[^reach]: [Add components to a plugin: Reach users on claude.ai and Cowork](https://code.claude.com/docs/en/plugins/components#reach-users-on-claudeai-and-cowork)
+[^reach]: [Add components to a plugin: Reach users on claude.ai and Cowork](https://code.claude.com/docs/en/plugins/components#reach-users-on-claude-ai-and-cowork)
 [^fields]: [Plugin manifest reference: Fields](https://code.claude.com/docs/en/plugins/manifest-reference#fields)
 [^entries]: [Marketplace reference: Plugin entries](https://code.claude.com/docs/en/plugins/marketplace-reference#plugin-entries)
