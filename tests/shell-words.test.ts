@@ -880,11 +880,69 @@ describe('scanCommands', () => {
       expect(commands.at(-1), text).toEqual(['echo', 'hi'])
     }
     // bash 5.3.9 and 3.2.57 print the body, then `RAN` and `}`. The delimiter `${b}` of the
-    // here-document gives a `}` on a later line.
+    // here-document gives a `${` on a later line.
     expect(commandsOf(`cat <<'\${b}'\n\${a:-$(true) )\n\${b}\necho RAN ; echo }`)).toContainEqual([
       'echo',
       'RAN',
     ])
+  })
+
+  it(`keeps the result of a scan that ends at a \`)\` when no separator comes before a command`, () => {
+    // bash 5.3.9 and 3.2.57 print `RAN }` for each line, after `'${x'` for the first three. The
+    // reader reads `'\'` of `$'\'${x'` as a quote, so it opens a `${x` expansion that bash does
+    // not open. bash reads the next `)` as the end of the subshell. A `then`, `do`, `else` or
+    // `elif` after a `)` can start a command with no separator.
+    for (const [text, command] of [
+      [`if (echo $'\\'\${x'\\' $(true) ) then (echo RAN }) fi`, ['echo', 'RAN', '}']],
+      [`if (echo $'\\'\${x'\\' $(true) ) then echo RAN }; fi`, ['then', 'echo', 'RAN', '}']],
+      [`while (echo $'\\'\${x'\\' $(true) ) do (echo RAN }); break; done`, ['echo', 'RAN', '}']],
+      [`if false; then (echo $'\\'\${x'\\' $(true) ) else (echo RAN }); fi`, ['echo', 'RAN', '}']],
+      [
+        `if false; then (echo $'\\'\${x'\\' $(true) ) elif (echo RAN }) then :; fi`,
+        ['echo', 'RAN', '}'],
+      ],
+    ] as const) {
+      expect(commandsOf(text), text).toContainEqual(command)
+    }
+    // bash 5.3.9 and 3.2.57 print `') ' RAN`, then `hi`. The `if (` level ends at the `)` of
+    // `$'\')'`, and the `$(` level ends at the `)` after `\'`.
+    expect(commandsOf(`echo \${x:-$(if (echo $'\\')' \\') then (echo RAN) fi )}; echo hi`)).toEqual(
+      [
+        ['echo', `\${x:-$`],
+        ['if'],
+        ['echo', '$\\'],
+        [' \\'],
+        ['then'],
+        ['echo', 'RAN'],
+        ['fi'],
+        ['}'],
+        ['echo', 'hi'],
+      ],
+    )
+    // bash 5.3.9 and 3.2.57 print `'${x ${y'`, then `RAN` and `}`. The reader opens two
+    // expansions, and a `}` closes only one. So no scan reads each `)` as text here.
+    expect(commandsOf(`{ (echo $'\\'\${x \${y'\\' $(true) ) }; echo RAN; echo }`)).toContainEqual([
+      'echo',
+      'RAN',
+    ])
+    // bash 5.3.9 and 3.2.57 print the body, then `RAN` and `}`. In the body, a `${c}` or a `\`
+    // before a new line comes after the stray `)`.
+    for (const text of [
+      `cat <<'\${b}'\n\${a:-$(true) ) \${c}\n\${b}\necho RAN ; echo }`,
+      `cat <<'\${b}'\n\${a:-$(true) ) \\\n\${b}\necho RAN ; echo }`,
+    ]) {
+      expect(commandsOf(text), text).toContainEqual(['echo', 'RAN'])
+    }
+    // bash 5.3.9 and 3.2.57 print `) athen #c` and `) thence #c`, then `hi`. These words are not
+    // reserved words, so the scan reads them as text.
+    for (const word of ['athen', 'thence']) {
+      expect(commandsOf(`echo \${a:-$(true) ) ${word} #c}; echo hi`)).toEqual([
+        ['echo', `\${a:-$`],
+        ['true'],
+        [` ) ${word} #c}`],
+        ['echo', 'hi'],
+      ])
+    }
   })
 
   it(`reads a stray \`)\` of a \${...} expansion in a substitution in an expansion as text (#842)`, () => {
@@ -986,8 +1044,8 @@ describe('scanCommands', () => {
       `echo \${a:-( $(echo \${x:-$(case a in a) echo RAN;; esac)}) )}; echo hi`,
       `echo \${a:-( \`echo \${x:-$(case a in a) echo RAN;; esac)}\` )}; echo hi`,
       `cat <<'E'\n\${a:-(\nE\necho \${x:-$(case a in a) echo RAN;; esac)}; echo hi`,
-      // A subshell in the arm puts a plain `(` in the scan after the `)` of the pattern. A scan
-      // that reads each `)` as text finds the `}`, and reads the arm as text.
+      // A subshell in the arm puts a plain `(` in the scan after the `)` of the pattern. The
+      // `inCase` value stops the second scan here.
       `echo \${x:-$(case a in a) (echo RAN);; esac)}; echo hi`,
     ]) {
       const commands = commandsOf(text)
@@ -1086,7 +1144,8 @@ describe('scanCommands', () => {
       expect(commands.at(-1), text).toEqual(['echo', 'hi'])
     }
     // bash 5.3.9 prints `( RAN ) ) #c`, then `hi`. bash 3.2.57 refuses the `case` pattern. The
-    // scan reads the `)` after `esac` as the `)` of a pattern, as on `main`. This is a limit.
+    // reader ends the substitution at the `)` of the pattern, as on `main`. The scan after it
+    // stops at the `)` after `esac`, so no expansion stays open. This is a limit.
     expect(commandsOf(`echo \${a:-( $(case a in a) echo RAN;; esac) ) ) #c}; echo hi`)).toEqual([
       ['echo', `\${a:-( $`],
       ['case', 'a', 'in', 'a'],
@@ -1143,7 +1202,7 @@ describe('scanCommands', () => {
   it(`reads many substitutions and stray \`)\` in one \${...} expansion in linear time`, () => {
     // After the `)` of each substitution, a second scan reads each `)` as text, to the `}`.
     // `knownText` holds these results, apart from `known`.
-    // The first command, 8000 `a`, 7999 ` )$`, ` ) #c}` and `echo hi`.
+    // The result holds the first command, 8000 `a`, 7999 ` )$`, ` ) #c}` and `echo hi`.
     const start = Date.now()
     const commands = scanCommands(`echo \${a:-${'$(a) )'.repeat(8000)} #c}; echo hi`)
     expect(commands).toHaveLength(16_002)
