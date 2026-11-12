@@ -483,6 +483,11 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     },
+    {
+      code: named('dup'),
+      filename: skillAt('bad-sibling', 'x'),
+      errors: [{ messageId: 'duplicate', data: { name: 'dup', others: '`skills/dup/SKILL.md`' } }],
+    },
     // YAML that parses to a value that is not a map, or to null, gives no field. So the skill also
     // goes by its folder name. The rule infers this result: the probe (#821) did not cover it.
     ...['---\n- a\n---\n', '---\nhello\n---\n', '---\n---\n'].map((code) => ({
@@ -497,11 +502,6 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         },
       ],
     })),
-    {
-      code: named('dup'),
-      filename: skillAt('bad-sibling', 'x'),
-      errors: [{ messageId: 'duplicate', data: { name: 'dup', others: '`skills/dup/SKILL.md`' } }],
-    },
     // Each folding of the names.
     ...sameCases,
     // The files that the message names print each refused character as its code point.
