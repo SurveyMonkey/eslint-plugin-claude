@@ -468,7 +468,7 @@ markdownTester.run('skill-name-unique', ruleOf('skill-name-unique'), {
         { messageId: 'duplicate', data: { name: 'blank', others: '`skills/blank/SKILL.md`' } },
       ],
     },
-    // A probe of Claude Code 2.1.322 (#821) ignored frontmatter that does not parse, and loaded
+    // In a probe (#821), Claude Code 2.1.322 ignored frontmatter that does not parse. It loaded
     // the skill under its folder name. So the clash is real, and each file gets a report. The
     // file with frontmatter that does not parse gets it at line 1.
     {

@@ -189,7 +189,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'duplicate' }> = {
           end: { line: 1, column: 1 },
         }
         const first = node.children[0]
-        // A probe of Claude Code 2.1.322 (#821) ignored frontmatter that does not parse, and
+        // In a probe (#821), Claude Code 2.1.322 ignored frontmatter that does not parse. It
         // loaded the skill under its folder name. So such a skill keeps `given` as null.
         const fm =
           first?.type === 'yaml' && file.kind === 'skill'
