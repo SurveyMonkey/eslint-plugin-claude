@@ -19,6 +19,9 @@ markdownTester.run('agent-mcp-servers-schema', ruleOf('agent-mcp-servers-schema'
     ...['stdio', 'http', 'sse', 'ws'].map((type) =>
       file(`mcpServers:\n  - remote:\n      type: ${type}\n      url: https://example.com\n`),
     ),
+    // The mcp page: the `type` field "accepts `streamable-http` as an alias for `http`".
+    // The sub-agents page: an entry is "an inline server definition", so the same schema applies.
+    file('mcpServers:\n  - remote:\n      type: streamable-http\n      url: https://example.com\n'),
     // Claude Code skips an `sdk` server with a warning. It is not a schema fault.
     file('mcpServers:\n  - app:\n      type: sdk\n'),
     // A server config with no `type`.
@@ -65,6 +68,16 @@ markdownTester.run('agent-mcp-servers-schema', ruleOf('agent-mcp-servers-schema'
     {
       ...file('mcpServers:\n  - db:\n      type: grpc\n'),
       errors: [{ messageId: 'badType', data: { server: 'db', type: 'grpc' } }],
+    },
+    // The message lists each accepted type, `streamable-http` included.
+    {
+      ...file('mcpServers:\n  - db:\n      type: tcp\n'),
+      errors: [
+        {
+          message:
+            'The inline server `db` has the type `tcp`. Use stdio, http, sse, ws or streamable-http.',
+        },
+      ],
     },
     {
       ...file('mcpServers:\n  - db:\n      type: 5\n'),

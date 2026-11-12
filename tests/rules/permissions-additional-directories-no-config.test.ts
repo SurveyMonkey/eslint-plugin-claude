@@ -66,6 +66,10 @@ describe(`${name}: reports`, () => {
     expect(messages[0]?.message).toContain('CLAUDE.md')
     expect(messages[0]?.message).toContain('--add-dir')
     expect(messages[0]?.message).toContain('CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD')
+    // The memory page: the variable loads rules "except rules that set a `paths` field".
+    expect(messages[0]?.message).toContain(
+      'A rule with a `paths` field does not load from --add-dir.',
+    )
   })
 
   for (const held of [

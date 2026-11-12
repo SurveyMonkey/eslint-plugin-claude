@@ -41,8 +41,9 @@ The settings files of such a directory are not in the list. A directory added wi
 the advice of the message would not fit.[^config]
 
 The message gives the way to load the files. A directory added with `--add-dir` loads skills, commands and agents. It loads
-`CLAUDE.md` and rules only with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`.[^grant] Starting Claude Code in that directory
-loads all of it.
+`CLAUDE.md` and rules without `paths` only with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`.[^grant] A rule that sets a `paths` field
+does not load, even with the variable.[^memory-add-dir] If you start Claude Code in that directory,
+it loads all of it.
 
 ### Where a relative entry starts
 
@@ -87,4 +88,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^config]: [Configure permissions: Additional directories grant file access, not configuration](https://code.claude.com/docs/en/permissions#additional-directories-grant-file-access-not-configuration)
+[^memory-add-dir]: [How Claude remembers your project: Load from additional directories](https://code.claude.com/docs/en/memory#load-from-additional-directories)
 [^grant]: [Set up Claude Code in a monorepo or large codebase: Grant access across packages or repositories](https://code.claude.com/docs/en/large-codebases#grant-access-across-packages-or-repositories)

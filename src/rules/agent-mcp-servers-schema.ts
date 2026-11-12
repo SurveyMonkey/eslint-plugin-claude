@@ -50,7 +50,7 @@ const rule: MarkdownRuleDefinition<{
         'Entry {{index}} of `mcpServers` must be a server name, or a map with one key: the server name.',
       badConfig: 'The inline server `{{server}}` must have a map as its config.',
       badType:
-        'The inline server `{{server}}` has the type `{{type}}`. Use stdio, http, sse or ws.',
+        'The inline server `{{server}}` has the type `{{type}}`. Use stdio, http, sse, ws or streamable-http.',
     },
   },
   create(context) {
