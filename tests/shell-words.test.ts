@@ -904,8 +904,8 @@ describe('scanCommands', () => {
     ] as const) {
       expect(commandsOf(text), text).toContainEqual(command)
     }
-    // bash 5.3.9 and 3.2.57 print `') ' RAN`, then `hi`. The `if (` level ends at the `)` of
-    // `$'\')'`, and the `$(` level ends at the `)` after `\'`.
+    // bash 5.3.9 and 3.2.57 print `') ' RAN`, then `hi`. The reader ends the `if (` level at the
+    // `)` of `$'\')'`, and the `$(` level at the `)` after `\'`.
     expect(commandsOf(`echo \${x:-$(if (echo $'\\')' \\') then (echo RAN) fi )}; echo hi`)).toEqual(
       [
         ['echo', `\${x:-$`],
