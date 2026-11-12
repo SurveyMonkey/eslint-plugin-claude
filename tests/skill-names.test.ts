@@ -120,6 +120,15 @@ describe('firstFault', () => {
     expect(firstFault(text)).toBeNull()
   })
 
+  // The parts of this text are from the cases above: an Arabic U+200C, and two red hearts with
+  // U+FE0F. The index of each part catches a count of code points that is wrong in `takenAt`.
+  // A joiner before the last emoji, and a letter between the two emoji, move each index.
+  it('takes each part at its own index', () => {
+    const text = 'ab\u0628\u200C\u0628\u2764\uFE0Fy\u2764\uFE0F'
+    expect(firstFault(text)).toBeNull()
+    expect(escapeName(text)).toBe(text)
+  })
+
   // Claude Code 2.1.319 refused a project skill folder with each of these names.
   it.each([
     ['a red heart with U+FE0E', 'x\u2764\uFE0Ey', 'U+FE0E'],
@@ -187,6 +196,15 @@ describe('firstFault', () => {
   it('escapes a very long run of marks in linear time', () => {
     const text = `a${'\u0301'.repeat(30000)}`
     expect(escapeName(text)).toBe(`a${'\u0301'.repeat(8)}${'<U+0301>'.repeat(29992)}`)
+  }, 3000)
+
+  // Claude Code 2.1.319 loaded U+1F600, so the text stays as it is. A count of the code points
+  // from the start of the text for each match is quadratic. In one run, 50000 U+1F600 then took
+  // 10 seconds.
+  it('escapes a very long run of emoji in linear time', () => {
+    const text = '\u{1F600}'.repeat(50000)
+    expect(text.length).toBe(100000)
+    expect(escapeName(text)).toBe(text)
   }, 3000)
 
   // Claude Code 2.1.322 refused a project skill folder with each of these names. Its debug log

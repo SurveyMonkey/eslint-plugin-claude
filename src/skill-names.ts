@@ -139,12 +139,18 @@ function takenAt(chars: string[]): Set<number> {
   const text = chars.join('')
   const taken = new Set<number>()
   for (const pattern of [EMOJI, SCRIPT_JOINER]) {
+    // `first` is the count of code points before the match. Each match adds only the code points
+    // after the last match. A count from the start of the text for each match takes quadratic
+    // time.
+    let unit = 0
+    let first = 0
     for (const match of text.matchAll(pattern)) {
+      first += [...text.slice(unit, match.index)].length
+      unit = match.index
       const end = match.index + match[0].length
       if (pattern === EMOJI && refusedBefore(match[0], text.slice(end))) {
         continue
       }
-      const first = [...text.slice(0, match.index)].length
       const count = [...match[0]].length
       for (let index = first; index < first + count; index++) {
         taken.add(index)
