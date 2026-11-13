@@ -7122,18 +7122,22 @@ describe('files of each rule in recommended and strict', () => {
     const cwd = mkdtempSync(path.join(tmpdir(), 'claude-config-globs-'))
     try {
       for (const config of ['recommended', 'strict']) {
+        // One instance for each config. The user block has no `files` key, so it sets each
+        // rule for every file. A glob reaches a rule only through the blocks of files.
+        const eslint = new ESLint({
+          cwd,
+          overrideConfigFile: true,
+          overrideConfig: defineConfig([
+            {
+              plugins: { claude: plugin },
+              extends: [`claude/${config}`],
+              rules: Object.fromEntries(
+                Object.keys(plugin.rules).map((n) => [`claude/${n}`, 'warn']),
+              ),
+            },
+          ]),
+        })
         for (const { name, language, files, also } of all) {
-          const eslint = new ESLint({
-            cwd,
-            overrideConfigFile: true,
-            overrideConfig: defineConfig([
-              {
-                plugins: { claude: plugin },
-                extends: [`claude/${config}`],
-                rules: { [`claude/${name}`]: 'warn' },
-              },
-            ]),
-          })
           const groups: [Target['language'], string[]][] = [[language, files]]
           if (also) groups.push([also.language, also.files])
           for (const [lang, globs] of groups) {
@@ -7153,7 +7157,7 @@ describe('files of each rule in recommended and strict', () => {
     } finally {
       rmSync(cwd, { recursive: true, force: true })
     }
-  }, 120_000)
+  }, 30_000)
 
   it('has one block for each language, with the union of the globs and no rules', async () => {
     const all = await targets()
