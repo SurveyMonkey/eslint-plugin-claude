@@ -8,6 +8,7 @@ import type { Rule } from 'eslint'
 import { TOOL_EVENTS } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
 import { HOOKS_TARGET, handlersOf, hooksListener, memberOf } from '../hooks-config.ts'
+import { isBelow } from '../min-version.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
 
 const name = 'hooks-if-dir-glob-depth' as const
@@ -24,14 +25,6 @@ const SINGLE_SEGMENT = /^(?![.]{1,2}\/)([^/*?[\]{}!~\\][^/*?[\]{}\\]*)\/\*\*$/
 
 interface Options {
   minVersion?: string
-}
-
-/** True when the version `version` is `limit` or later. Both are `major.minor.patch`. */
-function atLeast(version: string, limit: string): boolean {
-  const have = version.split('.').map(Number)
-  const want = limit.split('.').map(Number)
-  const index = have.findIndex((part, at) => part !== want[at])
-  return index === -1 || (have[index] as number) > (want[index] as number)
 }
 
 const rule: Rule.RuleModule = {
@@ -63,7 +56,7 @@ const rule: Rule.RuleModule = {
   },
   create(context) {
     const [{ minVersion }] = context.options as [Options]
-    if (minVersion === undefined || !atLeast(minVersion, SINCE)) {
+    if (minVersion === undefined || isBelow(minVersion, SINCE)) {
       return {}
     }
     return hooksListener(context, (source) => {

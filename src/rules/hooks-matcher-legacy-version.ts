@@ -10,6 +10,7 @@ import {
 } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
 import { exactValues, groupsOf, HOOKS_TARGET, hooksListener } from '../hooks-config.ts'
+import { isBelow } from '../min-version.ts'
 
 const name = 'hooks-matcher-legacy-version' as const
 
@@ -22,14 +23,6 @@ const COMMA_FIXED = '2.1.191'
 
 interface Options {
   minVersion?: string
-}
-
-/** True when the version `version` is older than `limit`. Both are `major.minor.patch`. */
-function isBefore(version: string, limit: string): boolean {
-  const have = version.split('.').map(Number)
-  const want = limit.split('.').map(Number)
-  const index = have.findIndex((part, at) => part !== want[at])
-  return index !== -1 && (have[index] as number) < (want[index] as number)
 }
 
 const rule: Rule.RuleModule = {
@@ -78,11 +71,11 @@ const rule: Rule.RuleModule = {
         // support are for `hooks-matcher-unsupported-event`.
         const free = !narrow && !NO_MATCHER_EVENTS.includes(event)
         const wide = exactValues(value, false)
-        if (free && wide !== null && value.includes(',') && isBefore(minVersion, COMMA_FIXED)) {
+        if (free && wide !== null && value.includes(',') && isBelow(minVersion, COMMA_FIXED)) {
           context.report({ loc, messageId: 'comma', data })
         }
         // An event with a fixed set of values is for `hooks-matcher-enum`.
-        if (free && !MATCHER_VALUES.has(event) && isBefore(minVersion, HYPHEN_FIXED)) {
+        if (free && !MATCHER_VALUES.has(event) && isBelow(minVersion, HYPHEN_FIXED)) {
           for (const segment of wide ?? []) {
             if (/\w-\w/.test(segment)) {
               context.report({ loc, messageId: 'hyphen', data: { min: minVersion, segment } })
@@ -90,7 +83,7 @@ const rule: Rule.RuleModule = {
           }
         }
         for (const since of MATCHER_VALUE_SINCE) {
-          if (since.event === event && isBefore(minVersion, since.version)) {
+          if (since.event === event && isBelow(minVersion, since.version)) {
             for (const segment of exactValues(value, narrow) ?? []) {
               if (since.values.includes(segment)) {
                 context.report({

@@ -10,6 +10,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { PLUGIN_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type MemberNode, pluginEntries, type ValueNode } from '../marketplace-json.ts'
+import { isBelow } from '../min-version.ts'
 
 const name = 'marketplace-min-version' as const
 
@@ -29,15 +30,6 @@ const SOURCE_TYPES: ReadonlyMap<string, string> = new Map([
   [PLUGIN_SOURCE_TYPES.archive, '2.1.224'],
   [PLUGIN_SOURCE_TYPES.command, '2.1.229'],
 ])
-
-/** True when version `a` is older than version `b`. Both are `major.minor.patch`.
- *  The comparison is numeric: `2.1.99` is older than `2.1.224`. */
-function older(a: string, b: string): boolean {
-  const left = a.split('.').map(Number)
-  const right = b.split('.').map(Number)
-  const index = left.findIndex((part, i) => part !== right[i])
-  return index !== -1 && (left[index] as number) < (right[index] as number)
-}
 
 const rule: JSONRuleDefinition<{
   RuleOptions: Options
@@ -77,7 +69,7 @@ const rule: JSONRuleDefinition<{
       return {}
     }
     const check = (node: MemberNode | ValueNode, feature: string, since: string) => {
-      if (older(minVersion, since)) {
+      if (isBelow(minVersion, since)) {
         context.report({ node, messageId: 'tooNew', data: { feature, since, minVersion } })
       }
     }

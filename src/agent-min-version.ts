@@ -5,17 +5,3 @@
 
 /** The options of such a rule. */
 export type MinVersionOptions = [{ minVersion?: string }]
-
-/** True when the version `version` is lower than `required`. Both are
- *  `major.minor.patch`. */
-export function isBelow(version: string, required: string): boolean {
-  const have = version.split('.').map(Number)
-  const need = required.split('.').map(Number)
-  for (const [index, part] of need.entries()) {
-    const own = have[index] as number
-    if (own !== part) {
-      return own < part
-    }
-  }
-  return false
-}
