@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-claude",
-  "version": "0.13.0",
+  "version": "1.0.0",
   "description": "An ESLint plugin that lints Claude Code configuration: CLAUDE.md, skills, subagents, hooks, settings, permissions, MCP servers, and plugin manifests.",
   "keywords": [
     "claude-code",
