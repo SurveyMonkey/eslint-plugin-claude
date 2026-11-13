@@ -3,6 +3,7 @@
 // works for one handler type, one event, one place, or without another field.
 // A handler with no type or an unknown type is for `hooks-config-schema`.
 import type { Rule } from 'eslint'
+import { ON_FAILURE_IGNORED } from '../data/hook-events.ts'
 import { docsUrl } from '../docs-url.ts'
 import {
   HOOKS_TARGET,
@@ -41,10 +42,6 @@ interface Problem {
 /** The events where `continueOnBlock` has no effect. The reason goes to Claude as a tool error
  *  and the turn continues, whatever the field says (the hooks reference, "Response schema"). */
 const CONTINUE_IGNORED = ['PostToolUseFailure', 'TaskCreated']
-
-/** The events where exit code 2 sends Claude back to work, so `onFailure` has no effect
- *  (the hooks reference, "Block the action when a hook fails"). */
-const ON_FAILURE_IGNORED = ['Stop', 'SubagentStop', 'TaskCompleted', 'TeammateIdle']
 
 /** The most seconds that the SessionEnd budget rises to (the hooks reference, "SessionEnd"),
  *  and the budget that a plugin hook cannot raise. The environment variable
