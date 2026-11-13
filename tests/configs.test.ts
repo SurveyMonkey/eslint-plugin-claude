@@ -621,8 +621,8 @@ const TREE: Record<string, string> = {
   // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
   'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
   'plugins/loc/.claude-plugin/bin/tool': '',
-  // A `settings.json` inside `.claude-plugin/`, which `plugin-manifest-location` names, and a
-  // root `settings.json` that is not an object, which `plugin-settings-keys` reports (#383).
+  // A `settings.json` inside `.claude-plugin/` and a root `settings.json`. No rule reads either
+  // file. `plugin-manifest-location` reports the plugin for `bin` only.
   'plugins/loc/.claude-plugin/settings.json': '{"theme": "dark"}',
   'plugins/loc/settings.json': '[]',
   // The default `skills/` directory is in the `skills` key too. That entry is a report of
@@ -755,13 +755,6 @@ const TREE: Record<string, string> = {
   'plugins/msk2/monitors/monitors.json': JSON.stringify([
     { name: 'm', description: 'd', command: 'run', when: 'on-skill-invoke:gone' },
   ]),
-  // A plugin that sets `agent` in the manifest and in a root `settings.json`. The file wins, and
-  // the plugin has no agent `b`.
-  'plugins/set/.claude-plugin/plugin.json': JSON.stringify({
-    name: 'set',
-    settings: { agent: 'a' },
-  }),
-  'plugins/set/settings.json': JSON.stringify({ agent: 'b' }),
   // A `min` bound on a string option.
   'plugins/uca/.claude-plugin/plugin.json': JSON.stringify({
     name: 'uca',
@@ -2905,7 +2898,7 @@ const GIT_TREE: Record<string, string> = {
   'ok/bin/tool': '#!/bin/sh\n',
   'loose/bin/tool': '#!/bin/sh\n',
   // `statusline-script-exists`: a script with mode `100644`, a script that is not there, and a
-  // key of each of the three, in each file that it reads. The project of a managed file is the
+  // key of each of the two, in each file that it reads. The project of a managed file is the
   // repository, so it names `sl/line.sh`. A hidden drop-in is for `settings-managed-file`. The
   // same content where no rule reads it. A script with mode `100755` is silent.
   'sl/line.sh': '#!/bin/sh\n',
@@ -2914,7 +2907,7 @@ const GIT_TREE: Record<string, string> = {
     statusLine: { type: 'command', command: `${projectDir}/line.sh` },
   }),
   'sl/.claude/settings.local.json': JSON.stringify({
-    subagentStatusLine: { type: 'command', command: './gone.sh' },
+    fileSuggestion: { type: 'command', command: './gone.sh' },
   }),
   'sl/managed-settings.json': JSON.stringify({
     model: 'opus',
@@ -3560,13 +3553,11 @@ const PLUGIN_RULES: {
     files: ['**/.claude-plugin/plugin.json', '**/monitors/monitors.json'],
   },
   { name: 'plugin-npm-source-shrinkwrap', files: ['**/.claude-plugin/plugin.json'] },
-  { name: 'plugin-settings-single-source', files: ['**/.claude-plugin/plugin.json'] },
   {
     name: 'plugin-user-config-sensitive-in-content',
     language: 'markdown/gfm',
     files: ['**/*.md'],
   },
-  { name: 'plugin-settings-keys', files: ['**/.claude-plugin/plugin.json', '**/settings.json'] },
   // The rules with the option `minVersion` give no report in the config run, which sets no option.
   {
     name: 'plugin-feature-min-version',
@@ -3602,11 +3593,6 @@ const PLUGIN_RULES: {
   {
     name: 'plugin-path-no-backslash',
     files: ['**/.claude-plugin/plugin.json'],
-    severity: 'warn',
-  },
-  {
-    name: 'plugin-settings-agent-exists',
-    files: ['**/.claude-plugin/plugin.json', '**/settings.json'],
     severity: 'warn',
   },
   {
@@ -4255,7 +4241,6 @@ const EXPECTED = [
   'plugins/msk/.claude-plugin/plugin.json: claude/plugin-monitors-skill-exists@2',
   'plugins/msk2/monitors/monitors.json: claude/plugin-monitors-skill-exists@2',
   'plugins/loc/.claude-plugin/plugin.json: claude/plugin-manifest-location@2',
-  'plugins/loc/settings.json: claude/plugin-settings-keys@2',
   'plugins/bare/agents/a.md: claude/plugin-path-var-braced@2',
   'plugins/bare/commands/c.md: claude/command-legacy-format@1',
   'plugins/bare/commands/c.md: claude/plugin-path-var-braced@2',
@@ -4301,8 +4286,6 @@ const EXPECTED = [
   'plugins/shadow/.claude-plugin/plugin.json: claude/plugin-default-dir-shadowed@2',
   'plugins/shadow/commands/c.md: claude/command-legacy-format@1',
   'plugins/shadow/commands/c.md: claude/skill-description-present@1',
-  'plugins/set/.claude-plugin/plugin.json: claude/plugin-settings-single-source@2',
-  'plugins/set/settings.json: claude/plugin-settings-agent-exists@1',
   'plugins/sen/agents/a.md: claude/plugin-user-config-sensitive-in-content@2',
   'plugins/sen/commands/c.md: claude/command-legacy-format@1',
   'plugins/sen/commands/c.md: claude/skill-description-present@1',
@@ -6473,7 +6456,7 @@ describe('configs', () => {
   }, 30_000)
 
   // #380: a `.claude` folder that is also a plugin root. Its `settings.json` is the project
-  // settings and the plugin default settings. One `agent` key gets one report.
+  // settings. `settings-agent-exists` reports the `agent` key once.
   it('reports one agent key once in a .claude folder that is also a plugin root', async () => {
     const top = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-380-'))
     try {

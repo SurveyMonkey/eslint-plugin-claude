@@ -9,7 +9,7 @@ import json from '@eslint/json'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import claude from '../src/index.ts'
-import { readListedPluginAt, readPluginAt } from '../src/plugin-manifest.ts'
+import { readPluginAt } from '../src/plugin-manifest.ts'
 import { link, marketplaceOf, noLinks, tree } from './marketplace-tree.test-support.ts'
 import { lintPlugin, lintPluginFile, pluginTree } from './plugin-tree.test-support.ts'
 import { lintMarkdown } from './rule-tester.test-support.ts'
@@ -130,57 +130,6 @@ describe('a plugin root that links out of the repository', () => {
 })
 
 describe('the cross-file rules of the plugin layer', () => {
-  const AGENT = JSON.stringify({ name: 'p', settings: { agent: 'ghost' } })
-  it('plugin-settings-agent-exists reports in the plugin in the repository', () => {
-    const { dir, code } = pluginTree(AGENT)
-    expect(lintPlugin('plugin-settings-agent-exists', dir, code).map((m) => m.messageId)).toEqual([
-      'missing',
-    ])
-  })
-  linked('plugin-settings-agent-exists stays silent for the linked plugin manifest', () => {
-    const { dir } = linkedOut({}, {}, AGENT)
-    expect(lintPlugin('plugin-settings-agent-exists', dir, AGENT)).toEqual([])
-  })
-  it('plugin-settings-agent-exists reports in the settings.json of the plugin in the repository', () => {
-    const { dir } = pluginTree(MANIFEST, { 'settings.json': '{"agent": "ghost"}' })
-    const file = path.join(dir, 'settings.json')
-    expect(
-      lintPluginFile(
-        'plugin-settings-agent-exists',
-        ['**/settings.json'],
-        file,
-        '{"agent": "ghost"}',
-      ).map((m) => m.messageId),
-    ).toEqual(['missing'])
-  })
-  linked(
-    'plugin-settings-agent-exists stays silent for the settings.json of the linked plugin',
-    () => {
-      const { dir } = linkedOut({}, { 'settings.json': '{"agent": "ghost"}' })
-      const file = path.join(dir, 'settings.json')
-      expect(
-        lintPluginFile(
-          'plugin-settings-agent-exists',
-          ['**/settings.json'],
-          file,
-          '{"agent": "ghost"}',
-        ),
-      ).toEqual([])
-    },
-  )
-
-  const SETTINGS = JSON.stringify({ name: 'p', settings: { agent: 'a' } })
-  it('plugin-settings-single-source reports in the plugin in the repository', () => {
-    const { dir, code } = pluginTree(SETTINGS, { 'settings.json': '{"agent": "b"}' })
-    expect(lintPlugin('plugin-settings-single-source', dir, code).map((m) => m.messageId)).toEqual([
-      'ignored',
-    ])
-  })
-  linked('plugin-settings-single-source stays silent for the linked plugin', () => {
-    const { dir } = linkedOut({}, { 'settings.json': '{"agent": "b"}' }, SETTINGS)
-    expect(lintPlugin('plugin-settings-single-source', dir, SETTINGS)).toEqual([])
-  })
-
   const SENSITIVE = JSON.stringify({
     name: 'p',
     userConfig: { token: { type: 'string', title: 'T', description: 'D', sensitive: true } },
@@ -417,8 +366,7 @@ describe('readPluginAt', () => {
   linked('gives no plugin for a root that links out of the repository', () => {
     expect(readPluginAt(linkedOut({}).dir)).toBeUndefined()
   })
-  // A marketplace lists `plugins/p`, which has no `plugin.json`. Only `readListedPluginAt` gives
-  // a plugin for it, so the other callers of `readPluginAt` keep their reports (#384).
+  // A marketplace lists `plugins/p`, which has no `plugin.json`. The root gives no plugin (#384).
   it('gives no plugin for a listed root with no manifest', () => {
     const top = tree({
       '.claude-plugin/marketplace.json': marketplaceOf([{ name: 'p', source: './plugins/p' }]),
@@ -426,6 +374,5 @@ describe('readPluginAt', () => {
     })
     const dir = path.join(top, 'plugins', 'p')
     expect(readPluginAt(dir)).toBeUndefined()
-    expect(readListedPluginAt(dir)).toMatchObject({ fields: {}, root: dir })
   })
 })

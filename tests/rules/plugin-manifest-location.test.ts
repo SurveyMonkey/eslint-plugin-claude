@@ -47,7 +47,6 @@ describe(RULE, () => {
     ['themes', { '.claude-plugin/themes/t.json': '{}' }, '`themes`'],
     ['monitors', { '.claude-plugin/monitors/monitors.json': '[]' }, '`monitors`'],
     ['executables', { '.claude-plugin/bin/tool': '' }, '`bin`'],
-    ['settings', { '.claude-plugin/settings.json': '{}' }, '`settings.json`'],
     ['an MCP file', { '.claude-plugin/.mcp.json': '{}' }, '`.mcp.json`'],
     ['an LSP file', { '.claude-plugin/.lsp.json': '{}' }, '`.lsp.json`'],
   ])('reports %s', (_title, files, names) => {
@@ -126,6 +125,12 @@ describe(`${RULE} (silent)`, () => {
       expect(lint(dir, code)).toEqual([])
     },
   )
+
+  // The Standard layout table dropped `settings.json` with Claude Code 2.1.323.
+  check('stays silent for a settings.json in .claude-plugin/', () => {
+    const { dir, code } = pluginTree({ name: 'p' }, { '.claude-plugin/settings.json': '{}' })
+    expect(lint(dir, code)).toEqual([])
+  })
 
   check('stays silent for a directory that holds no manifest on disk', () => {
     const top = tree({ '.claude-plugin/skills/s/SKILL.md': '# S\n' })

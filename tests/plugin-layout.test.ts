@@ -13,7 +13,6 @@ import {
   PLUGIN_COMMAND_FIELDS,
   PLUGIN_COMPONENT_NAMES,
   PLUGIN_PATH_KEYS,
-  PLUGIN_SETTINGS_KEYS,
   REPLACED_DEFAULTS,
   SYSTEM_COMMANDS,
   THEME_BASES,
@@ -31,7 +30,6 @@ describe('plugin component names', () => {
       'hooks',
       'monitors',
       'output-styles',
-      'settings.json',
       'skills',
       'themes',
       'workflows',
@@ -55,12 +53,6 @@ describe('keys that replace a default folder', () => {
     for (const { folder } of REPLACED_DEFAULTS) {
       expect(PLUGIN_COMPONENT_NAMES).toContain(folder)
     }
-  })
-})
-
-describe('plugin settings keys', () => {
-  it('holds the two keys that take effect, as the docs name them', () => {
-    expect(PLUGIN_SETTINGS_KEYS).toEqual(['agent', 'subagentStatusLine'])
   })
 })
 

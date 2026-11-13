@@ -40,10 +40,10 @@ release.
   keys.[^privacy][^channel] Set them in `env`. A name is a capital letter, then capital letters,
   digits and underscores. An unknown key of another form gets `unknownKey`.
 - **An unknown field inside a documented object** gets `unknownKey`, with the path of the
-  field. The objects are `attribution`, `statusLine`, `subagentStatusLine`, `fileSuggestion`,
-  `voice`, `spinnerVerbs`, `spinnerTipsOverride`, `spellcheck`, `worktree`, `remote`,
-  `policyHelper`, `modelPicker`, `modelPricing`, the entries of `modelSettings`, and the rows of
-  the arrays below. A map, such as `modelOverrides`, `skillOverrides` and `env`, has no fixed
+  field. The objects are `attribution`, `statusLine`, `fileSuggestion`, `voice`,
+  `spinnerVerbs`, `spinnerTipsOverride`, `spellcheck`, `worktree`, `remote`, `policyHelper`,
+  `modelPicker`, `modelPricing`, the entries of `modelSettings`, and the rows of the arrays
+  below. A map, such as `modelOverrides`, `skillOverrides` and `env`, has no fixed
   keys.
 
 A top-level key with a dot in its name is one key. `"sandbox.bwrapPath"` at the top level is an
@@ -87,7 +87,7 @@ last review. The kinds of value are below.
   `statusLine.padding`, `statusLine.refreshInterval` (at least 1), `modelPricing.multiplier`
   (above 0, at most 10), each `modelPricing` rate (0 to 10000), `policyHelper.timeoutMs` (at least
   1000), `policyHelper.refreshIntervalMs` (`0` or at least 60000), and the fields of a tip.
-- **Shapes.** `attribution` is an object or `false`. `statusLine`, `subagentStatusLine` and
+- **Shapes.** `attribution` is an object or `false`. `statusLine` and
   `fileSuggestion` need `type: "command"` and `command`. `modelPicker` rows need `model`.
   `modelPricing` rows need `input`, `output`, `cacheRead` and `cacheWrite`.
   `footerLinksRegexes` rows need `type`, `pattern` and `url`. `sshConfigs` rows need `id`, `name`

@@ -33,12 +33,13 @@ installed plugins, with no error and no skills.[^missing]
 The rule runs on a `plugin.json`. It lists the entries of the `.claude-plugin/` directory next to
 it. It reports once, on the first line. The report names the entries that are default component
 locations of a plugin.[^standard] It names them in name order. The names are `.lsp.json`,
-`.mcp.json`, `agents`, `bin`, `commands`, `hooks`, `monitors`, `output-styles`, `settings.json`,
-`skills`, `themes` and `workflows`. A name counts when it is a file, a directory or a link.
+`.mcp.json`, `agents`, `bin`, `commands`, `hooks`, `monitors`, `output-styles`, `skills`, `themes`
+and `workflows`. A name counts when it is a file, a directory or a link.
 
 The rule allows `plugin.json` and `marketplace.json`. A directory can hold both files when a
 repository is a plugin and a marketplace. The rule does not report any other file name, such as
-`README.md`. The docs say that every other plugin file goes at the plugin root. They do not name
+`README.md` or `settings.json`. From Claude Code 2.1.323, the Standard layout table does not list
+`settings.json`. The docs say that every other plugin file goes at the plugin root. They do not name
 these files as components that fail to load.
 
 The rule makes no report in these cases:

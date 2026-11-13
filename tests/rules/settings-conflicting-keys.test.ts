@@ -105,21 +105,21 @@ describe(`${name}: enableWorkflows and disableWorkflows`, () => {
 describe(`${name}: the status line and file suggestion gates`, () => {
   it('reports each command key when disableAllHooks is true, in every file', () => {
     for (const file of EVERY_FILE) {
-      for (const key of ['statusLine', 'subagentStatusLine', 'fileSuggestion']) {
+      for (const key of ['statusLine', 'fileSuggestion']) {
         const code = { [key]: { type: 'command', command: 'x' }, disableAllHooks: true }
         expect(ids(code, file), `${file} ${key}`).toEqual(['hooksOff'])
       }
     }
   })
 
-  it('reports each of the three keys once', () => {
-    const code = {
-      statusLine: {},
-      subagentStatusLine: {},
-      fileSuggestion: {},
-      disableAllHooks: true,
-    }
-    expect(ids(code)).toEqual(['hooksOff', 'hooksOff', 'hooksOff'])
+  it('reports each of the two keys once', () => {
+    const code = { statusLine: {}, fileSuggestion: {}, disableAllHooks: true }
+    expect(ids(code)).toEqual(['hooksOff', 'hooksOff'])
+  })
+
+  it('is silent on subagentStatusLine, which Claude Code 2.1.323 removed', () => {
+    const code = { subagentStatusLine: { type: 'command', command: 'x' }, disableAllHooks: true }
+    expect(ids(code)).toEqual([])
   })
 
   it('names the key in the message', () => {

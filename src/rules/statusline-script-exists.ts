@@ -1,7 +1,7 @@
-// The script of a status line, a subagent status line or a file suggestion
-// command must exist (docs/rules/statusline-script-exists.md). The script that
-// is the program must also have the executable bit. The bit is the git index
-// mode `100755`, read by `src/git-state.ts`. The rule makes no `notExecutable`
+// The script of a status line or a file suggestion command must exist
+// (docs/rules/statusline-script-exists.md). The script that is the program
+// must also have the executable bit. The bit is the git index mode `100755`,
+// read by `src/git-state.ts`. The rule makes no `notExecutable`
 // report in three cases. It cannot see the path. Git does not track the
 // script. It cannot read the git index.
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -15,7 +15,7 @@ import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 const name = 'statusline-script-exists' as const
 
 // The settings keys that hold a `command`.
-const KEYS = ['statusLine', 'subagentStatusLine', 'fileSuggestion']
+const KEYS = ['statusLine', 'fileSuggestion']
 
 const rule: JSONRuleDefinition<{ MessageIds: 'missing' | 'notExecutable' }> = {
   meta: {

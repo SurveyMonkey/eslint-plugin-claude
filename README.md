@@ -343,9 +343,6 @@ default if it has one.
 | [plugin-path-var-braced](docs/rules/plugin-path-var-braced.md)                                   | Write the plugin path variables of plugin Markdown in the braced form                  | ✅ 🔒 |       |     |
 | [plugin-project-skills-dir-limits](docs/rules/plugin-project-skills-dir-limits.md)               | Use no monitor, MCP bundle or outside MCP file in a plugin in .claude/skills/          | ✅ 🔒 |       |     |
 | [plugin-relevance-signal-hints](docs/rules/plugin-relevance-signal-hints.md)                     | Write a relevance cli entry as one command name, and a file pattern with an end anchor |       | 🔒    |     |
-| [plugin-settings-agent-exists](docs/rules/plugin-settings-agent-exists.md)                       | Name an agent of the plugin in the agent setting of its default settings               |       | ✅ 🔒 |     |
-| [plugin-settings-keys](docs/rules/plugin-settings-keys.md)                                       | Set only the keys that take effect in the default settings of a plugin                 | ✅ 🔒 |       |     |
-| [plugin-settings-single-source](docs/rules/plugin-settings-single-source.md)                     | Set the default settings of a plugin in settings.json or in the manifest, not both     | ✅ 🔒 |       |     |
 | [plugin-skill-dir-layout](docs/rules/plugin-skill-dir-layout.md)                                 | Put each skill of a listed skills directory in a folder with a SKILL.md                | ✅ 🔒 |       |     |
 | [plugin-skills-key-redundant-default](docs/rules/plugin-skills-key-redundant-default.md)         | Do not list the default skills directory in the skills key of a plugin                 |       | ✅ 🔒 |     |
 | [plugin-symlink-escapes-marketplace](docs/rules/plugin-symlink-escapes-marketplace.md)           | Keep the target of a link under a plugin inside the marketplace                        | ✅ 🔒 |       |     |

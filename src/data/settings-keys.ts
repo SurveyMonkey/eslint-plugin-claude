@@ -1,7 +1,7 @@
 // The scope of each settings key: the files that Claude Code reads the key
 // from. Source: the Scope column of the settings index in the settings
 // reference (https://code.claude.com/docs/en/settings-reference#settings-index),
-// checked on Claude Code 2.1.295 on 2026-10-08. Review these lists on or
+// checked on Claude Code 2.1.323 on 2026-11-13. Review these lists on or
 // before 2027-04-08, the `stale_after` date of docs/rules/settings-key-scope.md.
 // A nested key is dotted, as in the index.
 //
@@ -274,7 +274,6 @@ const ANY_FILE: readonly string[] = [
   'spinnerVerbs',
   'statusLine',
   'subagentPromptCacheTtl',
-  'subagentStatusLine',
   'switchModelsOnFlag',
   'syntaxHighlightingDisabled',
   'taskOutputMaxChars',
@@ -477,7 +476,8 @@ export const BUNDLED_SKILL_ALIASES: ReadonlyMap<string, string> = new Map([
  *  names three of them as settings that run shell commands
  *  (https://code.claude.com/docs/en/server-managed-settings#security-approval-dialogs). Checked on
  *  Claude Code 2.1.296 on 2026-10-10. A key of the first kind holds a command line. A key of the
- *  second kind holds an object with a `command` field. */
+ *  second kind holds an object with a `command` field. Claude Code 2.1.323 removed the
+ *  subagent status line key, which held an object. Checked on 2026-11-13. */
 export const COMMAND_STRING_KEYS: readonly string[] = [
   'apiKeyHelper',
   'awsAuthRefresh',
@@ -485,11 +485,7 @@ export const COMMAND_STRING_KEYS: readonly string[] = [
   'gcpAuthRefresh',
   'otelHeadersHelper',
 ]
-export const COMMAND_OBJECT_KEYS: readonly string[] = [
-  'statusLine',
-  'subagentStatusLine',
-  'fileSuggestion',
-]
+export const COMMAND_OBJECT_KEYS: readonly string[] = ['statusLine', 'fileSuggestion']
 /** The values of `permissions.defaultMode`. Source: the entry for `permissions.defaultMode` in
  *  the settings reference
  *  (https://code.claude.com/docs/en/settings-reference#permissions-defaultmode), checked on Claude

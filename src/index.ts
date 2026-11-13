@@ -319,9 +319,6 @@ import * as pluginPathUsesPluginRoot from './rules/plugin-path-uses-plugin-root.
 import * as pluginPathVarBraced from './rules/plugin-path-var-braced.ts'
 import * as pluginProjectSkillsDirLimits from './rules/plugin-project-skills-dir-limits.ts'
 import * as pluginRelevanceSignalHints from './rules/plugin-relevance-signal-hints.ts'
-import * as pluginSettingsAgentExists from './rules/plugin-settings-agent-exists.ts'
-import * as pluginSettingsKeys from './rules/plugin-settings-keys.ts'
-import * as pluginSettingsSingleSource from './rules/plugin-settings-single-source.ts'
 import * as pluginSkillDirLayout from './rules/plugin-skill-dir-layout.ts'
 import * as pluginSkillsKeyRedundantDefault from './rules/plugin-skills-key-redundant-default.ts'
 import * as pluginSymlinkEscapesMarketplace from './rules/plugin-symlink-escapes-marketplace.ts'
@@ -1080,12 +1077,10 @@ const modules = [
   { target: pluginDependenciesResolve.target, default: pluginDependenciesResolve.default },
   { target: pluginMonitorsSkillExists.target, default: pluginMonitorsSkillExists.default },
   { target: pluginNpmSourceShrinkwrap.target, default: pluginNpmSourceShrinkwrap.default },
-  { target: pluginSettingsSingleSource.target, default: pluginSettingsSingleSource.default },
   {
     target: pluginUserConfigSensitiveInContent.target,
     default: pluginUserConfigSensitiveInContent.default,
   },
-  { target: pluginSettingsKeys.target, default: pluginSettingsKeys.default },
   { target: pluginFeatureMinVersion.target, default: pluginFeatureMinVersion.default },
   { target: pluginManifestMetadataFormat.target, default: pluginManifestMetadataFormat.default },
   { target: pluginManifestNoBom.target, default: pluginManifestNoBom.default },
@@ -1097,7 +1092,6 @@ const modules = [
     default: pluginDependenciesNotAutoInstalled.default,
   },
   { target: pluginPathNoBackslash.target, default: pluginPathNoBackslash.default },
-  { target: pluginSettingsAgentExists.target, default: pluginSettingsAgentExists.default },
   {
     target: pluginSkillsKeyRedundantDefault.target,
     default: pluginSkillsKeyRedundantDefault.default,
@@ -1586,9 +1580,7 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-dependencies-resolve': 'error',
   'plugin-monitors-skill-exists': 'error',
   'plugin-npm-source-shrinkwrap': 'error',
-  'plugin-settings-single-source': 'error',
   'plugin-user-config-sensitive-in-content': 'error',
-  'plugin-settings-keys': 'error',
   'plugin-evals-case-yaml': 'error',
   'plugin-evals-dir': 'error',
   'plugin-evals-grader': 'error',
@@ -1604,7 +1596,6 @@ const recommended: Record<RuleName, Severity> = {
   'plugin-commands-map-fields': 'warn',
   'plugin-dependencies-not-auto-installed': 'warn',
   'plugin-path-no-backslash': 'warn',
-  'plugin-settings-agent-exists': 'warn',
   'plugin-skills-key-redundant-default': 'warn',
   'plugin-user-config-field-applicability': 'warn',
   'plugin-bin-claude-ai': 'warn',

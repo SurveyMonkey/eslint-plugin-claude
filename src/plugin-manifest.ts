@@ -1,7 +1,6 @@
 // The plugin that holds a `plugin.json`, for a rule that lints the manifest
 // and reads the files around it. `readPlugin` finds the plugin root once. A
 // rule checks the plugin root in code (ADR 001, Decision 10).
-// `readListedPluginAt` also reads a listed plugin with no `plugin.json`.
 import { Stats } from 'node:fs'
 import path from 'node:path'
 import type { ValueNode } from './marketplace-json.ts'
@@ -23,8 +22,7 @@ import {
  *  it, `realRoot` is its real path, and `bound` is the real path of the
  *  repository (ADR 001, Decision 14). `fields` are the keys of the manifest on
  *  disk. They are always an object: a manifest that is not an object gives no
- *  plugin. An absent manifest gives no plugin, except in `readListedPluginAt`.
- *  There, the `fields` are empty. */
+ *  plugin. An absent manifest gives no plugin. */
 export interface Plugin {
   readonly bound: string
   readonly fields: Readonly<Record<string, unknown>>
@@ -60,29 +58,12 @@ export function skillsPlugin(file: string): Plugin | undefined {
  *  `readPlugin`. A root that a `marketplace.json` lists, with no `plugin.json`,
  *  also gives no plugin. */
 export function readPluginAt(root: string): Plugin | undefined {
-  return pluginAt(root, false)
-}
-
-/** The plugin at the plugin root `root`, as `readPluginAt` gives it. A plugin
- *  root that a `marketplace.json` lists, with no `plugin.json`, also gives a
- *  plugin. With no `plugin.json`, the entry is the manifest (ADR 001, Decision
- *  10). This function does not read the entry, so the `fields` are empty. Such
- *  a root whose entry has a key that replaces a default location gives no
- *  plugin, because `isPluginRoot` gives `UNREADABLE` for it. */
-export function readListedPluginAt(root: string): Plugin | undefined {
-  return pluginAt(root, true)
-}
-
-/** The plugin at `root`. With `listed`, a plugin root with no `plugin.json`
- *  gives a plugin with empty `fields`. */
-function pluginAt(root: string, listed: boolean): Plugin | undefined {
   if (isPluginRoot(root) !== true) {
     return undefined
   }
   const bound = repositoryRoot(root)
   // `readManifest` gives null only when no `plugin.json` is there.
-  const read = readManifest(root, bound)
-  const fields = read === null && listed ? {} : read
+  const fields = readManifest(root, bound)
   if (fields === UNREADABLE || fields === null) {
     return undefined
   }

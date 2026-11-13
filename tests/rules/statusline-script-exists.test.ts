@@ -1,7 +1,6 @@
-// The rule reads the `command` of `statusLine`, `subagentStatusLine` and `fileSuggestion` in
-// the settings files. It checks that the script exists, and that it has git mode 100755. The
-// repositories are real, made with `git init`. The files glob and the decoy files are in
-// tests/configs.test.ts.
+// The rule reads the `command` of `statusLine` and `fileSuggestion` in the settings files. It
+// checks that the script exists, and that it has git mode 100755. The repositories are real,
+// made with `git init`. The files glob and the decoy files are in tests/configs.test.ts.
 import { chmodSync, symlinkSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
@@ -20,7 +19,7 @@ const settings = (command: unknown, key = 'statusLine') =>
 // The variable, escaped so that the template literal keeps it as text.
 const PROJECT = `\${CLAUDE_PROJECT_DIR}`
 const SETTINGS = '.claude/settings.json'
-const KEYS = ['statusLine', 'subagentStatusLine', 'fileSuggestion']
+const KEYS = ['statusLine', 'fileSuggestion']
 
 describe(RULE, () => {
   it('reports a script that is not there, on the command', () => {
@@ -56,7 +55,7 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, settings(`${PROJECT}/.claude/statusline.sh`))).toEqual([])
   })
 
-  it('reads each of the three keys, and names the key', () => {
+  it('reads each of the two keys, and names the key', () => {
     const root = repo({ 'a.sh': 'x' })
     for (const key of KEYS) {
       const messages = lint(root, SETTINGS, settings(`${PROJECT}/gone.sh`, key))
@@ -72,10 +71,17 @@ describe(RULE, () => {
     const root = repo({ 'a.sh': 'x' })
     const code = JSON.stringify({
       statusLine: { type: 'command', command: `${PROJECT}/gone.sh` },
-      subagentStatusLine: { type: 'command', command: `${PROJECT}/a.sh` },
-      fileSuggestion: { type: 'command', command: `${PROJECT}/b.sh` },
+      fileSuggestion: { type: 'command', command: `${PROJECT}/a.sh` },
     })
-    expect(ids(lint(root, SETTINGS, code))).toEqual(['missing', 'notExecutable', 'missing'])
+    expect(ids(lint(root, SETTINGS, code))).toEqual(['missing', 'notExecutable'])
+  })
+
+  it('is silent on subagentStatusLine, which Claude Code 2.1.323 removed', () => {
+    const root = repo({ 'a.sh': 'x' })
+    for (const script of ['gone.sh', 'a.sh']) {
+      const code = settings(`${PROJECT}/${script}`, 'subagentStatusLine')
+      expect(ids(lint(root, SETTINGS, code)), script).toEqual([])
+    }
   })
 
   it('reads the forms of the path', () => {

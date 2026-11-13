@@ -58,7 +58,7 @@ folder that holds `.claude/`. A managed file has no project, so it has no such w
 - A comment after code, such as `x=1 # tput cols`, or a comment with `//`. The rule reports it as a call.
 - A fallback such as `${COLUMNS:-$(tput cols)}`. The rule reports it as a call.
 - `tput lines`, and the width detection of a language. The page names only `tput cols` as a command.
-- `subagentStatusLine` and `fileSuggestion`.
+- `fileSuggestion`.
 - A hidden file in `managed-settings.d/`, which Claude Code ignores.
 
 Fail, when `.claude/statusline.sh` has the line `width=$(tput cols)`:
