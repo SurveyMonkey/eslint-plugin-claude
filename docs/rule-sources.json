@@ -1495,7 +1495,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Hook locations",
-      "hash": "b52987a21c34ce141fe1e5b1db52ed257bb89a50955f068bbeaf81aa17ec7b2b"
+      "hash": "dcff5604348403fa24f882b8404226e1a3ac51f62dbd89e07f86cf96283ff937"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -1867,7 +1867,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -2038,7 +2038,7 @@
     {
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Path escapes plugin directory",
-      "hash": "c6858ead4fc96ae301b3ced57775cd7d79f1e938d5b4831d92d03cffece3d649"
+      "hash": "25c023c264c4a38c1f8df3cfd37044c6896e127bbbfeb01df789344455a589e1"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
@@ -2927,7 +2927,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -4453,7 +4453,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Standard layout",
-      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+      "hash": "ffa2d241676f1d52319cec090ecc48a3fa0a7349972096b041ec9c90bfc14a66"
     }
   ],
   "plugin-bin-executable": [
@@ -4750,14 +4750,14 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Standard layout",
-      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+      "hash": "ffa2d241676f1d52319cec090ecc48a3fa0a7349972096b041ec9c90bfc14a66"
     }
   ],
   "plugin-manifest-metadata-format": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     }
   ],
   "plugin-manifest-no-bom": [
@@ -4771,12 +4771,12 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/publish",
       "heading": "Prepare your plugin for release",
-      "hash": "3e8b3837cac2b7cb1d36618e87f1caed49d9adda40fe16a271fe52a0c6a77982"
+      "hash": "1213974cd06e13f317f25a1a4931c75476e1b6ac0b346ef846543d603aa299de"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     }
   ],
   "plugin-manifest-version-semver": [
@@ -4947,12 +4947,12 @@
     {
       "url": "https://code.claude.com/docs/en/errors",
       "heading": "Path escapes plugin directory",
-      "hash": "c6858ead4fc96ae301b3ced57775cd7d79f1e938d5b4831d92d03cffece3d649"
+      "hash": "25c023c264c4a38c1f8df3cfd37044c6896e127bbbfeb01df789344455a589e1"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -4974,7 +4974,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/publish",
       "heading": "Prepare your plugin for release",
-      "hash": "3e8b3837cac2b7cb1d36618e87f1caed49d9adda40fe16a271fe52a0c6a77982"
+      "hash": "1213974cd06e13f317f25a1a4931c75476e1b6ac0b346ef846543d603aa299de"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -5028,57 +5028,16 @@
       "hash": "cb2aced873feea0df706274a79bbb69050dfceae065ec414c5c27118b439d54c"
     }
   ],
-  "plugin-settings-agent-exists": [
-    {
-      "url": "https://code.claude.com/docs/en/plugins/components",
-      "heading": "Default settings",
-      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/plugins/components",
-      "heading": "Agents",
-      "hash": "2c7a6ca78c34bededd8a76add8c6920a003be3b79e1d83bff2e1330872ca657a"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "How each key combines with its default location",
-      "hash": "3fc08cbf3295148e906223549f3a27637e701eeccb242bfb7bbd3493febccb17"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
-      "heading": "Strict mode",
-      "hash": "962d76d08f246698dc863e3abc98e8818536417872aa6e06590b67f54ecb8a3d"
-    }
-  ],
-  "plugin-settings-keys": [
-    {
-      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
-      "heading": "settings",
-      "hash": "317fe5e02e8a921104edd38e5d07b6fa6d10ad1724e23c3b0bb1343c80f767a6"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/plugins/components",
-      "heading": "Default settings",
-      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
-    }
-  ],
-  "plugin-settings-single-source": [
-    {
-      "url": "https://code.claude.com/docs/en/plugins/components",
-      "heading": "Default settings",
-      "hash": "f1fdba3455fa1c03c18d27489636ecee243c983750e890f919628290bead3d03"
-    }
-  ],
   "plugin-skill-dir-layout": [
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Standard layout",
-      "hash": "81110fa4d75d5d17c329cf792eeacb2067b0a51e70bd9259711e804b9292d00e"
+      "hash": "ffa2d241676f1d52319cec090ecc48a3fa0a7349972096b041ec9c90bfc14a66"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -5105,7 +5064,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     }
   ],
   "plugin-symlink-escapes-marketplace": [
@@ -5840,7 +5799,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "agent",
-      "hash": "721d922211e0ecaf19dffeab4df4cd8d474d17457f95b7cfc4358943a24e7fd7"
+      "hash": "5395f61b6ba0a9f1065e9dfb3be8bde1090d475ee164d1d0ac709b705fa4171e"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -5888,11 +5847,6 @@
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
-      "heading": "subagentStatusLine",
-      "hash": "97c7c76a9cffd6e307665b1e491356a8b961a0a04e2413ab24b95736801ef376"
-    },
-    {
-      "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "fileSuggestion",
       "hash": "3b9603f5087a69b4e2a8545bc463c8b360209506b1ca56ba611024559ba9e4ff"
     },
@@ -5926,7 +5880,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Status line and file suggestion gates",
-      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+      "hash": "6ccdc1510c253cfd58657fe376ef00666e35dac18d015c0f257a02a2686270e7"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -6461,7 +6415,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "af0716c0d324a0d647626104d933cd5d68ece05c3435dcce0665ac18932629ab"
+      "hash": "095bcbb07940258a9c1c0fe6952514dea05f5b94bdcff67725150cc9fc5c2af7"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -7103,7 +7057,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Settings index",
-      "hash": "af0716c0d324a0d647626104d933cd5d68ece05c3435dcce0665ac18932629ab"
+      "hash": "095bcbb07940258a9c1c0fe6952514dea05f5b94bdcff67725150cc9fc5c2af7"
     },
     {
       "url": "https://code.claude.com/docs/en/settings",
@@ -7741,7 +7695,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "f0a01b78cdf19637b480cbd28d651c398d980cbf088091d55174214ea5cc2836"
+      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
     }
   ],
   "skill-no-bom": [
@@ -7907,14 +7861,9 @@
       "hash": "a71152f13345df7577464f2d0663172b03c93886d0750b2c47bf450d30f13dec"
     },
     {
-      "url": "https://code.claude.com/docs/en/statusline",
-      "heading": "Subagent status lines",
-      "hash": "ae743a37737a5975a409eb8e4f3e0c8222bd62e3fa5d381f3d29e850798ead9d"
-    },
-    {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "Status line and file suggestion gates",
-      "hash": "b93d64656d6c93940f3268dbe1582f6e474dfac647f49e82f1f627dc0453ac33"
+      "hash": "6ccdc1510c253cfd58657fe376ef00666e35dac18d015c0f257a02a2686270e7"
     }
   ],
   "statusline-script-terminal-size": [
