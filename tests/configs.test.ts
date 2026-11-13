@@ -7122,8 +7122,9 @@ describe('files of each rule in recommended and strict', () => {
     const cwd = mkdtempSync(path.join(tmpdir(), 'claude-config-globs-'))
     try {
       for (const config of ['recommended', 'strict']) {
-        // One instance for each config. The user block has no `files` key, so it sets each
-        // rule for every file. A glob reaches a rule only through the blocks of files.
+        // One instance for each config. The user block has no `files` key. It sets each rule
+        // for each file that another block matches. A file that no block matches has no config.
+        // A block with a `files` key can match: the union block or the block of any rule.
         const eslint = new ESLint({
           cwd,
           overrideConfigFile: true,
