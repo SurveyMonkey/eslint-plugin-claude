@@ -11,10 +11,9 @@ import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import {
+  ancestorChain,
   frontmatterOfFile,
-  isInside,
   markdownFiles,
-  realDirectory,
   repositoryRoot,
   UNREADABLE,
 } from '../skill-tree.ts'
@@ -36,36 +35,12 @@ interface Styles {
   unseen: boolean
 }
 
-/** `start` and each directory above it, up to the real path `top`. The walk goes up the path as
- *  given. A directory counts when its real path is at or below `top`. So a link above the project
- *  does not hide `top`. A directory with a real path out of `top` is not in the chain, and
- *  `skipped` is true: the rule cannot read its styles. The walk stops at `top`, so no call reaches
- *  a path above the repository (ADR 001, Decision 14). It also stops at the root of the file
- *  system. */
-function ancestors(start: string, top: string): { chain: string[]; skipped: boolean } {
-  const chain: string[] = []
-  let skipped = false
-  // The loop ends at the root of the file system, where `path.dirname` returns its argument.
-  for (let at = start, last = ''; at !== last; last = at, at = path.dirname(at)) {
-    const real = realDirectory(at)
-    if (isInside(real, top)) {
-      chain.push(at)
-    } else {
-      skipped = true
-    }
-    if (real === top) {
-      break
-    }
-  }
-  return { chain, skipped }
-}
-
 /** The names of the custom styles in `.claude/output-styles/` of `start`, and of each directory
  *  above it up to `top`. A style has two names: its file name without `.md`, and the `name` field
  *  of its frontmatter. Claude Code uses the field when it is there, and the rule accepts both. The
  *  scans read no file out of `bound`. */
 function customStyles(start: string, top: string, bound: string): Styles {
-  const walk = ancestors(start, top)
+  const walk = ancestorChain(start, top)
   const found: Styles = { names: [], unseen: walk.skipped }
   for (const dir of walk.chain) {
     const claude = path.join(dir, '.claude')
