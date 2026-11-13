@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.0.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.13.0...v1.0.0) (2026-11-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **plugins:** this release removes the rules `claude/plugin-settings-keys`, `claude/plugin-settings-agent-exists` and `claude/plugin-settings-single-source`. Claude Code 2.1.323 deprecated the plugin `agent` setting and removed `subagentStatusLine`. The docs removed the sections that the rules cited. No CLI tool makes the checks. Remove the three rule IDs from your config.
+
+### Features
+
+* **permissions:** report blockWritesOutsideWorkingDirectories set to false ([#832](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/832)) ([54a702e](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/54a702e27091de3f7c22c0d9f1b3136dec6bd5a7)), closes [#706](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/706)
+* **plugins:** remove the plugin default settings rules and subagentStatusLine ([#883](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/883)) ([48f6544](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/48f6544d3d1b416f4b4674a0c7ce79e4a4ca69c1))
+
+
+### Bug Fixes
+
+* accept streamable-http in agent frontmatter, and say that path-scoped rules do not load from --add-dir ([#853](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/853)) ([f2c48fc](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/f2c48fc816b7c3fdda705db273bf666c14c96731)), closes [#844](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/844) [#849](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/849)
+* **hooks:** read the command after a group in a parameter default ([#834](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/834)) ([55f60fa](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/55f60fa11f7065524816a55b1aa3693db1d579a6)), closes [#800](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/800)
+* **hooks:** read the command after a second ) in a parameter default ([#856](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/856)) ([13f5b45](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/13f5b45d231883ceeec9e5adff876300385cb49b)), closes [#842](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/842)
+* **hooks:** skip discarded hook output in hooks-output-size, and show the jq example ([#814](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/814)) ([9e8a485](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/9e8a4855e8550418cb46e92f7f5bac1d245054f0)), closes [#761](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/761) [#753](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/753)
+* **marketplace:** report the .. server file paths of a marketplace entry ([#830](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/830)) ([93458a7](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/93458a7abf2bf682348e8f38f190b4323d487ffa)), closes [#809](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/809)
+* **permissions:** report Grep(path), bare Bash(which) and a non-Boolean denyInsteadOfPrompting ([#815](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/815)) ([e399f49](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/e399f49c0126c14a60a77cf3e111208b1bc90f18)), closes [#783](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/783) [#801](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/801) [#781](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/781)
+* **plugins:** source the min-version facts from the changelog, and drop metadata ([#813](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/813)) ([bb363b5](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/bb363b5295e43d2c5f064123a6ecc41a2f30ff8e)), closes [#786](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/786) [#793](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/793)
+* **sandbox:** report a reversed bracket range in a read list below v2.1.304 ([#838](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/838)) ([eedbd15](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/eedbd15b00a715ec4c91e60cf1b35ec1f42a6aca)), closes [#765](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/765)
+* **settings:** add CLAUDE_CODE_DISABLE_FEATURE_FLAGS from the env vars reference ([#822](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/822)) ([7174bc6](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/7174bc6860113195bb9b3caaa504141a71a20459)), closes [#819](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/819)
+* **settings:** add the managed Boolean key disableRemotePreviewScripts ([#865](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/865)) ([b05e143](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/b05e1431506e65e8df2a78bb4ff0fb084acb8b9c)), closes [#857](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/857) [#858](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/858) [#859](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/859) [#860](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/860) [#861](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/861) [#862](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/862)
+* **settings:** read dotted model IDs, and give the OAuth token its setup-token advice ([#828](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/828)) ([27c4149](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/27c41494382ec8654dfa4bf09d4c80af3179df6b)), closes [#764](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/764) [#760](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/760)
+* **settings:** resolve best to Opus and fable to Fable 5.2 ([#820](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/820)) ([3248af9](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/3248af959b5fd53ccffd952773519219c75f6c88)), closes [#766](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/766)
+* **skills:** escape an emoji run in linear time, and report both files of a clash ([#855](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/855)) ([2dd7fb3](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/2dd7fb3882a2f12ca3f06858f4fb6d52d3eded42)), closes [#840](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/840) [#841](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/841)
+* **skills:** fold plugin command names as Claude Code does ([#836](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/836)) ([70f1e5e](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/70f1e5eb15666b3de4750525fc76a296e915176a)), closes [#762](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/762)
+* **skills:** refuse the remaining hidden name characters ([#821](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/821)) ([901c3b8](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/901c3b82757eee8808e0047c1e436144f6cead2d)), closes [#763](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/763)
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([#863](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/863)) ([7c49185](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/7c49185a684ca795f424bc8022b0a69fd76bfc23)), closes [#852](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/852)
+
 ## [0.13.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.12.0...v0.13.0) (2026-11-10)
 
 
