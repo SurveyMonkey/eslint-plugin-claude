@@ -6,19 +6,13 @@
 // It reads no path out of the repository (ADR 001, Decision 14). A file that it cannot read can
 // hold the rule, so the rule then makes no report. `permissions` is a list key, so the rule reads
 // each file on its own and does not use `readSettings`.
-import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
-import {
-  isHiddenDropIn,
-  kindOf,
-  MANAGED_SETTINGS_FILES,
-  readManagedSource,
-} from '../settings-files.ts'
-import { readJson, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES, readSiblings } from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-webfetch-preflight-skip' as const
 
@@ -58,25 +52,6 @@ function entriesOfNode(body: ValueNode): unknown[] {
   })
 }
 
-const isObject = (value: unknown): value is Record<string, unknown> =>
-  value !== null && typeof value === 'object' && !Array.isArray(value)
-
-/** The parsed objects of the other settings files that Claude Code merges with `filename`, or
- *  `UNREADABLE` when one of them cannot be seen. */
-function siblingsOf(filename: string): Record<string, unknown>[] | typeof UNREADABLE {
-  if (kindOf(filename) === 'managed') {
-    return readManagedSource(filename)
-  }
-  const dir = path.dirname(path.resolve(filename))
-  const other =
-    path.basename(filename) === 'settings.json' ? 'settings.local.json' : 'settings.json'
-  const parsed = readJson(path.join(dir, other), repositoryRoot(dir))
-  if (parsed === null) {
-    return []
-  }
-  return parsed === UNREADABLE || !isObject(parsed.data) ? UNREADABLE : [parsed.data]
-}
-
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'skipped' }> = {
   meta: {
     type: 'problem',
@@ -100,7 +75,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'skipped' }> = {
         if (skip?.type !== 'Boolean' || !skip.value || hasDomainRule(entriesOfNode(node.body))) {
           return
         }
-        const siblings = siblingsOf(context.filename)
+        const siblings = readSiblings(context.filename)
         if (siblings === UNREADABLE || siblings.some((data) => hasDomainRule(entriesOf(data)))) {
           return
         }
