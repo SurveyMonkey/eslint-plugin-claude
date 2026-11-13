@@ -621,8 +621,8 @@ const TREE: Record<string, string> = {
   // The executable is a component inside `.claude-plugin/`, and no rule reads the file.
   'plugins/loc/.claude-plugin/plugin.json': JSON.stringify({ name: 'loc' }),
   'plugins/loc/.claude-plugin/bin/tool': '',
-  // A `settings.json` inside `.claude-plugin/`, which `plugin-manifest-location` names, and a
-  // root `settings.json` that no rule reads.
+  // A `settings.json` inside `.claude-plugin/` and a root `settings.json`. No rule reads either
+  // file. `plugin-manifest-location` reports the plugin for `bin` only.
   'plugins/loc/.claude-plugin/settings.json': '{"theme": "dark"}',
   'plugins/loc/settings.json': '[]',
   // The default `skills/` directory is in the `skills` key too. That entry is a report of
