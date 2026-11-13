@@ -18,7 +18,7 @@ import {
   stringOf,
 } from '../hooks-config.ts'
 import { placeholderFolders, scriptsRun, scriptText } from '../hooks-files.ts'
-import { commandsOf, commandWordAt } from '../shell-words.ts'
+import { commandsOf, commandWordAt, tickEnd } from '../shell-words.ts'
 
 const name = 'hooks-command-shell-safety' as const
 
@@ -115,20 +115,6 @@ function closingParen(text: string, open: number): number {
       braces = outer.pop() as number
     } else {
       boundary = /[\s;|&<>]/.test(char)
-    }
-  }
-  return text.length
-}
-
-/** The index of the backtick that closes the one at `start` in `text`, or the length of `text`. A
- *  backslash escapes the next character, as in `closingTick` in `src/shell-words.ts`. Unlike
- *  `closingTick`, it gives the length when no backtick closes the pair. */
-function tickEnd(text: string, start: number): number {
-  for (let i = start + 1; i < text.length; i++) {
-    if (text.charAt(i) === '\\') {
-      i++
-    } else if (text.charAt(i) === '`') {
-      return i
     }
   }
   return text.length
