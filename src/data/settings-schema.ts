@@ -132,6 +132,7 @@ const BOOLEAN_KEYS = [
   'disableDesktopLocalSessions',
   'disableMobileSimulatorTools',
   'disableRemoteControl',
+  'disableRemotePreviewScripts',
   'disableSideloadFlags',
   'disableSkillShellExecution',
   'disableWorkflows',

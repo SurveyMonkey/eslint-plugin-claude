@@ -41,6 +41,7 @@ const MANAGED_ONLY: readonly string[] = [
   'claudeMd',
   'deniedModels',
   'disableBrowserExternalNavigation',
+  'disableRemotePreviewScripts',
   'disableCommandPluginSources',
   'disableDesktopLocalSessions',
   'disableMobileSimulatorTools',
