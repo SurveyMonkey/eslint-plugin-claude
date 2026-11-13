@@ -1,10 +1,12 @@
-// The platforms that a rule with the option `platforms` knows. Source: the hooks reference,
-// "Command hook fields" (https://code.claude.com/docs/en/hooks#command-hook-fields), checked on
-// Claude Code 2.1.287. Review this list on or before 2027-03-29, the `stale_after` date of
-// docs/rules-inventory.md.
+// The platforms that the option `platforms` of a rule names. The five values are the vocabulary
+// of this plugin. The hooks reference, "Command hook fields"
+// (https://code.claude.com/docs/en/hooks#command-hook-fields), is the source for the default
+// shell on each of them. The Claude Code version of the last check is not on record. Review this
+// list on or before 2027-04-10, the `stale_after` date of docs/rules/sandbox-platform-limits.md
+// and of the other rule docs that cite it.
 
-/** The platforms that a rule with the option `platforms` knows. Claude Code runs a hook in PowerShell by
- *  default on `windows-no-git-bash`, and in Bash on the others (the hooks reference, "Command hook fields"). */
+/** Claude Code runs a hook in PowerShell by default on `windows-no-git-bash`, and in Bash on the
+ *  others (the hooks reference, "Command hook fields"). */
 export const PLATFORMS = [
   'windows-git-bash',
   'windows-no-git-bash',

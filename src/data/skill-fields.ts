@@ -40,10 +40,12 @@ export const SKILL_BOOLEAN_FIELDS: readonly string[] = [
 
 /** The bundled skills: the rows of the commands reference that it marks as a skill
  *  (https://code.claude.com/docs/en/commands#all-commands), checked on Claude Code 2.1.296 on
- *  2026-10-10. A bundled skill has no file on disk, so `agent-skills-exist` cannot find it there. A project can define a skill of the same name, and then the rule finds that file. A session can lack some of them, such as `claude-in-chrome` and
- *  `workflow-authoring`, so the list is a set of valid names, not of available ones. Review it on
- *  or before the `stale_after` date of docs/rules/settings-skilloverrides-unknown-skill.md
- *  and docs/rules/agent-skills-exist.md. */
+ *  2026-10-10. A session can lack some of them, such as `claude-in-chrome` and
+ *  `workflow-authoring`, so the list is a set of valid names, not of available ones.
+ *  A bundled skill has no file on disk, so `agent-skills-exist` cannot find it there.
+ *  A project can define a skill of the same name, and then the rule finds that file.
+ *  Review it on or before the `stale_after` date of
+ *  docs/rules/settings-skilloverrides-unknown-skill.md and docs/rules/agent-skills-exist.md. */
 export const BUNDLED_SKILLS: readonly string[] = [
   'artifact-capabilities',
   'artifact-diagramming',
