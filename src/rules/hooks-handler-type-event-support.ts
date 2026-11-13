@@ -5,6 +5,7 @@
 import type { Rule } from 'eslint'
 import { docsUrl } from '../docs-url.ts'
 import {
+  exactValues,
   type HandlerType,
   HOOKS_TARGET,
   handlersOf,
@@ -58,14 +59,8 @@ const LAUNCH_SOURCES = ['startup', 'resume']
  *  match set is a regular expression, and the rule does not read it. A match-all matcher also fires
  *  on `clear` and `compact`, where the hook runs. */
 function launchOnly(matcher: string | undefined): boolean {
-  if (matcher === undefined || !/^[\w\- ,|]*$/.test(matcher)) {
-    return false
-  }
-  const names = matcher
-    .split(/[|,]/)
-    .map((part) => part.trim())
-    .filter((part) => part !== '')
-  return names.length > 0 && names.every((part) => LAUNCH_SOURCES.includes(part))
+  const names = matcher === undefined ? null : exactValues(matcher, false)
+  return names !== null && names.length > 0 && names.every((part) => LAUNCH_SOURCES.includes(part))
 }
 
 const rule: Rule.RuleModule = {
