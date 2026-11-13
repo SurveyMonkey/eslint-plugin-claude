@@ -4,10 +4,12 @@
 // the file does not show which versions its users run.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted } from '../agent-files.ts'
-import { isBelow, MIN_VERSION_SCHEMA, type MinVersionOptions } from '../agent-min-version.ts'
+import { isBelow, type MinVersionOptions } from '../agent-min-version.ts'
+import { AGENT_BOOLEAN_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
 import { isMap } from '../frontmatter-values.ts'
+import { MIN_VERSION_SCHEMA } from '../min-version.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'agent-field-min-version' as const
@@ -22,10 +24,6 @@ const AUTO_COMPACT_WINDOW = '2.1.296'
 const CACHE_TTL = '2.1.248'
 const MANUAL_ALIAS = '2.1.200'
 const BOOLEAN_FORMS = '2.1.218'
-
-// The Boolean fields of a subagent. `agent-frontmatter-schema` holds the same
-// list.
-const BOOLEAN_FIELDS = ['background', 'omitClaudeMd']
 
 type Loc = ReturnType<SkillFrontmatter['at']>
 
@@ -98,7 +96,7 @@ const rule: MarkdownRuleDefinition<{
             needs(fm.at(valueStart, valueEnd), 'permissionMode: manual', MANUAL_ALIAS)
           }
           if (
-            BOOLEAN_FIELDS.includes(key) &&
+            AGENT_BOOLEAN_FIELDS.includes(key) &&
             isLooseBoolean(value) &&
             isBelow(minVersion, BOOLEAN_FORMS)
           ) {

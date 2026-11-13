@@ -8,10 +8,10 @@ import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import { escapeName } from '../skill-names.ts'
 import {
+  ancestorDirs,
   frontmatterOfFile,
   markdownFiles,
   readManifest,
-  realDirectory,
   repositoryRoot,
   scopeRoot,
   UNREADABLE,
@@ -29,14 +29,6 @@ export interface Agents {
   unseen: boolean
 }
 
-/** `dir` and each directory above it, up to `top`. The walk goes up the path as given, as
- *  `repositoryRoot` does. `top` is a real path, so the walk compares the real path of each
- *  directory with it. A project directory that is a link then does not hide `top`. */
-function ancestors(dir: string, top: string): string[] {
-  const parent = path.dirname(dir)
-  return realDirectory(dir) === top || parent === dir ? [dir] : [dir, ...ancestors(parent, top)]
-}
-
 /** The `name` of each agent file in `.claude/agents/` of `start`, and of each
  *  directory above it up to `top`. The scans read no file out of `bound`. The
  *  two differ with no `.git`, where `bound` is `.claude/` and `top` is the
@@ -44,7 +36,7 @@ function ancestors(dir: string, top: string): string[] {
  *  holds its own `.git`. */
 function projectAgents(start: string, top: string, bound: string): Agents {
   const found: Agents = { names: [], unseen: false }
-  for (const dir of ancestors(start, top)) {
+  for (const dir of ancestorDirs(start, top)) {
     const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
     found.unseen ||= scan.outside || scan.unreadable
     for (const file of scan.files) {

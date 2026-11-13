@@ -19,6 +19,7 @@
 // The part for WSL1 is not checked: the value `wsl` of `platforms` means WSL2, the only WSL
 // that the sandbox supports.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { PLATFORMS } from '../data/platforms.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
 import { fetchHost } from '../permission-host.ts'
@@ -39,8 +40,6 @@ type MessageId =
   | 'reversedRange'
   | 'failIfUnavailable'
 
-/** The platforms that the option names. */
-const PLATFORMS = ['windows-git-bash', 'windows-no-git-bash', 'macos', 'linux', 'wsl'] as const
 const LINUX_LIKE = ['linux', 'wsl']
 const WINDOWS = ['windows-git-bash', 'windows-no-git-bash']
 

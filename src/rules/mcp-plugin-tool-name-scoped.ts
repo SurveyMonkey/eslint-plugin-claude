@@ -12,17 +12,13 @@ import { MCP_PREFIX, MCP_SEPARATOR } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { COMMA, listEntries, SPACE_OR_COMMA } from '../frontmatter-list.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { pluginMcpDeclarations, readJsonBody } from '../mcp-servers.ts'
+import { pluginMcpDeclarations, readJsonBody, sanitizeName } from '../mcp-servers.ts'
 import { parsePermissionRule } from '../permission-rule.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import { repositoryRoot, scopeRoot } from '../skill-tree.ts'
 
 const name = 'mcp-plugin-tool-name-scoped' as const
-
-/** The name with each character outside `A-Za-z0-9_-` as `_`, as Claude Code writes it in a
- *  tool name. */
-const sanitize = (text: string) => text.replaceAll(/[^A-Za-z0-9_-]/g, '_')
 
 const SKILL_FIELDS = ['allowed-tools', 'disallowed-tools']
 const AGENT_FIELDS = ['tools', 'disallowedTools']
@@ -86,7 +82,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bare' }> = {
         // Each server by its name as written and by its name with `_`. A server with an empty
         // name has no tool name to match.
         const forms = pluginMcpDeclarations(scope.root, manifest).flatMap(({ name: server }) =>
-          [server, sanitize(server)]
+          [server, sanitizeName(server)]
             .filter((form) => form !== '')
             .map((form) => ({ server, form })),
         )
@@ -96,7 +92,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'bare' }> = {
             ({ form }) => rest === form || rest.startsWith(`${form}${MCP_SEPARATOR}`),
           )
           if (found !== undefined) {
-            const scoped = `${MCP_PREFIX}plugin_${sanitize(plugin.value)}_${sanitize(found.server)}${rest.slice(found.form.length)}`
+            const scoped = `${MCP_PREFIX}plugin_${sanitizeName(plugin.value)}_${sanitizeName(found.server)}${rest.slice(found.form.length)}`
             context.report({
               loc,
               messageId: 'bare',

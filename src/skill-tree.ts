@@ -114,6 +114,40 @@ export function isInside(real: string, bound: string): boolean {
   return real === base || real.startsWith(base.endsWith(path.sep) ? base : base + path.sep)
 }
 
+/** `start` and each directory above it, up to the real path `top`. The walk goes up the path as
+ *  given. A directory counts when its real path is at or below `top`. So a link above the project
+ *  does not hide `top`. A directory with a real path out of `top` is not in the chain, and
+ *  `skipped` is true: the rule cannot read what it holds. The walk stops at the directory with the
+ *  real path `top`. That directory is a parent of the path as given, so a link in the chain does
+ *  not carry the walk above the repository, and no call reaches a path above it (ADR 001,
+ *  Decision 14). It also stops at the root of the file system. Each step only resolves a path,
+ *  and reads no file. */
+export function ancestorChain(start: string, top: string): { chain: string[]; skipped: boolean } {
+  const chain: string[] = []
+  let skipped = false
+  // The loop ends at the root of the file system, where `path.dirname` returns its argument.
+  for (let at = start, last = ''; at !== last; last = at, at = path.dirname(at)) {
+    const real = realDirectory(at)
+    if (isInside(real, top)) {
+      chain.push(at)
+    } else {
+      skipped = true
+    }
+    if (real === top) {
+      break
+    }
+  }
+  return { chain, skipped }
+}
+
+/** `dir` and each directory above it, up to `top`. The walk goes up the path as given, as
+ *  `repositoryRoot` does. `top` is a real path, so the walk compares the real path of each
+ *  directory with it. A project directory that is a link then does not hide `top`. */
+export function ancestorDirs(dir: string, top: string): string[] {
+  const parent = path.dirname(dir)
+  return realDirectory(dir) === top || parent === dir ? [dir] : [dir, ...ancestorDirs(parent, top)]
+}
+
 /** The real path of `file`, null when it does not exist (a dangling link), or
  *  `UNREADABLE`. */
 export function realOf(file: string): string | null | Unreadable {

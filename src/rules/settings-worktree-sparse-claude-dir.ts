@@ -10,13 +10,8 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
-import {
-  isHiddenDropIn,
-  kindOf,
-  MANAGED_SETTINGS_FILES,
-  readManagedSource,
-} from '../settings-files.ts'
-import { readJson, repositoryRoot, UNREADABLE } from '../skill-tree.ts'
+import { isHiddenDropIn, MANAGED_SETTINGS_FILES, readSiblings } from '../settings-files.ts'
+import { UNREADABLE } from '../skill-tree.ts'
 
 const name = 'settings-worktree-sparse-claude-dir' as const
 
@@ -35,22 +30,6 @@ function listsClaudeDir(data: Record<string, unknown>): boolean {
   const { worktree } = data
   const paths = isObject(worktree) ? worktree.sparsePaths : undefined
   return Array.isArray(paths) && paths.some(isClaudeDir)
-}
-
-/** The parsed objects of the other settings files that Claude Code merges with `filename`, or
- *  `UNREADABLE` when one of them cannot be seen. */
-function siblingsOf(filename: string): Record<string, unknown>[] | typeof UNREADABLE {
-  if (kindOf(filename) === 'managed') {
-    return readManagedSource(filename)
-  }
-  const dir = path.dirname(path.resolve(filename))
-  const other =
-    path.basename(filename) === 'settings.json' ? 'settings.local.json' : 'settings.json'
-  const parsed = readJson(path.join(dir, other), repositoryRoot(dir))
-  if (parsed === null) {
-    return []
-  }
-  return parsed === UNREADABLE || !isObject(parsed.data) ? UNREADABLE : [parsed.data]
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'omitted' }> = {
@@ -83,7 +62,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'omitted' }> = {
         ) {
           return
         }
-        const siblings = siblingsOf(context.filename)
+        const siblings = readSiblings(context.filename)
         if (siblings === UNREADABLE || siblings.some(listsClaudeDir)) {
           return
         }

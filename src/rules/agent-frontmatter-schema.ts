@@ -3,7 +3,12 @@
 // (docs/rules/agent-frontmatter-schema.md).
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted } from '../agent-files.ts'
-import { AGENT_ENUMS, AGENT_FIELDS, CACHE_TTL_VALUES } from '../data/agent-fields.ts'
+import {
+  AGENT_BOOLEAN_FIELDS,
+  AGENT_ENUMS,
+  AGENT_FIELDS,
+  CACHE_TTL_VALUES,
+} from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { isBooleanValue, isMap, nearMissOf } from '../frontmatter-values.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -12,7 +17,6 @@ const name = 'agent-frontmatter-schema' as const
 
 const STRING_FIELDS = ['name', 'description']
 const STRING_OR_LIST_FIELDS = ['tools', 'disallowedTools']
-const BOOLEAN_FIELDS = ['background', 'omitClaudeMd']
 
 type Problem = {
   messageId: 'wrongType' | 'invalidValue' | 'unknownExperimental'
@@ -55,7 +59,7 @@ function valueProblem(key: string, value: unknown, text: string): Problem | null
   if (key === 'skills') {
     return isStringList(value) ? null : wrong('a list of skill names')
   }
-  if (BOOLEAN_FIELDS.includes(key)) {
+  if (AGENT_BOOLEAN_FIELDS.includes(key)) {
     return isBooleanValue(value) ? null : wrong('a Boolean')
   }
   if (key === 'experimental') {

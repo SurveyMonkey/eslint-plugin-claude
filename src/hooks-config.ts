@@ -26,6 +26,7 @@ import {
   type YAMLMap,
 } from 'yaml'
 import { classifyAgentFile } from './agent-files.ts'
+import { PLATFORMS } from './data/platforms.ts'
 import {
   type HandlerText,
   handlerTexts,
@@ -110,10 +111,6 @@ export const HOOKS_TARGET = {
   files: [...SETTINGS_FILES, ...MANAGED_SETTINGS_FILES, '**/hooks/hooks.json'],
   also: { language: 'markdown' as const, files: ['**/SKILL.md', '**/agents/**/*.md'] },
 }
-
-/** The platforms that a rule with the option `platforms` knows. Claude Code runs a hook in PowerShell by
- *  default on `windows-no-git-bash`, and in Bash on the others (the hooks reference, "Command hook fields"). */
-const PLATFORMS = ['windows-git-bash', 'windows-no-git-bash', 'macos', 'linux', 'wsl'] as const
 
 /** The schema of the option `platforms`. A rule that depends on the platform of a team takes it, and
  *  makes no report without it. */

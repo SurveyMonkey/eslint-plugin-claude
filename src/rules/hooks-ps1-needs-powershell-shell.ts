@@ -5,6 +5,7 @@
 // `platforms`, and makes no report without it. `shell` has no effect in exec form, so the rule reads
 // shell form only.
 import type { Rule } from 'eslint'
+import { PLATFORMS } from '../data/platforms.ts'
 import { docsUrl } from '../docs-url.ts'
 import {
   HOOKS_TARGET,
@@ -18,9 +19,6 @@ import { commandsOf, commandWordAt } from '../shell-words.ts'
 
 const name = 'hooks-ps1-needs-powershell-shell' as const
 
-/** The platforms that the option names. Claude Code runs a hook in PowerShell by default on one of
- *  them: Windows without Git Bash. */
-const PLATFORMS = ['windows-git-bash', 'windows-no-git-bash', 'macos', 'linux', 'wsl'] as const
 const POWERSHELL_DEFAULT = 'windows-no-git-bash'
 
 interface Options {

@@ -3,6 +3,7 @@
 // project skill or command says that the grant needs no workspace trust. The docs say this of
 // a project skill only, so the message of a plugin skill or command does not.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
+import { SHELL_TOOLS } from '../data/shell-tools.ts'
 import { MCP_PREFIX } from '../data/tool-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { skillEntries } from '../permission-entries.ts'
@@ -17,10 +18,6 @@ type Options = [{ allow: string[] }]
 
 /** The tools whose bare name grants every use of the tool. */
 const BARE_BROAD = ['Bash', 'PowerShell', 'Write', 'Edit', 'WebFetch']
-
-/** The tools whose `(*)` form is the same as the bare name. The permissions
- *  page says so for Bash and PowerShell. */
-const STAR_BROAD = ['Bash', 'PowerShell']
 
 /** `mcp__<server>__*` and `mcp__<server>`. The permissions page says that
  *  each matches every tool of the server. A glob after the tool prefix, such
@@ -37,7 +34,7 @@ function isBroad({ tool, specifier }: ParsedRule): boolean {
   }
   return specifier === null
     ? BARE_BROAD.includes(tool)
-    : specifier === '*' && STAR_BROAD.includes(tool)
+    : specifier === '*' && SHELL_TOOLS.includes(tool)
 }
 
 const rule: MarkdownRuleDefinition<{ RuleOptions: Options; MessageIds: 'broad' | 'broadPlugin' }> =

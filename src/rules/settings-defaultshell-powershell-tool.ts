@@ -6,6 +6,7 @@
 // variable can sit in another file that Claude Code merges with the linted file, so the rule
 // reads those files too.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { PLATFORMS } from '../data/platforms.ts'
 import { envIsOn, isEnvOn } from '../data/settings-env.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -17,8 +18,6 @@ const name = 'settings-defaultshell-powershell-tool' as const
 
 const VARIABLE = 'CLAUDE_CODE_USE_POWERSHELL_TOOL'
 
-/** The platforms that the option names. */
-const PLATFORMS = ['windows-git-bash', 'windows-no-git-bash', 'macos', 'linux', 'wsl'] as const
 const WINDOWS = new Set<string>(['windows-git-bash', 'windows-no-git-bash'])
 
 type Options = [{ platforms?: string[] }]

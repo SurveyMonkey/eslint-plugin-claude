@@ -5,7 +5,7 @@
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { type AgentFile, classifyLinted } from '../agent-files.ts'
-import { BUNDLED_SKILLS } from '../data/agent-fields.ts'
+import { BUNDLED_SKILLS } from '../data/skill-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { foldersAbove } from '../folders-above.ts'
 import { listEntries } from '../frontmatter-list.ts'

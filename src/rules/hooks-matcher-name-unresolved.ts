@@ -23,10 +23,10 @@ import {
 } from '../hooks-config.ts'
 import { kindOf } from '../settings-files.ts'
 import {
+  ancestorDirs,
   frontmatterOfFile,
   markdownFiles,
   readJson,
-  realDirectory,
   repositoryRoot,
   UNREADABLE,
 } from '../skill-tree.ts'
@@ -41,13 +41,6 @@ interface Options {
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
-
-/** `dir` and each directory above it, up to `top`. The walk goes up the path as given, and compares the real path
- *  of each directory with `top`, so that a project directory that is a link does not hide `top`. */
-function ancestors(dir: string, top: string): string[] {
-  const parent = path.dirname(dir)
-  return realDirectory(dir) === top || parent === dir ? [dir] : [dir, ...ancestors(parent, top)]
-}
 
 /** Claude Code skips an agent file with no `name`, a `name` that starts with `-`, holds `:` or is longer than 256
  *  characters, or no `description`, and a file whose YAML does not parse (sub-agents, "Subagent files Claude Code
@@ -72,7 +65,7 @@ function agentNames(project: string, claude: string): string[] | undefined {
   const top = repositoryRoot(project)
   const bound = repositoryRoot(claude)
   const names: string[] = []
-  for (const dir of ancestors(project, top)) {
+  for (const dir of ancestorDirs(project, top)) {
     const scan = markdownFiles(path.join(dir, '.claude', 'agents'), bound)
     if (scan.outside || scan.unreadable) {
       return undefined
@@ -98,7 +91,7 @@ function serverNames(project: string, claude: string): string[] | undefined {
   const bound = repositoryRoot(claude)
   const names: string[] = []
   let found = false
-  for (const dir of ancestors(project, top)) {
+  for (const dir of ancestorDirs(project, top)) {
     const parsed = readJson(path.join(dir, '.mcp.json'), bound)
     if (parsed === null) {
       continue
