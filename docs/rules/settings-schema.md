@@ -66,7 +66,8 @@ The data is in `src/data/settings-schema.ts`, with the Claude Code version and t
 last review. The kinds of value are below.
 
 - **Boolean keys.** Each key that the Type line gives as Boolean. A managed key that "takes the
-  JSON Boolean `true` only" is a Boolean key too, such as `disableRemotePreviewScripts`.[^remotepreview] The string `"true"` is a `wrongType`
+  JSON Boolean `true` only" is a Boolean key too. One example is
+  `disableRemotePreviewScripts`.[^remotepreview] The string `"true"` is a `wrongType`
   report.[^index]
 - **String and array keys.** `model`, `advisorModel`, `language`, `outputStyle`, `agent` and the
   helper commands are strings. `availableModels`, `fallbackModel`, `deniedModels`,

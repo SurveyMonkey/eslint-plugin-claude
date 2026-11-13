@@ -511,7 +511,7 @@ jsonTester.run('settings-schema (types)', rule, {
       type('disableMobileSimulatorTools', 'a Boolean'),
       type('disableDesktopLocalSessions', 'a Boolean'),
     ),
-    // `disableRemotePreviewScripts`, a managed key that takes the JSON Boolean `true` only (#857).
+    // `disableRemotePreviewScripts`, a managed Boolean key: a string and a number are wrong types (#857).
     bad({ disableRemotePreviewScripts: 'true' }, type('disableRemotePreviewScripts', 'a Boolean')),
     bad({ disableRemotePreviewScripts: 1 }, type('disableRemotePreviewScripts', 'a Boolean')),
     // The Boolean keys that other groups name, and `disableArtifact` with a value that is not a Boolean.

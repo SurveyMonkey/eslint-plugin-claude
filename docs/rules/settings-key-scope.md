@@ -37,7 +37,7 @@ rule reports a key that the file cannot set. The report is on the key.
 | `Global config`           | `~/.claude.json` only[^global]   | Each file, a managed file too                          |
 | `Any file`                | Each settings file               | No file                                                |
 
-The key `disableRemotePreviewScripts` has the Scope `Managed`. The rule reports it in a project file.[^remotepreview]
+The key `disableRemotePreviewScripts` has the Scope `Managed`. The rule reports it in project files and local files.[^remotepreview]
 
 The index lists the `User` Scope as the user file `~/.claude/settings.json`.[^index] The rule treats
 a `User` key as a `User or managed` key. It reports the key in project files and local files. It
