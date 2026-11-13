@@ -6456,7 +6456,7 @@ describe('configs', () => {
   }, 30_000)
 
   // #380: a `.claude` folder that is also a plugin root. Its `settings.json` is the project
-  // settings and the plugin default settings. One `agent` key gets one report.
+  // settings. `settings-agent-exists` reports the `agent` key once.
   it('reports one agent key once in a .claude folder that is also a plugin root', async () => {
     const top = mkdtempSync(path.join(tmpdir(), 'eslint-plugin-claude-380-'))
     try {

@@ -55,7 +55,7 @@ describe(RULE, () => {
     expect(lint(root, SETTINGS, settings(`${PROJECT}/.claude/statusline.sh`))).toEqual([])
   })
 
-  it('reads each of the three keys, and names the key', () => {
+  it('reads each of the two keys, and names the key', () => {
     const root = repo({ 'a.sh': 'x' })
     for (const key of KEYS) {
       const messages = lint(root, SETTINGS, settings(`${PROJECT}/gone.sh`, key))
