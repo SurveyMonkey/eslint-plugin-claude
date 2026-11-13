@@ -4,11 +4,12 @@
 // the file does not show which versions its users run.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted } from '../agent-files.ts'
-import { isBelow, MIN_VERSION_SCHEMA, type MinVersionOptions } from '../agent-min-version.ts'
+import { isBelow, type MinVersionOptions } from '../agent-min-version.ts'
 import { AGENT_BOOLEAN_FIELDS } from '../data/agent-fields.ts'
 import { docsUrl } from '../docs-url.ts'
 import { readBoolean } from '../frontmatter-boolean.ts'
 import { isMap } from '../frontmatter-values.ts'
+import { MIN_VERSION_SCHEMA } from '../min-version.ts'
 import { readFrontmatter, type SkillFrontmatter } from '../skill-frontmatter.ts'
 
 const name = 'agent-field-min-version' as const
