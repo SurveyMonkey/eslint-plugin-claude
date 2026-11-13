@@ -38,8 +38,8 @@ export function handlerOf(value: ValueNode): Handler[] {
   ]
 }
 
-/** The handler values of the event map `events`, in file order: each item of the `hooks` array
- *  of each group of each event. A value of another shape holds no handler. */
+/** The handler values of the event map `events`, in file order. Each is an item of the `hooks`
+ *  array of a group of an event. A value of another shape holds no handler. */
 export function handlerValues(events: ValueNode | undefined): ValueNode[] {
   if (events?.type !== 'Object') {
     return []

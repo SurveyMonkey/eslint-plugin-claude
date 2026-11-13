@@ -160,9 +160,8 @@ export function pathNodes(value: ValueNode | undefined): StringNode[] {
   )
 }
 
-/** The strings of a parsed manifest value that names paths: the value itself when it is a string,
- *  and each string of an array. Another value gives none, and so does an item that is not a
- *  string. */
+/** The strings of a parsed manifest value that names paths. A string value gives itself, and an
+ *  array gives each string item. Another value gives none. */
 export const pathStrings = (value: unknown): string[] =>
   (Array.isArray(value) ? value : [value]).filter((item) => typeof item === 'string')
 

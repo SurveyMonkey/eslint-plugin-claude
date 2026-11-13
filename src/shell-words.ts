@@ -127,9 +127,10 @@ function closingQuote(line: string, start: number, nesting = 0): number {
   return line.length - 1
 }
 
-/** The index of the backtick that closes the one at `start` in `text`, or the length of `text`
- *  when no backtick closes the pair. A backslash escapes the next character. The length is not
- *  an index of `text`, so a caller can tell an open pair from a pair that closes at the end. */
+/** The index of the backtick that closes the one at `start` in `text`. When no backtick closes
+ *  the pair, the result is the length of `text`. A backslash escapes the next character. The
+ *  length is not an index of `text`. So a caller can tell an open pair from a pair that closes at
+ *  the end. */
 export function tickEnd(text: string, start: number): number {
   for (let i = start + 1; i < text.length; i++) {
     if (text.charAt(i) === '\\') {
