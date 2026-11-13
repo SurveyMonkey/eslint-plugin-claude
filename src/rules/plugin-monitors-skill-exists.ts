@@ -5,7 +5,7 @@ import path from 'node:path'
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { pluginFileOf, whensOf } from '../plugin-commands.ts'
-import { ESCAPES, lookup, MISSING, type Plugin } from '../plugin-manifest.ts'
+import { ESCAPES, lookup, MISSING, type Plugin, pathStrings } from '../plugin-manifest.ts'
 import {
   entriesOf,
   frontmatterOfFile,
@@ -19,10 +19,6 @@ import {
 const name = 'plugin-monitors-skill-exists' as const
 
 const PREFIX = 'on-skill-invoke:'
-
-/** The strings of a manifest value that names paths: a string, or each string of an array. */
-const listOf = (value: unknown): string[] =>
-  (Array.isArray(value) ? value : [value]).filter((item) => typeof item === 'string')
 
 /** Add the names of the skill in the folder `folder` to `names`. The skill has the
  *  file `SKILL.md`. Its names are `label` and the `name` of its frontmatter. The result
@@ -110,7 +106,7 @@ function skillNames(plugin: Plugin): Set<string> | undefined {
   // exist. The rule counts it always, which can only make the rule report less.
   const root = addSkill(plugin, plugin.realRoot, plugin.fields.name, names) !== 'blind'
   const listed =
-    root && ['skills', ...listOf(skills)].every((text) => addSkillPath(plugin, text, names))
+    root && ['skills', ...pathStrings(skills)].every((text) => addSkillPath(plugin, text, names))
   const object = commands !== null && typeof commands === 'object' && !Array.isArray(commands)
   if (object) {
     for (const key of Object.keys(commands)) {

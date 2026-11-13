@@ -160,6 +160,12 @@ export function pathNodes(value: ValueNode | undefined): StringNode[] {
   )
 }
 
+/** The strings of a parsed manifest value that names paths: the value itself when it is a string,
+ *  and each string of an array. Another value gives none, and so does an item that is not a
+ *  string. */
+export const pathStrings = (value: unknown): string[] =>
+  (Array.isArray(value) ? value : [value]).filter((item) => typeof item === 'string')
+
 /** A skill that a path of the manifest `skills` key gives. `file` is its `SKILL.md`, spelled
  *  from the plugin root and the path text. In a folder of skill folders, the spelling also holds
  *  the folder name. `folder` is the name of its folder. */
@@ -187,11 +193,7 @@ function skillAt(plugin: Plugin, file: string, folder: string): ListedSkill | nu
  *  plugin. The paths add to `skills/`, and a path can name `skills/`, so a skill can occur two
  *  times. */
 export function listedSkills(plugin: Plugin): ListedSkill[] {
-  const { skills } = plugin.fields
-  const texts = (Array.isArray(skills) ? skills : [skills]).filter(
-    (item): item is string => typeof item === 'string',
-  )
-  return texts.flatMap((text) => {
+  return pathStrings(plugin.fields.skills).flatMap((text) => {
     const real = lookup(plugin, text)
     if (typeof real !== 'string' || real === plugin.realRoot) {
       return []
