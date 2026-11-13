@@ -136,6 +136,13 @@ jsonTester.run('settings-schema (valid)', rule, {
       }),
       filename,
     })),
+    // `disableRemotePreviewScripts` is a Boolean key (#857). Each Boolean is valid.
+    ...ALL.flatMap((filename) =>
+      [true, false].map((value) => ({
+        code: obj({ disableRemotePreviewScripts: value }),
+        filename,
+      })),
+    ),
     // The managed keys, with the values that the docs give.
     ...ALL.map((filename) => ({
       code: obj({
@@ -504,6 +511,9 @@ jsonTester.run('settings-schema (types)', rule, {
       type('disableMobileSimulatorTools', 'a Boolean'),
       type('disableDesktopLocalSessions', 'a Boolean'),
     ),
+    // `disableRemotePreviewScripts`, a managed Boolean key: a string and a number are wrong types (#857).
+    bad({ disableRemotePreviewScripts: 'true' }, type('disableRemotePreviewScripts', 'a Boolean')),
+    bad({ disableRemotePreviewScripts: 1 }, type('disableRemotePreviewScripts', 'a Boolean')),
     // The Boolean keys that other groups name, and `disableArtifact` with a value that is not a Boolean.
     bad(
       {

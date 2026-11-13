@@ -37,6 +37,11 @@ jsonTester.run('settings-key-scope (valid)', rule, {
       code: obj({ [MANAGED_KEY]: true }),
       filename,
     })),
+    // `disableRemotePreviewScripts` is a Managed key (#857).
+    ...[managed, dropIn].map((filename) => ({
+      code: obj({ disableRemotePreviewScripts: true }),
+      filename,
+    })),
     // A User or managed key is for managed files.
     ...[managed, dropIn].map((filename) => ({
       code: obj({ [USER_OR_MANAGED_KEY]: [] }),
@@ -145,6 +150,12 @@ jsonTester.run('settings-key-scope (invalid)', rule, {
       code: obj({ [MANAGED_KEY]: true }),
       filename,
       errors: [{ messageId: 'managedOnly' as const, line: 1, column: 2, endColumn: 25 }],
+    })),
+    // `disableRemotePreviewScripts` is a Managed key, so it is a fault in the project files (#857).
+    ...[project, local].map((filename) => ({
+      code: obj({ disableRemotePreviewScripts: true }),
+      filename,
+      errors: [{ messageId: 'managedOnly' as const, line: 1, column: 2, endColumn: 31 }],
     })),
     // A User or managed key is a fault in the project files.
     ...[project, local].map((filename) => ({

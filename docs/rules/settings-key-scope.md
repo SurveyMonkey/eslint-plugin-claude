@@ -37,6 +37,8 @@ rule reports a key that the file cannot set. The report is on the key.
 | `Global config`           | `~/.claude.json` only[^global]   | Each file, a managed file too                          |
 | `Any file`                | Each settings file               | No file                                                |
 
+The key `disableRemotePreviewScripts` has the Scope `Managed`. The rule reports it in project files and local files.[^remotepreview]
+
 The index lists the `User` Scope as the user file `~/.claude/settings.json`.[^index] The rule treats
 a `User` key as a `User or managed` key. It reports the key in project files and local files. It
 makes no report in a managed file, because the index does not say that Claude Code ignores the key
@@ -138,3 +140,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^autocontinue]: [All settings: autoContinueAtUsageLimit](https://code.claude.com/docs/en/settings-reference#autocontinueatusagelimit)
 [^aliases]: [All settings: Marketplace key aliases](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases)
 [^disableautomode]: [All settings: disableAutoMode](https://code.claude.com/docs/en/settings-reference#disableautomode)
+[^remotepreview]: [All settings: disableRemotePreviewScripts](https://code.claude.com/docs/en/settings-reference#disableremotepreviewscripts)

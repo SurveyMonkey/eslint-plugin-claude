@@ -44,6 +44,7 @@ const MANAGED_ONLY: readonly string[] = [
   'disableCommandPluginSources',
   'disableDesktopLocalSessions',
   'disableMobileSimulatorTools',
+  'disableRemotePreviewScripts',
   'disableSideloadFlags',
   'forceRemoteSettingsRefresh',
   'gatewayInternalNetworks',
