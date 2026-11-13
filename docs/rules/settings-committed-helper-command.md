@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-committed-helper-command, which reports a key in the shared .claude/settings.json that runs a shell command, such as apiKeyHelper, awsAuthRefresh, awsCredentialExport, gcpAuthRefresh, otelHeadersHelper, statusLine, subagentStatusLine and fileSuggestion.
+description: The ESLint rule claude/settings-committed-helper-command, which reports a key in the shared .claude/settings.json that runs a shell command, such as apiKeyHelper, awsAuthRefresh, awsCredentialExport, gcpAuthRefresh, otelHeadersHelper, statusLine and fileSuggestion.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -24,7 +24,7 @@ generated:
 
 ## Rule details
 
-Eight settings keys make Claude Code run a shell command. A command in `.claude/settings.json`
+Seven settings keys make Claude Code run a shell command. A command in `.claude/settings.json`
 comes from the repository, so it runs on the machine of each person who opens it. In an
 interactive session, Claude Code does not run a command from project or local settings until the
 user accepts the workspace trust prompt.[^key] In `claude -p` or the SDK, the folder is not
@@ -39,7 +39,6 @@ used in that case.[^trust]
 | `gcpAuthRefresh`      | A command line           | [^gcp]              |
 | `otelHeadersHelper`   | A command line           | [^otel][^dialogs]   |
 | `statusLine`          | An object with `command` | [^status][^dialogs] |
-| `subagentStatusLine`  | An object with `command` | [^subagent]         |
 | `fileSuggestion`      | An object with `command` | [^suggest]          |
 
 The list is `COMMAND_STRING_KEYS` and `COMMAND_OBJECT_KEYS` in `src/data/settings-keys.ts`.
@@ -93,7 +92,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^gcp]: [All settings: gcpAuthRefresh](https://code.claude.com/docs/en/settings-reference#gcpauthrefresh)
 [^otel]: [All settings: otelHeadersHelper](https://code.claude.com/docs/en/settings-reference#otelheadershelper)
 [^status]: [All settings: statusLine](https://code.claude.com/docs/en/settings-reference#statusline)
-[^subagent]: [All settings: subagentStatusLine](https://code.claude.com/docs/en/settings-reference#subagentstatusline)
 [^suggest]: [All settings: fileSuggestion](https://code.claude.com/docs/en/settings-reference#filesuggestion)
 [^dialogs]: [Configure server-managed settings: Security approval dialogs](https://code.claude.com/docs/en/server-managed-settings#security-approval-dialogs)
 [^trust]: [Configure permissions: What runs before you trust a folder](https://code.claude.com/docs/en/permissions#what-runs-before-you-trust-a-folder)

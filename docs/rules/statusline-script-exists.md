@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/statusline-script-exists, which reports a script in the command of statusLine, subagentStatusLine or fileSuggestion when it does not exist in the repository, or when its git index mode is 100644 and not 100755.
+description: The ESLint rule claude/statusline-script-exists, which reports a script in the command of statusLine or fileSuggestion when it does not exist in the repository, or when its git index mode is 100644 and not 100755.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -25,11 +25,10 @@ generated:
 ## Rule details
 
 The `command` of `statusLine` points to a script path or holds an inline shell command.[^manual] The
-same shape is in `subagentStatusLine`[^subagent] and `fileSuggestion`.[^gates] When the script is
-not executable, the status line does not appear.[^trouble] A script that is not there fails in the
-same way.
+same shape is in `fileSuggestion`.[^gates] When the script is not executable, the status line does
+not appear.[^trouble] A script that is not there fails in the same way.
 
-The rule reads the `command` string of the three keys, and finds a script path in these words:
+The rule reads the `command` string of the two keys, and finds a script path in these words:
 
 - **A word that starts with `${CLAUDE_PROJECT_DIR}`.** The `$CLAUDE_PROJECT_DIR` form with no braces
   counts too. The rule checks the program, and the first argument when the program is an
@@ -94,5 +93,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^manual]: [Customize your status line: Manually configure a status line](https://code.claude.com/docs/en/statusline#manually-configure-a-status-line)
 [^trouble]: [Customize your status line: Status line not appearing](https://code.claude.com/docs/en/statusline#status-line-not-appearing)
-[^subagent]: [Customize your status line: Subagent status lines](https://code.claude.com/docs/en/statusline#subagent-status-lines)
 [^gates]: [All settings: Status line and file suggestion gates](https://code.claude.com/docs/en/settings-reference#status-line-and-file-suggestion-gates)

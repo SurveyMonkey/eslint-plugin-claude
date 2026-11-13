@@ -40,7 +40,7 @@ the report that the path is in a home folder.
 ### What the rule does not check
 
 - `$HOME/.claude/` and other spellings of the home folder. The page shows the form `~/.claude/` only.
-- `subagentStatusLine` and `fileSuggestion`.
+- `fileSuggestion`.
 - `.claude/settings.local.json`. The local file is for one user.
 - A managed file.
 

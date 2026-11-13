@@ -45,6 +45,8 @@ jsonTester.run('settings-committed-helper-command (valid)', rule, {
       code: JSON.stringify({ apiKeyHelperX: 'x.sh', hooks: { statusLine: 'x' } }),
       filename: project,
     },
+    // Claude Code 2.1.323 removed `subagentStatusLine`, so it runs no command.
+    { code: object('subagentStatusLine', '~/.claude/agents.sh'), filename: project },
     // Two `command` fields: the last counts.
     { code: '{"statusLine": {"command": "x", "command": ""}}', filename: project },
     // The top-level value is no object.
@@ -82,7 +84,7 @@ jsonTester.run('settings-committed-helper-command (valid)', rule, {
 })
 
 describe('settings-committed-helper-command: the keys', () => {
-  it('lists the eight keys of the row', () => {
+  it('lists the seven keys of the row', () => {
     expect([...COMMAND_STRING_KEYS, ...COMMAND_OBJECT_KEYS].sort()).toEqual(
       [
         'apiKeyHelper',
@@ -92,7 +94,6 @@ describe('settings-committed-helper-command: the keys', () => {
         'gcpAuthRefresh',
         'otelHeadersHelper',
         'statusLine',
-        'subagentStatusLine',
       ].sort(),
     )
   })

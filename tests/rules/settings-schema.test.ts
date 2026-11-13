@@ -79,7 +79,6 @@ jsonTester.run('settings-schema (valid)', rule, {
           refreshInterval: 1,
           hideVimModeIndicator: true,
         },
-        subagentStatusLine: { type: 'command', command: 'x' },
         fileSuggestion: { type: 'command', command: 'x' },
         voice: { enabled: true, autoSubmit: false, mode: 'tap' },
         spinnerVerbs: { mode: 'append', verbs: ['Pondering'] },
@@ -406,6 +405,11 @@ jsonTester.run('settings-schema (unknown keys)', rule, {
       unknown('enable-all'),
       unknown('disable_telemetry'),
     ),
+    // Claude Code 2.1.323 removed `subagentStatusLine`, and the settings index does not list it.
+    bad(
+      { subagentStatusLine: { type: 'command', command: 'x' } },
+      { ...unknown('subagentStatusLine'), line: 1, column: 2 },
+    ),
     // Two keys of one name give one report, on the last.
     bad('{"modle": 1, "modle": 2}', { ...unknown('modle'), column: 14 }),
     // An environment variable name at the top level belongs in `env`.
@@ -435,10 +439,6 @@ jsonTester.run('settings-schema (unknown keys)', rule, {
     // An unknown field inside each documented object, with its path.
     bad({ attribution: { co: 'x' } }, unknown('attribution.co')),
     bad({ statusLine: { type: 'command', command: 'x', pad: 1 } }, unknown('statusLine.pad')),
-    bad(
-      { subagentStatusLine: { type: 'command', command: 'x', pad: 1 } },
-      unknown('subagentStatusLine.pad'),
-    ),
     bad(
       { fileSuggestion: { type: 'command', command: 'x', timeout: 1 } },
       unknown('fileSuggestion.timeout'),
@@ -1089,8 +1089,8 @@ jsonTester.run('settings-schema (shapes)', rule, {
     ),
     bad({ statusLine: { type: 'command' } }, missing('statusLine', 'command')),
     bad(
-      { subagentStatusLine: { command: 'x' }, fileSuggestion: { type: 'command' } },
-      missing('subagentStatusLine', 'type'),
+      { statusLine: { command: 'x' }, fileSuggestion: { type: 'command' } },
+      missing('statusLine', 'type'),
       missing('fileSuggestion', 'command'),
     ),
     // A field that is `null` is missing.

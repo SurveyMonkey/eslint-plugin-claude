@@ -31,7 +31,7 @@ type MessageId =
 const VIEWS = ['default', 'verbose', 'focus']
 
 /** The keys that run a command, and that `disableAllHooks` turns off. */
-const COMMAND_KEYS = ['statusLine', 'subagentStatusLine', 'fileSuggestion']
+const COMMAND_KEYS = ['statusLine', 'fileSuggestion']
 
 /** The last member `key` of `object`, unless its value is `null`. */
 function setMember(object: ValueNode | undefined, key: string): MemberNode | undefined {

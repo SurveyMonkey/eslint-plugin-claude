@@ -2905,7 +2905,7 @@ const GIT_TREE: Record<string, string> = {
   'ok/bin/tool': '#!/bin/sh\n',
   'loose/bin/tool': '#!/bin/sh\n',
   // `statusline-script-exists`: a script with mode `100644`, a script that is not there, and a
-  // key of each of the three, in each file that it reads. The project of a managed file is the
+  // key of each of the two, in each file that it reads. The project of a managed file is the
   // repository, so it names `sl/line.sh`. A hidden drop-in is for `settings-managed-file`. The
   // same content where no rule reads it. A script with mode `100755` is silent.
   'sl/line.sh': '#!/bin/sh\n',
@@ -2914,7 +2914,7 @@ const GIT_TREE: Record<string, string> = {
     statusLine: { type: 'command', command: `${projectDir}/line.sh` },
   }),
   'sl/.claude/settings.local.json': JSON.stringify({
-    subagentStatusLine: { type: 'command', command: './gone.sh' },
+    fileSuggestion: { type: 'command', command: './gone.sh' },
   }),
   'sl/managed-settings.json': JSON.stringify({
     model: 'opus',
