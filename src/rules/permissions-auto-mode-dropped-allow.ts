@@ -4,6 +4,7 @@
 // the docs name, unless the settings source turns auto mode off. `permissions-allow-unrestricted`
 // owns `Bash(*)`, `PowerShell(*)` and the bare names, so this rule skips them.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { SHELL_TOOLS } from '../data/shell-tools.ts'
 import { docsUrl } from '../docs-url.ts'
 import { commandWords } from '../permission-command.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
@@ -12,8 +13,6 @@ import { at, sourceOf } from '../permission-source.ts'
 import { kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-auto-mode-dropped-allow' as const
-
-const SHELL_TOOLS = ['Bash', 'PowerShell']
 
 type Options = [{ interpreters: string[] }]
 

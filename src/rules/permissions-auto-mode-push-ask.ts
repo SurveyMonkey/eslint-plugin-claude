@@ -7,6 +7,7 @@
 // auto mode off, or when it holds a `PreToolUse` hook, which the docs name as the checkpoint that
 // reads the full command.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { SHELL_TOOLS } from '../data/shell-tools.ts'
 import { docsUrl } from '../docs-url.ts'
 import { commandPatternMatches } from '../permission-command.ts'
 import { valueAt } from '../permission-sandbox.ts'
@@ -21,8 +22,6 @@ import {
 import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-auto-mode-push-ask' as const
-
-const SHELL_TOOLS = ['Bash', 'PowerShell']
 
 /** A push with arguments. A rule covers a push when it matches this command. The permissions page
  *  gives `Bash(git push *)` for it. */

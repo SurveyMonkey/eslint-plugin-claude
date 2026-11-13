@@ -2,6 +2,7 @@
 // `WebFetch(domain:*)` matches every fetch, and it also lets sandboxed
 // commands reach any host (docs/rules/permissions-allow-unrestricted.md).
 import type { JSONRuleDefinition } from '@eslint/json'
+import { SHELL_TOOLS } from '../data/shell-tools.ts'
 import { docsUrl } from '../docs-url.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
@@ -9,11 +10,6 @@ import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 const name = 'permissions-allow-unrestricted' as const
 
 type MessageId = 'command' | 'fetch'
-
-/** The shell tools whose bare name and `(*)` form match every command. The
- *  permissions page says so for `Bash` ("Match all uses of a tool") and for
- *  `PowerShell` ("PowerShell"). */
-const SHELL_TOOLS = ['Bash', 'PowerShell']
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
   meta: {
