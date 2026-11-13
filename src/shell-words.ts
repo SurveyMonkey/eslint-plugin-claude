@@ -127,16 +127,24 @@ function closingQuote(line: string, start: number, nesting = 0): number {
   return line.length - 1
 }
 
-/** The index of the backtick that closes the one at `start` in `line`, or the last index. */
-function closingTick(line: string, start: number): number {
-  for (let i = start + 1; i < line.length; i++) {
-    if (line.charAt(i) === '\\') {
+/** The index of the backtick that closes the one at `start` in `text`. When no backtick closes
+ *  the pair, the result is the length of `text`. A backslash escapes the next character. The
+ *  length is not an index of `text`. So a caller can tell an open pair from a pair that closes at
+ *  the end. */
+export function tickEnd(text: string, start: number): number {
+  for (let i = start + 1; i < text.length; i++) {
+    if (text.charAt(i) === '\\') {
       i++
-    } else if (line.charAt(i) === '`') {
+    } else if (text.charAt(i) === '`') {
       return i
     }
   }
-  return line.length - 1
+  return text.length
+}
+
+/** The index of the backtick that closes the one at `start` in `line`, or the last index. */
+function closingTick(line: string, start: number): number {
+  return Math.min(tickEnd(line, start), line.length - 1)
 }
 
 /** A reserved word that bash accepts straight after a `)`. A command can come after it. */

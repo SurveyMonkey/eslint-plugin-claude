@@ -22,6 +22,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { PLATFORMS } from '../data/platforms.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
+import { isBelow } from '../min-version.ts'
 import { fetchHost } from '../permission-host.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { isOn, stringEntries, valueAt } from '../permission-sandbox.ts'
@@ -46,14 +47,6 @@ const WINDOWS = ['windows-git-bash', 'windows-no-git-bash']
 interface Options {
   platforms?: string[]
   minVersion?: string
-}
-
-/** True when version `a` is lower than version `b`. Both are `major.minor.patch`. */
-function isBelow(a: string, b: string): boolean {
-  const left = a.split('.').map(Number)
-  const right = b.split('.').map(Number)
-  const at = left.findIndex((part, index) => part !== right[index])
-  return at !== -1 && (left[at] as number) < (right[at] as number)
 }
 
 /** True when `path` holds `*` or `?` after the rule removes a trailing `/**`. On Linux and WSL2

@@ -7,6 +7,7 @@
 // `MultiEdit(path)` rule, so this rule skips that form.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
+import { isBelow } from '../min-version.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -17,14 +18,6 @@ type Options = [{ minVersion?: string }]
 
 /** The version that renamed `Task` to `Agent`, from the sub-agents page of the docs. */
 const RENAME_VERSION = '2.1.63'
-
-/** True when version `a` is lower than version `b`. Both are `major.minor.patch`. */
-function isBelow(a: string, b: string): boolean {
-  const left = a.split('.').map(Number)
-  const right = b.split('.').map(Number)
-  const at = left.findIndex((part, index) => part !== right[index])
-  return at !== -1 && (left[at] as number) < (right[at] as number)
-}
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> = {
   meta: {

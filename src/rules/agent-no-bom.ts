@@ -3,37 +3,17 @@
 // mark before a rule runs, so the rule reads the first bytes of the file on
 // disk. It makes no report for a file that it cannot read (ADR 001, Decision
 // 14). The rule is inactive until the option `minVersion` is set.
-import { closeSync, openSync, readSync } from 'node:fs'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { classifyLinted } from '../agent-files.ts'
-import { isBelow, type MinVersionOptions } from '../agent-min-version.ts'
+import type { MinVersionOptions } from '../agent-min-version.ts'
 import { docsUrl } from '../docs-url.ts'
-import { MIN_VERSION_SCHEMA } from '../min-version.ts'
+import { startsWithBom } from '../file-bom.ts'
+import { isBelow, MIN_VERSION_SCHEMA } from '../min-version.ts'
 
 const name = 'agent-no-bom' as const
 
 // The first Claude Code version that reads an agent file with a BOM.
 const FIXED_IN = '2.1.239'
-
-// The UTF-8 form of U+FEFF.
-const BOM = Buffer.from([0xef, 0xbb, 0xbf])
-
-/** True when the file `file` starts with a UTF-8 BOM. A file that cannot be
- *  read gives false. */
-function startsWithBom(file: string): boolean {
-  try {
-    const descriptor = openSync(file, 'r')
-    try {
-      const head = Buffer.alloc(BOM.length)
-      readSync(descriptor, head, 0, BOM.length, 0)
-      return head.equals(BOM)
-    } finally {
-      closeSync(descriptor)
-    }
-  } catch {
-    return false
-  }
-}
 
 const rule: MarkdownRuleDefinition<{ RuleOptions: MinVersionOptions; MessageIds: 'bom' }> = {
   meta: {
