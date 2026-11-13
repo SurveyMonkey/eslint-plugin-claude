@@ -22,7 +22,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { PLATFORMS } from '../data/platforms.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type ValueNode } from '../marketplace-json.ts'
-import { isBelow } from '../min-version.ts'
+import { supportsBefore } from '../min-version.ts'
 import { fetchHost } from '../permission-host.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { isOn, stringEntries, valueAt } from '../permission-sandbox.ts'
@@ -171,10 +171,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: [Options]; MessageIds: MessageId }
       platforms.some((entry) => names.includes(entry))
     const linux = onPlatform(LINUX_LIKE)
     const windows = onPlatform(WINDOWS)
-    const olderThan = (version: string) => minVersion !== undefined && isBelow(minVersion, version)
-    const slash = olderThan('2.1.224')
-    const ipv6 = olderThan('2.1.229')
-    const reversed = olderThan('2.1.304')
+    const slash = supportsBefore(minVersion, '2.1.224')
+    const ipv6 = supportsBefore(minVersion, '2.1.229')
+    const reversed = supportsBefore(minVersion, '2.1.304')
     if (!linux && !windows && !slash && !ipv6) {
       return {}
     }
