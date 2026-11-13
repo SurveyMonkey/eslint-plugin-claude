@@ -66,7 +66,7 @@ function monitorsOf(value: ValueNode | undefined): PluginCommand[] {
 
 /** The shell-form command hooks of an event map. A hook is in shell form when it
  *  has no `args` member and its `type` is `command`. An `args` member of any value
- *  takes the hook out, also when `handlerOf` reads the value as no array. */
+ *  takes the hook out, also a value that is not an array. */
 function hooksOf(value: ValueNode | undefined): PluginCommand[] {
   return handlerValues(value).flatMap((handler) =>
     lastMember(handler, 'args') === undefined

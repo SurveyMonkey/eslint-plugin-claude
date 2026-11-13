@@ -22,11 +22,11 @@ function parts(version: string): number[] {
   return version.split('.').map(Number)
 }
 
-/** True when the version `version` is older than `required`. The compare is numeric: `2.1.99` is
- *  older than `2.1.224`. Both must be `major.minor.patch`. The result is correct only for that
- *  form. Each `minVersion` schema pins it with the pattern `^\d+\.\d+\.\d+$`. Each other version
- *  is a literal in the code or in `src/data/`. A version with more or fewer numbers can give a
- *  wrong result. */
+/** True when the version `version` is older than `required`. The function compares each part as a
+ *  number, so `2.1.99` is older than `2.1.224`. Both must be `major.minor.patch`. The result is
+ *  correct only for that form. Each `minVersion` schema pins it with the pattern
+ *  `^\d+\.\d+\.\d+$`. Each other version is a literal in the code or in `src/data/`. A version
+ *  with more or fewer numbers can give a wrong result. */
 export function isBelow(version: string, required: string): boolean {
   const have = parts(version)
   const want = parts(required)
