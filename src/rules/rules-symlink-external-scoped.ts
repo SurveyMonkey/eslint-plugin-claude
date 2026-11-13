@@ -9,18 +9,11 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import { classifyMemoryFile } from '../memory-files.ts'
+import { classifyMemoryFile, isScopedRule } from '../memory-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
 import { isInside, realOf, repositoryRoot } from '../skill-tree.ts'
 
 const name = 'rules-symlink-external-scoped' as const
-
-/** True when `paths` sets a scope: a string, or a list, with one glob that is not empty. An empty
- *  value is the same as an absent field. */
-function isScoped(paths: unknown): boolean {
-  const globs = typeof paths === 'string' ? paths.split(',') : Array.isArray(paths) ? paths : []
-  return globs.some((glob) => typeof glob === 'string' && glob.trim() !== '')
-}
 
 /** True when a `.git` is at the folder `dir` or above it. */
 function hasGit(dir: string): boolean {
@@ -67,7 +60,7 @@ const rule: MarkdownRuleDefinition<{ MessageIds: 'neverLoads' }> = {
         if (
           fm === null ||
           field === undefined ||
-          !isScoped(fm.data.paths) ||
+          !isScopedRule(fm.data.paths) ||
           !leavesRepository(file)
         ) {
           return

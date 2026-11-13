@@ -55,8 +55,7 @@ export function lineCount(text: string): number {
 // A UNC share: two backslashes and a host. The hosts `\\wsl$` and `\\wsl.localhost` lead to a
 // Linux distribution on the same machine. The docs say that `\\wsl$` paths are not network
 // paths. A long path (`\\?\C:\`) and a device path (`\\.\pipe\`) are local. A long UNC path
-// (`\\?\UNC\server\share`) is a share. The rule `memory-symlink-network-target` has the
-// same test.
+// (`\\?\UNC\server\share`) is a share.
 const UNC = /^\\\\(?:\?\\UNC\\|(?![?.]\\)(?!wsl\$(?:\\|$))(?!wsl\.localhost(?:\\|$)))/i
 // A path under `/net` or `/Network`, or the folder itself.
 const MOUNT = /^\/(?:net|Network)(?:\/|$)/
@@ -68,8 +67,7 @@ export function isNetworkTarget(target: string): boolean {
 }
 
 /** True when the value of `paths` sets a scope: a string, or a list, with one glob that is
- *  not empty. An empty value is the same as an absent field. The rule
- *  `rules-symlink-external-scoped` has the same test. */
+ *  not empty. An empty value is the same as an absent field. */
 export function isScopedRule(paths: unknown): boolean {
   const globs = typeof paths === 'string' ? paths.split(',') : Array.isArray(paths) ? paths : []
   return globs.some((glob) => typeof glob === 'string' && glob.trim() !== '')

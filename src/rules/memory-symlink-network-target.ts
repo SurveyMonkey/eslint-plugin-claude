@@ -6,22 +6,9 @@ import { lstatSync, readlinkSync } from 'node:fs'
 import path from 'node:path'
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
 import { docsUrl } from '../docs-url.ts'
-import { classifyMemoryFile } from '../memory-files.ts'
+import { classifyMemoryFile, isNetworkTarget } from '../memory-files.ts'
 
 const name = 'memory-symlink-network-target' as const
-
-// A UNC share: two backslashes and a host. The hosts `\\wsl$` and `\\wsl.localhost` lead to a
-// Linux distribution on the same machine. The docs say that `\\wsl$` paths are not network
-// paths. A long path (`\\?\C:\`) and a device path (`\\.\pipe\`) are local. A long UNC path
-// (`\\?\UNC\server\share`) is a share.
-const UNC = /^\\\\(?:\?\\UNC\\|(?![?.]\\)(?!wsl\$(?:\\|$))(?!wsl\.localhost(?:\\|$)))/i
-// A path under `/net` or `/Network`, or the folder itself.
-const MOUNT = /^\/(?:net|Network)(?:\/|$)/
-
-/** True when `target`, the text of a link, is a network path. */
-function isNetworkTarget(target: string): boolean {
-  return UNC.test(target) || MOUNT.test(target)
-}
 
 /** The text of the link at `entry`, or null when `entry` is no link or cannot be read. */
 function targetOf(entry: string): string | null {
