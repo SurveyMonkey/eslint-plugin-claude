@@ -18,7 +18,7 @@ export interface Handler {
 
 /** The command handler in `value`, as a list of one. The list is empty when
  *  `value` is not a command handler. */
-function handlerOf(value: ValueNode): Handler[] {
+export function handlerOf(value: ValueNode): Handler[] {
   const type = lastMember(value, 'type')?.value
   const command = lastMember(value, 'command')?.value
   if (type?.type !== 'String' || type.value !== 'command' || command?.type !== 'String') {
@@ -38,10 +38,9 @@ function handlerOf(value: ValueNode): Handler[] {
   ]
 }
 
-/** The command handlers of the last `hooks` key of `document`, in file order.
- *  A value of another shape holds no handler. */
-export function commandHandlers(document: DocumentNode): Handler[] {
-  const events = lastMember(document.body, 'hooks')?.value
+/** The handler values of the event map `events`, in file order: each item of the `hooks` array
+ *  of each group of each event. A value of another shape holds no handler. */
+export function handlerValues(events: ValueNode | undefined): ValueNode[] {
   if (events?.type !== 'Object') {
     return []
   }
@@ -49,12 +48,16 @@ export function commandHandlers(document: DocumentNode): Handler[] {
     groups.type === 'Array'
       ? groups.elements.flatMap(({ value: group }) => {
           const handlers = lastMember(group, 'hooks')?.value
-          return handlers?.type === 'Array'
-            ? handlers.elements.flatMap(({ value }) => handlerOf(value))
-            : []
+          return handlers?.type === 'Array' ? handlers.elements.map(({ value }) => value) : []
         })
       : [],
   )
+}
+
+/** The command handlers of the last `hooks` key of `document`, in file order.
+ *  A value of another shape holds no handler. */
+export function commandHandlers(document: DocumentNode): Handler[] {
+  return handlerValues(lastMember(document.body, 'hooks')?.value).flatMap(handlerOf)
 }
 
 /** The words that a handler runs: the program first, then its arguments. The

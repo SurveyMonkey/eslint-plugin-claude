@@ -8,6 +8,7 @@
 // no rule reads it. The same holds for the monitors file that
 // `experimental.monitors` names.
 import path from 'node:path'
+import { handlerOf, handlerValues } from './hook-handlers.ts'
 import type { DocumentNode, ObjectNode, ValueNode } from './marketplace-json.ts'
 import { lastMember } from './marketplace-json.ts'
 import { type Plugin, readPluginAt, type StringNode } from './plugin-manifest.ts'
@@ -64,27 +65,14 @@ function monitorsOf(value: ValueNode | undefined): PluginCommand[] {
 }
 
 /** The shell-form command hooks of an event map. A hook is in shell form when it
- *  has no `args` member and its `type` is `command`. */
+ *  has no `args` member and its `type` is `command`. An `args` member of any value
+ *  takes the hook out, also when `handlerOf` reads the value as no array. */
 function hooksOf(value: ValueNode | undefined): PluginCommand[] {
-  if (value?.type !== 'Object') {
-    return []
-  }
-  return value.members
-    .flatMap((event) => (event.value.type === 'Array' ? event.value.elements : []))
-    .flatMap(({ value: group }) => {
-      const handlers = lastMember(group, 'hooks')?.value
-      return handlers?.type === 'Array' ? handlers.elements : []
-    })
-    .flatMap(({ value: handler }) => {
-      const command = lastMember(handler, 'command')?.value
-      const type = lastMember(handler, 'type')?.value
-      return type?.type === 'String' &&
-        type.value === 'command' &&
-        command?.type === 'String' &&
-        lastMember(handler, 'args') === undefined
-        ? [{ kind: 'hook' as const, node: command }]
-        : []
-    })
+  return handlerValues(value).flatMap((handler) =>
+    lastMember(handler, 'args') === undefined
+      ? handlerOf(handler).map(({ command }) => ({ kind: 'hook' as const, node: command }))
+      : [],
+  )
 }
 
 /** The `headersHelper` strings of a map of MCP servers. */
