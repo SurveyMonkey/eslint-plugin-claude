@@ -179,6 +179,10 @@ describe(`${RULE} (silent)`, () => {
       'an exec-form hook with a reference in command',
       hooksOf({ type: 'command', command: REF, args: [] }),
     ],
+    [
+      'a hook with a reference in command and args that is no array',
+      hooksOf({ type: 'command', command: REF, args: REF }),
+    ],
     ['a hook with no reference', hooksOf(shell('./n.sh $CLAUDE_PLUGIN_OPTION_TOKEN'))],
     ['an http hook', hooksOf({ type: 'http', url: REF, command: REF })],
     ['a hook with no type', hooksOf({ command: REF })],

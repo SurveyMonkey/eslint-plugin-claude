@@ -7,7 +7,7 @@
 // `MultiEdit(path)` rule, so this rule skips that form.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
-import { isBelow } from '../min-version.ts'
+import { supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
 import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -49,7 +49,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
   },
   create(context) {
     const [{ minVersion }] = context.options
-    const skipTask = minVersion !== undefined && isBelow(minVersion, RENAME_VERSION)
+    const skipTask = supportsBefore(minVersion, RENAME_VERSION)
     return settingsListener(context, (entries) => {
       for (const entry of entries) {
         const { tool, specifier } = entry.rule

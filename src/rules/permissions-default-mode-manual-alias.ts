@@ -6,7 +6,7 @@
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
-import { isBelow } from '../min-version.ts'
+import { supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
@@ -48,7 +48,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'alias' | 'us
   },
   create(context) {
     const [{ minVersion }] = context.options
-    if (minVersion === undefined || !isBelow(minVersion, ALIAS_VERSION)) {
+    if (!supportsBefore(minVersion, ALIAS_VERSION)) {
       return {}
     }
     return {

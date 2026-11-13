@@ -8,7 +8,7 @@ import { classifyLinted } from '../agent-files.ts'
 import type { MinVersionOptions } from '../agent-min-version.ts'
 import { docsUrl } from '../docs-url.ts'
 import { startsWithBom } from '../file-bom.ts'
-import { isBelow, MIN_VERSION_SCHEMA } from '../min-version.ts'
+import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 
 const name = 'agent-no-bom' as const
 
@@ -30,11 +30,7 @@ const rule: MarkdownRuleDefinition<{ RuleOptions: MinVersionOptions; MessageIds:
   },
   create(context) {
     const [{ minVersion }] = context.options
-    if (
-      minVersion === undefined ||
-      !isBelow(minVersion, FIXED_IN) ||
-      classifyLinted(context) === null
-    ) {
+    if (!supportsBefore(minVersion, FIXED_IN) || classifyLinted(context) === null) {
       return {}
     }
     return {
