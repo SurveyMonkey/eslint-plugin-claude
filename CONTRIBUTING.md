@@ -191,10 +191,7 @@ Do this in the major release that `availableUntil` names. Run each step in order
 7. Commit as `feat(<group>)!: remove <rule>`, and use the same title for the pull request.
    Pull requests are squash-merged, so the title and the body become the commit on `main`. Put a
    `BREAKING CHANGE:` footer that names the tool in the last paragraph of the body.
-   release-please reads the `!` to pick the version. Do not change the version by hand.
-   While the version is 0.x, `bump-minor-pre-major` in `release-please-config.json` makes `!` a
-   minor bump. When `availableUntil` is `1.0.0`, add a `Release-As: 1.0.0` footer to the same
-   last paragraph.
+   release-please reads the `!` as a major bump. Do not change the version by hand.
 
 ## Docs watch
 
