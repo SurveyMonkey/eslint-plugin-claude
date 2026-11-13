@@ -3,7 +3,7 @@
 // (https://code.claude.com/docs/en/settings-reference), checked on Claude Code 2.1.296 on
 // 2026-10-10. Review these lists on or before 2027-04-10, the `stale_after` date of
 // docs/rules/settings-schema.md. The key catalog is `src/data/settings-keys.ts`. Claude Code
-// 2.1.323 removed `subagentStatusLine`. Checked on 2026-11-13.
+// 2.1.323 removed the subagent status line key. Checked on 2026-11-13.
 //
 // A key is in `SETTINGS_VALUES` only when `settings-schema` is the one rule that reports its value.
 // These keys are not in the table:

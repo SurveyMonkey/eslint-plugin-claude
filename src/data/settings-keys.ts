@@ -1,10 +1,9 @@
 // The scope of each settings key: the files that Claude Code reads the key
 // from. Source: the Scope column of the settings index in the settings
 // reference (https://code.claude.com/docs/en/settings-reference#settings-index),
-// checked on Claude Code 2.1.295 on 2026-10-08. Review these lists on or
+// checked on Claude Code 2.1.323 on 2026-11-13. Review these lists on or
 // before 2027-04-08, the `stale_after` date of docs/rules/settings-key-scope.md.
-// A nested key is dotted, as in the index. Claude Code 2.1.323 removed
-// `subagentStatusLine` from the index. Checked on 2026-11-13.
+// A nested key is dotted, as in the index.
 //
 // The index has two keys that Appendix A.1 of docs/rules-inventory.md lacks:
 // `allowClaudeInChromeWithManagedMcp` and `allowedProviders` (Managed).
@@ -477,8 +476,8 @@ export const BUNDLED_SKILL_ALIASES: ReadonlyMap<string, string> = new Map([
  *  names three of them as settings that run shell commands
  *  (https://code.claude.com/docs/en/server-managed-settings#security-approval-dialogs). Checked on
  *  Claude Code 2.1.296 on 2026-10-10. A key of the first kind holds a command line. A key of the
- *  second kind holds an object with a `command` field. Claude Code 2.1.323 removed
- *  `subagentStatusLine`, which held an object. Checked on 2026-11-13. */
+ *  second kind holds an object with a `command` field. Claude Code 2.1.323 removed the
+ *  subagent status line key, which held an object. Checked on 2026-11-13. */
 export const COMMAND_STRING_KEYS: readonly string[] = [
   'apiKeyHelper',
   'awsAuthRefresh',
