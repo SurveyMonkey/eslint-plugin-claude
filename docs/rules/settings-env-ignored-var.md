@@ -77,7 +77,8 @@ can set them, so the rule makes no report in a managed file.[^ignored]
   `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and the file mention switch `CLAUDE_CODE_DISABLE_FILE_MENTIONS`.
 - `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE`. Claude Code turns Code Mode on from the shell, user
   settings or a `--settings` file. It does not turn Code Mode on from managed, project or local
-  settings. The rule reports the variable in a project or local file. It makes no report in a
+  settings. The rule reports the variable in a project or local file. Its message names the shell,
+  user settings and a `--settings` file, and not managed settings. The rule makes no report in a
   managed file.[^ignored]
 
 A few values that turn telemetry off still apply from a project or local file. The rule makes
