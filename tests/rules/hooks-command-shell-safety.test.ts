@@ -485,6 +485,25 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
+  it('finds the end of a command substitution after a backtick pair in it', () => {
+    // The bash manual (Command Substitution) says: "The first backquote not preceded by a
+    // backslash terminates the command substitution." So a `)` or a quote in the pair does not
+    // end the outer `$(`. bash 3.2.57 and 5.3.9 print `[a]` and `[b]` for `$X` with X="a b"
+    // after each of these, so `$X` is out of quotes.
+    for (const text of [
+      // The `)` of a `case` pattern in the pair. bash prints `[x]` first.
+      'echo "$(echo `case a in a) echo x;; esac`)" $X',
+      // An escaped single quote in the pair. bash prints `[']` first.
+      `echo "$(echo \`echo \\\\'\`)" $X`,
+      // An escaped double quote in the pair. bash prints `["]` first.
+      `echo "$(echo \`echo \\\\"\`)" $X`,
+      // A double quote holds the pair, and the pair holds a double quote. bash prints `[a)]` first.
+      `echo $(echo "\`echo "a)"\`") $X`,
+    ]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+  })
+
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {
     // bash 5.3.9 prints `#y`, then runs `rm` on the split `$T`.
     expect(line(`echo \${1:-$(true) $(false) #y}; rm -rf $T`)).toEqual(['destructive'])

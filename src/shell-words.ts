@@ -44,13 +44,19 @@ const MAX_NESTING = 100
  *  opens a bash 5.3 substitution of commands. */
 const opensExpansion = (line: string, at: number) => /^\{[^\s|]/.test(line.slice(at + 1, at + 3))
 
-/** The index of the `)` that closes the `(` at `open` in `line`, or the last index. A quote, a backslash, a
- *  backtick and a nested substitution inside keep their own level. A comment inside ends at the next
- *  new line. A `#` in a `${...}` expansion starts no comment. Each parenthesis level has its own count
- *  of open expansions. So a `}` in a nested substitution does not end an outer expansion. */
-function closingParen(line: string, open: number, nesting = 0): number {
+/** The index of the `)` that closes the `(` at `open` in `line`. When no `)` closes it, the result is
+ *  the length of `line`, as in `tickEnd`. A quote, a backslash, a backtick pair and a nested
+ *  substitution inside keep their own level. A comment inside ends at the next new line. A `#` in a
+ *  `${...}` expansion starts no comment. Each parenthesis level has its own count of open
+ *  expansions. So a `}` in a nested substitution does not end an outer expansion.
+ *
+ *  The reader skips a backtick pair to the backtick that ends it, so a `)` or a quote in the pair
+ *  is text. The bash manual (Command Substitution) says: "The first backquote not preceded by a
+ *  backslash terminates the command substitution." A comment in the pair also ends at that
+ *  backtick. `scanCommands` and `hooks-command-shell-safety` use this one reader (#866). */
+export function closingParen(line: string, open: number, nesting = 0): number {
   if (nesting > MAX_NESTING) {
-    return line.length - 1
+    return line.length
   }
   let depth = 0
   // The open `${` expansions at this level, and the counts of the outer levels.
@@ -66,7 +72,7 @@ function closingParen(line: string, open: number, nesting = 0): number {
     if (char === "'") {
       const end = line.indexOf("'", i + 1)
       if (end === -1) {
-        return line.length - 1
+        return line.length
       }
       i = end
     } else if (char === '"') {
@@ -106,7 +112,7 @@ function closingParen(line: string, open: number, nesting = 0): number {
       boundary = /[\s;|&<>]/.test(char)
     }
   }
-  return line.length - 1
+  return line.length
 }
 
 /** The index of the double quote that closes the one at `start` in `line`, or the last index. A command

@@ -18,7 +18,7 @@ import {
   stringOf,
 } from '../hooks-config.ts'
 import { placeholderFolders, scriptsRun, scriptText } from '../hooks-files.ts'
-import { commandsOf, commandWordAt, tickEnd } from '../shell-words.ts'
+import { closingParen, commandsOf, commandWordAt, tickEnd } from '../shell-words.ts'
 
 const name = 'hooks-command-shell-safety' as const
 
@@ -30,95 +30,6 @@ const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
 /** A variable that gets a value from `jq` or `cat`, which read the hook input, or from `read`. */
 const DERIVED =
   /(?:^|[\s;])([A-Za-z_]\w*)=\$\([^)\n]*\b(?:cat|jq)\b|\bread\s+(?:-\w+\s+)*([A-Za-z_]\w*)/g
-
-/** The index of the quote that closes the one at `start` in `text`, or the length of `text`. A double quote
- *  holds command substitutions, which have quotes and parentheses of their own. */
-function quoteEnd(text: string, start: number): number {
-  const quote = text.charAt(start)
-  for (let i = start + 1; i < text.length; i++) {
-    const char = text.charAt(i)
-    if (char === quote) {
-      return i
-    }
-    if (quote === '"' && char === '\\') {
-      i++
-    } else if (quote === '"' && char === '$' && text.startsWith('(', i + 1)) {
-      i = closingParen(text, i + 1)
-    }
-  }
-  return text.length
-}
-
-/** The index of the parenthesis that closes the one at `open` in `text`, or the length of `text`. A
- *  parenthesis in quotes, after a backslash or in a comment does not count. In a `${...}` expansion,
- *  only a parenthesis that starts a command or process substitution counts. Each parenthesis level
- *  and each backtick substitution has its own count of open `${` expansions, as in
- *  `src/shell-words.ts`. */
-function closingParen(text: string, open: number): number {
-  let depth = 0
-  // The open `${` expansions at this level, the counts of the outer levels, and if a backtick
-  // substitution is open.
-  let braces = 0
-  const outer: number[] = []
-  let tick = false
-  // True when the next character starts a word. The shell removes each backslash and new line
-  // pair first, so a pair does not change `boundary`. A backslash in a comment joins no lines.
-  let boundary = true
-  for (let i = open; i < text.length; i++) {
-    const char = text.charAt(i)
-    const before: boolean = boundary
-    boundary = false
-    if (char === "'" || char === '"') {
-      i = quoteEnd(text, i)
-    } else if (char === '\\') {
-      i++
-      boundary = before && text.charAt(i) === '\n'
-    } else if (
-      char === '$' &&
-      (/^\{[^\s|]/.test(text.slice(i + 1, i + 3)) || text.charAt(i + 1) === '$')
-    ) {
-      // `$$` is a parameter, so a `{` after it opens no expansion. A blank or a `|` after `${`
-      // opens a bash 5.3 substitution of commands, not an expansion.
-      braces += text.charAt(i + 1) === '{' ? 1 : 0
-      i++
-    } else if (char === '}' && braces > 0) {
-      braces--
-    } else if (char === '`') {
-      // A `#` after a backtick that starts a substitution starts a word. After a backtick that
-      // ends one, it stays in the word, as in `src/shell-words.ts`.
-      tick = !tick
-      boundary = tick
-      if (tick) {
-        outer.push(braces)
-        braces = 0
-      } else {
-        braces = outer.pop() as number
-      }
-    } else if (char === '#' && braces === 0 && before) {
-      // A `#` that starts a word, or that follows a redirect operator, starts a comment. A quote
-      // in it is plain text. The comment ends before the next new line. In a backtick
-      // substitution, it also ends before the backtick that ends the substitution.
-      const length = text.slice(i).search(tick ? /[\n`]/ : /\n/)
-      i = length === -1 ? text.length : i + length - 1
-    } else if (char === '(' && (braces === 0 || /[$<>]/.test(text.charAt(i - 1)))) {
-      // In an expansion, a parenthesis is plain text, unless it starts a command or process
-      // substitution.
-      depth++
-      outer.push(braces)
-      braces = 0
-      boundary = true
-    } else if (char === ')' && braces === 0) {
-      // A `#` after a `)` starts no comment, as in `src/shell-words.ts`.
-      if (--depth === 0) {
-        return i
-      }
-      braces = outer.pop() as number
-    } else {
-      boundary = /[\s;|&<>]/.test(char)
-    }
-  }
-  return text.length
-}
 
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
  *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a substitution or a
