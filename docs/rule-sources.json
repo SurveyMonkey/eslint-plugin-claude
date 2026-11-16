@@ -127,7 +127,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Invoke subagents explicitly",
-      "hash": "e33e650705c10390f545950489f9a5dd6c11530d7e55198e9918afa3e669e54a"
+      "hash": "9088aa8ae9cd8f0be00d6763a131d211957ad4c901d10bf22f318a94ba7c084e"
     }
   ],
   "agent-mcp-servers-inline-trust": [
@@ -285,7 +285,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Invoke subagents explicitly",
-      "hash": "e33e650705c10390f545950489f9a5dd6c11530d7e55198e9918afa3e669e54a"
+      "hash": "9088aa8ae9cd8f0be00d6763a131d211957ad4c901d10bf22f318a94ba7c084e"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -442,7 +442,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Invoke subagents explicitly",
-      "hash": "e33e650705c10390f545950489f9a5dd6c11530d7e55198e9918afa3e669e54a"
+      "hash": "9088aa8ae9cd8f0be00d6763a131d211957ad4c901d10bf22f318a94ba7c084e"
     }
   ],
   "agent-tools-conditional": [
@@ -897,7 +897,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "677a811b41e474e73237325e5ec35e8ddc87ced7dfe6d0e3f05e76cec6eec5dd"
+      "hash": "7ad5f085cea07379213a2af9f017afb5c7473d403b97a828db6f82a695820693"
     }
   ],
   "hooks-command-path-variable": [
@@ -931,7 +931,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "677a811b41e474e73237325e5ec35e8ddc87ced7dfe6d0e3f05e76cec6eec5dd"
+      "hash": "7ad5f085cea07379213a2af9f017afb5c7473d403b97a828db6f82a695820693"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -3526,6 +3526,16 @@
     },
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
+      "heading": "What the classifier blocks by default",
+      "hash": "462919079beab699b6e377447127d4070885950018f9701a9df498702c2d7b97"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "permissions.denyInsteadOfPrompting",
+      "hash": "78a074f5b2694f99933c70adf8c38d19620e4a9cdac696affa5d29c4caea5e71"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "Which mode a session starts in",
       "hash": "8864af55c57014d699539ba892bd8a5398e7b5e6e981d5d340fba940aa4c73ba"
     },
@@ -5804,7 +5814,7 @@
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
       "heading": "Invoke subagents explicitly",
-      "hash": "e33e650705c10390f545950489f9a5dd6c11530d7e55198e9918afa3e669e54a"
+      "hash": "9088aa8ae9cd8f0be00d6763a131d211957ad4c901d10bf22f318a94ba7c084e"
     }
   ],
   "settings-attribution-false": [
@@ -6173,7 +6183,7 @@
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
       "heading": "How Claude Code uses prompt caching",
-      "hash": "02b6fa6d4a7b574d087c4cc0e0bd2f9bdc2c2c4cecad572893436ac1193a1bee"
+      "hash": "662199611ddd05ccfe221e53908155034ef8560437b5eda6a475e7b9d569eda4"
     },
     {
       "url": "https://code.claude.com/docs/en/prompt-caching",
@@ -6237,9 +6247,9 @@
       "hash": "308c734d7738bd2e9d4054889f2891eff8c7256da5b13fd8b466d008a69e5d51"
     },
     {
-      "url": "https://code.claude.com/docs/en/sub-agents",
-      "heading": "Choose a model",
-      "hash": "cccef7070bfa4f8198110ca3c3122199a148fb8ed27ecb71887d28e0b1fc1b5b"
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "1a731d229ed752655b557cfb806863067fdf44461a956d9c8c7fea95985a9ae9"
     },
     {
       "url": "https://code.claude.com/docs/en/sub-agents",
@@ -6379,7 +6389,7 @@
     {
       "url": "https://code.claude.com/docs/en/cli-reference",
       "heading": "CLI flags",
-      "hash": "677a811b41e474e73237325e5ec35e8ddc87ced7dfe6d0e3f05e76cec6eec5dd"
+      "hash": "7ad5f085cea07379213a2af9f017afb5c7473d403b97a828db6f82a695820693"
     },
     {
       "url": "https://code.claude.com/docs/en/managed-settings",
@@ -6398,7 +6408,7 @@
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
       "heading": "File reference",
-      "hash": "14d12f0815cd0d33cbe33a6844bdba426590aed1cec3bd630fa788123e467883"
+      "hash": "c47bb7463a13e9997f6904eb429ea7d6c4f9fe0316384df311c74ac8051369cd"
     },
     {
       "url": "https://code.claude.com/docs/en/keybindings",
@@ -6531,7 +6541,7 @@
     {
       "url": "https://code.claude.com/docs/en/claude-directory",
       "heading": "File reference",
-      "hash": "14d12f0815cd0d33cbe33a6844bdba426590aed1cec3bd630fa788123e467883"
+      "hash": "c47bb7463a13e9997f6904eb429ea7d6c4f9fe0316384df311c74ac8051369cd"
     }
   ],
   "settings-local-location": [
@@ -6746,6 +6756,11 @@
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
+      "heading": "Which entries Claude Code tries",
+      "hash": "0eb3e96f6eef780e6148aa252c5bd97036c69db0ac8d10c51323ba98be7dbcfb"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Default model behavior",
       "hash": "dd52d36a90ad970a24f0b1f553f54c493d032ca1630adbc6d6113d0267e0596e"
     },
@@ -6800,6 +6815,36 @@
       "url": "https://code.claude.com/docs/en/model-config",
       "heading": "Pin models for third-party deployments",
       "hash": "d68c046ef69efa3ebc47b42b8a303695569e084a0ba7a8b84ca8f841ed8ada77"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/amazon-bedrock",
+      "heading": "When your organization enforces a model allowlist",
+      "hash": "b8b9cf98ef7b3b8a5f94b701e694fb4f6ac3dd8681c2b603d720e5bc4df00756"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/amazon-bedrock",
+      "heading": "4. Pin model versions",
+      "hash": "c25edbe8d0a24bc8e62a344759dc9129d156cee20cf1d10d5ba55ed826417d55"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/google-vertex-ai",
+      "heading": "When your organization enforces a model allowlist",
+      "hash": "500263403fc47eb2edeaaeadf21b57b1c1c93bf8d7eec96810497c63f07c024e"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/microsoft-foundry",
+      "heading": "4. Pin model versions",
+      "hash": "3b7435089fd1343b34d2b6082752110be7661fdf119354bf4e5aa8ec108bedd5"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-platform-on-aws",
+      "heading": "3. Pin model versions",
+      "hash": "1c6f616e1c3873669b74849d7b1b98ee3e56e85b9c302fa446afaba5bcdeaf93"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/claude-models-on-google-cloud-anthropic-managed",
+      "heading": "Pin model versions",
+      "hash": "7aadf0533503a0c23c39471be8f3a928cd7c11dfb5a9f8867e9558fc2a24ace0"
     },
     {
       "url": "https://code.claude.com/docs/en/model-config",
@@ -6859,9 +6904,9 @@
       "hash": "8fdfc19583d28f272cd50ab37f2c78720e43dacd706f6ceaab6ee4130f2930a9"
     },
     {
-      "url": "https://code.claude.com/docs/en/sub-agents",
-      "heading": "Choose a model",
-      "hash": "cccef7070bfa4f8198110ca3c3122199a148fb8ed27ecb71887d28e0b1fc1b5b"
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "heading": "Variables",
+      "hash": "1a731d229ed752655b557cfb806863067fdf44461a956d9c8c7fea95985a9ae9"
     }
   ],
   "settings-nested-project-file": [
@@ -7148,6 +7193,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "disableRemotePreviewScripts",
       "hash": "8610b181b9a855a1edc245e5a190ad27df4500f23f5dce24e7a31e8efafe9378"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/settings-reference",
+      "heading": "allowedProviders",
+      "hash": "21210aa4c9f6cae6ce4a5b2ba27fe314491a75581fc5ceef4627d9a618dc6535"
     }
   ],
   "settings-schema-url": [
