@@ -3473,7 +3473,7 @@
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
       "heading": "Override the block and allow rules",
-      "hash": "57c232d469d0dded81d9fd52c45ce8250370cf68b9e415fe56b66abbbaa665b1"
+      "hash": "c03c50b02de49714c74a35eb6efc17bed3fa852942fab9ca9c103e3a6173dc03"
     },
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
@@ -3495,7 +3495,7 @@
     {
       "url": "https://code.claude.com/docs/en/permission-modes",
       "heading": "How auto mode evaluates actions",
-      "hash": "3cfcfee9296d3202d4883011480cc5faf29c0a16687bb26671e318de3631e84d"
+      "hash": "1f8c3b4391a11bf18a0ce01684d7c5e7c91a3f49e81bc1f8c31d2102e3c2a0ec"
     },
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
@@ -3564,7 +3564,7 @@
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
       "heading": "Override the block and allow rules",
-      "hash": "57c232d469d0dded81d9fd52c45ce8250370cf68b9e415fe56b66abbbaa665b1"
+      "hash": "c03c50b02de49714c74a35eb6efc17bed3fa852942fab9ca9c103e3a6173dc03"
     },
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
@@ -3586,7 +3586,7 @@
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
       "heading": "Override the block and allow rules",
-      "hash": "57c232d469d0dded81d9fd52c45ce8250370cf68b9e415fe56b66abbbaa665b1"
+      "hash": "c03c50b02de49714c74a35eb6efc17bed3fa852942fab9ca9c103e3a6173dc03"
     },
     {
       "url": "https://code.claude.com/docs/en/auto-mode-config",
@@ -6057,7 +6057,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "syncClaudeAiPlugins",
-      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+      "hash": "5ac6870d37c813e3905521fb08df6a693c5a666b3f41bf78662b46dcda496b4c"
     }
   ],
   "settings-env-auto-mode-model": [
@@ -7043,12 +7043,12 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "syncClaudeAiSkills",
-      "hash": "ad434b2431cddba2591be161684fdf0f3e98069650e53b46c4eb2fe8ca421c7f"
+      "hash": "0279f086602eff85e412b17488c2ed65b2f7f3e30c88b1e48a62765eee63c60a"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "syncClaudeAiPlugins",
-      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+      "hash": "5ac6870d37c813e3905521fb08df6a693c5a666b3f41bf78662b46dcda496b4c"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
@@ -7302,7 +7302,7 @@
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "syncClaudeAiPlugins",
-      "hash": "a0f5601a8ef3d22355369abea9f8411401bdaaf83f48050d0c65e2f284b60192"
+      "hash": "5ac6870d37c813e3905521fb08df6a693c5a666b3f41bf78662b46dcda496b4c"
     },
     {
       "url": "https://code.claude.com/docs/en/settings-reference",
