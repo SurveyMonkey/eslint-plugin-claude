@@ -47,6 +47,8 @@ The rule makes no report in these cases:
 - A name is a folder, and not a file.
 - The rule cannot see a supported lockfile or the `package.json`. The real path of the entry can
   be out of the repository. A part of the path can be a link with no target.
+- The rule cannot see a skipped lockfile. The rule reports a skipped lockfile only when it sees
+  the file in the repository.
 - The rule cannot see the plugin. The plugin root can be unseen. The real path of
   the plugin root, of `.claude-plugin/` or of `plugin.json` can be out of the repository. The manifest can fail to
   parse.

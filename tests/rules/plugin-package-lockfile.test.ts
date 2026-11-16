@@ -123,6 +123,8 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code)).toEqual([])
   })
 
+  // The rule doc, "The rule makes no report in these cases": the rule reports a skipped lockfile
+  // only when it sees the file in the repository.
   linked('stays silent for a skipped lockfile that is a link out of the repository', () => {
     const elsewhere = tree({ 'yarn.lock': '' })
     const { dir, code, top } = pluginTree({ name: 'p' }, { 'package.json': '{}' })

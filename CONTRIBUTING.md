@@ -133,7 +133,8 @@ A built rule can leave the plugin in two cases (ADR 001, Decision 2):
 - A Claude Code CLI tool starts to make the check of the rule. A minor release deprecates the
   rule, and the next major release removes it.
 - The Claude Code docs remove the section that the rule cites, and no CLI tool makes the check.
-  The rule has no docs source. See [Remove a rule whose docs source is gone](#remove-a-rule-whose-docs-source-is-gone).
+  The rule has no docs source. See
+  [Remove a rule whose docs source is gone](#remove-a-rule-whose-docs-source-is-gone).
 
 ### Deprecate a rule
 
@@ -183,8 +184,9 @@ Do this in the major release that `availableUntil` names. Run each step in order
    `tests/configs.test.ts`, and from any other test that names it. Delete each case that tests
    only this rule.
 4. In `docs/rules-inventory.md`, start the Checks cell of the row with `Dropped.`. Name the
-   tool and its version, or the docs removal and the Claude Code version. Set Preset and Severity to `–`. The Summary counts the kept rows only,
-   so update each count and table that the row changed.
+   tool and its version, or the docs removal and the Claude Code version. Set Preset and
+   Severity to `–`. The Summary counts the kept rows only, so update each count and table that
+   the row changed.
 5. Run `pnpm docs:seed`, then `pnpm docs:update`. The seed removes the entry of the rule from
    `docs/rule-sources.json`. `docs:update` deletes the snapshot file of a page that no rule cites
    now. Commit `docs/rule-sources.json` and `docs/docs-snapshot/`. `docs:update` also takes in
@@ -200,19 +202,19 @@ Do this in the major release that `availableUntil` names. Run each step in order
 
 ### Remove a rule whose docs source is gone
 
-ADR 001, Decision 2 puts a rule in `recommended` only when the Claude Code docs are its source.
-When the docs remove the cited section, the rule has no source. Check first that no CLI tool
-makes the check. If one does, use the tool case above. #883 removed three rules this way, as the
-rulings on #872 set.
+ADR 001, Decision 2 says that a rule that no Claude Code docs page gives is not a rule in this
+package. Suppose the docs remove the section that a rule cites, and no other cited section
+remains. Then the rule has no source. Check first that no CLI tool makes the check. If one does,
+use the tool case above. #883 removed three rules this way (see #872).
 
-- Before 1.0.0, the rule goes with no deprecation. Run each step of "Remove a rule", with these
-  changes:
-  - In step 4, the Checks cell starts with `Dropped.`. It names the docs removal and the Claude
-    Code version in place of a tool.
-  - In step 7, the `BREAKING CHANGE:` footer names the rule IDs, the docs removal and the Claude
-    Code version. It says that no CLI tool makes the check.
-- No ruling covers a removal after 1.0.0. Ask the person before you remove or deprecate a rule
-  for this reason.
+- Run each step of "Remove a rule". Steps 4 and 7 name the docs removal in place of a tool.
+- In step 4, write the result of the CLI check in the Checks cell, as "Deprecate a rule" step 3
+  does.
+- In step 7, the `BREAKING CHANGE:` footer names the rule IDs, the docs removal and the Claude
+  Code version. It says that no CLI tool makes the check.
+- #883 removed its rules before 1.0.0, with no deprecation. Version 1.0.0 is out, and step 7
+  now gives a major release. No ruling says whether a deprecation release comes first. Ask the
+  person before you remove or deprecate a rule for this reason.
 
 ## Docs watch
 

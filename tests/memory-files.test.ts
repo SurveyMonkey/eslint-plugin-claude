@@ -73,7 +73,10 @@ describe('isAgentsMd', () => {
 
 // A symlink to a network path does not load. The docs name the UNC share and "a path under `/net`
 // or `/Network`": https://code.claude.com/docs/en/memory (the symlink note, about `.claude/rules/`)
-// The docs write a UNC share with backslashes. A forward-slash `//host/share` is not a UNC share.
+// Rows beyond those words rest on the rule doc, docs/rules/memory-symlink-network-target.md, "The
+// rule reads a target as a network path in these cases" and the list after it: the host in any
+// letter case, `\\?\UNC\`, the case of `/net` and `/Network`, and the local forms. A forward-slash
+// `//host/share` is not a UNC share there. The docs write a UNC share with backslashes.
 describe('isNetworkTarget', () => {
   it.each([
     ['/net', true],
@@ -85,7 +88,13 @@ describe('isNetworkTarget', () => {
     ['/netx', false],
     ['//host/share', false],
     ['\\\\host\\share', true],
+    ['\\\\HOST\\share', true],
+    ['\\\\10.0.0.5\\share', true],
+    ['\\\\?\\UNC\\server\\share', true],
+    ['\\\\?\\C:\\x', false],
+    ['\\\\.\\pipe\\x', false],
     ['\\\\wsl$\\Ubuntu', false],
+    ['\\\\wsl.localhost\\Ubuntu', false],
     ['docs/net', false],
     ['../net/x', false],
     ['shared/rules', false],
