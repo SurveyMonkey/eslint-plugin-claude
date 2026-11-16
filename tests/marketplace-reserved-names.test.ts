@@ -5,7 +5,7 @@ import {
   ANTHROPIC_MARKETPLACE_NAMES,
   CLAUDEAI_PREFIX,
   INTERNAL_MARKETPLACE_NAMES,
-  PACKAGE_MANAGER_NAMES,
+  JAVASCRIPT_MEMBER_NAMES,
 } from '../src/data/marketplace-reserved-names.ts'
 
 describe('marketplace reserved names', () => {
@@ -54,17 +54,38 @@ describe('marketplace reserved names', () => {
     ])
   })
 
-  it('holds the six package-manager names', () => {
-    expect(PACKAGE_MANAGER_NAMES).toEqual(['npm', 'pip', 'uv', 'cargo', 'github', 'gh'])
+  it('holds the seven member names that every JavaScript object has', () => {
+    // The "Member names that every JavaScript object has" bullet of "Reserved names".
+    expect([...JAVASCRIPT_MEMBER_NAMES].sort()).toEqual(
+      [
+        'constructor',
+        'hasOwnProperty',
+        'isPrototypeOf',
+        'propertyIsEnumerable',
+        'toLocaleString',
+        'toString',
+        'valueOf',
+      ].sort(),
+    )
   })
 
-  it('writes each name in lowercase kebab case, and none in two lists', () => {
+  it('holds no package-manager name, because the docs reserve none', () => {
+    // "Reserved names" lists no package manager. A probe of `claude plugin
+    // validate` accepted a marketplace named `npm` (docs/rules-inventory.md).
     const all = [
       ...ANTHROPIC_MARKETPLACE_NAMES,
       ...INTERNAL_MARKETPLACE_NAMES,
-      ...PACKAGE_MANAGER_NAMES,
+      ...JAVASCRIPT_MEMBER_NAMES,
     ]
-    expect(all.filter((name) => !/^[a-z]+(-[a-z]+)*$/.test(name))).toEqual([])
+    for (const name of ['npm', 'pip', 'uv', 'cargo', 'github', 'gh']) {
+      expect(all).not.toContain(name)
+    }
+  })
+
+  it('writes each kebab-case name in lowercase, and none in two lists', () => {
+    const kebab = [...ANTHROPIC_MARKETPLACE_NAMES, ...INTERNAL_MARKETPLACE_NAMES]
+    expect(kebab.filter((name) => !/^[a-z]+(-[a-z]+)*$/.test(name))).toEqual([])
+    const all = [...kebab, ...JAVASCRIPT_MEMBER_NAMES]
     expect(new Set(all).size).toBe(all.length)
   })
 

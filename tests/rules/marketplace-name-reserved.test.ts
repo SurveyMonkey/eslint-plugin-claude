@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest'
 import {
   ANTHROPIC_MARKETPLACE_NAMES,
   INTERNAL_MARKETPLACE_NAMES,
-  PACKAGE_MANAGER_NAMES,
+  JAVASCRIPT_MEMBER_NAMES,
 } from '../../src/data/marketplace-reserved-names.ts'
 import plugin from '../../src/index.ts'
 import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
@@ -51,6 +51,17 @@ jsonTester.run('marketplace-name-reserved (valid)', rule, {
     { code: manifest('inline-tools'), filename },
     { code: manifest('npmx'), filename },
     { code: manifest('github-tools'), filename },
+    // "Reserved names" lists no package manager. A probe of
+    // `claude plugin validate` accepted `npm` too.
+    ...['npm', 'NPM', 'pip', 'uv', 'cargo', 'github', 'gh'].map((marketplaceName) => ({
+      code: manifest(marketplaceName),
+      filename,
+    })),
+    // The rule matches a member name in the letter case of the docs, and
+    // the whole name only.
+    { code: manifest('Constructor'), filename },
+    { code: manifest('tostring'), filename },
+    { code: manifest('toString2'), filename },
     // A value of the wrong type is for the schema rule.
     { code: JSON.stringify({ name: 3 }), filename },
     { code: JSON.stringify({ name: ['inline'] }), filename },
@@ -89,10 +100,11 @@ jsonTester.run('marketplace-name-reserved (invalid)', rule, {
       filename,
       errors: [{ messageId: 'internal' as const, data: { name: marketplaceName } }],
     })),
-    ...[...PACKAGE_MANAGER_NAMES, 'NPM', 'GitHub', 'Cargo'].map((marketplaceName) => ({
+    // "Member names that every JavaScript object has".
+    ...JAVASCRIPT_MEMBER_NAMES.map((marketplaceName) => ({
       code: manifest(marketplaceName),
       filename,
-      errors: [{ messageId: 'packageManager' as const, data: { name: marketplaceName } }],
+      errors: [{ messageId: 'memberName' as const, data: { name: marketplaceName } }],
     })),
     ...['claudeai-tools', 'claudeai-'].map((marketplaceName) => ({
       code: manifest(marketplaceName),
@@ -126,11 +138,11 @@ jsonTester.run('marketplace-name-reserved (invalid)', rule, {
       ],
     })),
     // `allowOfficial` does not silence a spelling, an internal name, a
-    // package-manager name or the prefix.
+    // member name or the prefix.
     ...[
       ['claude.code.plugins', 'spelling'],
       ['inline', 'internal'],
-      ['npm', 'packageManager'],
+      ['constructor', 'memberName'],
       ['claudeai-x', 'claudeaiPrefix'],
     ].map(([marketplaceName, messageId]) => ({
       code: manifest(marketplaceName as string),

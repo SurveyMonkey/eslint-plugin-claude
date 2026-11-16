@@ -1,7 +1,7 @@
 // The marketplace names that Claude Code reserves. Source: the marketplace
 // reference, "Reserved names"
 // (https://code.claude.com/docs/en/plugins/marketplace-reference#reserved-names),
-// checked on Claude Code 2.1.288. Review these lists on or before 2027-04-06,
+// checked on Claude Code 2.1.325. Review these lists on or before 2027-04-06,
 // the `stale_after` date of docs/rules/marketplace-name-reserved.md.
 
 /** The official, community and plugin directory names. Claude Code reserves
@@ -42,14 +42,16 @@ export const INTERNAL_MARKETPLACE_NAMES: readonly string[] = [
   'claude-plugin-test',
 ]
 
-/** The package-manager names. Claude Code reserves them in any letter case. */
-export const PACKAGE_MANAGER_NAMES: readonly string[] = [
-  'npm',
-  'pip',
-  'uv',
-  'cargo',
-  'github',
-  'gh',
+/** The member names that every JavaScript object has. `claude plugin
+ *  marketplace add` refuses them, from Claude Code 2.1.296. */
+export const JAVASCRIPT_MEMBER_NAMES: readonly string[] = [
+  'constructor',
+  'hasOwnProperty',
+  'isPrototypeOf',
+  'propertyIsEnumerable',
+  'toLocaleString',
+  'toString',
+  'valueOf',
 ]
 
 /** Claude Code reserves each name that starts with this prefix for

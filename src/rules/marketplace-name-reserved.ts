@@ -5,7 +5,7 @@ import {
   ANTHROPIC_MARKETPLACE_NAMES,
   CLAUDEAI_PREFIX,
   INTERNAL_MARKETPLACE_NAMES,
-  PACKAGE_MANAGER_NAMES,
+  JAVASCRIPT_MEMBER_NAMES,
 } from '../data/marketplace-reserved-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -13,7 +13,7 @@ import { lastMember } from '../marketplace-json.ts'
 const name = 'marketplace-name-reserved' as const
 
 type Options = [{ allowOfficial: boolean }]
-type MessageIds = 'official' | 'spelling' | 'internal' | 'packageManager' | 'claudeaiPrefix'
+type MessageIds = 'official' | 'spelling' | 'internal' | 'memberName' | 'claudeaiPrefix'
 
 /** An ASCII symbol other than a hyphen and an underscore. */
 const SPELLING_SYMBOL = /[!-,./:-@[-^`{-~]/
@@ -61,8 +61,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageIds }>
       spelling:
         'The marketplace name "{{name}}" is another spelling of "{{reserved}}", a reserved name. Claude Code refuses it.',
       internal: 'The marketplace name "{{name}}" is a reserved name. Claude Code refuses it.',
-      packageManager:
-        'The marketplace name "{{name}}" is a package-manager name. Claude Code reserves it in any letter case.',
+      memberName:
+        'The marketplace name "{{name}}" is a member name that every JavaScript object has. Claude Code reserves it and refuses it.',
       claudeaiPrefix:
         'The marketplace name "{{name}}" starts with "claudeai-". Claude Code reserves that prefix for marketplaces that claude.ai hosts.',
     },
@@ -88,8 +88,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageIds }>
         }
         if (INTERNAL_MARKETPLACE_NAMES.includes(text)) {
           report('internal')
-        } else if (PACKAGE_MANAGER_NAMES.includes(text.toLowerCase())) {
-          report('packageManager')
+        } else if (JAVASCRIPT_MEMBER_NAMES.includes(text)) {
+          report('memberName')
         } else if (text.startsWith(CLAUDEAI_PREFIX)) {
           report('claudeaiPrefix')
         } else {
