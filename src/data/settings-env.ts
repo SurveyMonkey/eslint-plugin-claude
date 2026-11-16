@@ -557,9 +557,9 @@ export function deprecatedEnvSummary(name: string, value: string): string | unde
 }
 
 /** The variables that send the traffic of Claude Code through a proxy, add a certificate
- *  authority, or set the mTLS client certificate. The server-managed settings page lists these
- *  variables under "Proxy and TLS configuration". It names `CLAUDE_CODE_CLIENT_CERT` and
- *  `CLAUDE_CODE_CLIENT_KEY` as the mTLS variables. The value of `CLAUDE_CODE_CLIENT_KEY` is the
+ *  authority, or set the mTLS client certificate. The server-managed settings page gives examples
+ *  of "Proxy and TLS configuration": `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS` and the two mTLS
+ *  variables `CLAUDE_CODE_CLIENT_CERT` and `CLAUDE_CODE_CLIENT_KEY`. The value of `CLAUDE_CODE_CLIENT_KEY` is the
  *  path to a key file. So `settings-env-credential` skips it, and `settings-env-secret-heuristic`
  *  checks only its value.
  *  The OpenTelemetry endpoint variable is not here: `settings-env-ignored-var` reports it in a
