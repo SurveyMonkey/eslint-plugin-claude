@@ -66,8 +66,8 @@ The rule adds up the files of one source. For a project file, the source is the 
 The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
 
 In a project or local file, the rule reads only the Boolean `true` as `true`. A quoted `"true"` is no value there, and
-`sandbox-schema` reports it. A managed file reads a quoted `"true"` or `"false"` as that Boolean. Another value of
-`autoAllowBashIfSandboxed` counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
+`sandbox-schema` reports it. In a managed file, Claude Code reads a quoted `"true"` or `"false"` as that Boolean. Another value
+of `autoAllowBashIfSandboxed` counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
 
 Fail, in `.claude/settings.json`:
 
