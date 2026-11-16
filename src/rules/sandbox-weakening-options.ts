@@ -1,11 +1,11 @@
 // A sandbox option that the docs say reduces security or removes isolation
 // (docs/rules/sandbox-weakening-options.md). The rule reads one file, except for
-// `autoAllowBashIfSandboxed`: the fault of `filesystem.disabled` needs a file of the source that
-// sets it to true, and a file that sets it to false removes the fault. The default is `false` from
-// v2.1.324, and was `true` before (settings-reference#sandbox-autoallowbashifsandboxed), so
+// `autoAllowBashIfSandboxed`. The fault of `filesystem.disabled` needs a file of the source that
+// sets it to true. A file that sets it to false removes the fault. The default is `false` from
+// v2.1.324, and was `true` before (settings-reference#sandbox-autoallowbashifsandboxed). So a
 // `minVersion` older than 2.1.324 counts an unset key as true. The rule reads the source there,
-// and makes no report when it cannot read a file. A project or
-// local file cannot set `allowAppleEvents`, `allowNestedUserNamespaces`, `allowPlaintextInject` or
+// and makes no report when it cannot read a file. A project or local file cannot set
+// `allowAppleEvents`, `allowNestedUserNamespaces`, `allowPlaintextInject` or
 // `filesystem.disabled`. `settings-key-scope` reports the key there, so the rule leaves those keys
 // alone in those files.
 import type { JSONRuleDefinition } from '@eslint/json'
@@ -15,7 +15,7 @@ import type { ValueNode } from '../marketplace-json.ts'
 import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import { isOn, stringEntries, valueAt } from '../permission-sandbox.ts'
-import { at, sourceOf } from '../permission-source.ts'
+import { at, boolOf, sourceOf } from '../permission-source.ts'
 import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'sandbox-weakening-options' as const
@@ -112,12 +112,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           const allowAuto = ['sandbox', 'autoAllowBashIfSandboxed']
           // A file that cannot be read can set the option to false. From v2.1.324 the key is off
           // when unset, so a file must set it to true.
-          const states = objects.map((object) => at(object, allowAuto))
+          const states = objects.map((object) => boolOf(at(object, allowAuto), isManaged, false))
           if (
             complete &&
-            !states.some((value) => value === false || value === 'false') &&
-            (supportsBefore(minVersion, FIXED) ||
-              states.some((value) => value === true || value === 'true'))
+            !states.includes(false) &&
+            (supportsBefore(minVersion, FIXED) || states.includes(true))
           ) {
             context.report({ node: disabled as ValueNode, messageId: 'filesystemDisabled' })
           }

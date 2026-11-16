@@ -200,8 +200,10 @@ describe(`${name}: filesystem.disabled`, () => {
       expect(ids(sandbox(DISABLED), MANAGED, options), minVersion).toEqual(['filesystemDisabled'])
       expect(ids(sandbox(DISABLED), DROP_IN, options), minVersion).toEqual(['filesystemDisabled'])
     }
+    // Another invalid value of a key that loosens a managed sandbox counts as `false`:
+    // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
     const odd = sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'x' })
-    expect(ids(odd, MANAGED, [{ minVersion: '2.1.323' }])).toEqual(['filesystemDisabled'])
+    expect(ids(odd, MANAGED, [{ minVersion: '2.1.323' }])).toEqual([])
   })
 
   it('refuses a minVersion that is not major.minor.patch', () => {

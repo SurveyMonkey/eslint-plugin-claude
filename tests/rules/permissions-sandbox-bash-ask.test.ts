@@ -193,6 +193,18 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(root, DROP_IN, file(REPORTING))).toEqual([])
   })
 
+  // A managed sandbox block reads a quoted "true" or "false" as that Boolean. Another invalid
+  // value of a key that loosens the sandbox counts as `false`:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('reads a quoted Boolean of auto-allow in a managed source', () => {
+    const quoted = (value: string) =>
+      repo({ [MANAGED]: file({ sandbox: { enabled: true, autoAllowBashIfSandboxed: value } }) })
+    expect(at(quoted('true'), DROP_IN, file(ASK))).toEqual(['skipped'])
+    for (const value of ['false', 'x']) {
+      expect(at(quoted(value), DROP_IN, file(ASK), [{ minVersion: '2.1.323' }]), value).toEqual([])
+    }
+  })
+
   it('does not read a project file for a managed file', () => {
     const root = repo({ [PROJECT]: file(AUTO), [LOCAL]: file(AUTO) })
     expect(at(root, MANAGED, file(ASK))).toEqual([])
