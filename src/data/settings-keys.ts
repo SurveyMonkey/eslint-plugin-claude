@@ -485,6 +485,9 @@ export const COMMAND_STRING_KEYS: readonly string[] = [
   'gcpAuthRefresh',
   'otelHeadersHelper',
 ]
+/** The keys of the second kind above: each holds an object with a `command` field. Three rules
+ *  read this list: `settings-committed-helper-command`, `settings-conflicting-keys` and
+ *  `statusline-script-exists`. */
 export const COMMAND_OBJECT_KEYS: readonly string[] = ['statusLine', 'fileSuggestion']
 /** The values of `permissions.defaultMode`. Source: the entry for `permissions.defaultMode` in
  *  the settings reference

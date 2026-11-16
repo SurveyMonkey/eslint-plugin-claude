@@ -15,7 +15,16 @@ const rule = ruleOf('settings-env-routing')
 const project = '.claude/settings.json'
 const env = (value: object) => JSON.stringify({ env: value })
 
-const TRAFFIC = ['HTTP_PROXY', 'HTTPS_PROXY', 'NODE_EXTRA_CA_CERTS']
+// "Proxy and TLS configuration, such as `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`, and the mTLS client
+// certificate variables `CLAUDE_CODE_CLIENT_CERT` and `CLAUDE_CODE_CLIENT_KEY`" (server-managed
+// settings, "Fetch and caching behavior").
+const TRAFFIC = [
+  'HTTP_PROXY',
+  'HTTPS_PROXY',
+  'NODE_EXTRA_CA_CERTS',
+  'CLAUDE_CODE_CLIENT_CERT',
+  'CLAUDE_CODE_CLIENT_KEY',
+]
 const PROVIDERS = [
   'CLAUDE_CODE_USE_BEDROCK',
   'CLAUDE_CODE_USE_MANTLE',
@@ -66,6 +75,17 @@ jsonTester.run('settings-env-routing (valid)', rule, {
   invalid: [
     ...TRAFFIC.map((key) => ({
       code: env({ [key]: 'http://proxy.example.com:3128' }),
+      filename: project,
+      errors: [{ messageId: 'traffic' as const }],
+    })),
+    // The mTLS variables hold the path to a file.
+    ...(
+      [
+        ['CLAUDE_CODE_CLIENT_CERT', '/etc/ssl/client.pem'],
+        ['CLAUDE_CODE_CLIENT_KEY', '/etc/ssl/client.key'],
+      ] as const
+    ).map(([key, value]) => ({
+      code: env({ [key]: value }),
       filename: project,
       errors: [{ messageId: 'traffic' as const }],
     })),
@@ -125,6 +145,13 @@ describe('settings-env-routing: messages', () => {
 
   it('names the variable', () => {
     expect(text({ HTTPS_PROXY: 'http://p:1' })).toContain('"HTTPS_PROXY"')
+  })
+
+  // The env vars reference: "Path to client certificate file for mTLS authentication".
+  it('says that an mTLS variable sets the client certificate', () => {
+    expect(text({ CLAUDE_CODE_CLIENT_CERT: '/etc/ssl/client.pem' })).toContain(
+      'sets the mTLS client certificate',
+    )
   })
 })
 
