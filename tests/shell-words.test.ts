@@ -2,6 +2,7 @@
 // also reach this module.
 import { describe, expect, it } from 'vitest'
 import {
+  closingParen,
   commandsOf,
   commandWordAt,
   isAssignment,
@@ -1446,5 +1447,49 @@ describe('scanCommands', () => {
     expect(commandsOf('echo "$(echo "a b')).toEqual([['echo', '$(echo "a b']])
     expect(commandsOf('echo "a `b')).toEqual([['echo', 'a `b']])
     expect(commandsOf('echo "a $(b \\')).toEqual([['echo', 'a $(b \\']])
+  })
+})
+
+describe('closingParen', () => {
+  /** The index of the `(` of the first `$(` in `text`. */
+  const open = (text: string) => text.indexOf('$(') + 1
+
+  it('skips a backtick pair to the backtick that ends it', () => {
+    // The bash manual (Command Substitution) says: "The first backquote not preceded by a
+    // backslash terminates the command substitution." bash 3.2.57 and 5.3.9 print the first
+    // output, then `[b]`, for each of these. So the last `)` ends the `$(`.
+    for (const text of [
+      // A `)` of a `case` pattern in the pair. bash prints `[x]`.
+      "printf '[%s]\\n' $(echo `case a in a) echo x;; esac`) b",
+      // An escaped single quote in the pair. bash prints `[']`.
+      "printf '[%s]\\n' $(echo `echo \\\\'`) b",
+      // An escaped double quote in the pair. bash prints `["]`.
+      `printf '[%s]\\n' $(echo \`echo \\\\"\`) b`,
+      // A double quote holds the pair, and the pair holds a double quote. bash prints `[a)]`.
+      `printf '[%s]\\n' $(echo "\`echo "a)"\`") b`,
+      // A comment in the pair ends at the backtick. bash prints `[a]`.
+      "printf '[%s]\\n' $(echo `echo a #)`) b",
+    ]) {
+      expect(closingParen(text, open(text)), text).toBe(text.lastIndexOf(')'))
+    }
+  })
+
+  it('gives the length of the text when no parenthesis closes the substitution', () => {
+    // bash 3.2.57 and 5.3.9 exit with status 2, with "unexpected EOF while looking for matching"
+    // and the open backtick or quote.
+    for (const text of [
+      "printf '[%s]\\n' $(echo `echo a) b",
+      "printf '[%s]\\n' $(echo 'a) b",
+      "printf '[%s]\\n' $(echo a",
+    ]) {
+      expect(closingParen(text, open(text)), text).toBe(text.length)
+    }
+  })
+
+  it('reads 50 levels of a substitution in double quotes in a substitution', () => {
+    // A pinning test: the reader gave this result before #866 too. bash 3.2.57 and 5.3.9 print
+    // `[x]`, then `[b]`. The reader stops at a depth of more than 50 such levels (`MAX_NESTING`).
+    const text = `printf '[%s]\\n' $(echo ${'"$(echo '.repeat(50)}x${')"'.repeat(50)}) b`
+    expect(closingParen(text, open(text))).toBe(text.lastIndexOf(')'))
   })
 })
