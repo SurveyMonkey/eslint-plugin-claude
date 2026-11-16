@@ -3,6 +3,7 @@
 // checks need a key that a sibling file of the same managed source can set. The rule reads the
 // siblings for these checks. A `null` value removes a key, so it counts as no key.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { COMMAND_OBJECT_KEYS } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { lastMember, type MemberNode, type ValueNode } from '../marketplace-json.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
@@ -29,9 +30,6 @@ type MessageId =
 
 /** The views that `viewMode` takes. A value outside them is for `settings-schema`. */
 const VIEWS = ['default', 'verbose', 'focus']
-
-/** The keys that run a command, and that `disableAllHooks` turns off. */
-const COMMAND_KEYS = ['statusLine', 'fileSuggestion']
 
 /** The last member `key` of `object`, unless its value is `null`. */
 function setMember(object: ValueNode | undefined, key: string): MemberNode | undefined {
@@ -144,7 +142,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         }
 
         if (isBoolean(body, 'disableAllHooks', true)) {
-          for (const key of COMMAND_KEYS) {
+          for (const key of COMMAND_OBJECT_KEYS) {
             pair(setMember(body, key), 'hooksOff', { key })
           }
         }

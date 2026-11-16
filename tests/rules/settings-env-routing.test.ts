@@ -15,7 +15,16 @@ const rule = ruleOf('settings-env-routing')
 const project = '.claude/settings.json'
 const env = (value: object) => JSON.stringify({ env: value })
 
-const TRAFFIC = ['HTTP_PROXY', 'HTTPS_PROXY', 'NODE_EXTRA_CA_CERTS']
+// "Proxy and TLS configuration, such as `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`, and the mTLS client
+// certificate variables `CLAUDE_CODE_CLIENT_CERT` and `CLAUDE_CODE_CLIENT_KEY`" (server-managed
+// settings, "Fetch and caching behavior").
+const TRAFFIC = [
+  'HTTP_PROXY',
+  'HTTPS_PROXY',
+  'NODE_EXTRA_CA_CERTS',
+  'CLAUDE_CODE_CLIENT_CERT',
+  'CLAUDE_CODE_CLIENT_KEY',
+]
 const PROVIDERS = [
   'CLAUDE_CODE_USE_BEDROCK',
   'CLAUDE_CODE_USE_MANTLE',

@@ -6,7 +6,7 @@ import json from '@eslint/json'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import plugin from '../../src/index.ts'
-import { jsonTester, ruleOf } from '../rule-tester.test-support.ts'
+import { jsonTester, lintJson, ruleOf } from '../rule-tester.test-support.ts'
 
 const rule = ruleOf('settings-env-ignored-var')
 
@@ -100,13 +100,15 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
-  // Code Mode turns on "from your shell, user settings, or a `--settings` file, and not from
-  // managed, project, or local settings". The rule covers the project and local files only.
-  'CLAUDE_CODE_EXPERIMENTAL_CODE_MODE',
   // "the other variables whose names start with CLAUDE_AX_, such as CLAUDE_AX_STARTUP_QUIET_MS"
   'CLAUDE_AX_SCREEN_READER',
   'CLAUDE_AX_STARTUP_QUIET_MS',
 ]
+
+// Code Mode turns on "from your shell, user settings, or a `--settings` file, and not from
+// managed, project, or local settings". The rule covers the project and local files only. Its
+// message names the shell, user settings and a `--settings` file, and not managed settings.
+const CODE_MODE = 'CLAUDE_CODE_EXPERIMENTAL_CODE_MODE'
 
 // "Removed ... and now a no-op", with the version of the env vars reference.
 const REMOVED: [string, string][] = [
@@ -150,6 +152,9 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
     ...PROJECT_ONLY.flatMap((name) =>
       MANAGED_FILES.map((filename) => ({ code: env({ [name]: 'x' }), filename })),
     ),
+    // Code Mode makes no report in a managed file (ruling 8 of 2026-11-16: only the message
+    // changes). A `1` in managed settings is the case that the docs describe.
+    ...MANAGED_FILES.map((filename) => ({ code: env({ [CODE_MODE]: '1' }), filename })),
     // The settings reference names no AFK variable, so a settings file may set them (#499).
     ...ALL.map((filename) => ({
       code: env({ CLAUDE_AFK_TIMEOUT_MS: '1', CLAUDE_AFK_COUNTDOWN_MS: '1' }),
@@ -325,6 +330,21 @@ jsonTester.run('settings-env-ignored-var (invalid)', rule, {
         ],
       })),
     ),
+    // Code Mode: the message names the shell, user settings and a `--settings` file, and does
+    // not name managed settings, which Claude Code ignores for this variable.
+    ...PROJECT_FILES.map((filename) => ({
+      code: env({ FOO: 'x', [CODE_MODE]: '1' }),
+      filename,
+      errors: [
+        {
+          messageId: 'codeMode' as const,
+          data: { name: CODE_MODE },
+          line: 1,
+          column: 19,
+          endColumn: 19 + CODE_MODE.length + 2,
+        },
+      ],
+    })),
     // An empty or a blank value, or a value that is not a string, is no credential for
     // `settings-env-credential`. So the variable stays ignored in a project or local file.
     ...['', '  ', 1, null, true].flatMap((value) =>
@@ -482,6 +502,28 @@ jsonTester.run('settings-env-ignored-var (invalid)', rule, {
       errors: [{ messageId: 'projectFiles' as const, column: 31 }],
     },
   ],
+})
+
+// The settings reference lists the places that turn Code Mode on: "your shell, user settings, or a
+// `--settings` file, and not from managed, project, or local settings". Another variable that
+// the project files ignore keeps the message that names managed settings.
+describe('settings-env-ignored-var message for Code Mode', () => {
+  const messageOf = (variable: string) =>
+    lintJson('settings-env-ignored-var', env({ [variable]: '1' }), project).map(
+      ({ message }) => message,
+    )
+
+  it('names the shell, user settings and a --settings file, and not managed settings', () => {
+    const [message] = messageOf(CODE_MODE)
+    expect(message).toContain('your shell, user settings, or a --settings file')
+    expect(message).not.toMatch(/managed/i)
+  })
+
+  it('keeps the message that names managed settings for another variable', () => {
+    expect(messageOf('CLAUDE_CODE_PROCESS_WRAPPER')[0]).toContain(
+      'your shell, user settings, or managed settings',
+    )
+  })
 })
 
 // A number in a telemetry variable is two faults: the type, and a value that is no off string.

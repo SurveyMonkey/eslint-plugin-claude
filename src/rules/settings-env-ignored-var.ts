@@ -15,9 +15,13 @@ import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-file
 
 const name = 'settings-env-ignored-var' as const
 
+/** Claude Code ignores this variable in managed settings too. The shared project message names
+ *  managed settings as a place to set a variable, so this variable gets its own message. */
+const CODE_MODE_VAR = 'CLAUDE_CODE_EXPERIMENTAL_CODE_MODE'
+
 const rule: JSONRuleDefinition<{
   RuleOptions: []
-  MessageIds: 'everyFile' | 'projectFiles' | 'projectFilesValue' | 'removed'
+  MessageIds: 'codeMode' | 'everyFile' | 'projectFiles' | 'projectFilesValue' | 'removed'
 }> = {
   meta: {
     type: 'problem',
@@ -27,6 +31,8 @@ const rule: JSONRuleDefinition<{
     },
     schema: [],
     messages: {
+      codeMode:
+        'Claude Code ignores "{{name}}" in the env block of a project or local settings file. Set it in your shell, user settings, or a --settings file.',
       everyFile: 'Claude Code ignores "{{name}}" in the env block of every settings file.',
       projectFiles:
         'Claude Code ignores "{{name}}" in the env block of a project or local settings file. Set it in your shell, user settings, or managed settings.',
@@ -80,7 +86,7 @@ const rule: JSONRuleDefinition<{
           ) {
             context.report({
               node: member.name,
-              messageId: 'projectFiles',
+              messageId: variable === CODE_MODE_VAR ? 'codeMode' : 'projectFiles',
               data: { name: variable },
             })
           } else if (
