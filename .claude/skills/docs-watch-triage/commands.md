@@ -113,6 +113,29 @@ git -C <wt> push
 gh pr edit <n> --body-file <file>
 ```
 
+For an open refresh pull request (step 1 of Phase 7), read its checks and its body. To fix it
+on its branch, make a worktree from that branch, push, and edit the body:
+
+```sh
+gh pr checks <n>
+gh pr view <n> --json body --jq '.body'
+git -C <root> fetch origin docs-watch-refresh
+git -C <root> worktree add <wt> docs-watch-refresh
+git -C <wt> push
+gh pr edit <n> --body-file <file>
+```
+
+For a pull request of a stop plan, use a branch that is not `docs-watch-refresh`. Replace
+`<branch>` with its name, and `<wk>` with its worktree. Give no `--draft` flag. Do not run
+`gh pr merge --auto`: this pull request gets a normal review.
+
+```sh
+git -C <root> worktree add <wk> -b <branch> origin/main
+pnpm --dir <wk> install --frozen-lockfile
+git -C <wk> push -u origin <branch>
+gh pr create --base main --head <branch> --title '<type>(<scope>): <subject>' --body-file <file>
+```
+
 Remove the worktree after the push, or after a failed `vitest` command:
 
 ```sh

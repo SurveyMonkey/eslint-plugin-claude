@@ -31,7 +31,9 @@ the `docs-watch-triage` skill (`.claude/skills/docs-watch-triage/SKILL.md`). It 
 or opens issues, and adds scope notes to group issues. At its end, it opens one refresh pull
 request on the branch `docs-watch-refresh`, with auto-merge. That pull request stores the
 snapshot, and closes each issue that the session decided and left open. A pull request
-from this runbook then resolves each work item.
+from this runbook then resolves each work item. When a blocker stops the refresh, the skill
+proposes an ordered plan to the person. After approval, it runs the plan in the same session,
+in a pull request with a normal review.
 
 ## The five kinds of issue
 
@@ -136,8 +138,10 @@ An issue that the pull request closes is open until the merge. So its marker sti
 issue for its block.
 
 A refresh pull request from the triage skill has auto-merge. When its check fails, it stays
-open, and auto-merge waits. The skill does one loop of the first item above. The next session reads the
-open refresh pull request first, and opens no second one.
+open, and auto-merge waits. The skill does one loop of the first item above. If the check fails
+again, the skill proposes a plan to fix it. The next session reads the checks of the open refresh
+pull request first, and opens no second one. A pull request for a code fix gets a normal review.
+It has no auto-merge, because only the refresh merges with no review (ADR 002 Decision 4).
 
 ## A digest issue
 
