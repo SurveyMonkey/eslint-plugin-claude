@@ -7,7 +7,7 @@ import {
   ANTHROPIC_MARKETPLACE_NAMES,
   CLAUDEAI_PREFIX,
   INTERNAL_MARKETPLACE_NAMES,
-  PACKAGE_MANAGER_NAMES,
+  JAVASCRIPT_MEMBER_NAMES,
 } from '../data/marketplace-reserved-names.ts'
 import {
   MARKETPLACE_SOURCE_TYPES,
@@ -80,6 +80,10 @@ const ITEM_FIELDS: Record<string, Kind> = {
 // `owner/repo`: one slash, and no white space or second slash.
 const REPO = /^[^/\s]+\/[^/\s]+$/
 
+// A full commit SHA. The docs write "the full lowercase SHA", so an uppercase
+// letter is not a SHA here.
+const FULL_SHA = /^[0-9a-f]{40}$/
+
 /** True when Claude Code reserves `text` as a marketplace name. A `settings`
  *  source is not a `github` or `git` source under `github.com/anthropics/`.
  *  So the exception for the Anthropic names does not apply. */
@@ -87,7 +91,7 @@ function reserved(text: string): boolean {
   return (
     ANTHROPIC_MARKETPLACE_NAMES.some((official) => isSpellingOf(text, official)) ||
     INTERNAL_MARKETPLACE_NAMES.includes(text) ||
-    PACKAGE_MANAGER_NAMES.includes(text.toLowerCase()) ||
+    JAVASCRIPT_MEMBER_NAMES.includes(text) ||
     text.startsWith(CLAUDEAI_PREFIX)
   )
 }
@@ -106,6 +110,7 @@ type MessageIds =
   | 'fieldType'
   | 'repoWildcard'
   | 'repoForm'
+  | 'refShaReserved'
   | 'nameMismatch'
   | 'nameReserved'
   | 'pluginNotObject'
@@ -141,6 +146,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
       repoWildcard:
         'The "repo" of a "github" source must name one repository, and "{{value}}" has a "*". Claude Code takes it literally, and the clone fails.',
       repoForm: 'The "repo" of a "github" source must be "owner/repo", and "{{value}}" is not.',
+      refShaReserved:
+        'The "ref" of the marketplace "{{key}}" is a commit SHA, and Claude Code refuses a SHA for a marketplace with a reserved name. Use a branch or a tag.',
       nameMismatch:
         'The "name" of a "settings" source must equal the marketplace key "{{key}}", and "{{name}}" does not.',
       nameReserved:
@@ -188,6 +195,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageIds }> = {
         } else if (!REPO.test(value.value)) {
           report(value, 'repoForm', { value: value.value })
         }
+      } else if (field === 'ref' && FULL_SHA.test(value.value) && reserved(key)) {
+        report(value, 'refShaReserved', { key })
       } else if (type === 'settings' && field === 'name') {
         if (value.value !== key) {
           report(value, 'nameMismatch', { key, name: value.value })
