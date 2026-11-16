@@ -92,8 +92,8 @@ change what the rule takes as an alias.
 ### What the rule does not check
 
 - `ANTHROPIC_DEFAULT_MODEL`. `settings-env-shadowed` owns it.
-- `CLAUDE_CODE_SUBAGENT_MODEL: "inherit"`. The docs say that this value is the same as an unset
-  variable. `settings-env-shadowed` reports it, so this rule makes no second report.[^subagent]
+- `CLAUDE_CODE_SUBAGENT_MODEL: "inherit"`. The env vars reference says: "Setting it to `inherit` is the same as leaving it unset."
+  `settings-env-shadowed` reports it, so this rule makes no second report.[^subagent]
 - Whether a model exists. The rule checks the form of a value, not the model list of an account.
 - A value of a wrong type, and a key that is not a list. `settings-schema` is for these.
 - The model of an agent, a skill or a hook.
@@ -145,4 +145,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^variables]: [Model configuration: Environment variables](https://code.claude.com/docs/en/model-config#environment-variables)
 [^available-forms]: [Model configuration: Available models](https://code.claude.com/docs/en/model-config#available-models)
 [^shell]: [All settings: How env values interact with your shell](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell)
-[^subagent]: [Create custom subagents: Choose a model](https://code.claude.com/docs/en/sub-agents#choose-a-model)
+[^subagent]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)

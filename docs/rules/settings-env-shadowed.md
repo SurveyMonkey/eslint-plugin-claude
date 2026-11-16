@@ -35,7 +35,7 @@ ignores it.
 | `BASH_MAX_OUTPUT_LENGTH`     | the file also sets `bashOutputMaxChars` as a number              | the variable name | "When you set this key, Claude Code ignores the `BASH_MAX_OUTPUT_LENGTH` environment variable."[^bash]                                                                   |
 | `ANTHROPIC_DEFAULT_MODEL`    | the file also sets a `model` that is not empty and not `default` | the variable name | Claude Code starts a new session on the variable's model "only when none of these selects a model", and a `model` value "in any settings file" is one of them.[^default] |
 | `ANTHROPIC_DEFAULT_MODEL`    | its value is `default`, `inherit`, `opusplan` or `haiku`         | the value         | "Claude Code ignores the variable in these cases ... You set it to `default`, `inherit`, `opusplan`, or `haiku`"[^default]                                               |
-| `CLAUDE_CODE_SUBAGENT_MODEL` | its value is `inherit`                                           | the value         | "Setting the variable to `inherit` is the same as leaving it unset."[^subagent]                                                                                          |
+| `CLAUDE_CODE_SUBAGENT_MODEL` | its value is `inherit`                                           | the value         | "Setting it to `inherit` is the same as leaving it unset."[^subagent]                                                                                                    |
 | `NO_COLOR`, `FORCE_COLOR`    | its value is not empty                                           | the variable name | "`NO_COLOR` and `FORCE_COLOR` set here reach only subprocesses."[^shell]                                                                                                 |
 
 A value of `ANTHROPIC_DEFAULT_MODEL` that is one of the four ignored values gets one report. The
@@ -103,6 +103,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^bash]: [All settings: bashOutputMaxChars](https://code.claude.com/docs/en/settings-reference#bashoutputmaxchars)
 [^default]: [Model configuration: Set a default model for new sessions](https://code.claude.com/docs/en/model-config#set-a-default-model-for-new-sessions)
-[^subagent]: [Create custom subagents: Choose a model](https://code.claude.com/docs/en/sub-agents#choose-a-model)
+[^subagent]: [Environment variables: Variables](https://code.claude.com/docs/en/env-vars#variables)
 [^force]: [Create custom subagents: Run every subagent on one model](https://code.claude.com/docs/en/sub-agents#run-every-subagent-on-one-model)
 [^shell]: [All settings: How env values interact with your shell](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell)

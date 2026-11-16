@@ -27,8 +27,8 @@ The rule is `off` in `recommended`.
 ## Rule details
 
 The `model` field takes `sonnet`, `opus`, `haiku`, `fable`, a full model ID such as
-`claude-opus-5-5`, or `inherit`.[^fields][^choose] The docs say that a full ID "accepts the same
-values as the `--model` flag". That flag takes the aliases of the model configuration page.[^aliases]
+`claude-opus-5-5`, or `inherit`.[^fields][^choose] The docs say that a full ID is "a value the `--model`
+flag accepts". That flag takes the aliases of the model configuration page.[^aliases]
 
 The rule accepts these values:
 
