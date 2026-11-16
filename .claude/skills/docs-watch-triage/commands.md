@@ -75,6 +75,7 @@ the working directory.
 
 ```sh
 gh pr list --head docs-watch-refresh --state open --json number,url,autoMergeRequest
+gh pr list --state open --json number,headRefName --jq '.[]|select(.headRefName|startswith("docs-watch-plan"))'
 git -C <root> fetch origin main
 git -C <root> worktree add <wt> -b docs-watch-refresh origin/main
 pnpm --dir <wt> install --frozen-lockfile
@@ -91,8 +92,8 @@ gh pr checks <n> --watch
 ```
 
 The first command prints `[]` when no refresh is open. If the `vitest` command fails, do not
-push and open no pull request. Run the two commands of the last block, then stop. See step 5 of
-Phase 7 in SKILL.md. `gh pr create` opens a pull request that is ready unless you give
+push and open no pull request. Run the two commands of the last block, then make a stop plan. See
+step 5 of Phase 7 in SKILL.md. `gh pr create` opens a pull request that is ready unless you give
 `--draft`. Do not give it. The commit runs the pre-commit hook.
 
 For one loop after a `docs-snapshot` failure: the listed run must start after `gh workflow run`.
@@ -113,27 +114,33 @@ git -C <wt> push
 gh pr edit <n> --body-file <file>
 ```
 
-For an open refresh pull request (step 1 of Phase 7), read its checks and its body. To fix it
-on its branch, make a worktree from that branch, push, and edit the body:
+For an open refresh pull request (Phase 7 step 1), read its checks and its body. To fix it
+on its branch, make a worktree from the remote branch. Run the `update` commands above, commit,
+push, and edit the body:
 
 ```sh
 gh pr checks <n>
 gh pr view <n> --json body --jq '.body'
 git -C <root> fetch origin docs-watch-refresh
-git -C <root> worktree add <wt> docs-watch-refresh
+git -C <root> worktree add -B docs-watch-refresh <wt> origin/docs-watch-refresh
+pnpm --dir <wt> install --frozen-lockfile
 git -C <wt> push
 gh pr edit <n> --body-file <file>
 ```
 
-For a pull request of a stop plan, use a branch that is not `docs-watch-refresh`. Replace
+For a pull request of a stop plan, use a branch that starts with `docs-watch-plan`. Replace
 `<branch>` with its name, and `<wk>` with its worktree. Give no `--draft` flag. Do not run
-`gh pr merge --auto`: this pull request gets a normal review.
+`gh pr merge --auto`: this pull request gets a normal review. Run the checks of
+`CONTRIBUTING.md` before the push.
 
 ```sh
+git -C <root> fetch origin main
 git -C <root> worktree add <wk> -b <branch> origin/main
 pnpm --dir <wk> install --frozen-lockfile
+git -C <wk> commit -m '<type>(<scope>): <subject>'
 git -C <wk> push -u origin <branch>
 gh pr create --base main --head <branch> --title '<type>(<scope>): <subject>' --body-file <file>
+git -C <root> worktree remove <wk>
 ```
 
 Remove the worktree after the push, or after a failed `vitest` command:
