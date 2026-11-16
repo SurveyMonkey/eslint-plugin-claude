@@ -123,6 +123,13 @@ describe(`${RULE} (silent)`, () => {
     expect(lint(dir, code)).toEqual([])
   })
 
+  linked('stays silent for a skipped lockfile that is a link out of the repository', () => {
+    const elsewhere = tree({ 'yarn.lock': '' })
+    const { dir, code, top } = pluginTree({ name: 'p' }, { 'package.json': '{}' })
+    link(top, 'yarn.lock', path.join(elsewhere, 'yarn.lock'))
+    expect(lint(dir, code)).toEqual([])
+  })
+
   linked('stays silent for a .claude-plugin directory out of the repository', () => {
     const elsewhere = tree({ 'p/plugin.json': '{"name": "p"}' })
     const top = tree({ 'package.json': '{}', 'yarn.lock': '' })

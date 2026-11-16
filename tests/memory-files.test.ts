@@ -2,7 +2,7 @@
 // https://code.claude.com/docs/en/memory#choose-where-to-put-claude-md-files
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { classifyMemoryFile, isAgentsMd } from '../src/memory-files.ts'
+import { classifyMemoryFile, isAgentsMd, isNetworkTarget } from '../src/memory-files.ts'
 
 const at = (...parts: string[]) => classifyMemoryFile(path.join('/repo', ...parts))
 
@@ -68,5 +68,28 @@ describe('isAgentsMd', () => {
     expect(isAgentsMd(path.join('/repo', 'AGENTS.local.md'))).toBe(false)
     expect(isAgentsMd(path.join('/repo', 'agents.md'))).toBe(false)
     expect(isAgentsMd(path.join('/repo', 'CLAUDE.md'))).toBe(false)
+  })
+})
+
+// A symlink to a network path does not load. The docs name the UNC share and "a path under `/net`
+// or `/Network`": https://code.claude.com/docs/en/memory (the symlink note, about `.claude/rules/`)
+// The docs write a UNC share with backslashes. A forward-slash `//host/share` is not a UNC share.
+describe('isNetworkTarget', () => {
+  it.each([
+    ['/net', true],
+    ['/net/x', true],
+    ['/Network', true],
+    ['/Network/x', true],
+    ['/network', false],
+    ['/Networks', false],
+    ['/netx', false],
+    ['//host/share', false],
+    ['\\\\host\\share', true],
+    ['\\\\wsl$\\Ubuntu', false],
+    ['docs/net', false],
+    ['../net/x', false],
+    ['shared/rules', false],
+  ])('reads %j as network path: %s', (target, expected) => {
+    expect(isNetworkTarget(target)).toBe(expected)
   })
 })

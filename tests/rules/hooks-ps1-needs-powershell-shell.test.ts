@@ -55,6 +55,13 @@ describe(`${name}: the platforms`, () => {
     expect(run('./a.ps1', {}, ['windows-no-git-bash', 'linux'])).toEqual(['ps1'])
   })
 
+  it('rejects a platform that the plugin does not list', () => {
+    const text = settings(hooks('PostToolUse', [command({ command: './a.ps1' })], 'Write'))
+    expect(() => lintJson(name, text, FILES.project, [{ platforms: ['solaris'] }])).toThrow(
+      /Key "rules"/,
+    )
+  })
+
   it('is silent when every platform runs the hook in PowerShell', () => {
     expect(run('./a.ps1', {}, ['windows-no-git-bash'])).toEqual([])
   })
