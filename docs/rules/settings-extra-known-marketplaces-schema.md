@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-extra-known-marketplaces-schema, which reports an extraKnownMarketplaces entry in a project settings file that has no source object, a source type that Claude Code does not load, a missing or mistyped field, or a settings source with a bad name or item.
+description: The ESLint rule claude/settings-extra-known-marketplaces-schema, which reports an extraKnownMarketplaces entry in a project settings file that has no source object, a source type that Claude Code does not load, a missing or mistyped field, a SHA ref under a reserved name, or a settings source with a bad name or item.
 owner: brianespinosa
 created: 2026-10-08
 related_issues: [12]
@@ -52,12 +52,20 @@ rule takes the type from the field description.[^fields] The rule checks no `url
 `settings-marketplace-headers-helper-https` checks the scheme of a `url` source that has a
 `headersHelper`.
 
-Three more checks apply to one field each:
+Four more checks apply to one field each:
 
 - **`repo` of a `github` source.** It must name one repository, as `owner/repo`. In
   `extraKnownMarketplaces`, Claude Code takes `owner/*` literally and the clone fails. The owner
   wildcard is valid in the two policy lists only.[^wildcards] A `repo` with a `*` gives the wildcard
   report. The rule gives no second report for it.
+- **`ref` of a `github` or `git` source.** A `ref` can be a branch, a tag, or the full lowercase
+  SHA of a commit. Claude Code refuses a SHA for a marketplace with a reserved name, such as
+  `claude-plugins-official`.[^fields] The rule reports a `ref` of 40 lowercase hex digits when the
+  `extraKnownMarketplaces` key is a reserved name. The reserved names are the same as for the
+  `name` of a `settings` source, below.[^reserved] A branch or a tag gives no report. A SHA under
+  another key gives no report. The docs say "lowercase", so a `ref` with an uppercase hex digit
+  is not a SHA for the rule. The rule reads no version, because the docs tie a SHA to Claude Code
+  2.1.324 or later and the rule has no `minVersion` option.
 - **`name` of a `settings` source.** It must equal the `extraKnownMarketplaces` key, and it must
   not be a reserved name.[^fields] The reserved names are the same as for
   `marketplace-name-reserved`.[^reserved] The `settings` source is not a `github` or `git` source under `github.com/anthropics/`. So the

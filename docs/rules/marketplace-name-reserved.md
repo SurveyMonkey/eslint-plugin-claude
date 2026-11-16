@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/marketplace-name-reserved, which reports a marketplace.json name that Claude Code reserves, a spelling of one of the 19 Anthropic marketplace names, a package-manager name, and a name that starts with claudeai-, with the allowOfficial option.
+description: The ESLint rule claude/marketplace-name-reserved, which reports a marketplace.json name that Claude Code reserves, a spelling of one of the 19 Anthropic marketplace names, a member name that every JavaScript object has, and a name that starts with claudeai-, with the allowOfficial option.
 owner: brianespinosa
 created: 2026-10-06
 related_issues: [12]
@@ -40,12 +40,14 @@ reports the name in these cases:
 - **Internal names.** The name is `inline`, `builtin`, `skills-dir`, `synced` or
   `claude-plugin-test`. Claude Code uses the first four for plugins that do not come
   from a marketplace. The docs also reserve the last.[^reserved]
-- **Package-manager names.** The name is `npm`, `pip`, `uv`, `cargo`, `github` or `gh`, in any letter
-  case.[^reserved]
+- **Member names that every JavaScript object has.** The name is `constructor`, `hasOwnProperty`,
+  `isPrototypeOf`, `propertyIsEnumerable`, `toLocaleString`, `toString` or `valueOf`. Claude Code
+  refuses them from version 2.1.296.[^reserved] The rule matches the letters as the docs write
+  them.
 - **The `claudeai-` prefix.** Claude Code reserves it for marketplaces that claude.ai
   hosts.[^reserved] The rule matches the prefix in lowercase only, as the docs write it.
 
-The lists are in `src/data/marketplace-reserved-names.ts`, as of Claude Code 2.1.288.
+The lists are in `src/data/marketplace-reserved-names.ts`, as of Claude Code 2.1.325.
 
 The docs also reserve a name that impersonates an official marketplace, such as
 `official-claude-plugins`. The docs give no test for it, so the rule does not check it.[^reserved]
@@ -55,11 +57,16 @@ one for the bad character, one for the spelling. The docs do not say which
 reserved names the spelling check covers. The rule checks the 19 Anthropic names only. The rule
 does not check a `name` that is not a string. That value is a fault for `marketplace-schema`.
 
-`claude plugin validate` also reports the internal names and the package-manager names as
-errors.[^validation] The docs say that the exact official names pass validation. Claude
-Code refuses them when a user adds the marketplace.[^add] The docs do not say whether validate
-reports a spelling or the `claudeai-` prefix. So the rule reports the official names, which
-validate does not.
+The docs list no package-manager name as reserved.[^reserved] The rule does not report `npm`, `pip`,
+`uv`, `cargo`, `github` or `gh`. A probe on Claude Code 2.1.325 found that `claude plugin validate`
+accepts a marketplace named `npm`.
+
+`claude plugin validate` also reports the internal names as errors.[^validation] The docs say that
+the exact official names pass validation. Claude Code refuses them when a user adds the
+marketplace.[^add] A probe on 2.1.325 found that validate also accepts a marketplace named
+`constructor`. So the rule reports the member names, which validate does not. The docs do not say
+whether validate reports a spelling or the `claudeai-` prefix. So the rule reports the official
+names, which validate does not.
 
 Fail:
 
@@ -97,7 +104,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ```
 
 The rule reads no git remote, so the user sets the option. `allowOfficial` silences the 19 names
-only. It does not silence a spelling, an internal name, a package-manager name or the prefix. The
+only. It does not silence a spelling, an internal name, a member name or the prefix. The
 `recommended` and `strict` configs set no option.
 
 ## Sources
