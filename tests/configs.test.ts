@@ -2760,7 +2760,12 @@ const TREE: Record<string, string> = {
   // `sandbox-excluded-commands-syntax`: an entry that starts with `sudo`.
   ...settingsFiles('sec', { sandbox: { excludedCommands: ['sudo make'] } }),
   // `sandbox-filesystem-disabled-conflict`: `disabled` with a `denyRead` entry.
-  ...settingsFiles('sfd', { sandbox: { filesystem: { disabled: true, denyRead: ['~/.aws'] } } }),
+  ...settingsFiles('sfd', {
+    sandbox: {
+      autoAllowBashIfSandboxed: true,
+      filesystem: { disabled: true, denyRead: ['~/.aws'] },
+    },
+  }),
   // `sandbox-schema`: a key that the docs do not list.
   ...settingsFiles('ssm', { sandbox: { madeUp: 1 } }),
   // `sandbox-scope`: a mask entry in a credentials list.
@@ -2787,8 +2792,12 @@ const TREE: Record<string, string> = {
   ...settingsFiles('sdo', {
     sandbox: { network: { allowedDomains: ['a.com'], deniedDomains: ['a.com'] } },
   }),
-  // `permissions-sandbox-bash-ask`: a bare Bash ask rule with the sandbox on.
-  ...settingsFiles('psb', { permissions: { ask: ['Bash'] }, sandbox: { enabled: true } }),
+  // `permissions-sandbox-bash-ask`: a bare Bash ask rule with the sandbox on and auto-allow on.
+  // The default of `autoAllowBashIfSandboxed` is `false` from v2.1.324, so the files set it.
+  ...settingsFiles('psb', {
+    permissions: { ask: ['Bash'] },
+    sandbox: { enabled: true, autoAllowBashIfSandboxed: true },
+  }),
   // `permissions-dead-allow`: an allow rule under a bare deny.
   ...settingsFiles('pda', { permissions: { allow: ['Bash(npm test)'], deny: ['Bash'] } }),
   // The warn rules for modes and Bash. `permissions-default-mode-manual-alias` reports only with
@@ -5136,8 +5145,8 @@ const EXPECTED = [
   'packages/sfd/managed-settings.json: claude/sandbox-filesystem-disabled-conflict@2',
   'packages/sfd/managed-settings.d/10-a.json: claude/sandbox-filesystem-disabled-conflict@2',
   'packages/sfd/managed-settings.d/.20-hidden.json: claude/settings-managed-file@2',
-  // The `sfd` files set `disabled` with `autoAllowBashIfSandboxed` unset, which
-  // `sandbox-weakening-options` reports in the managed files.
+  // The `sfd` files set `disabled` with `autoAllowBashIfSandboxed` true, which
+  // `sandbox-weakening-options` reports in the managed files. The default is `false` from v2.1.324.
   'packages/sfd/managed-settings.json: claude/sandbox-weakening-options@1',
   'packages/sfd/managed-settings.d/10-a.json: claude/sandbox-weakening-options@1',
   // `sandbox-scope` reads the two project files only. A managed file keeps a mask entry.

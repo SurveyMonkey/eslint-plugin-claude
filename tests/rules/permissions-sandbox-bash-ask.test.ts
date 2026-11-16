@@ -1,6 +1,8 @@
 // A bare `Bash` ask rule, or `Bash(*)`, is skipped for a command that runs in the sandbox while
-// `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is not false:
+// `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is true:
 // https://code.claude.com/docs/en/permissions#how-permissions-interact-with-sandboxing
+// The default of `autoAllowBashIfSandboxed` is `false`, and "Before v2.1.324, the default was
+// `true`": https://code.claude.com/docs/en/settings-reference#sandbox-autoallowbashifsandboxed
 // The rule adds up the project pair, or one managed source. The tests of a source use files on disk.
 import { symlinkSync } from 'node:fs'
 import path from 'node:path'
@@ -17,11 +19,12 @@ const DROP_IN = 'managed-settings.d/10-a.json'
 const file = (fields: object) => JSON.stringify(fields)
 const ASK = { permissions: { ask: ['Bash'] } }
 const ON = { sandbox: { enabled: true } }
-const REPORTING = { ...ASK, ...ON }
-const at = (root: string, name_: string, text: string) =>
-  lintJson(name, text, path.join(root, name_)).map((message) => message.messageId)
-const alone = (fields: object | string, name_ = PROJECT) =>
-  at(repo({}), name_, typeof fields === 'string' ? fields : file(fields))
+const AUTO = { sandbox: { enabled: true, autoAllowBashIfSandboxed: true } }
+const REPORTING = { ...ASK, ...AUTO }
+const at = (root: string, name_: string, text: string, options: unknown[] = []) =>
+  lintJson(name, text, path.join(root, name_), options).map((message) => message.messageId)
+const alone = (fields: object | string, name_ = PROJECT, options: unknown[] = []) =>
+  at(repo({}), name_, typeof fields === 'string' ? fields : file(fields), options)
 
 describe(`${name}: one file`, () => {
   it('reports a bare Bash ask rule while the sandbox is on', () => {
@@ -30,13 +33,13 @@ describe(`${name}: one file`, () => {
 
   it('reports Bash(*) with white space around the star', () => {
     for (const rule of ['Bash(*)', 'Bash( * )']) {
-      expect(alone({ permissions: { ask: [rule] }, ...ON }), rule).toEqual(['skipped'])
+      expect(alone({ permissions: { ask: [rule] }, ...AUTO }), rule).toEqual(['skipped'])
     }
   })
 
   it('reports each such rule, at its line and column', () => {
     const text =
-      '{"permissions": {"ask": ["Bash", "Read", "Bash(*)"]}, "sandbox": {"enabled": true}}'
+      '{"permissions": {"ask": ["Bash", "Read", "Bash(*)"]}, "sandbox": {"enabled": true, "autoAllowBashIfSandboxed": true}}'
     const messages = lintJson(name, text, '/repo/.claude/settings.json')
     expect(messages.map(({ column }) => column)).toEqual([26, 42])
   })
@@ -47,16 +50,54 @@ describe(`${name}: one file`, () => {
   })
 
   it('is silent when auto-allow is false', () => {
-    expect(
-      alone({ ...REPORTING, sandbox: { enabled: true, autoAllowBashIfSandboxed: false } }),
-    ).toEqual([])
+    const sandbox = { enabled: true, autoAllowBashIfSandboxed: false }
+    for (const options of [[], [{ minVersion: '2.1.323' }], [{ minVersion: '2.1.324' }]]) {
+      expect(alone({ ...ASK, sandbox }, PROJECT, options), JSON.stringify(options)).toEqual([])
+    }
   })
 
-  it('reports when auto-allow is true, null, or a value that sandbox-schema reports', () => {
-    for (const value of [true, null, 'false']) {
-      const sandbox = { enabled: true, autoAllowBashIfSandboxed: value }
-      expect(alone({ ...ASK, sandbox }), String(value)).toEqual(['skipped'])
+  it('is silent when auto-allow is unset, because the default is false from v2.1.324', () => {
+    expect(alone({ ...ASK, ...ON })).toEqual([])
+    expect(alone({ ...ASK, ...ON }, PROJECT, [{}])).toEqual([])
+    expect(alone({ ...ASK, ...ON }, PROJECT, [{ minVersion: '2.1.324' }])).toEqual([])
+    expect(alone({ ...ASK, ...ON }, PROJECT, [{ minVersion: '2.2.0' }])).toEqual([])
+  })
+
+  it('reports an unset auto-allow when minVersion is older than 2.1.324', () => {
+    for (const minVersion of ['2.1.323', '2.1.300', '2.0.0']) {
+      expect(alone({ ...ASK, ...ON }, PROJECT, [{ minVersion }]), minVersion).toEqual(['skipped'])
     }
+  })
+
+  it('reports when auto-allow is true, with or without minVersion', () => {
+    for (const options of [[], [{ minVersion: '2.1.323' }], [{ minVersion: '2.1.324' }]]) {
+      expect(alone(REPORTING, PROJECT, options), JSON.stringify(options)).toEqual(['skipped'])
+    }
+  })
+
+  it('reads auto-allow as true only for the Boolean true', () => {
+    for (const value of [null, 'true', 'false', 1]) {
+      const sandbox = { enabled: true, autoAllowBashIfSandboxed: value }
+      expect(alone({ ...ASK, sandbox }), String(value)).toEqual([])
+    }
+  })
+
+  it('reports null and a quoted false when minVersion is older than 2.1.324', () => {
+    for (const value of [null, 'false']) {
+      const sandbox = { enabled: true, autoAllowBashIfSandboxed: value }
+      const options = [{ minVersion: '2.1.323' }]
+      expect(alone({ ...ASK, sandbox }, PROJECT, options), String(value)).toEqual(['skipped'])
+    }
+  })
+
+  it('refuses a minVersion that is not major.minor.patch', () => {
+    expect(() => alone(REPORTING, PROJECT, [{ minVersion: '2.1' }])).toThrow(
+      /match pattern|should be string/,
+    )
+    expect(() => alone(REPORTING, PROJECT, [{ minVersion: 2 }])).toThrow(
+      /match pattern|should be string/,
+    )
+    expect(() => alone(REPORTING, PROJECT, [{ other: true }])).toThrow(/additional properties/)
   })
 
   it('is silent when the sandbox is off or unset, or enabled is not true', () => {
@@ -72,7 +113,7 @@ describe(`${name}: one file`, () => {
       { ask: ['PowerShell'] },
       { allow: ['Bash'], deny: ['Bash'] },
     ]) {
-      expect(alone({ permissions, ...ON }), JSON.stringify(permissions)).toEqual([])
+      expect(alone({ permissions, ...AUTO }), JSON.stringify(permissions)).toEqual([])
     }
   })
 
@@ -92,9 +133,9 @@ describe(`${name}: one file`, () => {
 
 describe(`${name}: the project pair, on disk`, () => {
   it('adds up the ask rule and the sandbox of the two files', () => {
-    const root = repo({ [PROJECT]: file(ASK), [LOCAL]: file(ON) })
+    const root = repo({ [PROJECT]: file(ASK), [LOCAL]: file(AUTO) })
     expect(at(root, PROJECT, file(ASK))).toEqual(['skipped'])
-    const swapped = repo({ [PROJECT]: file(ON), [LOCAL]: file(ASK) })
+    const swapped = repo({ [PROJECT]: file(AUTO), [LOCAL]: file(ASK) })
     expect(at(swapped, LOCAL, file(ASK))).toEqual(['skipped'])
   })
 
@@ -112,6 +153,14 @@ describe(`${name}: the project pair, on disk`, () => {
     expect(at(off, PROJECT, file(ASK))).toEqual([])
   })
 
+  it('needs auto-allow true in one file of the pair, or a minVersion before 2.1.324', () => {
+    const split = repo({ [LOCAL]: file({ sandbox: { autoAllowBashIfSandboxed: true } }) })
+    expect(at(split, PROJECT, file({ ...ASK, ...ON }))).toEqual(['skipped'])
+    const unset = repo({ [LOCAL]: file(ON) })
+    expect(at(unset, PROJECT, file(ASK))).toEqual([])
+    expect(at(unset, PROJECT, file(ASK), [{ minVersion: '2.1.323' }])).toEqual(['skipped'])
+  })
+
   it('adds nothing for a sibling that does not read', () => {
     const root = repo({ [LOCAL]: '[1]' })
     expect(at(root, PROJECT, file(ASK))).toEqual([])
@@ -127,8 +176,16 @@ describe(`${name}: the project pair, on disk`, () => {
 
 describe(`${name}: a managed source, on disk`, () => {
   it('adds up the ask rule and the sandbox of the files of the source', () => {
-    const root = repo({ [MANAGED]: file(ON), [DROP_IN]: file(ASK) })
+    const root = repo({ [MANAGED]: file(AUTO), [DROP_IN]: file(ASK) })
     expect(at(root, DROP_IN, file(ASK))).toEqual(['skipped'])
+  })
+
+  it('needs auto-allow true in one file of the source, or a minVersion before 2.1.324', () => {
+    const unset = repo({ [MANAGED]: file(ON) })
+    expect(at(unset, DROP_IN, file(ASK))).toEqual([])
+    expect(at(unset, DROP_IN, file(ASK), [{ minVersion: '2.1.323' }])).toEqual(['skipped'])
+    const off = repo({ [MANAGED]: file({ sandbox: { autoAllowBashIfSandboxed: false } }) })
+    expect(at(off, DROP_IN, file(REPORTING), [{ minVersion: '2.1.323' }])).toEqual([])
   })
 
   it('is silent when a sibling turns auto-allow off', () => {
@@ -137,7 +194,7 @@ describe(`${name}: a managed source, on disk`, () => {
   })
 
   it('does not read a project file for a managed file', () => {
-    const root = repo({ [PROJECT]: file(ON), [LOCAL]: file(ON) })
+    const root = repo({ [PROJECT]: file(AUTO), [LOCAL]: file(AUTO) })
     expect(at(root, MANAGED, file(ASK))).toEqual([])
   })
 

@@ -2,7 +2,9 @@
 // https://code.claude.com/docs/en/settings-reference#sandbox-enableweakernestedsandbox
 // https://code.claude.com/docs/en/sandboxing#security-limitations
 // The rule reads one file. The one exception is `autoAllowBashIfSandboxed`, which the rule
-// reads in the files of the source, because a file that sets it to false removes the fault.
+// reads in the files of the source. A file that sets it to false removes the fault. The default
+// is `false`, and "Before v2.1.324, the default was `true`":
+// https://code.claude.com/docs/en/settings-reference#sandbox-autoallowbashifsandboxed
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { repo } from '../agent-settings.test-support.ts'
@@ -18,9 +20,10 @@ const EVERY_FILE = [PROJECT, LOCAL, MANAGED, DROP_IN]
 
 const sandbox = (fields: object) => JSON.stringify({ sandbox: fields })
 const network = (fields: object) => sandbox({ network: fields })
-const at = (root: string, file: string, text: string) => lintJson(name, text, path.join(root, file))
-const ids = (text: string, file = PROJECT) =>
-  at(repo({}), file, text).map((message) => message.messageId)
+const at = (root: string, file: string, text: string, options: unknown[] = []) =>
+  lintJson(name, text, path.join(root, file), options)
+const ids = (text: string, file = PROJECT, options: unknown[] = []) =>
+  at(repo({}), file, text, options).map((message) => message.messageId)
 
 describe(`${name}: the options that any file can set`, () => {
   const CASES: [string, string, string][] = [
@@ -169,21 +172,55 @@ describe(`${name}: the options for user and managed settings`, () => {
 describe(`${name}: filesystem.disabled`, () => {
   const DISABLED = { filesystem: { disabled: true } }
 
-  it('reports disabled with autoAllowBashIfSandboxed unset or true, in a managed file', () => {
+  it('reports disabled with autoAllowBashIfSandboxed true, in a managed file', () => {
     for (const file of [MANAGED, DROP_IN]) {
-      expect(ids(sandbox(DISABLED), file), file).toEqual(['filesystemDisabled'])
-      expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: true }), file), file).toEqual([
-        'filesystemDisabled',
-      ])
+      for (const options of [[], [{ minVersion: '2.1.323' }], [{ minVersion: '2.1.324' }]]) {
+        const text = sandbox({ ...DISABLED, autoAllowBashIfSandboxed: true })
+        expect(ids(text, file, options), file).toEqual(['filesystemDisabled'])
+      }
     }
-    expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'x' }), MANAGED)).toEqual([
+    expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'true' }), MANAGED)).toEqual([
       'filesystemDisabled',
     ])
   })
 
+  it('is silent when autoAllowBashIfSandboxed is unset or not true, from v2.1.324', () => {
+    for (const file of [MANAGED, DROP_IN]) {
+      for (const options of [[], [{}], [{ minVersion: '2.1.324' }], [{ minVersion: '2.2.0' }]]) {
+        expect(ids(sandbox(DISABLED), file, options), file).toEqual([])
+      }
+    }
+    expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'x' }), MANAGED)).toEqual([])
+    expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: null }), MANAGED)).toEqual([])
+  })
+
+  it('reports disabled with autoAllowBashIfSandboxed unset when minVersion is before 2.1.324', () => {
+    for (const minVersion of ['2.1.323', '2.1.300', '2.0.0']) {
+      const options = [{ minVersion }]
+      expect(ids(sandbox(DISABLED), MANAGED, options), minVersion).toEqual(['filesystemDisabled'])
+      expect(ids(sandbox(DISABLED), DROP_IN, options), minVersion).toEqual(['filesystemDisabled'])
+    }
+    const odd = sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'x' })
+    expect(ids(odd, MANAGED, [{ minVersion: '2.1.323' }])).toEqual(['filesystemDisabled'])
+  })
+
+  it('refuses a minVersion that is not major.minor.patch', () => {
+    expect(() => ids(sandbox(DISABLED), MANAGED, [{ minVersion: '2.1' }])).toThrow(/match pattern/)
+    expect(() => ids(sandbox(DISABLED), MANAGED, [{ other: true }])).toThrow(
+      /additional properties/,
+    )
+  })
+
   it('is silent when autoAllowBashIfSandboxed is false in the file', () => {
-    expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: false }), MANAGED)).toEqual([])
-    expect(ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'false' }), MANAGED)).toEqual([])
+    const old = [{ minVersion: '2.1.323' }]
+    for (const options of [[], old]) {
+      expect(
+        ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: false }), MANAGED, options),
+      ).toEqual([])
+      expect(
+        ids(sandbox({ ...DISABLED, autoAllowBashIfSandboxed: 'false' }), MANAGED, options),
+      ).toEqual([])
+    }
   })
 
   it('is silent for disabled false, and in a project and a local file', () => {
@@ -196,10 +233,19 @@ describe(`${name}: filesystem.disabled`, () => {
   it('is silent when another file of the source sets autoAllowBashIfSandboxed to false', () => {
     const root = repo({ [DROP_IN]: sandbox({ autoAllowBashIfSandboxed: false }) })
     expect(at(root, MANAGED, sandbox(DISABLED))).toEqual([])
+    expect(at(root, MANAGED, sandbox(DISABLED), [{ minVersion: '2.1.323' }])).toEqual([])
+  })
+
+  it('reports when another file of the source sets autoAllowBashIfSandboxed to true', () => {
     const other = repo({ [DROP_IN]: sandbox({ autoAllowBashIfSandboxed: true }) })
     expect(at(other, MANAGED, sandbox(DISABLED)).map((m) => m.messageId)).toEqual([
       'filesystemDisabled',
     ])
+    const unset = repo({ [DROP_IN]: sandbox({}) })
+    expect(at(unset, MANAGED, sandbox(DISABLED))).toEqual([])
+    expect(
+      at(unset, MANAGED, sandbox(DISABLED), [{ minVersion: '2.1.323' }]).map((m) => m.messageId),
+    ).toEqual(['filesystemDisabled'])
   })
 
   it('is silent when a file of the source cannot be read', () => {
@@ -209,13 +255,19 @@ describe(`${name}: filesystem.disabled`, () => {
 
   it('does not read a hidden sibling', () => {
     const root = repo({ [HIDDEN]: sandbox({ autoAllowBashIfSandboxed: false }) })
-    expect(at(root, MANAGED, sandbox(DISABLED)).map((m) => m.messageId)).toEqual([
+    const options = [{ minVersion: '2.1.323' }]
+    expect(at(root, MANAGED, sandbox(DISABLED), options).map((m) => m.messageId)).toEqual([
       'filesystemDisabled',
     ])
+    const hiddenOn = repo({ [HIDDEN]: sandbox({ autoAllowBashIfSandboxed: true }) })
+    expect(at(hiddenOn, MANAGED, sandbox(DISABLED))).toEqual([])
   })
 
   it('may report the same line as sandbox-filesystem-disabled-conflict, for another fault', () => {
-    const text = sandbox({ filesystem: { disabled: true, denyRead: ['~/.aws'] } })
+    const text = sandbox({
+      autoAllowBashIfSandboxed: true,
+      filesystem: { disabled: true, denyRead: ['~/.aws'] },
+    })
     expect(ids(text, MANAGED)).toEqual(['filesystemDisabled'])
   })
 })

@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-sandbox-bash-ask, which reports a bare Bash ask rule or Bash(*) while sandbox.enabled is true and autoAllowBashIfSandboxed is not false, because Claude Code skips the rule for a command that runs in the sandbox.
+description: The ESLint rule claude/permissions-sandbox-bash-ask, which reports a bare Bash ask rule or Bash(*) while sandbox.enabled is true and autoAllowBashIfSandboxed is true, because Claude Code skips the rule for a command that runs in the sandbox.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -26,9 +26,13 @@ The rule skips a hidden drop-in in `managed-settings.d`, because Claude Code ign
 
 ## Rule details
 
-Assume `sandbox.enabled` is `true` and `autoAllowBashIfSandboxed` keeps its default of `true`. Then Claude Code runs a sandboxed Bash
+Assume `sandbox.enabled` is `true` and `autoAllowBashIfSandboxed` is `true`. Then Claude Code runs a sandboxed Bash
 command with no prompt. This holds although the permissions hold a bare `Bash` ask rule or the same rule as `Bash(*)`. The
 sandbox boundary replaces the prompt for the whole tool.[^interact][^auto] So the ask rule does not prompt for a sandboxed command.
+
+The default of `autoAllowBashIfSandboxed` is `false`. The docs say: "Before v2.1.324, the default was `true`".[^auto]
+So the rule reports only when a file of the same source sets the key to `true`. With the option `minVersion` older than
+2.1.324, an unset key counts as `true` too, because Claude Code before v2.1.324 turns it on by default.
 
 The rule reports each ask entry that is `Bash` or `Bash(*)`. The report is on the entry. To keep the prompt, set
 `autoAllowBashIfSandboxed` to `false`, or write a scoped ask rule such as `Bash(git push *)`, which still prompts.
@@ -37,6 +41,7 @@ The rule is silent in these cases:
 
 - `sandbox.enabled` is not `true`, or a file of the same source sets it to `false`.
 - A file of the same source sets `autoAllowBashIfSandboxed` to `false`.
+- No file of the same source sets `autoAllowBashIfSandboxed` to `true`, and `minVersion` is unset or is 2.1.324 or later.
 - The ask rule has a specifier other than `*`, or the rule is for another tool.
 - The rule cannot read a file of the same source.
 
@@ -60,12 +65,14 @@ The rule adds up the files of one source. For a project file, the source is the 
 
 The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
 
+The rule reads only the Boolean `true` as `true`. A quoted `"true"` is no value, and `sandbox-schema` reports it.
+
 Fail, in `.claude/settings.json`:
 
 ```json
 {
   "permissions": { "ask": ["Bash"] },
-  "sandbox": { "enabled": true }
+  "sandbox": { "enabled": true, "autoAllowBashIfSandboxed": true }
 }
 ```
 
@@ -77,6 +84,25 @@ Pass, in `.claude/settings.json`:
   "sandbox": { "enabled": true, "autoAllowBashIfSandboxed": false }
 }
 ```
+
+## Options
+
+<!-- begin auto-generated rule options list -->
+
+| Name         | Description                                                                  | Type   |
+| :----------- | :--------------------------------------------------------------------------- | :----- |
+| `minVersion` | The oldest Claude Code version that the team supports, as major.minor.patch. | String |
+
+<!-- end auto-generated rule options list -->
+
+```js
+'claude/permissions-sandbox-bash-ask': ['error', { minVersion: '2.1.300' }]
+```
+
+With no `minVersion`, or a `minVersion` of 2.1.324 or later, the rule reports only when a file sets
+`autoAllowBashIfSandboxed` to `true`. The docs give the default as `false` and say "Before v2.1.324, the default was
+`true`".[^auto] When `minVersion` is older than 2.1.324, the rule also reports an unset key. The value has three
+numbers, such as `2.1.324`.
 
 ## Usage
 

@@ -1,7 +1,10 @@
 // A sandbox option that the docs say reduces security or removes isolation
 // (docs/rules/sandbox-weakening-options.md). The rule reads one file, except for
-// `autoAllowBashIfSandboxed`: a file of the source that sets it to false removes that fault, so
-// the rule reads the source there, and makes no report when it cannot read a file. A project or
+// `autoAllowBashIfSandboxed`: the fault of `filesystem.disabled` needs a file of the source that
+// sets it to true, and a file that sets it to false removes the fault. The default is `false` from
+// v2.1.324, and was `true` before (settings-reference#sandbox-autoallowbashifsandboxed), so
+// `minVersion` older than 2.1.324 counts an unset key as true. The rule reads the source there,
+// and makes no report when it cannot read a file. A project or
 // local file cannot set `allowAppleEvents`, `allowNestedUserNamespaces`, `allowPlaintextInject` or
 // `filesystem.disabled`. `settings-key-scope` reports the key there, so the rule leaves those keys
 // alone in those files.
@@ -9,12 +12,18 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { isIgnoredInRepoFile } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import type { ValueNode } from '../marketplace-json.ts'
+import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES } from '../permission-listener.ts'
 import { isOn, stringEntries, valueAt } from '../permission-sandbox.ts'
 import { at, sourceOf } from '../permission-source.ts'
 import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'sandbox-weakening-options' as const
+
+// The first version with `false` as the default of `autoAllowBashIfSandboxed`.
+const FIXED = '2.1.324'
+
+type Options = [{ minVersion?: string }]
 
 type MessageId =
   | 'weakerNested'
@@ -37,14 +46,15 @@ const FLAGS: readonly (readonly [readonly string[], MessageId])[] = [
   [['sandbox', 'credentials', 'allowPlaintextInject'], 'plaintextInject'],
 ]
 
-const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
+const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> = {
   meta: {
     type: 'suggestion',
     docs: {
       description: 'Do not weaken the sandbox with an option that removes isolation',
       url: docsUrl(name),
     },
-    schema: [],
+    schema: [MIN_VERSION_SCHEMA],
+    defaultOptions: [{}],
     messages: {
       weakerNested:
         '"enableWeakerNestedSandbox" bind-mounts the existing `/proc` of the container, which exposes process information. This considerably weakens security. Use it only when an outer layer already isolates the process.',
@@ -63,10 +73,11 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
       plaintextInject:
         '"allowPlaintextInject" sends a credential in cleartext on plain HTTP, to an upstream with no verified identity. Use it only on trusted test networks.',
       filesystemDisabled:
-        '"filesystem.disabled" gives sandboxed commands unrestricted read and write access to the host, and "autoAllowBashIfSandboxed" still defaults to `true`, so they run with no prompt. Set "autoAllowBashIfSandboxed" to `false`.',
+        '"filesystem.disabled" gives sandboxed commands unrestricted read and write access to the host, and "autoAllowBashIfSandboxed" is on, so they run with no prompt. Claude Code before v2.1.324 turns it on by default. Set "autoAllowBashIfSandboxed" to `false`.',
     },
   },
   create(context) {
+    const [{ minVersion }] = context.options
     if (isHiddenDropIn(context.filename)) {
       return {}
     }
@@ -99,12 +110,14 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         if (isOn(disabled, isManaged) && reads(['sandbox', 'filesystem', 'disabled'])) {
           const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
           const allowAuto = ['sandbox', 'autoAllowBashIfSandboxed']
-          // A file that cannot be read can set the option to false.
+          // A file that cannot be read can set the option to false. From v2.1.324 the key is off
+          // when unset, so a file must set it to true.
+          const states = objects.map((object) => at(object, allowAuto))
           if (
             complete &&
-            !objects.some((object) =>
-              [false, 'false'].includes(at(object, allowAuto) as string | boolean),
-            )
+            !states.some((value) => value === false || value === 'false') &&
+            (supportsBefore(minVersion, FIXED) ||
+              states.some((value) => value === true || value === 'true'))
           ) {
             context.report({ node: disabled as ValueNode, messageId: 'filesystemDisabled' })
           }
