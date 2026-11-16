@@ -488,8 +488,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it('finds the end of a command substitution after a backtick pair in it', () => {
     // The bash manual (Command Substitution) says: "The first backquote not preceded by a
     // backslash terminates the command substitution." So a `)` or a quote in the pair does not
-    // end the outer `$(`. bash 3.2.57 and 5.3.9 print `[a]` and `[b]` for `$X` with X="a b"
-    // after each of these, so `$X` is out of quotes.
+    // end the outer `$(`. The probe sets X="a b" and puts `printf '[%s]\n'` in place of `echo`.
+    // bash 3.2.57 and 5.3.9 then print `[a]` and `[b]` for `$X`, so `$X` is out of quotes.
     for (const text of [
       // The `)` of a `case` pattern in the pair. bash prints `[x]` first.
       'echo "$(echo `case a in a) echo x;; esac`)" $X',
