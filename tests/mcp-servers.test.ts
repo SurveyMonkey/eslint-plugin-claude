@@ -305,6 +305,11 @@ describe('sanitizeName', () => {
   it('replaces each character outside A-Za-z0-9_- with an underscore', () => {
     expect(sanitizeName('my.plugin name-1_x')).toBe('my_plugin_name-1_x')
   })
+
+  it('keeps an uppercase letter', () => {
+    expect(sanitizeName('My.Plugin')).toBe('My_Plugin')
+    expect(sanitizeName('ABC-xyz_Z9')).toBe('ABC-xyz_Z9')
+  })
 })
 
 describe('pluginMcpDeclarations', () => {

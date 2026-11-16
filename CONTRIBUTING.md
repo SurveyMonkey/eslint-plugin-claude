@@ -128,8 +128,13 @@ rule that lacks the option that its row names.
 
 ## Deprecate and remove a rule
 
-A Claude Code CLI tool can start to make the check of a built rule (ADR 001, Decision 2).
-Then a minor release deprecates the rule, and the next major release removes it.
+A built rule can leave the plugin in two cases (ADR 001, Decision 2):
+
+- A Claude Code CLI tool starts to make the check of the rule. A minor release deprecates the
+  rule, and the next major release removes it.
+- The Claude Code docs remove the section that the rule cites, and no CLI tool makes the check.
+  The rule has no docs source. See
+  [Remove a rule whose docs source is gone](#remove-a-rule-whose-docs-source-is-gone).
 
 ### Deprecate a rule
 
@@ -178,9 +183,10 @@ Do this in the major release that `availableUntil` names. Run each step in order
 3. Run `git grep -n <rule> tests`. Delete the name from the lists in `tests/docs.test.ts` and
    `tests/configs.test.ts`, and from any other test that names it. Delete each case that tests
    only this rule.
-4. In `docs/rules-inventory.md`, start the Checks cell of the row with `Dropped.`, and name the
-   tool and its version. Set Preset and Severity to `–`. The Summary counts the kept rows only,
-   so update each count and table that the row changed.
+4. In `docs/rules-inventory.md`, start the Checks cell of the row with `Dropped.`. Name the
+   tool and its version, or the docs removal and the Claude Code version. Set Preset and
+   Severity to `–`. The Summary counts the kept rows only, so update each count and table that
+   the row changed.
 5. Run `pnpm docs:seed`, then `pnpm docs:update`. The seed removes the entry of the rule from
    `docs/rule-sources.json`. `docs:update` deletes the snapshot file of a page that no rule cites
    now. Commit `docs/rule-sources.json` and `docs/docs-snapshot/`. `docs:update` also takes in
@@ -190,8 +196,25 @@ Do this in the major release that `availableUntil` names. Run each step in order
    not run.
 7. Commit as `feat(<group>)!: remove <rule>`, and use the same title for the pull request.
    Pull requests are squash-merged, so the title and the body become the commit on `main`. Put a
-   `BREAKING CHANGE:` footer that names the tool in the last paragraph of the body.
+   `BREAKING CHANGE:` footer that names the tool, or the docs removal and the Claude Code
+   version, in the last paragraph of the body.
    release-please reads the `!` as a major bump. Do not change the version by hand.
+
+### Remove a rule whose docs source is gone
+
+ADR 001, Decision 2 says that a rule that no Claude Code docs page gives is not a rule in this
+package. Suppose the docs remove the section that a rule cites, and no other cited section
+remains. Then the rule has no source. Check first that no CLI tool makes the check. If one does,
+use the tool case above. #883 removed three rules this way (see #872).
+
+- Run each step of "Remove a rule". Steps 4 and 7 name the docs removal in place of a tool.
+- In step 4, write the result of the CLI check in the Checks cell, as "Deprecate a rule" step 3
+  does.
+- In step 7, the `BREAKING CHANGE:` footer names the rule IDs, the docs removal and the Claude
+  Code version. It says that no CLI tool makes the check.
+- #883 removed its rules before 1.0.0, with no deprecation. Version 1.0.0 is out, and step 7
+  now gives a major release. No ruling says whether a deprecation release comes first. Ask the
+  person before you remove or deprecate a rule for this reason.
 
 ## Docs watch
 

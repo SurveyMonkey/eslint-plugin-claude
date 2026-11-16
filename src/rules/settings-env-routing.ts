@@ -36,7 +36,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'traffic' | 'bypas
     schema: [],
     messages: {
       traffic:
-        '"{{name}}" in the shared settings file sends the traffic of every user of this repository through a proxy or adds a certificate authority. Set it in your shell, in user settings, or in managed settings.',
+        '"{{name}}" in the shared settings file sends the traffic of every user of this repository through a proxy, adds a certificate authority, or sets the mTLS client certificate. Set it in your shell, in user settings, or in managed settings.',
       bypass:
         '"{{name}}" in the shared settings file selects the API endpoint or the model provider for every user of this repository. Claude Code then bypasses server-managed settings. Set it in your shell, in user settings, or in managed settings.',
     },

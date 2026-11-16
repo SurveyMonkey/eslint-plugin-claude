@@ -5,6 +5,7 @@
 // report in three cases. It cannot see the path. Git does not track the
 // script. It cannot read the git index.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { COMMAND_OBJECT_KEYS } from '../data/settings-keys.ts'
 import { docsUrl } from '../docs-url.ts'
 import { gitModeOf, PLAIN_MODE } from '../git-state.ts'
 import { lastMember } from '../marketplace-json.ts'
@@ -13,9 +14,6 @@ import { realScript, scriptRefs, settingsScope, wordsOf } from '../script-refs.t
 import { isHiddenDropIn, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'statusline-script-exists' as const
-
-// The settings keys that hold a `command`.
-const KEYS = ['statusLine', 'fileSuggestion']
 
 const rule: JSONRuleDefinition<{ MessageIds: 'missing' | 'notExecutable' }> = {
   meta: {
@@ -39,7 +37,7 @@ const rule: JSONRuleDefinition<{ MessageIds: 'missing' | 'notExecutable' }> = {
     const scope = settingsScope(context.filename)
     return {
       Document(node) {
-        for (const key of KEYS) {
+        for (const key of COMMAND_OBJECT_KEYS) {
           const command = lastMember(lastMember(node.body, key)?.value, 'command')?.value
           if (command?.type !== 'String') {
             continue
