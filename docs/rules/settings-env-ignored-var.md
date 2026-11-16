@@ -75,9 +75,10 @@ can set them, so the rule makes no report in a managed file.[^ignored]
   rule makes no report for it when its value has text (see below).
 - The timer of an unanswered dialog `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS`, the attachment switch
   `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and the file mention switch `CLAUDE_CODE_DISABLE_FILE_MENTIONS`.
-- `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE`. Code Mode turns on from the shell, user settings or a
-  `--settings` file, not from managed, project or local settings. The rule reports it in project
-  and local files only, and makes no report in a managed file.[^ignored]
+- `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE`. Claude Code turns Code Mode on from the shell, user
+  settings or a `--settings` file. It does not turn Code Mode on from managed, project or local
+  settings. The rule reports the variable in a project or local file. It makes no report in a
+  managed file.[^ignored]
 
 A few values that turn telemetry off still apply from a project or local file. The rule makes
 no report on them: `none` for the three exporter selectors, and an off value such as `0` for

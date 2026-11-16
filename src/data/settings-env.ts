@@ -4,12 +4,12 @@
 // (https://code.claude.com/docs/en/settings-reference#variables-claude-code-ignores-in-env),
 // and the server-managed settings page
 // (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
-// checked on Claude Code 2.1.307 on 2026-10-21. Review these lists on or before 2027-04-08,
+// checked on Claude Code 2.1.323 on 2026-11-16. Review these lists on or before 2027-04-08,
 // the `stale_after` date of docs/rules/settings-env-credential.md.
 
 // The first Claude Code version that reads a variable. Source: the sentence "Requires Claude Code
 // vX or later" in the row of a variable in the env vars reference
-// (https://code.claude.com/docs/en/env-vars#variables). The review date is 2026-10-19, against
+// (https://code.claude.com/docs/en/env-vars#variables). The review date is 2026-11-16, against
 // the stored text in docs/docs-snapshot/env-vars.json. The list holds each variable where the
 // sentence covers the whole variable and X is v2.1.211 or later. This is the range that
 // `settings-env-numeric-spelling` needs. The list leaves out a sentence for one part of a
@@ -83,8 +83,8 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_PROJECT_DIR_NAME', '2.1.234'],
   ['CLAUDE_CODE_PROMPT_CACHE_TTL', '2.1.242'],
   ['CLAUDE_CODE_RESTRICTED', '2.1.248'],
-  ['CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS', '2.1.211'],
   ['CLAUDE_CODE_RESUME_HINT_COMMAND', '2.1.323'],
+  ['CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS', '2.1.211'],
   ['CLAUDE_CODE_RESUME_SHOWS_CUT_OFF_CALLS', '2.1.309'],
   ['CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS', '2.1.295'],
   ['CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS', '2.1.305'],
@@ -347,7 +347,8 @@ export function envValueForm(name: string): EnvForm | undefined {
 
 /** Variables that Claude Code ignores in the `env` block of every settings file. The settings
  *  reference names two kinds. Host platforms own the identity variables. Claude Code exports
- *  the others, or reads them from the launch environment only. */
+ *  the others, or reads them from the launch environment only. The env vars reference names one
+ *  more: `CLAUDE_CODE_RESUME_HINT_COMMAND`. */
 const IGNORED_IN_EVERY_FILE = new Set([
   'CLAUDE_CODE_REMOTE',
   'CLAUDE_CODE_ACCOUNT_UUID',
@@ -499,7 +500,7 @@ export function removedEnvVarSince(name: string): string | undefined {
 // (https://code.claude.com/docs/en/prompt-caching#disable-prompt-caching) and the server-managed
 // settings page
 // (https://code.claude.com/docs/en/server-managed-settings#environment-variables-and-the-approval-dialog),
-// checked on Claude Code 2.1.296 on 2026-10-11.
+// checked on Claude Code 2.1.323 on 2026-11-16.
 
 /** A variable that Claude Code keeps for compatibility, and what to say about it. `summary`
  *  finishes a sentence that starts with the variable name. `value` is set when only that value is
@@ -565,7 +566,10 @@ export const TRAFFIC_ENV_VARS: readonly string[] = [
   'NODE_EXTRA_CA_CERTS',
 ]
 
-/** The variables that select a model provider. Setting one bypasses server-managed settings. */
+/** The variables that select a model provider. Setting one bypasses server-managed settings.
+ *  The server-managed settings page lists five by name and says that any `CLAUDE_CODE_USE_*`
+ *  provider variable skips the settings fetch. That sentence covers
+ *  `CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD`. */
 export const PROVIDER_ENV_VARS: readonly string[] = [
   'CLAUDE_CODE_USE_ANTHROPIC_AWS',
   'CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD',
