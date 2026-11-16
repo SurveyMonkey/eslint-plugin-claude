@@ -75,15 +75,15 @@ describe(`${name}: one file`, () => {
     }
   })
 
-  it('reads auto-allow as true only for the Boolean true', () => {
+  it('reads auto-allow as true only for the Boolean true in a project file', () => {
     for (const value of [null, 'true', 'false', 1]) {
       const sandbox = { enabled: true, autoAllowBashIfSandboxed: value }
       expect(alone({ ...ASK, sandbox }), String(value)).toEqual([])
     }
   })
 
-  it('reports null and a quoted false when minVersion is older than 2.1.324', () => {
-    for (const value of [null, 'false']) {
+  it('reports a non-Boolean in a project file when minVersion is older than 2.1.324', () => {
+    for (const value of [null, 'true', 'false']) {
       const sandbox = { enabled: true, autoAllowBashIfSandboxed: value }
       const options = [{ minVersion: '2.1.323' }]
       expect(alone({ ...ASK, sandbox }, PROJECT, options), String(value)).toEqual(['skipped'])

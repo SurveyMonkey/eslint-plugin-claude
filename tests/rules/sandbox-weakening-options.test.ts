@@ -226,9 +226,11 @@ describe(`${name}: filesystem.disabled`, () => {
   })
 
   it('is silent for disabled false, and in a project and a local file', () => {
-    expect(ids(sandbox({ filesystem: { disabled: false } }), MANAGED)).toEqual([])
+    // Auto-allow is on in each text, so only `disabled` and the kind of file stop the report.
+    const auto = { autoAllowBashIfSandboxed: true }
+    expect(ids(sandbox({ ...auto, filesystem: { disabled: false } }), MANAGED)).toEqual([])
     for (const file of [PROJECT, LOCAL]) {
-      expect(ids(sandbox(DISABLED), file), file).toEqual([])
+      expect(ids(sandbox({ ...auto, ...DISABLED }), file), file).toEqual([])
     }
   })
 
@@ -251,8 +253,11 @@ describe(`${name}: filesystem.disabled`, () => {
   })
 
   it('is silent when a file of the source cannot be read', () => {
+    // Auto-allow is on in the file, so only the file that cannot be read stops the report.
     const root = repo({ [DROP_IN]: '[1]' })
-    expect(at(root, MANAGED, sandbox(DISABLED))).toEqual([])
+    const text = sandbox({ ...DISABLED, autoAllowBashIfSandboxed: true })
+    expect(at(root, MANAGED, text)).toEqual([])
+    expect(at(root, MANAGED, sandbox(DISABLED), [{ minVersion: '2.1.323' }])).toEqual([])
   })
 
   it('does not read a hidden sibling', () => {
