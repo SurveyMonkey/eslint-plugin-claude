@@ -1,8 +1,9 @@
 // A sandbox option that the docs say reduces security or removes isolation
 // (docs/rules/sandbox-weakening-options.md). The rule reads one file, except for
 // `autoAllowBashIfSandboxed`. The fault of `filesystem.disabled` needs a file of the source that
-// sets it to true. A file that sets it to false removes the fault. The default is `false` from
-// v2.1.324, and was `true` before (settings-reference#sandbox-autoallowbashifsandboxed). So a
+// sets `autoAllowBashIfSandboxed` to true. A file that sets that key to false removes the fault.
+// The default is `false` from v2.1.324, and was `true` before
+// (https://code.claude.com/docs/en/settings-reference#sandbox-autoallowbashifsandboxed). So a
 // `minVersion` older than 2.1.324 counts an unset key as true. The rule reads the source there,
 // and makes no report when it cannot read a file. A project or local file cannot set
 // `allowAppleEvents`, `allowNestedUserNamespaces`, `allowPlaintextInject` or
@@ -73,7 +74,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
       plaintextInject:
         '"allowPlaintextInject" sends a credential in cleartext on plain HTTP, to an upstream with no verified identity. Use it only on trusted test networks.',
       filesystemDisabled:
-        '"filesystem.disabled" gives sandboxed commands unrestricted read and write access to the host, and "autoAllowBashIfSandboxed" is on, so they run with no prompt. Claude Code before v2.1.324 turns it on by default. Set "autoAllowBashIfSandboxed" to `false`.',
+        '"filesystem.disabled" gives sandboxed commands unrestricted read and write access to the host, and "autoAllowBashIfSandboxed" is on, so they run with no prompt. Claude Code before v2.1.324 turns "autoAllowBashIfSandboxed" on by default. Set "autoAllowBashIfSandboxed" to `false`.',
     },
   },
   create(context) {
@@ -111,7 +112,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: MessageId }> 
           const { objects, complete } = sourceOf(context.filename, context.sourceCode.text)
           const allowAuto = ['sandbox', 'autoAllowBashIfSandboxed']
           // A file that cannot be read can set the option to false. From v2.1.324 the key is off
-          // when unset, so a file must set it to true.
+          // when unset, so a file must set it to true, unless `minVersion` is older.
           const states = objects.map((object) => boolOf(at(object, allowAuto), isManaged, false))
           if (
             complete &&

@@ -7137,7 +7137,7 @@ describe('files of each rule in recommended and strict', () => {
             for (const glob of globs.filter((g) => !isCatchAll(g))) {
               const calculated = await eslint.calculateConfigForFile(path.join(cwd, sampleOf(glob)))
               const where = `${config} ${name} ${glob}`
-              // The merged config above cannot tell a missing glob in the union block from a
+              // The merged config above cannot tell a union block without the glob from a
               // rule block with the same glob. So read the union block from the config itself.
               const unionFiles = plugin.configs[config as 'recommended' | 'strict'].find(
                 (block) => block.name === `claude/${config}/${lang}-files`,

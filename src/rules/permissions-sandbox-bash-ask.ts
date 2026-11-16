@@ -33,12 +33,12 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
     defaultOptions: [{}],
     messages: {
       skipped:
-        '`{{rule}}` is skipped for a command that runs in the sandbox, because `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is on. Claude Code before v2.1.324 turns it on by default. Set `autoAllowBashIfSandboxed` to false, or scope the rule, as `Bash(git push *)`.',
+        '`{{rule}}` is skipped for a command that runs in the sandbox, because `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is on. Claude Code before v2.1.324 turns `autoAllowBashIfSandboxed` on by default. Set `autoAllowBashIfSandboxed` to false, or scope the rule, as `Bash(git push *)`.',
     },
   },
   create(context) {
     const [{ minVersion }] = context.options
-    // From v2.1.324 the key is off when unset, so a file must set it to `true`.
+    // Before v2.1.324 an unset key is on. From v2.1.324 it is off, so a file must set it to `true`.
     const defaultsOn = supportsBefore(minVersion, FIXED)
     return settingsListener(context, (entries) => {
       const asks = entries.filter(
@@ -58,7 +58,8 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
       const auto = objects.map((object) =>
         boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
       )
-      // A file that sets `enabled` to false, or `autoAllowBashIfSandboxed` to false, ends the skip.
+      // A file that sets `enabled` or `autoAllowBashIfSandboxed` to false ends the skip. An unset
+      // `autoAllowBashIfSandboxed` ends it too, unless `minVersion` is older than 2.1.324.
       if (
         !values('enabled').includes(true) ||
         values('enabled').includes(false) ||
