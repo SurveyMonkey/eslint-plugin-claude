@@ -31,8 +31,8 @@ command with no prompt. This holds although the permissions hold a bare `Bash` a
 sandbox boundary replaces the prompt for the whole tool.[^interact][^auto] So the ask rule does not prompt for a sandboxed command.
 
 The default of `autoAllowBashIfSandboxed` is `false`. The docs say: "Before v2.1.324, the default was `true`".[^auto]
-So the rule reports only when a file of the same source sets the key to `true`. With the option `minVersion` older than
-2.1.324, an unset key counts as `true` too. Claude Code before v2.1.324 turns the key on by default.
+So without an older `minVersion`, the rule reports only when a file of the same source sets the key to `true`. With the
+option `minVersion` older than 2.1.324, an unset key counts as `true` too.
 
 The rule reports each ask entry that is `Bash` or `Bash(*)`. The report is on the entry. To keep the prompt, set
 `autoAllowBashIfSandboxed` to `false`, or write a scoped ask rule such as `Bash(git push *)`, which still prompts.
@@ -65,9 +65,10 @@ The rule adds up the files of one source. For a project file, the source is the 
 
 The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
 
-In a project or local file, the rule reads only the Boolean `true` as `true`. A quoted `"true"` is no value there, and
-`sandbox-schema` reports it. In a managed file, Claude Code reads a quoted `"true"` or `"false"` as that Boolean. Another value
-of `autoAllowBashIfSandboxed` counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
+In a project or local file, the rule reads only the Boolean `true` of `autoAllowBashIfSandboxed` as `true`. A quoted
+`"true"` is no value there, and `sandbox-schema` reports it. In a managed file, the rule reads a quoted `"true"` or
+`"false"` of `autoAllowBashIfSandboxed` as that Boolean. Claude Code does the same. Another value that is not `null`
+counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
 
 Fail, in `.claude/settings.json`:
 

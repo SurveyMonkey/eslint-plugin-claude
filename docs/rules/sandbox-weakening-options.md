@@ -42,11 +42,12 @@ The rule reports each of these in a settings file. A quoted `"true"` counts as `
 
 ### Scope
 
-- The rule reads one file, except for `autoAllowBashIfSandboxed`. The fault of `filesystem.disabled` needs a file of the
-  source that sets it to `true`. A file of the source that sets it to `false` removes the fault. So that part reads the
+- The rule reads one file, except for `autoAllowBashIfSandboxed`. Without an older `minVersion`, the fault of
+  `filesystem.disabled` needs a file of the source that sets `autoAllowBashIfSandboxed` to `true`. A file of the source
+  that sets that key to `false` removes the fault. So that part reads the
   source, as `src/permission-source.ts` defines it, and gives no report when it cannot read a file of the source.
 - The default of `autoAllowBashIfSandboxed` is `false`. The docs say: "Before v2.1.324, the default was `true`". The
-  source is in [`permissions-sandbox-bash-ask`](permissions-sandbox-bash-ask.md#options). With the option `minVersion`
+  docs link is in [`permissions-sandbox-bash-ask`](permissions-sandbox-bash-ask.md#options). With the option `minVersion`
   older than 2.1.324, an unset key counts as `true`.
 - Claude Code honors `allowAppleEvents`, `allowNestedUserNamespaces`, `credentials.allowPlaintextInject` and
   `filesystem.disabled` from user and managed settings only. `settings-key-scope` reports each in a project or local file, so this rule does not read them there. In
@@ -54,7 +55,7 @@ The rule reports each of these in a settings file. A quoted `"true"` counts as `
 - `sandbox-filesystem-disabled-conflict` reports `filesystem.disabled` with `denyRead` or `deny` entries that it switches off.
   This rule reports a different fault on the same value: commands run with no prompt. Both can report it.
 - `sandbox-schema` reports a value of the wrong type. This rule reads a Boolean. In a managed file it also reads a quoted
-  `"true"` or `"false"`, and counts another value of `autoAllowBashIfSandboxed` as `false`. See
+  `"true"` or `"false"`. It counts another value of `autoAllowBashIfSandboxed` that is not `null` as `false`. See
   [`sandbox-schema`](sandbox-schema.md#a-managed-file).
 
 Fail:
