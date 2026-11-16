@@ -62,10 +62,13 @@ Four more checks apply to one field each:
   SHA of a commit. Claude Code refuses a SHA for a marketplace with a reserved name, such as
   `claude-plugins-official`.[^fields] The rule reports a `ref` of 40 lowercase hex digits when the
   `extraKnownMarketplaces` key is a reserved name. The reserved names are the same as for the
-  `name` of a `settings` source, below.[^reserved] A branch or a tag gives no report. A SHA under
-  another key gives no report. The docs say "lowercase", so a `ref` with an uppercase hex digit
-  is not a SHA for the rule. The rule reads no version, because the docs tie a SHA to Claude Code
-  2.1.324 or later and the rule has no `minVersion` option.
+  `name` of a `settings` source, below.[^reserved] The exception for the Anthropic names does not
+  apply, because the docs give `claude-plugins-official` as the example.[^fields] The rule reads
+  the key as the name of the marketplace. It cannot read the `marketplace.json` of a remote
+  source. A branch or a tag gives no report. A SHA under another key gives no report. The docs say
+  "lowercase", so a `ref` with an uppercase hex digit is not a SHA for the rule. The docs tie a
+  SHA to Claude Code 2.1.324 or later. The rule has no `minVersion` option, so it reads no
+  version.
 - **`name` of a `settings` source.** It must equal the `extraKnownMarketplaces` key, and it must
   not be a reserved name.[^fields] The reserved names are the same as for
   `marketplace-name-reserved`.[^reserved] The `settings` source is not a `github` or `git` source under `github.com/anthropics/`. So the

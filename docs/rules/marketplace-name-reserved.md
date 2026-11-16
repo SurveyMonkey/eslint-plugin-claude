@@ -41,9 +41,10 @@ reports the name in these cases:
   `claude-plugin-test`. Claude Code uses the first four for plugins that do not come
   from a marketplace. The docs also reserve the last.[^reserved]
 - **Member names that every JavaScript object has.** The name is `constructor`, `hasOwnProperty`,
-  `isPrototypeOf`, `propertyIsEnumerable`, `toLocaleString`, `toString` or `valueOf`. Claude Code
-  refuses them from version 2.1.296.[^reserved] The rule matches the letters as the docs write
-  them.
+  `isPrototypeOf`, `propertyIsEnumerable`, `toLocaleString`, `toString` or `valueOf`.
+  `claude plugin marketplace add` refuses them on Claude Code 2.1.296 and later.[^reserved] The
+  rule has no `minVersion` option, so it reports them on all versions. The letters must match,
+  because the docs give no case folding for these names.
 - **The `claudeai-` prefix.** Claude Code reserves it for marketplaces that claude.ai
   hosts.[^reserved] The rule matches the prefix in lowercase only, as the docs write it.
 
@@ -63,10 +64,10 @@ accepts a marketplace named `npm`.
 
 `claude plugin validate` also reports the internal names as errors.[^validation] The docs say that
 the exact official names pass validation. Claude Code refuses them when a user adds the
-marketplace.[^add] A probe on 2.1.325 found that validate also accepts a marketplace named
-`constructor`. So the rule reports the member names, which validate does not. The docs do not say
-whether validate reports a spelling or the `claudeai-` prefix. So the rule reports the official
-names, which validate does not.
+marketplace.[^add] So the rule reports the official names, which validate does not. A probe on
+2.1.325 found that validate also accepts a marketplace named `constructor`. So the rule reports
+the member names too. The docs do not say whether validate reports a spelling or the `claudeai-`
+prefix.
 
 Fail:
 
