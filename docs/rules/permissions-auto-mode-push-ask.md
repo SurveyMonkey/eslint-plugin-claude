@@ -27,9 +27,9 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 ## Rule details
 
-By default, auto mode allows pushes to the branches of the repository you work in, and pull request creation.[^common] A branch with a deploy name, such as `production`, is an exception. An `ask`
-rule with a command, such as `Bash(git push *)`, is evaluated before the classifier, and always forces a prompt, even in auto
-mode.[^checkpoint] A `deny` rule blocks before the classifier too.[^checkpoint]
+By default, auto mode lets Claude push to the repository you work in, "including its default branch, without a prompt".[^common] It can also open a pull request there "when your task asks for one".[^common] The classifier blocks some pushes and pull requests, such as a push with a secret or a pull request to another repository.[^blocked] An `ask`
+rule with a command, such as `Bash(git push *)`, is evaluated before the classifier. By default, it prompts, even in auto
+mode.[^checkpoint] With `permissions.denyInsteadOfPrompting`, Claude Code denies a call that would otherwise prompt, so the `ask` becomes a deny, which still stops the push.[^deny-prompt] A `deny` rule blocks before the classifier too.[^checkpoint]
 
 A file does not show that a session runs in auto mode, because auto mode is the built-in start mode of terminal sessions on
 recent versions.[^start] The rule reads the one place where a file turns it on and the value takes effect: `permissions.defaultMode`
@@ -81,6 +81,8 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^common]: [Configure auto mode: Common boundaries](https://code.claude.com/docs/en/auto-mode-config#common-boundaries)
 [^checkpoint]: [Configure auto mode: Add a human checkpoint](https://code.claude.com/docs/en/auto-mode-config#add-a-human-checkpoint)
+[^blocked]: [Choose a permission mode: What the classifier blocks by default](https://code.claude.com/docs/en/permission-modes#what-the-classifier-blocks-by-default)
+[^deny-prompt]: [All settings: permissions.denyInsteadOfPrompting](https://code.claude.com/docs/en/settings-reference#permissions-denyinsteadofprompting)
 [^start]: [Choose a permission mode: Which mode a session starts in](https://code.claude.com/docs/en/permission-modes#which-mode-a-session-starts-in)
 [^wildcard]: [Configure permissions: Wildcard patterns](https://code.claude.com/docs/en/permissions#wildcard-patterns)
 [^lock]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)
