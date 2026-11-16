@@ -516,12 +516,18 @@ describe(`${name}: an unquoted variable in the command`, () => {
     for (const n of [50, 51, 52, 53, 60]) {
       expect(line(deep(n)), String(n)).toEqual(['unquoted'])
     }
-    // No `)` closes these. bash 3.2.57 and 5.3.9 exit with status 2: "unexpected EOF while
-    // looking for matching `)'". With 50 more substitutions, the reader cannot stop at its limit.
-    // So the scan keeps the single quotes. With 51, it can stop there, and the rule reports `$X`.
-    const open = (n: number) => `echo $(${'$(echo '.repeat(n)}'$X'`
-    expect(line(open(50))).toEqual([])
-    expect(line(open(51))).toEqual(['unquoted'])
+    // With `set -- 'a b'`, bash 3.2.57 and 5.3.9 also print `[x]`, `[a]` and `[b]` for `$@` at 52
+    // levels.
+    for (const parameter of ['$@', '$*', '$1']) {
+      expect(line(deep(52).replace('$X', parameter)), parameter).toEqual(['unquoted'])
+    }
+    // A `)` closes the first `$(`, so the rule reads the quotes, with 51 more `$(` after it. bash
+    // 3.2.57 and 5.3.9 print one word, `[ a b]`.
+    expect(line(`echo "$(true) $X"${' $(true)'.repeat(51)}`)).toEqual([])
+    // No `)` closes this. bash 3.2.57 and 5.3.9 exit with status 2: "unexpected EOF while
+    // looking for matching `)'". So bash gives no value. This pinning test keeps the single quotes
+    // of the scan when 50 or fewer `$(` come after the open one.
+    expect(line(`echo $(${'$(echo '.repeat(50)}'$X'`)).toEqual([])
   })
 
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {

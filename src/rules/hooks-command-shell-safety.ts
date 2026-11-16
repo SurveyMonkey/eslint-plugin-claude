@@ -25,6 +25,8 @@ const name = 'hooks-command-shell-safety' as const
 /** A script that is not a shell script, by its extension. */
 const OTHER_LANGUAGE = /\.(?:py|js|mjs|cjs|ts|rb|ps1|bat|cmd)$/i
 const SHELL_SHEBANG = /^#!.*\b(?:ba|z|da|k)?sh\b/
+/** A variable or a positional or special parameter, as the scan of `unquotedVariables` reads one. */
+const PARAMETER = /\$(?:\{#?([A-Za-z_]\w*)|([A-Za-z_]\w*|\d|[@*]))/g
 const VARIABLE = /\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*))/g
 const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
 /** A variable that gets a value from `jq` or `cat`, which read the hook input, or from `read`. */
@@ -36,7 +38,8 @@ const DERIVED =
  *  backtick pair on its own, with a new quote level. In a backtick pair, a comment ends at the
  *  closing backtick. A `#` starts a comment only at the start of a word, and not in a
  *  `${...}` expansion. As in `closingParen`, each parenthesis level has its own count of open `${`
- *  expansions. Past the depth limit of `closingParen`, each variable in the rest of the text counts. */
+ *  expansions. When `closingParen` can stop at its depth limit (`nestsTooDeep`), each variable and
+ *  parameter in the rest of the text counts. */
 function unquotedVariables(text: string): string[] {
   const names: string[] = []
   let quote = ''
@@ -61,8 +64,13 @@ function unquotedVariables(text: string): string[] {
       const end = closingParen(text, i + 1)
       if (end === text.length && nestsTooDeep(text, i + 1)) {
         // `closingParen` can stop at its depth limit here, so the scan cannot find the quotes.
-        // bash reads the deeper levels. So each variable in the rest counts as out of quotes.
-        names.push(...variablesIn(text.slice(i + 2)))
+        // bash reads the deeper levels. So each variable and parameter in the rest counts as out
+        // of quotes, also one in quotes.
+        names.push(
+          ...[...text.slice(i + 2).matchAll(PARAMETER)].map(
+            (match) => (match[1] ?? match[2]) as string,
+          ),
+        )
         break
       }
       names.push(...unquotedVariables(text.slice(i + 2, end)))
