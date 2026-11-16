@@ -78,8 +78,9 @@ last review. The kinds of value are below.
   `editorMode`, `tui`, `viewMode`, `teammateMode`, `workflowSizeGuideline`, `skillOverrides`
   values, `crossSessionInbound`, `autoUpdatesChannel`, `feedbackDrafts`, `forceLoginMethod`,
   `preferredNotifChannel`, `managedSourcesBehavior`, `parentSettingsBehavior`,
-  `allowedProviders`, `worktree.baseRef`, `worktree.bgIsolation`, `spellcheck.checker`,
-  `voice.mode`, `spinnerVerbs.mode` and `disableDeepLinkRegistration`.
+  `allowedProviders`[^providers], `worktree.baseRef`, `worktree.bgIsolation`, `spellcheck.checker`,
+  `voice.mode`, `spinnerVerbs.mode` and `disableDeepLinkRegistration`. The `allowedProviders` list
+  has nine values, from `anthropic` to `gateway`, and includes `anthropicGoogleCloud`.
 - **Ranges.** `autoCompactWindow` (100000 to 1000000, also under `modelSettings`),
   `bashOutputMaxChars` (a positive whole number), `skillListingBudgetFraction` (above 0, at most
   1), `skillListingMaxDescChars`, `maxProseWidth` (at least 40), `cleanupPeriodDays` (at least
@@ -203,3 +204,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^vim]: [All settings: vimInsertModeRemaps](https://code.claude.com/docs/en/settings-reference#viminsertmoderemaps)
 [^tips]: [All settings: spinnerTipsOverride](https://code.claude.com/docs/en/settings-reference#spinnertipsoverride)
 [^remotepreview]: [All settings: disableRemotePreviewScripts](https://code.claude.com/docs/en/settings-reference#disableremotepreviewscripts)
+[^providers]: [All settings: allowedProviders](https://code.claude.com/docs/en/settings-reference#allowedproviders)

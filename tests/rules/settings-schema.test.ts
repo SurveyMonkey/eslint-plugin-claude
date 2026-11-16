@@ -156,7 +156,7 @@ jsonTester.run('settings-schema (valid)', rule, {
         requiredMaximumVersion: '2.1.150',
         requiredMinimumVersion: '2.2.0-beta.1',
         strictPluginOnlyCustomization: ['skills', 'agents', 'hooks', 'mcp'],
-        allowedProviders: ['anthropic', 'bedrock', 'customEndpoint'],
+        allowedProviders: ['anthropic', 'bedrock', 'anthropicGoogleCloud', 'customEndpoint'],
         allowedChannelPlugins: [
           { marketplace: 'm', plugin: 'p' },
           'telegram@claude-plugins-official',
@@ -750,6 +750,7 @@ jsonTester.run('settings-schema (enums)', rule, {
           'vertex',
           'foundry',
           'anthropicAws',
+          'anthropicGoogleCloud',
           'mantle',
           'customEndpoint',
           'gateway',
