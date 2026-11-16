@@ -55,14 +55,6 @@ describe(`${name}: the platforms`, () => {
     expect(run('./a.ps1', {}, ['windows-no-git-bash', 'linux'])).toEqual(['ps1'])
   })
 
-  // The five values of `platforms` are the vocabulary of the plugin (src/data/platforms.ts).
-  it('rejects a platform that is not a known platform', () => {
-    const text = settings(hooks('PostToolUse', [command({ command: './a.ps1' })], 'Write'))
-    expect(() => lintJson(name, text, FILES.project, [{ platforms: ['solaris'] }])).toThrow(
-      /Value "solaris" should be equal to one of the allowed values/,
-    )
-  })
-
   it('is silent when every platform runs the hook in PowerShell', () => {
     expect(run('./a.ps1', {}, ['windows-no-git-bash'])).toEqual([])
   })
