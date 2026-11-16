@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/settings-env-routing, which reports an env variable in the shared .claude/settings.json that sends the traffic of every user through a proxy, a certificate authority, another API endpoint, or a model provider.
+description: The ESLint rule claude/settings-env-routing, which reports an env variable in the shared .claude/settings.json that sends the traffic of every user through a proxy, a certificate authority, a client certificate, another API endpoint, or a model provider.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [14]
@@ -29,9 +29,12 @@ variables send the traffic of Claude Code to another place. The rule reports two
 
 | Variable                                                                                                                                                                            | Effect                                                             | Source      |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ----------- |
-| `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`                                                                                                                                  | Proxy and TLS configuration                                        | [^fetch]    |
+| `HTTP_PROXY`, `HTTPS_PROXY`, `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT`, `CLAUDE_CODE_CLIENT_KEY`                                                                             | Proxy and TLS configuration                                        | [^fetch]    |
 | `CLAUDE_CODE_USE_BEDROCK`, `CLAUDE_CODE_USE_MANTLE`, `CLAUDE_CODE_USE_VERTEX`, `CLAUDE_CODE_USE_FOUNDRY`, `CLAUDE_CODE_USE_ANTHROPIC_AWS`, `CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD` | Selects a model provider. Server-managed settings are bypassed     | [^security] |
 | `ANTHROPIC_BASE_URL` with a host other than `api.anthropic.com`                                                                                                                     | Selects another API endpoint. Server-managed settings are bypassed | [^security] |
+
+`CLAUDE_CODE_CLIENT_CERT` and `CLAUDE_CODE_CLIENT_KEY` set the client certificate and key for
+mTLS.[^fetch] The rule reports them like the proxy variables.
 
 A proxy or certificate variable is a fault at any value that is not empty. A provider variable is
 a fault when its value turns the variable on: `1`, `true`, `yes` or `on`, with any letter case.[^vars] A
@@ -60,6 +63,7 @@ Fail:
 {
   "env": {
     "HTTPS_PROXY": "http://proxy.example.com:3128",
+    "CLAUDE_CODE_CLIENT_CERT": "/etc/ssl/client.pem",
     "CLAUDE_CODE_USE_BEDROCK": "1"
   }
 }
