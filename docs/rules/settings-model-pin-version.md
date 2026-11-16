@@ -61,8 +61,21 @@ The report is on the entry. The rule makes no report in these cases:
 - The entry is an alias, or a provider-form ID such as `us.anthropic.claude-opus-4-8`.
 - The entry is a key of `modelOverrides` in the same file. The page says that Claude Code compares
   the allowlist with the Anthropic ID of an overridden model.[^overrides]
-- The file does not select Amazon Bedrock. The examples of the page use the Anthropic ID for Google Cloud's Agent Platform and
-  Microsoft Foundry.[^pin]
+- The file does not select Amazon Bedrock. See the list below.
+
+The check covers Amazon Bedrock only. The page of each provider shows the form of a model ID. No
+page of the other four providers shows a provider prefix:
+
+- **Amazon Bedrock.** The startup checks "compare each entry with the inference profile ID they
+  would send, including its region prefix".[^bedrock-allowlist] The pin example uses
+  `us.anthropic.claude-opus-4-8`.[^bedrock-pin]
+- **Google Cloud's Agent Platform.** The checks "compare each entry with the model ID they would
+  send to Agent Platform". The example lists `claude-opus-4-8` and
+  `claude-sonnet-4-5@20250929`.[^vertex-allowlist] The `@` date is a suffix, not a prefix.
+- **Microsoft Foundry.** The pin example uses `claude-opus-4-8`.[^foundry-pin]
+- **Claude Platform on AWS.** The pin example uses `claude-opus-4-8`.[^aws-pin]
+- **Claude Models on Google Cloud (Anthropic managed).** The pin example uses
+  `claude-opus-5-5`.[^gcp-pin]
 
 The part reads the shared project file and the managed files. A hidden drop-in gets no report, as
 Claude Code ignores it.
@@ -103,4 +116,10 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^aliases]: [Model configuration: Model aliases](https://code.claude.com/docs/en/model-config#model-aliases)
 [^pin]: [Model configuration: Pin models for third-party deployments](https://code.claude.com/docs/en/model-config#pin-models-for-third-party-deployments)
+[^bedrock-allowlist]: [Amazon Bedrock: When your organization enforces a model allowlist](https://code.claude.com/docs/en/amazon-bedrock#when-your-organization-enforces-a-model-allowlist)
+[^bedrock-pin]: [Amazon Bedrock: 4. Pin model versions](https://code.claude.com/docs/en/amazon-bedrock#4-pin-model-versions)
+[^vertex-allowlist]: [Google Cloud's Agent Platform: When your organization enforces a model allowlist](https://code.claude.com/docs/en/google-vertex-ai#when-your-organization-enforces-a-model-allowlist)
+[^foundry-pin]: [Microsoft Foundry: 4. Pin model versions](https://code.claude.com/docs/en/microsoft-foundry#4-pin-model-versions)
+[^aws-pin]: [Claude Platform on AWS: 3. Pin model versions](https://code.claude.com/docs/en/claude-platform-on-aws#3-pin-model-versions)
+[^gcp-pin]: [Claude Models on Google Cloud (Anthropic managed): Pin model versions](https://code.claude.com/docs/en/claude-models-on-google-cloud-anthropic-managed#pin-model-versions)
 [^overrides]: [Model configuration: Override model IDs per version](https://code.claude.com/docs/en/model-config#override-model-ids-per-version)
