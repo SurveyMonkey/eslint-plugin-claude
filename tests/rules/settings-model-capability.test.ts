@@ -114,6 +114,15 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       ),
       filename: project,
     },
+    // A provider variable hides the alias. The rule cannot tell which model `haiku` names there.
+    // On the Anthropic API, `haiku` is Haiku 5.5, which always thinks.
+    {
+      code: env(
+        { CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD: '1' },
+        { model: 'haiku', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+    },
     // An alias pinned to a model that accepts it, or to an ID the rule cannot read.
     {
       code: env(

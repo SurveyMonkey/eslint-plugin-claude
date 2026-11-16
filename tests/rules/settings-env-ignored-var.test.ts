@@ -36,6 +36,8 @@ const EVERY_FILE = [
   'CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION',
   'CLAUDE_CODE_WARN_DISK_FREE_GIB',
   'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
+  // "It also ignores the variable in a settings file's `env` block" (env vars reference).
+  'CLAUDE_CODE_RESUME_HINT_COMMAND',
   // The docs say Claude Code ignores it from every file. It reads the launch environment only.
   'CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS',
 ]
@@ -98,6 +100,9 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
+  // Code Mode turns on "from your shell, user settings, or a `--settings` file, and not from
+  // managed, project, or local settings". The rule covers the project and local files only.
+  'CLAUDE_CODE_EXPERIMENTAL_CODE_MODE',
   // "the other variables whose names start with CLAUDE_AX_, such as CLAUDE_AX_STARTUP_QUIET_MS"
   'CLAUDE_AX_SCREEN_READER',
   'CLAUDE_AX_STARTUP_QUIET_MS',

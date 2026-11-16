@@ -45,6 +45,7 @@ Claude Code ignores these variables in the `env` block of any settings file:[^ig
   `CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT`.
 - `CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION`. Claude Code ignores a copy in a settings `env` block.[^vars]
 - `CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS`. Claude Code reads it from the launch environment only.
+- `CLAUDE_CODE_RESUME_HINT_COMMAND`. Claude Code ignores it in the `env` block of a settings file.[^vars]
 
 ### Ignored in project and local files
 
@@ -74,6 +75,10 @@ can set them, so the rule makes no report in a managed file.[^ignored]
   rule makes no report for it when its value has text (see below).
 - The timer of an unanswered dialog `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS`, the attachment switch
   `CLAUDE_CODE_DISABLE_ATTACHMENTS`, and the file mention switch `CLAUDE_CODE_DISABLE_FILE_MENTIONS`.
+- `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE`. Claude Code turns Code Mode on from the shell, user
+  settings or a `--settings` file. It does not turn Code Mode on from managed, project or local
+  settings. The rule reports the variable in a project or local file. It makes no report in a
+  managed file.[^ignored]
 
 A few values that turn telemetry off still apply from a project or local file. The rule makes
 no report on them: `none` for the three exporter selectors, and an off value such as `0` for

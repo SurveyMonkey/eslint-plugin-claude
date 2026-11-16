@@ -197,11 +197,12 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'a whole number from 500 to 32000 in plain digits',
   },
   {
-    // "Give whole milliseconds from 32000 to 64000 in plain digits".
+    // "Give whole milliseconds from 32000 to 300000 in plain digits". "Values above 64000
+    // require v2.1.323 or later".
     name: 'CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS',
-    pass: ['32000', '48000', '64000'],
-    fail: ['31999', '64001', '4e4', '64_000'],
-    expected: 'a whole number from 32000 to 64000 in plain digits',
+    pass: ['32000', '48000', '64000', '64001', '300000'],
+    fail: ['31999', '300001', '4e4', '64_000'],
+    expected: 'a whole number from 32000 to 300000 in plain digits',
   },
   {
     // "Set 0 to turn check-ins off. Give whole minutes in plain digits, at most 10080".

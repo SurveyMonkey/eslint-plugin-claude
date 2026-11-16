@@ -112,6 +112,6 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^dropped]: [Choose a permission mode: How auto mode evaluates actions](https://code.claude.com/docs/en/permission-modes#how-auto-mode-evaluates-actions)
-[^classify]: [Configure auto mode: Route all shell commands through the classifier](https://code.claude.com/docs/en/auto-mode-config#route-all-shell-commands-through-the-classifier)
+[^classify]: [Configure auto mode: Suspend shell allow rules](https://code.claude.com/docs/en/auto-mode-config#route-all-shell-commands-through-the-classifier)
 [^key]: [All settings: disableAutoMode](https://code.claude.com/docs/en/settings-reference#disableautomode)
 [^lock]: [Deploy managed settings: Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)

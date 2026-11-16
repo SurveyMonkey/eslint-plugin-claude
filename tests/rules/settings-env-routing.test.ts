@@ -22,6 +22,8 @@ const PROVIDERS = [
   'CLAUDE_CODE_USE_VERTEX',
   'CLAUDE_CODE_USE_FOUNDRY',
   'CLAUDE_CODE_USE_ANTHROPIC_AWS',
+  // "If you export a `CLAUDE_CODE_USE_*` provider variable" (server-managed settings).
+  'CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD',
 ]
 
 jsonTester.run('settings-env-routing (valid)', rule, {
