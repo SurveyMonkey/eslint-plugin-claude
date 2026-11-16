@@ -84,9 +84,11 @@ const REPO = /^[^/\s]+\/[^/\s]+$/
 // letter is not a SHA here.
 const FULL_SHA = /^[0-9a-f]{40}$/
 
-/** True when Claude Code reserves `text` as a marketplace name. A `settings`
- *  source is not a `github` or `git` source under `github.com/anthropics/`.
- *  So the exception for the Anthropic names does not apply. */
+/** True when Claude Code reserves `text` as a marketplace name. The exception
+ *  for the Anthropic names does not apply here. A `settings` source is not a
+ *  `github` or `git` source under `github.com/anthropics/`. For a SHA `ref`,
+ *  the "Fields by type" row gives `claude-plugins-official` as a name that
+ *  Claude Code refuses. */
 function reserved(text: string): boolean {
   return (
     ANTHROPIC_MARKETPLACE_NAMES.some((official) => isSpellingOf(text, official)) ||
