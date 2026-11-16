@@ -508,9 +508,10 @@ describe(`${name}: an unquoted variable in the command`, () => {
   })
 
   it('counts each variable after a substitution that the reader cannot close', () => {
-    // bash 3.2.57 and 5.3.9 read 52 and 60 levels of `"$(` in a `$(`, and print `[a]` and `[b]`
-    // for `$X`. The reader stops at more than 50 levels (`MAX_NESTING` in `src/shell-words.ts`).
-    // Then the rule cannot find the quotes, so it counts `$X` as out of quotes.
+    // The probe puts `printf '[%s]\n'` in place of `echo`. bash 3.2.57 and 5.3.9 read each
+    // of these levels of `$(echo "`, and print `[x]`, `[a]` and `[b]`. The reader stops at 51
+    // levels in a `$(` (`MAX_NESTING` in `src/shell-words.ts`), so at 52 here. Then the rule
+    // cannot find the quotes, so it counts `$X` as out of quotes.
     const deep = (n: number) => `echo "${'$(echo "'.repeat(n)}x${'")'.repeat(n)}" $X`
     for (const n of [50, 51, 52, 53, 60]) {
       expect(line(deep(n)), String(n)).toEqual(['unquoted'])

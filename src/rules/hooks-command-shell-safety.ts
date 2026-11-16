@@ -36,7 +36,7 @@ const DERIVED =
  *  backtick pair on its own, with a new quote level. In a backtick pair, a comment ends at the
  *  closing backtick. A `#` starts a comment only at the start of a word, and not in a
  *  `${...}` expansion. As in `closingParen`, each parenthesis level has its own count of open `${`
- *  expansions. */
+ *  expansions. Past the depth limit of `closingParen`, each variable in the rest of the text counts. */
 function unquotedVariables(text: string): string[] {
   const names: string[] = []
   let quote = ''
