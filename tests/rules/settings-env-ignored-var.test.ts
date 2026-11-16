@@ -152,8 +152,8 @@ jsonTester.run('settings-env-ignored-var (valid)', rule, {
     ...PROJECT_ONLY.flatMap((name) =>
       MANAGED_FILES.map((filename) => ({ code: env({ [name]: 'x' }), filename })),
     ),
-    // Code Mode makes no report in a managed file (ruling 8 of 2026-11-16: only the message
-    // changes). A `1` in managed settings is the case that the docs describe.
+    // Code Mode makes no report in a managed file (#945: only the message changes). A `1` in
+    // managed settings is the case that the docs describe.
     ...MANAGED_FILES.map((filename) => ({ code: env({ [CODE_MODE]: '1' }), filename })),
     // The settings reference names no AFK variable, so a settings file may set them (#499).
     ...ALL.map((filename) => ({

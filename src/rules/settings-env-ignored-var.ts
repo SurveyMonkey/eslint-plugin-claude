@@ -15,7 +15,7 @@ import { isHiddenDropIn, kindOf, MANAGED_SETTINGS_FILES } from '../settings-file
 
 const name = 'settings-env-ignored-var' as const
 
-/** Claude Code ignores this variable in managed settings too. The shared project message names
+/** Claude Code does not turn Code Mode on from managed settings. The shared project message names
  *  managed settings as a place to set a variable, so this variable gets its own message. */
 const CODE_MODE_VAR = 'CLAUDE_CODE_EXPERIMENTAL_CODE_MODE'
 

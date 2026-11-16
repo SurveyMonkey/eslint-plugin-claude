@@ -142,6 +142,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: MessageId }> = {
         }
 
         if (isBoolean(body, 'disableAllHooks', true)) {
+          // `disableAllHooks` turns off the status line and the file suggestion command too.
           for (const key of COMMAND_OBJECT_KEYS) {
             pair(setMember(body, key), 'hooksOff', { key })
           }
