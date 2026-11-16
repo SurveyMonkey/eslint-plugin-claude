@@ -79,8 +79,7 @@ last review. The kinds of value are below.
   values, `crossSessionInbound`, `autoUpdatesChannel`, `feedbackDrafts`, `forceLoginMethod`,
   `preferredNotifChannel`, `managedSourcesBehavior`, `parentSettingsBehavior`,
   `allowedProviders`[^providers], `worktree.baseRef`, `worktree.bgIsolation`, `spellcheck.checker`,
-  `voice.mode`, `spinnerVerbs.mode` and `disableDeepLinkRegistration`. The `allowedProviders` list
-  has nine values, from `anthropic` to `gateway`, and includes `anthropicGoogleCloud`.
+  `voice.mode`, `spinnerVerbs.mode` and `disableDeepLinkRegistration`.
 - **Ranges.** `autoCompactWindow` (100000 to 1000000, also under `modelSettings`),
   `bashOutputMaxChars` (a positive whole number), `skillListingBudgetFraction` (above 0, at most
   1), `skillListingMaxDescChars`, `maxProseWidth` (at least 40), `cleanupPeriodDays` (at least

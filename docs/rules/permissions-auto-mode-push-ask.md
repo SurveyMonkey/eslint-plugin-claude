@@ -27,9 +27,10 @@ The rule reads no hidden drop-in in `managed-settings.d`, because Claude Code ig
 
 ## Rule details
 
-By default, auto mode lets Claude push to the repository you work in, "including its default branch, without a prompt".[^common] It can also open a pull request there "when your task asks for one".[^common] The classifier blocks some pushes and pull requests, such as a push with a secret or a pull request to another repository.[^blocked] An `ask`
-rule with a command, such as `Bash(git push *)`, is evaluated before the classifier. By default, it prompts, even in auto
-mode.[^checkpoint] With `permissions.denyInsteadOfPrompting`, Claude Code denies a call that would otherwise prompt, so the `ask` becomes a deny, which still stops the push.[^deny-prompt] A `deny` rule blocks before the classifier too.[^checkpoint]
+By default, auto mode lets Claude push to the repository you work in, "including its default branch, without a prompt".[^common] It can also open a pull request there "when your task asks for one".[^common] A non-default branch with a deploy name, such as `production`, is an exception. The classifier judges a push there on its own terms.[^blocked] The classifier also blocks a push with a secret.[^blocked]
+
+An `ask` rule with a command, such as `Bash(git push *)`, is evaluated before the classifier. By default, it prompts, even in auto
+mode.[^checkpoint] With `permissions.denyInsteadOfPrompting`, Claude Code denies a call that would otherwise prompt.[^deny-prompt] A `deny` rule blocks before the classifier too.[^checkpoint]
 
 A file does not show that a session runs in auto mode, because auto mode is the built-in start mode of terminal sessions on
 recent versions.[^start] The rule reads the one place where a file turns it on and the value takes effect: `permissions.defaultMode`
