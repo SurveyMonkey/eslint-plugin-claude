@@ -45,14 +45,17 @@ The rule reports each of these in a settings file. A quoted `"true"` counts as `
 - The rule reads one file, except for `autoAllowBashIfSandboxed`. The fault of `filesystem.disabled` needs a file of the
   source that sets it to `true`. A file of the source that sets it to `false` removes the fault. So that part reads the
   source, as `src/permission-source.ts` defines it, and gives no report when it cannot read a file of the source.
-- The default of `autoAllowBashIfSandboxed` is `false`. The docs say: "Before v2.1.324, the default was `true`".[^auto]
-  With the option `minVersion` older than 2.1.324, an unset key counts as `true`.
+- The default of `autoAllowBashIfSandboxed` is `false`. The docs say: "Before v2.1.324, the default was `true`". The
+  source is in [`permissions-sandbox-bash-ask`](permissions-sandbox-bash-ask.md#options). With the option `minVersion`
+  older than 2.1.324, an unset key counts as `true`.
 - Claude Code honors `allowAppleEvents`, `allowNestedUserNamespaces`, `credentials.allowPlaintextInject` and
   `filesystem.disabled` from user and managed settings only. `settings-key-scope` reports each in a project or local file, so this rule does not read them there. In
   practice, `filesystem.disabled` is a managed file check.
 - `sandbox-filesystem-disabled-conflict` reports `filesystem.disabled` with `denyRead` or `deny` entries that it switches off.
   This rule reports a different fault on the same value: commands run with no prompt. Both can report it.
-- `sandbox-schema` reports a value of the wrong type. This rule reads a Boolean `true` only.
+- `sandbox-schema` reports a value of the wrong type. This rule reads a Boolean. In a managed file it also reads a quoted
+  `"true"` or `"false"`, and counts another value of `autoAllowBashIfSandboxed` as `false`. See
+  [`sandbox-schema`](sandbox-schema.md#a-managed-file).
 
 Fail:
 
@@ -80,9 +83,9 @@ Pass:
 'claude/sandbox-weakening-options': ['warn', { minVersion: '2.1.300' }]
 ```
 
-The option changes only the check of `filesystem.disabled`. With no `minVersion`, or a `minVersion` of 2.1.324 or later,
-that check reports only when a file sets `autoAllowBashIfSandboxed` to `true`. When `minVersion` is older than 2.1.324,
-the check also reports an unset key. The value has three numbers, such as `2.1.324`.
+The option changes only the check of `filesystem.disabled`. Without a `minVersion` older than 2.1.324, that check needs
+a file that sets `autoAllowBashIfSandboxed` to `true`. When `minVersion` is older than 2.1.324, the check also reports
+an unset key. The value has three numbers, such as `2.1.324`.
 
 ## Usage
 
@@ -103,6 +106,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 [^apple]: [All settings: sandbox.allowAppleEvents](https://code.claude.com/docs/en/settings-reference#sandbox-allowappleevents)
 [^userns]: [All settings: sandbox.allowNestedUserNamespaces](https://code.claude.com/docs/en/settings-reference#sandbox-allownestedusernamespaces)
 [^plaintext]: [All settings: sandbox.credentials.allowPlaintextInject](https://code.claude.com/docs/en/settings-reference#sandbox-credentials-allowplaintextinject)
-[^auto]: [All settings: sandbox.autoAllowBashIfSandboxed](https://code.claude.com/docs/en/settings-reference#sandbox-autoallowbashifsandboxed)
 [^disable]: [Configure the sandboxed Bash tool: Disable filesystem isolation](https://code.claude.com/docs/en/sandboxing#disable-filesystem-isolation)
 [^limits]: [Configure the sandboxed Bash tool: Security limitations](https://code.claude.com/docs/en/sandboxing#security-limitations)

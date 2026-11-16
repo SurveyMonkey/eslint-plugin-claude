@@ -32,7 +32,7 @@ sandbox boundary replaces the prompt for the whole tool.[^interact][^auto] So th
 
 The default of `autoAllowBashIfSandboxed` is `false`. The docs say: "Before v2.1.324, the default was `true`".[^auto]
 So the rule reports only when a file of the same source sets the key to `true`. With the option `minVersion` older than
-2.1.324, an unset key counts as `true` too, because Claude Code before v2.1.324 turns it on by default.
+2.1.324, an unset key counts as `true` too. Claude Code before v2.1.324 turns the key on by default.
 
 The rule reports each ask entry that is `Bash` or `Bash(*)`. The report is on the entry. To keep the prompt, set
 `autoAllowBashIfSandboxed` to `false`, or write a scoped ask rule such as `Bash(git push *)`, which still prompts.
@@ -65,7 +65,9 @@ The rule adds up the files of one source. For a project file, the source is the 
 
 The rule cannot show that `autoAllowBashIfSandboxed` is not `false` without that file. So it makes no report.
 
-The rule reads only the Boolean `true` as `true`. A quoted `"true"` is no value, and `sandbox-schema` reports it.
+In a project or local file, the rule reads only the Boolean `true` as `true`. A quoted `"true"` is no value there, and
+`sandbox-schema` reports it. A managed file reads a quoted `"true"` or `"false"` as that Boolean. Another value of
+`autoAllowBashIfSandboxed` counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
 
 Fail, in `.claude/settings.json`:
 
@@ -99,10 +101,9 @@ Pass, in `.claude/settings.json`:
 'claude/permissions-sandbox-bash-ask': ['error', { minVersion: '2.1.300' }]
 ```
 
-With no `minVersion`, or a `minVersion` of 2.1.324 or later, the rule reports only when a file sets
-`autoAllowBashIfSandboxed` to `true`. The docs give the default as `false` and say "Before v2.1.324, the default was
-`true`".[^auto] When `minVersion` is older than 2.1.324, the rule also reports an unset key. The value has three
-numbers, such as `2.1.324`.
+Without a `minVersion` older than 2.1.324, the rule needs a file that sets `autoAllowBashIfSandboxed` to `true`. The
+docs give the default as `false` and say "Before v2.1.324, the default was `true`".[^auto] When `minVersion` is older
+than 2.1.324, the rule also reports an unset key. The value has three numbers, such as `2.1.324`.
 
 ## Usage
 
