@@ -46,8 +46,8 @@ Code ignores it.
 ### The fallback chain
 
 The rule counts distinct strings in `fallbackModel`. A duplicate is not a new model. The report is
-on the first entry over the limit. The settings reference says that Claude Code "keeps at most three distinct allowed models".[^fallback] Claude Code also drops each entry that `availableModels` does
-not permit when it reads the chain.[^chains] The rule counts all entries.
+on the first entry over the limit. The settings reference says that Claude Code "keeps at most three distinct allowed models".[^fallback] Claude Code also "drops any entry not permitted by `availableModels` when it reads the
+chain".[^tries] The rule counts all entries.
 
 The docs cap the chain at 3 models and name no setting that moves the cap. The option `max` takes a
 lower number, and the schema refuses a number above 3. At 3, the message says that Claude Code
@@ -153,6 +153,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^chains]: [Model configuration: Fallback model chains](https://code.claude.com/docs/en/model-config#fallback-model-chains)
+[^tries]: [Model configuration: Which entries Claude Code tries](https://code.claude.com/docs/en/model-config#which-entries-claude-code-tries)
 [^behavior]: [Model configuration: Default model behavior](https://code.claude.com/docs/en/model-config#default-model-behavior)
 [^enforce]: [All settings: enforceAvailableModels](https://code.claude.com/docs/en/settings-reference#enforceavailablemodels)
 [^enforce-pair]: [Model configuration: Enforce the allowlist for the Default model](https://code.claude.com/docs/en/model-config#enforce-the-allowlist-for-the-default-model)
