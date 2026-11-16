@@ -8,6 +8,7 @@ import {
   isAssignment,
   isClaude,
   isPrinter,
+  nestsTooDeep,
   printedBy,
   scanCommands,
   sinkOf,
@@ -1487,9 +1488,18 @@ describe('closingParen', () => {
   })
 
   it('reads 50 levels of a substitution in double quotes in a substitution', () => {
-    // A pinning test: the reader gave this result before #866 too. bash 3.2.57 and 5.3.9 print
+    // This test keeps a result that the reader gave before #866 too. bash 3.2.57 and 5.3.9 print
     // `[x]`, then `[b]`. The reader stops at a depth of more than 50 such levels (`MAX_NESTING`).
     const text = `printf '[%s]\\n' $(echo ${'"$(echo '.repeat(50)}x${')"'.repeat(50)}) b`
     expect(closingParen(text, open(text))).toBe(text.lastIndexOf(')'))
+    expect(nestsTooDeep(text, open(text))).toBe(false)
+  })
+
+  it('stops at 51 levels, and nestsTooDeep tells the caller', () => {
+    // bash 3.2.57 and 5.3.9 read 51 levels too, and print `[x]`, then `[b]`. The length is the
+    // limit of the reader, not a bash result. So a caller asks `nestsTooDeep`.
+    const text = `printf '[%s]\\n' $(echo ${'"$(echo '.repeat(51)}x${')"'.repeat(51)}) b`
+    expect(closingParen(text, open(text))).toBe(text.length)
+    expect(nestsTooDeep(text, open(text))).toBe(true)
   })
 })

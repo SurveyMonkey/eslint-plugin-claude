@@ -502,6 +502,25 @@ describe(`${name}: an unquoted variable in the command`, () => {
     ]) {
       expect(line(text), text).toEqual(['unquoted'])
     }
+    // The `)` in the pair does not end the `$(`, so `$X` stays in the double quotes. bash 3.2.57
+    // and 5.3.9 print one word, `[x a b]`.
+    expect(line('echo "$(echo `case a in a) echo x;; esac`) $X"')).toEqual([])
+  })
+
+  it('counts each variable after a substitution that the reader cannot close', () => {
+    // bash 3.2.57 and 5.3.9 read 52 and 60 levels of `"$(` in a `$(`, and print `[a]` and `[b]`
+    // for `$X`. The reader stops at more than 50 levels (`MAX_NESTING` in `src/shell-words.ts`).
+    // Then the rule cannot find the quotes, so it counts `$X` as out of quotes.
+    const deep = (n: number) => `echo "${'$(echo "'.repeat(n)}x${'")'.repeat(n)}" $X`
+    for (const n of [50, 51, 52, 53, 60]) {
+      expect(line(deep(n)), String(n)).toEqual(['unquoted'])
+    }
+    // No `)` closes these. bash 3.2.57 and 5.3.9 exit with status 2: "unexpected EOF while
+    // looking for matching `)'". With 50 more substitutions, the reader cannot stop at its limit.
+    // So the scan keeps the single quotes. With 51, it can stop there, and the rule reports `$X`.
+    const open = (n: number) => `echo $(${'$(echo '.repeat(n)}'$X'`
+    expect(line(open(50))).toEqual([])
+    expect(line(open(51))).toEqual(['unquoted'])
   })
 
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {

@@ -18,7 +18,7 @@ import {
   stringOf,
 } from '../hooks-config.ts'
 import { placeholderFolders, scriptsRun, scriptText } from '../hooks-files.ts'
-import { closingParen, commandsOf, commandWordAt, tickEnd } from '../shell-words.ts'
+import { closingParen, commandsOf, commandWordAt, nestsTooDeep, tickEnd } from '../shell-words.ts'
 
 const name = 'hooks-command-shell-safety' as const
 
@@ -59,6 +59,12 @@ function unquotedVariables(text: string): string[] {
       quote = char === "'" ? '' : quote
     } else if (char === '$' && text.startsWith('(', i + 1)) {
       const end = closingParen(text, i + 1)
+      if (end === text.length && nestsTooDeep(text, i + 1)) {
+        // `closingParen` can stop at its depth limit here, so the scan cannot find the quotes.
+        // bash reads the deeper levels. So each variable in the rest counts as out of quotes.
+        names.push(...variablesIn(text.slice(i + 2)))
+        break
+      }
       names.push(...unquotedVariables(text.slice(i + 2, end)))
       i = end
     } else if (char === '`') {
