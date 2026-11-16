@@ -2,7 +2,7 @@
 // https://code.claude.com/docs/en/memory#choose-where-to-put-claude-md-files
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { classifyMemoryFile, isAgentsMd } from '../src/memory-files.ts'
+import { classifyMemoryFile, isAgentsMd, isNetworkTarget } from '../src/memory-files.ts'
 
 const at = (...parts: string[]) => classifyMemoryFile(path.join('/repo', ...parts))
 
@@ -68,5 +68,37 @@ describe('isAgentsMd', () => {
     expect(isAgentsMd(path.join('/repo', 'AGENTS.local.md'))).toBe(false)
     expect(isAgentsMd(path.join('/repo', 'agents.md'))).toBe(false)
     expect(isAgentsMd(path.join('/repo', 'CLAUDE.md'))).toBe(false)
+  })
+})
+
+// A symlink to a network path does not load. The docs name the UNC share and "a path under `/net`
+// or `/Network`": https://code.claude.com/docs/en/memory (the symlink note, about `.claude/rules/`)
+// Rows beyond those words rest on the rule doc, docs/rules/memory-symlink-network-target.md, "The
+// rule reads a target as a network path in these cases" and the list after it: the host in any
+// letter case, `\\?\UNC\`, the case of `/net` and `/Network`, and the local forms. A forward-slash
+// `//host/share` is not a UNC share there. The docs write a UNC share with backslashes.
+describe('isNetworkTarget', () => {
+  it.each([
+    ['/net', true],
+    ['/net/x', true],
+    ['/Network', true],
+    ['/Network/x', true],
+    ['/network', false],
+    ['/Networks', false],
+    ['/netx', false],
+    ['//host/share', false],
+    ['\\\\host\\share', true],
+    ['\\\\HOST\\share', true],
+    ['\\\\10.0.0.5\\share', true],
+    ['\\\\?\\UNC\\server\\share', true],
+    ['\\\\?\\C:\\x', false],
+    ['\\\\.\\pipe\\x', false],
+    ['\\\\wsl$\\Ubuntu', false],
+    ['\\\\wsl.localhost\\Ubuntu', false],
+    ['docs/net', false],
+    ['../net/x', false],
+    ['shared/rules', false],
+  ])('reads %j as network path: %s', (target, expected) => {
+    expect(isNetworkTarget(target)).toBe(expected)
   })
 })

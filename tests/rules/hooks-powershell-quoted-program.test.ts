@@ -231,6 +231,15 @@ describe(`${name}: no shell key and the option platforms`, () => {
     expect(unset(['windows-no-git-bash'], { shell: 1 })).toEqual([])
   })
 
+  // The five values of `platforms` are the vocabulary of the plugin (src/data/platforms.ts).
+  // This rule takes PLATFORMS_SCHEMA from src/hooks-config.ts.
+  it('rejects a platform that is not a known platform', () => {
+    const text = settings(hooks('Stop', [command({ command: '"C:\\Tools\\guard.exe"' })]))
+    expect(() => lintJson(name, text, FILES.project, [{ platforms: ['solaris'] }])).toThrow(
+      /Value "solaris" should be equal to one of the allowed values/,
+    )
+  })
+
   it('names the platform and the fix in the message', () => {
     const [message] = lintJson(
       name,
