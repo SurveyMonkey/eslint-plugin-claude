@@ -30,8 +30,9 @@ makes no report. The `recommended` and `strict` configs set no option. They turn
 no effect, until a team sets the version that it supports.
 
 The marketplace reference gives the versions of all fields and source types in the table, except
-`archive`.[^top][^entries][^sources] The changelog gives the version of `archive`. It lists
-"Added `archive` plugin source" under 2.1.224. See the
+`archive` and `command`.[^top][^entries][^sources] The changelog gives the version of both. It lists
+"Added `archive` plugin source" under 2.1.224. It lists "Added plugin marketplace `command`
+sources" under 2.1.229. See the
 [Claude Code changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
 
 | Field or source                     | Needs   |
