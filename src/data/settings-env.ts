@@ -28,6 +28,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_ARTIFACT_COMMENTS', '2.1.221'],
   ['CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT', '2.1.228'],
   ['CLAUDE_CODE_ARTIFACT_PUBLISH_EDITS', '2.1.300'],
+  ['CLAUDE_CODE_AUTOMOUNT_ROOTS', '2.1.323'],
   ['CLAUDE_CODE_AUTO_MODE_MODEL', '2.1.302'],
   ['CLAUDE_CODE_AUTO_MODE_SERVER', '2.1.271'],
   ['CLAUDE_CODE_BASH_EDIT_DIFF', '2.1.269'],
@@ -50,6 +51,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS', '2.1.288'],
   ['CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT', '2.1.281'],
   ['CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK', '2.1.309'],
+  ['CLAUDE_CODE_DISABLE_ULTRATHINK', '2.1.316'],
   ['CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT', '2.1.223'],
   ['CLAUDE_CODE_DISABLE_WEB_FETCH', '2.1.285'],
   ['CLAUDE_CODE_DISABLE_WINDOWS_SHELL_LAUNCHER', '2.1.269'],
@@ -82,6 +84,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_PROMPT_CACHE_TTL', '2.1.242'],
   ['CLAUDE_CODE_RESTRICTED', '2.1.248'],
   ['CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS', '2.1.211'],
+  ['CLAUDE_CODE_RESUME_HINT_COMMAND', '2.1.323'],
   ['CLAUDE_CODE_RESUME_SHOWS_CUT_OFF_CALLS', '2.1.309'],
   ['CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS', '2.1.295'],
   ['CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS', '2.1.305'],
@@ -296,7 +299,7 @@ const FORMS = new Map<string, EnvForm>([
   ['CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS', positiveWhole],
   ['CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS', positiveWhole],
   ['CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS', plainFrom(500, 32000)],
-  ['CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS', plainFrom(32000, 64000)],
+  ['CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS', plainFrom(32000, 300000)],
   // `0` turns the check-ins off.
   ['CLAUDE_CODE_GOAL_CHECKIN_MINUTES', plainFrom(0, 10080)],
   ['CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS', plainFrom(1, 256)],
@@ -361,6 +364,7 @@ const IGNORED_IN_EVERY_FILE = new Set([
   'CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS',
   'CLAUDE_CODE_WARN_DISK_FREE_GIB',
   'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
+  'CLAUDE_CODE_RESUME_HINT_COMMAND',
 ])
 
 /** Variables that Claude Code ignores in project and local settings. The user, managed and
@@ -418,6 +422,9 @@ const IGNORED_IN_PROJECT_FILES: readonly (string | RegExp)[] = [
   'CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS',
   'CLAUDE_CODE_DISABLE_ATTACHMENTS',
   'CLAUDE_CODE_DISABLE_FILE_MENTIONS',
+  // Code Mode: the shell, user settings and `--settings` turn it on, not managed, project or
+  // local settings. This list covers project and local files only.
+  'CLAUDE_CODE_EXPERIMENTAL_CODE_MODE',
   // The screen reader variable and the other variables whose names start with CLAUDE_AX_.
   /^CLAUDE_AX_/,
 ]
@@ -561,6 +568,7 @@ export const TRAFFIC_ENV_VARS: readonly string[] = [
 /** The variables that select a model provider. Setting one bypasses server-managed settings. */
 export const PROVIDER_ENV_VARS: readonly string[] = [
   'CLAUDE_CODE_USE_ANTHROPIC_AWS',
+  'CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD',
   'CLAUDE_CODE_USE_BEDROCK',
   'CLAUDE_CODE_USE_FOUNDRY',
   'CLAUDE_CODE_USE_MANTLE',

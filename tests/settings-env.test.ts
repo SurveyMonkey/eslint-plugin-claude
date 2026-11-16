@@ -141,7 +141,7 @@ describe('the value forms, against the docs', () => {
     expect(VARIABLES).toContain('from `100000` to `1000000`')
     // The ranges of the plain-digit forms.
     expect(VARIABLES).toContain('from 500 to 32000 in plain digits')
-    expect(VARIABLES).toContain('from 32000 to 64000 in plain digits')
+    expect(VARIABLES).toContain('from 32000 to 300000 in plain digits')
     expect(VARIABLES).toContain('at most `10080`')
     expect(VARIABLES).toContain('from `1` to `256`')
     expect(VARIABLES).toContain('from `1` to `86400`')

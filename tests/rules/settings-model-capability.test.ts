@@ -114,6 +114,15 @@ jsonTester.run('settings-model-capability (valid)', rule, {
       ),
       filename: project,
     },
+    // A provider variable of `CLAUDE_CODE_USE_*` (server-managed settings) hides the alias:
+    // `haiku` does not resolve to Haiku 5.5, which always thinks.
+    {
+      code: env(
+        { CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD: '1' },
+        { model: 'haiku', alwaysThinkingEnabled: false },
+      ),
+      filename: project,
+    },
     // An alias pinned to a model that accepts it, or to an ID the rule cannot read.
     {
       code: env(
