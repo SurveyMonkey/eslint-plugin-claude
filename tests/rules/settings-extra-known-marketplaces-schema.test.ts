@@ -810,7 +810,7 @@ jsonTester.run('settings-extra-known-marketplaces-schema (other keys)', rule, {
     { code: withItem({ name: 'f', source: { source: 'bogus' } }), filename },
     { code: withSource(inline({ owner: 5 })), filename },
     // Names close to a reserved name, with a different case or no dash.
-    ...['claudeai', 'claudeaiteam', 'Inline', 'my-npm', 'Constructor'].map((name) => ({
+    ...['claudeai', 'claudeaiteam', 'Inline', 'Constructor'].map((name) => ({
       code: marketplaces({ [name]: { source: inline({ name }) } }),
       filename,
     })),
@@ -820,7 +820,7 @@ jsonTester.run('settings-extra-known-marketplaces-schema (other keys)', rule, {
       filename,
     })),
     // A SHA `ref` under a key that is not reserved. The "Fields by type" row of
-    // `ref` refuses a SHA for a reserved name only.
+    // `ref` refuses a SHA for a reserved name, and names no other refusal.
     ...['github', 'git'].map((source) => ({
       code: marketplaces({ acme: { source: { ...sourceOf(source), ref: SHA } } }),
       filename,
@@ -835,6 +835,11 @@ jsonTester.run('settings-extra-known-marketplaces-schema (other keys)', rule, {
       code: marketplaces({ 'claude-plugins-official': { source: { ...github, ref } } }),
       filename,
     })),
+    // A SHA in a field other than `ref` is not a `ref`.
+    {
+      code: marketplaces({ 'claude-plugins-official': { source: { ...github, path: SHA } } }),
+      filename,
+    },
     // A SHA `ref` on a type that has no `ref` is not read.
     {
       code: marketplaces({
@@ -866,6 +871,18 @@ jsonTester.run('settings-extra-known-marketplaces-schema (invalid SHA ref)', rul
         errors: [{ messageId: 'refShaReserved' as const, data: { key }, line: 1 }],
       })),
     ),
+    // The `ref` row gives `claude-plugins-official` as its example, and that
+    // marketplace comes from `github.com/anthropics/`. So the exception for the
+    // Anthropic names does not apply to a SHA.
+    {
+      code: marketplaces({
+        'claude-plugins-official': {
+          source: { source: 'github', repo: 'anthropics/claude-plugins-official', ref: SHA },
+        },
+      }),
+      filename,
+      errors: [{ messageId: 'refShaReserved' as const, data: { key: 'claude-plugins-official' } }],
+    },
     {
       code: marketplaces({ 'claude-plugins-official': { source: { ...github, ref: SHA } } }),
       filename: local,

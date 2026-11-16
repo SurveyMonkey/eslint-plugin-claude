@@ -57,7 +57,8 @@ jsonTester.run('marketplace-name-reserved (valid)', rule, {
       code: manifest(marketplaceName),
       filename,
     })),
-    // The docs list the member names with this letter case.
+    // The rule matches a member name in the letter case of the docs, and
+    // the whole name only.
     { code: manifest('Constructor'), filename },
     { code: manifest('tostring'), filename },
     { code: manifest('toString2'), filename },
