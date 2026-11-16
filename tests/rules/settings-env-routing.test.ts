@@ -78,6 +78,17 @@ jsonTester.run('settings-env-routing (valid)', rule, {
       filename: project,
       errors: [{ messageId: 'traffic' as const }],
     })),
+    // The mTLS variables hold the path to a file.
+    ...(
+      [
+        ['CLAUDE_CODE_CLIENT_CERT', '/etc/ssl/client.pem'],
+        ['CLAUDE_CODE_CLIENT_KEY', '/etc/ssl/client.key'],
+      ] as const
+    ).map(([key, value]) => ({
+      code: env({ [key]: value }),
+      filename: project,
+      errors: [{ messageId: 'traffic' as const }],
+    })),
     // Any non-empty value is a fault for a proxy variable.
     {
       code: env({ HTTP_PROXY: '0' }),
@@ -134,6 +145,13 @@ describe('settings-env-routing: messages', () => {
 
   it('names the variable', () => {
     expect(text({ HTTPS_PROXY: 'http://p:1' })).toContain('"HTTPS_PROXY"')
+  })
+
+  // The env vars reference: "Path to client certificate file for mTLS authentication".
+  it('says that an mTLS variable sets the client certificate', () => {
+    expect(text({ CLAUDE_CODE_CLIENT_CERT: '/etc/ssl/client.pem' })).toContain(
+      'sets the mTLS client certificate',
+    )
   })
 })
 
