@@ -1,8 +1,9 @@
 // The expected values come from the settings reference
 // (https://code.claude.com/docs/en/settings-reference#bashoutputmaxchars and "How env values
 // interact with your shell"), the model configuration page
-// (https://code.claude.com/docs/en/model-config#set-a-default-model-for-new-sessions) and the
-// subagents page (https://code.claude.com/docs/en/sub-agents#choose-a-model). The rule reads the
+// (https://code.claude.com/docs/en/model-config#set-a-default-model-for-new-sessions), the env
+// vars reference (https://code.claude.com/docs/en/env-vars#variables) and the subagents page
+// (https://code.claude.com/docs/en/sub-agents#run-every-subagent-on-one-model). The rule reads the
 // linted file only. An agent `model` under `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` is for
 // `agent-model-forced`.
 import { describe, expect, it } from 'vitest'

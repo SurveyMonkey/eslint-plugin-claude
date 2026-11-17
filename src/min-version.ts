@@ -1,7 +1,9 @@
 // The option `minVersion` of a rule that flags a feature by the Claude Code
 // version that added it. The value is the oldest version that the repository
-// supports. A rule reports only when the version is set and older than the fix.
-// With no version set, the rule is inactive.
+// supports. A rule that flags an old Claude Code reports only when the version is set and older
+// than the fix. With no version set, that rule is inactive. A rule that follows a changed default
+// (`permissions-sandbox-bash-ask`, `sandbox-weakening-options`) reports with no version set. It
+// treats the changed default as current, and a version older than the fix changes its report.
 // No dependency parses a version here, because the docs write three numbers.
 
 /** The schema of the option object `{ minVersion }`. */

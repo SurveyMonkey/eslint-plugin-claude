@@ -1,6 +1,8 @@
-// The sub-agents page, frontmatter reference and "Choose a model": `model` is `sonnet`, `opus`,
+// The sub-agents page, "Supported frontmatter fields" and "Choose a model"
+// (https://code.claude.com/docs/en/sub-agents#choose-a-model): `model` is `sonnet`, `opus`,
 // `haiku`, `fable`, `inherit`, or a full model ID, and a full ID "accepts the same values as the
-// `--model` flag". The model configuration page lists the aliases of `--model`.
+// `--model` flag". The model configuration page lists the aliases of `--model`
+// (https://code.claude.com/docs/en/model-config#model-aliases).
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { lintAgent } from '../agent-rules.test-support.ts'
