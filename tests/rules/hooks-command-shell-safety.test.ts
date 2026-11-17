@@ -530,6 +530,31 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line(`echo $(${'$(echo '.repeat(50)}'$X'`)).toEqual([])
   })
 
+  it('counts each variable past 100 levels of substitutions with no quotes, and does not throw', () => {
+    // A chain of `$(` with no quotes does not get to the limit of `closingParen`. Before #960, a
+    // chain 20,000 deep threw a RangeError in the scan. bash 3.2.57 and 5.3.9 print `[a]` and
+    // `[b]` for the chains of 100 and 101 levels below, with X="a b".
+    const chain = (open: string, close: string, n: number, inner: string) =>
+      `printf '[%s]\\n' ${open.repeat(n)}${inner}${close.repeat(n)}`
+    for (const n of [100, 101, 20_000]) {
+      expect(line(chain('$(echo ', ')', n, '$X')), String(n)).toEqual(['unquoted'])
+      expect(line(chain('$( (echo ', ') )', n, '$X')), String(n)).toEqual(['unquoted'])
+    }
+  })
+
+  it('counts a variable in quotes past 100 levels of substitutions', () => {
+    // A known false positive. bash 3.2.57 and 5.3.9 print one word, `[a b]`, for each command
+    // below, with X="a b". The scan reads 100 levels (`MAX_NESTING` in `src/shell-words.ts`).
+    // Past that, it cannot find the quotes, so `"$X"` counts.
+    const deep = (n: number, inner: string) => `echo ${'$(echo '.repeat(n)}${inner}${')'.repeat(n)}`
+    const substitution = `$(printf '[%s]\\n' "$X" >&2)`
+    const backticks = `\`printf '[%s]\\n' "$X" >&2\``
+    expect(line(deep(99, substitution))).toEqual([])
+    expect(line(deep(100, substitution))).toEqual(['unquoted'])
+    expect(line(deep(99, backticks))).toEqual([])
+    expect(line(deep(100, backticks))).toEqual(['unquoted'])
+  })
+
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {
     // bash 5.3.9 prints `#y`, then runs `rm` on the split `$T`.
     expect(line(`echo \${1:-$(true) $(false) #y}; rm -rf $T`)).toEqual(['destructive'])

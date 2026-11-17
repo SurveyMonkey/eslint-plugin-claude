@@ -37,8 +37,9 @@ const RESERVED = [
   'coproc',
 ]
 
-/** How deep a quote and a substitution may nest before the reader gives up and takes the rest of the line. */
-const MAX_NESTING = 100
+/** How deep a quote and a substitution may nest before the reader gives up and takes the rest of the line.
+ *  `hooks-command-shell-safety` uses the same limit for the substitutions that its scan reads. */
+export const MAX_NESTING = 100
 
 /** True when the `$` at `at` in `line` opens a `${...}` expansion. A blank or a `|` after the `{`
  *  opens a bash 5.3 substitution of commands. */

@@ -18,7 +18,14 @@ import {
   stringOf,
 } from '../hooks-config.ts'
 import { placeholderFolders, scriptsRun, scriptText } from '../hooks-files.ts'
-import { closingParen, commandsOf, commandWordAt, nestsTooDeep, tickEnd } from '../shell-words.ts'
+import {
+  closingParen,
+  commandsOf,
+  commandWordAt,
+  MAX_NESTING,
+  nestsTooDeep,
+  tickEnd,
+} from '../shell-words.ts'
 
 const name = 'hooks-command-shell-safety' as const
 
@@ -33,14 +40,24 @@ const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
 const DERIVED =
   /(?:^|[\s;])([A-Za-z_]\w*)=\$\([^)\n]*\b(?:cat|jq)\b|\bread\s+(?:-\w+\s+)*([A-Za-z_]\w*)/g
 
+/** The name of each variable and parameter in `text`, also one in quotes. */
+const parametersIn = (text: string) =>
+  [...text.matchAll(PARAMETER)].map((match) => (match[1] ?? match[2]) as string)
+
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
  *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a substitution or a
  *  backtick pair on its own, with a new quote level. In a backtick pair, a comment ends at the
  *  closing backtick. A `#` starts a comment only at the start of a word, and not in a
  *  `${...}` expansion. As in `closingParen`, each parenthesis level has its own count of open `${`
- *  expansions. When `closingParen` can stop at its depth limit (`nestsTooDeep`), each variable and
- *  parameter in the rest of the text counts. */
-function unquotedVariables(text: string): string[] {
+ *  expansions. `nesting` is the number of substitutions and backtick pairs that hold `text`.
+ *
+ *  The scan stops and fails closed in two cases. Then each variable and parameter in the rest of
+ *  the text counts, also one in quotes:
+ *  - `closingParen` can stop at its depth limit (`nestsTooDeep`). That limit counts only the
+ *    levels in double quotes, so a chain of `$(` with no quotes does not get to it.
+ *  - A substitution or a backtick pair is deeper than `MAX_NESTING`. The scan reads each level
+ *    with one more call, so this limit keeps the call stack small (#960). */
+function unquotedVariables(text: string, nesting = 0): string[] {
   const names: string[] = []
   let quote = ''
   let test = false
@@ -62,25 +79,25 @@ function unquotedVariables(text: string): string[] {
       quote = char === "'" ? '' : quote
     } else if (char === '$' && text.startsWith('(', i + 1)) {
       const end = closingParen(text, i + 1)
-      if (end === text.length && nestsTooDeep(text, i + 1)) {
-        // `closingParen` can stop at its depth limit here, so the scan cannot find the quotes.
-        // bash reads the deeper levels. So each variable and parameter in the rest counts as out
-        // of quotes, also one in quotes.
-        names.push(
-          ...[...text.slice(i + 2).matchAll(PARAMETER)].map(
-            (match) => (match[1] ?? match[2]) as string,
-          ),
-        )
+      if (nesting >= MAX_NESTING || (end === text.length && nestsTooDeep(text, i + 1))) {
+        // The scan cannot find the quotes past a limit. bash reads the deeper levels. So each
+        // variable and parameter in the rest counts as out of quotes, also one in quotes.
+        names.push(...parametersIn(text.slice(i + 2)))
         break
       }
-      names.push(...unquotedVariables(text.slice(i + 2, end)))
+      names.push(...unquotedVariables(text.slice(i + 2, end), nesting + 1))
       i = end
     } else if (char === '`') {
+      if (nesting >= MAX_NESTING) {
+        names.push(...parametersIn(text.slice(i + 1)))
+        break
+      }
       const end = tickEnd(text, i)
       // In backticks, the shell removes a backslash before `$`, a backtick or a backslash. When
       // the pair is in double quotes, it also removes one before a double quote.
       const escaped = quote === '"' ? /\\([$`\\"])/g : /\\([$`\\])/g
-      names.push(...unquotedVariables(text.slice(i + 1, end).replace(escaped, '$1')))
+      const inner = text.slice(i + 1, end).replace(escaped, '$1')
+      names.push(...unquotedVariables(inner, nesting + 1))
       i = end
     } else if (char === '\\') {
       i++
