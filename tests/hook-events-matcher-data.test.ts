@@ -74,7 +74,6 @@ describe('the matcher data', () => {
       DirectoryAdded: ['slash_command', 'register_repo_root'],
       StopFailure: [
         'rate_limit',
-        'overloaded',
         'authentication_failed',
         'oauth_org_not_allowed',
         'account_on_hold',

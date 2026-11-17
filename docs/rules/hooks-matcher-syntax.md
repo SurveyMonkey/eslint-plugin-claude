@@ -53,7 +53,7 @@ support. [`hooks-matcher-unsupported-event`](hooks-matcher-unsupported-event.md)
 
 `StopFailure` has a narrower exact set than other events: letters, digits, `_` and `|`. A hyphen, a space or a
 comma keeps the matcher on the regular expression path, and only `|` separates values.[^patterns] So
-`rate_limit, overloaded` is one regular expression that matches no error type. The rule reports a
+`rate_limit, server_error` is one regular expression that matches no error type. The rule reports a
 `StopFailure` matcher that has these characters and no character of a regular expression.
 
 ### `FileChanged`

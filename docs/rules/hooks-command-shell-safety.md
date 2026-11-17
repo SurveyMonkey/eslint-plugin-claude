@@ -46,6 +46,24 @@ string.
   assigns it from `$(...)` with `jq` or `cat`, or reads it with `read`. A `destructive` report replaces an
   `unquoted` report for the same text. The rule reads the command line first, then each `-c` line, then each script, and reports the first finding.
 
+### Depth limits
+
+The scan reads each level of a command substitution or a backtick pair with one more call. Two limits keep
+the call stack small. Both come from `MAX_NESTING` (100) in `src/shell-words.ts`:
+
+- The scan reads 100 levels of `$(` and backtick pairs. At level 101, it stops.
+- The reader that finds the `)` of a `$(` stops after 50 levels of `"$(`, a substitution in double quotes.
+
+At a limit, the scan cannot find the quotes in the rest of the text that holds the deep substitution. For
+the second limit, this text is usually the rest of the command. So the rule counts each variable and
+parameter in that rest (`$X`, `$@`, `$*`, `$1`) as out of quotes, and reports the first one. bash
+reads the deeper levels. In probes, bash 3.2.57 and 5.3.9 read 101 levels of `$(` and 102 levels of
+`"$(`, and split an unquoted `$X`.
+
+This gives a known false positive. Past a limit, the rule also counts a variable in quotes, such as
+`"$X"` or `'$X'`. It also counts one in an assignment, a `[[ ]]` test or a comment. After `rm` with a
+recursive flag, the report can be `destructive`.
+
 ### What the rule does not read
 
 - A path placeholder in the command line. [`hooks-placeholder-quoted`](hooks-placeholder-quoted.md) reports it.

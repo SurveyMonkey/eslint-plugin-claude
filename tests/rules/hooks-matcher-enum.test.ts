@@ -132,14 +132,21 @@ describe(`${name}: what the rule does not read`, () => {
 
 describe(`${name}: StopFailure`, () => {
   it('accepts only "|" as a separator in the exact set', () => {
-    expect(ids('StopFailure', 'rate_limit|overloaded')).toEqual([])
+    expect(ids('StopFailure', 'rate_limit|server_error')).toEqual([])
     expect(ids('StopFailure', 'rate_limit|bogus')).toEqual(['unknown'])
+  })
+
+  it('reports overloaded, which the list of error types does not hold', () => {
+    // "StopFailure input": "For an HTTP `529` overloaded response, the value is `server_error`".
+    // (https://code.claude.com/docs/en/hooks#stopfailure-input)
+    expect(ids('StopFailure', 'overloaded')).toEqual(['unknown'])
+    expect(ids('StopFailure', 'server_error|overloaded')).toEqual(['unknown'])
   })
 
   it('reads a comma, a space or a hyphen as a regular expression and is silent', () => {
     for (const matcher of [
-      'rate_limit, overloaded',
-      'rate_limit,overloaded',
+      'rate_limit, server_error',
+      'rate_limit,server_error',
       'rate-limit',
       'bogus x',
     ]) {

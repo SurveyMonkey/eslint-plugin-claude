@@ -135,14 +135,14 @@ describe(`${name}: a regular expression that does not compile`, () => {
 
 describe(`${name}: StopFailure`, () => {
   it('reports a comma, a space or a hyphen, which do not split the matcher', () => {
-    expect(ids('StopFailure', 'rate_limit, overloaded')).toEqual(['separator'])
-    expect(ids('StopFailure', 'rate_limit,overloaded')).toEqual(['separator'])
-    expect(ids('StopFailure', 'rate_limit overloaded')).toEqual(['separator'])
+    expect(ids('StopFailure', 'rate_limit, server_error')).toEqual(['separator'])
+    expect(ids('StopFailure', 'rate_limit,server_error')).toEqual(['separator'])
+    expect(ids('StopFailure', 'rate_limit server_error')).toEqual(['separator'])
     expect(ids('StopFailure', 'rate-limit')).toEqual(['separator'])
   })
 
   it('names the comma before the space when both are present', () => {
-    expect(message('StopFailure', 'rate_limit, overloaded')).toContain('A comma is part')
+    expect(message('StopFailure', 'rate_limit, server_error')).toContain('A comma is part')
     expect(message('FileChanged', '.envrc, .env')).toContain('A comma is part')
   })
 
@@ -156,7 +156,7 @@ describe(`${name}: StopFailure`, () => {
 
   it('is silent for "|", and for a regular expression', () => {
     for (const matcher of [
-      'rate_limit|overloaded',
+      'rate_limit|server_error',
       'rate_limit',
       '^rate_limit',
       'rate.*,x',
