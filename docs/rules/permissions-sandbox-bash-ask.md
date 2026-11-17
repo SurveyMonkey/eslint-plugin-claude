@@ -39,7 +39,7 @@ The rule reports each ask entry that is `Bash` or `Bash(*)`. The report is on th
 
 The rule is silent in these cases:
 
-- `sandbox.enabled` is not on, or a file of the same source sets it to `false`.
+- No file of the same source turns `sandbox.enabled` on, or a file of the source turns it off.
 - A file of the same source sets `autoAllowBashIfSandboxed` to `false`.
 - No file of the same source sets `autoAllowBashIfSandboxed` to `true`, and `minVersion` is unset or is 2.1.324 or later.
 - The ask rule has a specifier other than `*`, or the rule is for another tool.
@@ -53,9 +53,8 @@ Claude Code still applies the ask rule in a few cases. The rule reports the entr
 - A command that runs outside the sandbox, such as an excluded command, still prompts.
 - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` turns auto-allow off.
 
-The rule does not read `permissions.defaultMode`, `excludedCommands` or the `env` block.
-A user file or the `--settings` flag can set
-`sandbox.enabled` or `autoAllowBashIfSandboxed`, and the repository does not hold them.
+The rule does not read `permissions.defaultMode`, `excludedCommands` or the `env` block. A user file or the `--settings`
+flag can set `sandbox.enabled` or `autoAllowBashIfSandboxed`, and the repository does not hold them.
 
 ### One source
 
@@ -70,9 +69,11 @@ In a project or local file, the rule reads only the Boolean `true` of `autoAllow
 `"false"` of `autoAllowBashIfSandboxed` as that Boolean. Claude Code does the same. Another value that is not `null`
 counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
 
-In a managed file, the rule reads `sandbox.enabled` as managed settings do. A quoted `"true"` or `"false"` counts as that
-Boolean. Every other invalid value counts as `true`, because `enabled` turns the sandbox on.[^invalid] In a project or local
-file, only the Boolean `true` turns the sandbox on.
+In a managed file, the rule reads `sandbox.enabled` as Claude Code does. A quoted `"true"` or `"false"` counts as that
+Boolean. Every other invalid value that is not `null` counts as `true`, because `enabled` turns the sandbox on.[^invalid]
+The docs say: "This per-field handling requires Claude Code v2.1.283 or later." Before v2.1.283, an invalid value drops
+every managed `sandbox` field except `credentials`.[^invalid] So with the option `minVersion` older than 2.1.283, an
+invalid managed `enabled` turns the sandbox off. In a project or local file, only the Boolean `true` turns the sandbox on.
 
 Fail, in `.claude/settings.json`:
 
@@ -108,7 +109,8 @@ Pass, in `.claude/settings.json`:
 
 Without a `minVersion` older than 2.1.324, the rule needs a file that sets `autoAllowBashIfSandboxed` to `true`. The
 docs give the default as `false` and say "Before v2.1.324, the default was `true`".[^auto] When `minVersion` is older
-than 2.1.324, the rule also reports an unset key. The value has three numbers, such as `2.1.324`.
+than 2.1.324, the rule also reports an unset key. When `minVersion` is older than 2.1.283, an invalid managed `enabled`
+turns the sandbox off, so the rule is silent.[^invalid] The value has three numbers, such as `2.1.324`.
 
 ## Usage
 
