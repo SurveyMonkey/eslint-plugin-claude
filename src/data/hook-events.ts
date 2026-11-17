@@ -104,7 +104,6 @@ export const MATCHER_VALUES: ReadonlyMap<string, readonly string[]> = new Map([
     'StopFailure',
     [
       'rate_limit',
-      'overloaded',
       'authentication_failed',
       'oauth_org_not_allowed',
       'account_on_hold',
