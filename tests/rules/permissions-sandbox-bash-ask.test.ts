@@ -232,6 +232,12 @@ describe(`${name}: a managed source, on disk`, () => {
       expect(at(root, DROP_IN, file(REPORTING), options), String(enabled)).toEqual([])
     }
     expect(alone(REPORTING, MANAGED, [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+    // A sibling that does not set `enabled` holds no invalid value, so it drops no block.
+    const unset = repo({ [MANAGED]: file(ASK) })
+    expect(at(unset, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+    // The text names the managed block only. In a project pair, a quoted "true" is no value.
+    const pair = repo({ [LOCAL]: file({ sandbox: { enabled: 'true' } }) })
+    expect(at(pair, PROJECT, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
   })
 
   // "A `null` removes the key." So a `null` is not an invalid value, and drops no block:
