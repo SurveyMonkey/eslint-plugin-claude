@@ -533,20 +533,20 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it('counts each variable past 100 levels of substitutions with no quotes, and does not throw', () => {
     // A chain of `$(` with no quotes does not get to the limit of `closingParen`. Before #960, a
     // chain 20,000 deep threw a RangeError in the scan. With X="a b", bash 3.2.57 and 5.3.9 print
-    // `[a]`, then `[b]`, for each of the two chains at 100 and at 101 levels.
+    // `[a]`, then `[b]`. This is true for the two chains, at 100 and at 101 levels.
     const chain = (open: string, close: string, n: number, inner: string) =>
       `printf '[%s]\\n' ${open.repeat(n)}${inner}${close.repeat(n)}`
     for (const n of [100, 101, 20_000]) {
       expect(line(chain('$(echo ', ')', n, '$X')), String(n)).toEqual(['unquoted'])
       expect(line(chain('$( (echo ', ') )', n, '$X')), String(n)).toEqual(['unquoted'])
     }
-    // For each of 100 levels, `closingParen` reads the rest of a 20,000 chain. Coverage makes
+    // For each of 101 levels, `closingParen` reads the rest of a 20,000 chain. Coverage makes
     // this slow on CI.
   }, 30_000)
 
   it('does not throw for a substitution that holds very many variables', () => {
     // Before #960, the scan gave the names of a substitution to its caller as the arguments of
-    // one call. More than about 120,000 names threw a RangeError.
+    // one call. More than about 100,000 names could throw a RangeError.
     // The last two commands put the substitution past the limit of 100 levels.
     const many = '$X '.repeat(150_000)
     const deep = (inner: string) => `echo ${'$(echo '.repeat(100)}${inner}${')'.repeat(100)}`
@@ -582,6 +582,9 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line(deep(100, substitution))).toEqual(['unquoted'])
     expect(line(deep(99, backticks))).toEqual([])
     expect(line(deep(100, backticks))).toEqual(['unquoted'])
+    // A backtick pair is also a level. Here it is level 100, so the `$(` in it is past the limit.
+    // bash 3.2.57 and 5.3.9 also print `[a b]`.
+    expect(line(deep(99, `\`echo ${substitution}\``))).toEqual(['unquoted'])
   })
 
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {
