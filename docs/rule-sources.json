@@ -4259,6 +4259,11 @@
       "url": "https://code.claude.com/docs/en/settings-reference",
       "heading": "sandbox.autoAllowBashIfSandboxed",
       "hash": "8eb97761df7a322b9c9892cab7b3c127bc057069df54e58068ea9620b18ecda3"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/managed-settings",
+      "heading": "Invalid values inside sandbox",
+      "hash": "83e93b8ac712b0479586fa4082355be78294ec7202f187f86e89767394e13681"
     }
   ],
   "permissions-schema": [
