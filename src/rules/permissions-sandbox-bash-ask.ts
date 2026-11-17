@@ -20,6 +20,11 @@ const name = 'permissions-sandbox-bash-ask' as const
 // The first version with `false` as the default of `autoAllowBashIfSandboxed`.
 const FIXED = '2.1.324'
 
+// The first version that reads each managed `sandbox` field on its own. Before it, an invalid
+// field drops the whole managed `sandbox` block
+// (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
+const PER_FIELD = '2.1.283'
+
 type Options = [{ minVersion?: string }]
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> = {
@@ -52,16 +57,27 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
       if (!complete) {
         return
       }
-      // A managed file reads a quoted Boolean. Another invalid value of `autoAllowBashIfSandboxed`
-      // counts as `false` there. An invalid `enabled` counts as `true`, as `sandboxOn` reads it
+      // In a managed file, Claude Code reads a quoted Boolean as that Boolean. There, another
+      // invalid `autoAllowBashIfSandboxed` that is not `null` counts as `false`, and another
+      // invalid `enabled` that is not `null` counts as `true`
       // (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
       const isManaged = kindOf(context.filename) === 'managed'
       const auto = objects.map((object) =>
         boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
       )
-      // A file that sets `enabled` or `autoAllowBashIfSandboxed` to false ends the skip. An unset
-      // `autoAllowBashIfSandboxed` ends it too, unless `minVersion` is older than 2.1.324.
+      // Before v2.1.283, an invalid managed `enabled` drops the block, so the sandbox is off.
+      const dropped =
+        isManaged &&
+        supportsBefore(minVersion, PER_FIELD) &&
+        objects.some((object) => {
+          const enabled = at(object, ['sandbox', 'enabled'])
+          return enabled !== undefined && enabled !== null && typeof enabled !== 'boolean'
+        })
+      // The rule is silent unless a file turns `enabled` on and no file turns it off. A file that
+      // sets `autoAllowBashIfSandboxed` to false stops the report too. So does an unset
+      // `autoAllowBashIfSandboxed`, unless `minVersion` is older than 2.1.324.
       if (
+        dropped ||
         !sandboxOn(objects, isManaged) ||
         auto.includes(false) ||
         (!defaultsOn && !auto.includes(true))

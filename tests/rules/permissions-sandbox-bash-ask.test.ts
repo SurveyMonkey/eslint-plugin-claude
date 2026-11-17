@@ -205,7 +205,7 @@ describe(`${name}: a managed source, on disk`, () => {
     }
   })
 
-  // "If you set a Boolean key to a quoted "true" or "false", the value counts as that Boolean."
+  // "If you set a Boolean key to a quoted `"true"` or `"false"`, the value counts as that Boolean."
   // "A key that turns the sandbox ... on, such as `enabled` ..., counts as `true`." So a managed
   // `enabled` of "true" or 1 is on, and a quoted "false" is off:
   // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
@@ -214,7 +214,32 @@ describe(`${name}: a managed source, on disk`, () => {
       const sandbox = { enabled, autoAllowBashIfSandboxed: true }
       expect(alone({ ...ASK, sandbox }, MANAGED), String(enabled)).toEqual(['skipped'])
       expect(alone({ ...ASK, sandbox }, DROP_IN), String(enabled)).toEqual(['skipped'])
+      const floor = [{ minVersion: '2.1.283' }]
+      expect(alone({ ...ASK, sandbox }, MANAGED, floor), String(enabled)).toEqual(['skipped'])
     }
+  })
+
+  // "This per-field handling requires Claude Code v2.1.283 or later. On versions before v2.1.283,
+  // Claude Code drops every `sandbox` field except `credentials` when a value outside
+  // `credentials` is invalid." So an invalid `enabled` turns the sandbox off there:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('is silent for an invalid managed enabled when minVersion is older than 2.1.283', () => {
+    for (const enabled of ['true', 1, 'false']) {
+      const sandbox = { enabled, autoAllowBashIfSandboxed: true }
+      const options = [{ minVersion: '2.1.282' }]
+      expect(alone({ ...ASK, sandbox }, MANAGED, options), String(enabled)).toEqual([])
+      const root = repo({ [MANAGED]: file({ sandbox }) })
+      expect(at(root, DROP_IN, file(REPORTING), options), String(enabled)).toEqual([])
+    }
+    expect(alone(REPORTING, MANAGED, [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+  })
+
+  // The default of `sandbox.enabled` is `false`:
+  // https://code.claude.com/docs/en/settings-reference#sandbox-enabled
+  it('is silent when no file of a managed source sets enabled', () => {
+    const sandbox = { autoAllowBashIfSandboxed: true }
+    expect(alone({ ...ASK, sandbox }, MANAGED)).toEqual([])
+    expect(alone({ ...ASK, sandbox }, DROP_IN)).toEqual([])
   })
 
   it('is silent when a managed drop-in sets enabled to a quoted "false"', () => {
