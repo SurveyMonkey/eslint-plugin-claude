@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.1](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v1.0.0...v1.0.1) (2026-11-17)
+
+
+### Bug Fixes
+
+* **hooks:** share one closingParen reader, and fail closed past its depth limit ([#955](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/955)) ([2e382a8](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/2e382a84f50cbe6b984ce1239bc3382c4faa2f23)), closes [#866](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/866)
+* **marketplace:** follow the reserved names of the marketplace reference ([#951](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/951)) ([f2ff7be](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/f2ff7be5d27613ebcfd2cfa58d67de1ea10c9d59)), closes [#902](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/902)
+* **marketplace:** report engines below 2.1.323 and record the validate probe ([#974](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/974)) ([b34974f](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/b34974f3fd72c8803bf485fc7f99f62baedaf323)), closes [#951](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/951) [#959](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/959) [#969](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/969)
+* **permissions:** follow the new autoAllowBashIfSandboxed default ([#952](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/952)) ([c5e6a84](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/c5e6a848c7d10f8dea4932d7b3055bed819ced95)), closes [#887](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/887)
+* **permissions:** read sandbox.enabled as managed settings do in permissions-sandbox-bash-ask ([#975](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/975)) ([5259501](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/5259501c2397e751fd91afb35ae99c40e5a775e4)), closes [#952](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/952) [#958](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/958)
+* **settings:** accept anthropicGoogleCloud and cite the docs for seven claims ([#948](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/948)) ([2c5dcbc](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/2c5dcbc4f0a3ae8979bb0525fd3933f957c493c8))
+* **settings:** follow the env vars reference and refresh the docs snapshot ([#938](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/938)) ([578001b](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/578001b6de2c1289f731515579994a91cb130de6))
+* **settings:** name the right files for Code Mode and route the mTLS variables ([#950](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/950)) ([16e48d6](https://github.com/SurveyMonkey/eslint-plugin-claude/commit/16e48d6e51de3cf5508e149accf1dfc5ee2b248e)), closes [#945](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/945) [#935](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/935) [#885](https://github.com/SurveyMonkey/eslint-plugin-claude/issues/885)
+
 ## [1.0.0](https://github.com/SurveyMonkey/eslint-plugin-claude/compare/v0.13.0...v1.0.0) (2026-11-13)
 
 
