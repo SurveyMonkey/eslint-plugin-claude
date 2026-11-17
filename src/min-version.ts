@@ -1,7 +1,11 @@
 // The option `minVersion` of a rule that flags a feature by the Claude Code
 // version that added it. The value is the oldest version that the repository
-// supports. A rule reports only when the version is set and older than the fix.
-// With no version set, the rule is inactive.
+// supports. A rule that flags a feature reports only when the version is set and on the affected
+// side of the fix. With no version set, that rule is inactive. Most rules report for a version older
+// than the fix. `hooks-if-dir-glob-depth` reports for a version at or after the fix. A rule that
+// follows a changed default (`permissions-sandbox-bash-ask`, `sandbox-weakening-options`) also
+// reports with no version set, when a file sets `autoAllowBashIfSandboxed` to true. It treats the
+// changed default as current. A version older than the fix changes its report.
 // No dependency parses a version here, because the docs write three numbers.
 
 /** The schema of the option object `{ minVersion }`. */
