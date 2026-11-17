@@ -242,8 +242,20 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(pair, PROJECT, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
   })
 
-  // "A `null` removes the key." So a `null` is not an invalid value, and drops no block:
+  // The same text: a quoted "true" of `autoAllowBashIfSandboxed` is invalid before v2.1.283. So it
+  // drops `enabled` too, and the sandbox is off:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('is silent for a quoted managed auto-allow when minVersion is older than 2.1.283', () => {
+    const sandbox = { enabled: true, autoAllowBashIfSandboxed: 'true' }
+    expect(alone({ ...ASK, sandbox }, MANAGED, [{ minVersion: '2.1.282' }])).toEqual([])
+    expect(alone({ ...ASK, sandbox }, MANAGED, [{ minVersion: '2.1.283' }])).toEqual(['skipped'])
+    const root = repo({ [MANAGED]: file({ sandbox: { autoAllowBashIfSandboxed: 'true' } }) })
+    expect(at(root, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual([])
+  })
+
+  // The docs name no `null` inside `sandbox`. For a top-level key, "A `null` removes the key":
   // https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed
+  // The rule reads a `null` in `sandbox` the same way, so it drops no block.
   it('reads a managed null enabled as unset when minVersion is older than 2.1.283', () => {
     const root = repo({ [MANAGED]: file({ sandbox: { enabled: null } }) })
     expect(at(root, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
@@ -257,6 +269,8 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(alone({ ...ASK, sandbox }, DROP_IN)).toEqual([])
   })
 
+  // "If you set a Boolean key to a quoted `"true"` or `"false"`, the value counts as that Boolean":
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
   it('is silent when a managed drop-in sets enabled to a quoted "false"', () => {
     const root = repo({ 'managed-settings.d/20-b.json': file({ sandbox: { enabled: 'false' } }) })
     expect(at(root, DROP_IN, file(REPORTING))).toEqual([])

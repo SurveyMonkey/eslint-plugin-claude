@@ -58,21 +58,24 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
         return
       }
       // In a managed file, Claude Code reads a quoted Boolean as that Boolean. There, another
-      // invalid `autoAllowBashIfSandboxed` that is not `null` counts as `false`, and another
-      // invalid `enabled` that is not `null` counts as `true`
+      // invalid `autoAllowBashIfSandboxed` that is not `null` counts as `false`. Another invalid
+      // `enabled` that is not `null` counts as `true`
       // (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
       const isManaged = kindOf(context.filename) === 'managed'
       const auto = objects.map((object) =>
         boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
       )
-      // Before v2.1.283, an invalid managed `enabled` drops `enabled` too, so the sandbox is off.
+      // Before v2.1.283, an invalid managed `enabled` or `autoAllowBashIfSandboxed` drops
+      // `enabled` too, so the sandbox is off. The rule does not read the other `sandbox` fields.
       const dropped =
         isManaged &&
         supportsBefore(minVersion, PER_FIELD) &&
-        objects.some((object) => {
-          const enabled = at(object, ['sandbox', 'enabled'])
-          return enabled !== undefined && enabled !== null && typeof enabled !== 'boolean'
-        })
+        objects.some((object) =>
+          (['enabled', 'autoAllowBashIfSandboxed'] as const).some((key) => {
+            const value = at(object, ['sandbox', key])
+            return value !== undefined && value !== null && typeof value !== 'boolean'
+          }),
+        )
       // The rule is silent unless a file turns `enabled` on and no file turns it off. A file that
       // sets `autoAllowBashIfSandboxed` to false stops the report too. So does an unset
       // `autoAllowBashIfSandboxed`, unless `minVersion` is older than 2.1.324.
