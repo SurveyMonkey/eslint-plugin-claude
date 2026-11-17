@@ -72,10 +72,10 @@ prefix.
 The rule does not report two more groups of names. The first group is the Claude Desktop names
 `org`, `org-provisioned` and `unknown`. The docs list a warning for them.[^validation] A probe on
 2.1.326 found that `claude plugin validate` reports each one with that warning, so the rule adds
-nothing. The second is the `<owner>-<repo>` download folder of a registered GitHub
-marketplace.[^reserved] Claude Code refuses that name only while another marketplace is
-registered under the folder. The rule cannot read that state from the repository. The probe
-found that validate passes the name on its own.
+nothing. The second is a name equal to the `<owner>-<repo>` download folder of a GitHub
+marketplace.[^reserved] Claude Code refuses that name only while the user has the GitHub
+marketplace `<owner>/<repo>` under another name. The rule cannot read that state from the
+repository. The probe found that validate passes the name on its own.
 
 Fail:
 

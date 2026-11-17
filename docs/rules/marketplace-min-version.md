@@ -40,8 +40,12 @@ sources" under 2.1.229. See the
 | `archive` source                    | 2.1.224 |
 | `command` source                    | 2.1.229 |
 | Entry `headers` and `headersHelper` | 2.1.238 |
-| Entry `engines`                     | 2.1.323 |
 | Top-level `metadata.pluginRoot`     | 2.1.239 |
+| Entry `engines`                     | 2.1.323 |
+
+The docs add that Claude Code v2.0.15 through v2.1.75 reject the whole `marketplace.json` when
+any entry has `engines`.[^entries] The rule reports `engines` for each `minVersion` below 2.1.323,
+so it reports these versions too.
 
 The report is on the key, or for a source type, on the value of its `source` member. The rule
 compares each part of the version as a number, so `2.1.99` is older than `2.1.224`. When a key
@@ -58,8 +62,9 @@ added it. The changelog has one entry for `renames`, under 2.1.193: "Improved pl
 marketplace `renames` maps are now followed automatically". It does not say which version added
 the map, so the rule does not check `renames`.
 
-The docs list no `claude plugin validate` message for these cases. The versions of the marketplace reference were read
-on 2026-10-10 for Claude Code 2.1.288.
+The docs list no `claude plugin validate` message for these cases. The versions come from the marketplace reference
+of 2026-10-10, for Claude Code 2.1.288. The `engines` version comes from the reference of
+2026-11-17, for Claude Code 2.1.326.
 
 Fail, with `minVersion` set to `2.1.200`:
 
