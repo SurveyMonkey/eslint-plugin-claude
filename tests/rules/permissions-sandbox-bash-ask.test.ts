@@ -234,6 +234,13 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(alone(REPORTING, MANAGED, [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
   })
 
+  // "A `null` removes the key." So a `null` is not an invalid value, and drops no block:
+  // https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed
+  it('reads a managed null enabled as unset when minVersion is older than 2.1.283', () => {
+    const root = repo({ [MANAGED]: file({ sandbox: { enabled: null } }) })
+    expect(at(root, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+  })
+
   // The default of `sandbox.enabled` is `false`:
   // https://code.claude.com/docs/en/settings-reference#sandbox-enabled
   it('is silent when no file of a managed source sets enabled', () => {
