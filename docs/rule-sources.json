@@ -1867,7 +1867,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -1990,7 +1990,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     }
   ],
   "marketplace-command-link-mode": [
@@ -2021,7 +2021,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     }
   ],
   "marketplace-entry-component-paths": [
@@ -2114,7 +2114,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Plugin entries",
-      "hash": "f69c76967b056d89949378e90b6ee6083343ed2b452fea49640748fa427b4365"
+      "hash": "208fbb0cc5c4b58c713d1cf4103ba4208f7e053005369420b47826e37f5a5f78"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -2129,7 +2129,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     }
   ],
   "marketplace-entry-name-matches-manifest": [
@@ -2151,7 +2151,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     }
   ],
   "marketplace-entry-root-skills": [
@@ -2175,7 +2175,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Plugin entries",
-      "hash": "f69c76967b056d89949378e90b6ee6083343ed2b452fea49640748fa427b4365"
+      "hash": "208fbb0cc5c4b58c713d1cf4103ba4208f7e053005369420b47826e37f5a5f78"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
@@ -2195,7 +2195,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     }
   ],
   "marketplace-headers-literal-credential": [
@@ -2231,7 +2231,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Plugin entries",
-      "hash": "f69c76967b056d89949378e90b6ee6083343ed2b452fea49640748fa427b4365"
+      "hash": "208fbb0cc5c4b58c713d1cf4103ba4208f7e053005369420b47826e37f5a5f78"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -2263,7 +2263,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     }
   ],
   "marketplace-relative-source-backslash": [
@@ -2292,7 +2292,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/host-marketplace",
@@ -2346,7 +2346,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -2390,12 +2390,12 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Plugin entries",
-      "hash": "f69c76967b056d89949378e90b6ee6083343ed2b452fea49640748fa427b4365"
+      "hash": "208fbb0cc5c4b58c713d1cf4103ba4208f7e053005369420b47826e37f5a5f78"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -2459,7 +2459,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -2508,7 +2508,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Validation messages",
-      "hash": "da84126ce79e66afbbfb016757743c0dfe7ac5aa0cb95ae02b7f7eb739118810"
+      "hash": "a347aa2c80f6c211288e1dfc3b1dc6ac5efcacf89e96a78576f4e16cc38b8616"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
@@ -2927,12 +2927,12 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Plugin entries",
-      "hash": "f69c76967b056d89949378e90b6ee6083343ed2b452fea49640748fa427b4365"
+      "hash": "208fbb0cc5c4b58c713d1cf4103ba4208f7e053005369420b47826e37f5a5f78"
     }
   ],
   "mcp-plugin-tool-name-scoped": [
@@ -4767,7 +4767,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     }
   ],
   "plugin-manifest-no-bom": [
@@ -4786,7 +4786,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     }
   ],
   "plugin-manifest-version-semver": [
@@ -4962,7 +4962,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
@@ -5047,7 +5047,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     },
     {
       "url": "https://code.claude.com/docs/en/plugins/components",
@@ -5057,7 +5057,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/troubleshooting",
       "heading": "claude plugin validate reports errors",
-      "hash": "1176a16a4fec8b582b1dc717bba56db9e590b2997910701ab5b3b720e10e258b"
+      "hash": "42a80c7028c24ecf7fca9e422a552ba180d3c8790d6e87791b6d87a29e1abd0e"
     }
   ],
   "plugin-skills-key-redundant-default": [
@@ -5074,7 +5074,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     }
   ],
   "plugin-symlink-escapes-marketplace": [
@@ -6377,7 +6377,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
       "heading": "Plugin entries",
-      "hash": "f69c76967b056d89949378e90b6ee6083343ed2b452fea49640748fa427b4365"
+      "hash": "208fbb0cc5c4b58c713d1cf4103ba4208f7e053005369420b47826e37f5a5f78"
     }
   ],
   "settings-file-size": [
@@ -7745,7 +7745,7 @@
     {
       "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
       "heading": "Fields",
-      "hash": "c3b1deae021f5c75702adbe8129b645665b56fd532eb7411dc401baf5bb19ae9"
+      "hash": "1d5caab36d26b26cf64bde0b9cd3efb1e455e4f6a7d1354a16894dd225e133dc"
     }
   ],
   "skill-no-bom": [
