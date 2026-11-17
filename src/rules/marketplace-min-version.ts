@@ -2,10 +2,10 @@
 // With the option `minVersion`, the rule reports each one that a newer version
 // than `minVersion` introduced. With no option, the rule makes no report
 // (docs/rules/marketplace-min-version.md). The marketplace reference gives the versions of
-// `metadata.pluginRoot`, `headers` and `headersHelper`. It lists them under "Top-level fields"
-// and "Plugin entries". The Claude Code changelog gives the version of the `archive` source
-// and of the `command` source. Review them on or before 2027-04-10, the `stale_after` date of
-// the rule doc.
+// `metadata.pluginRoot`, `headers`, `headersHelper` and `engines`. It lists them under
+// "Top-level fields" and "Plugin entries". The Claude Code changelog gives the version of the
+// `archive` source and of the `command` source. Review them on or before 2027-04-10, the
+// `stale_after` date of the rule doc.
 import type { JSONRuleDefinition } from '@eslint/json'
 import { PLUGIN_SOURCE_TYPES } from '../data/marketplace-source-types.ts'
 import { docsUrl } from '../docs-url.ts'
@@ -20,6 +20,7 @@ type Options = [{ minVersion?: string }]
 const ENTRY_FIELDS = [
   ['headers', '2.1.238'],
   ['headersHelper', '2.1.238'],
+  ['engines', '2.1.323'],
 ] as const
 
 // The first version of `metadata.pluginRoot`.

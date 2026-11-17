@@ -17,7 +17,7 @@ const tooNew = (feature: string, since: string, minVersion: string) => ({
 // A marketplace with each field that needs a version. The entry `metadata` needs none.
 const everything = manifest(
   { metadata: { pluginRoot: './plugins' } },
-  { name: 'a', source: './a', metadata: {} },
+  { name: 'a', source: './a', metadata: {}, engines: { 'claude-code': '>=2.1.400' } },
   { name: 'b', source: archive, strict: false, headers: { 'X-A': 'b' }, headersHelper: '/opt/m' },
   { name: 'c', source: command },
 )
@@ -28,14 +28,19 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
     { code: everything, filename },
     { code: everything, filename, options: [{}] },
     // The configured version is the version of the field, or newer.
-    { code: everything, filename, options: [{ minVersion: '2.1.239' }] },
+    { code: everything, filename, options: [{ minVersion: '2.1.323' }] },
     // A version equal to the version of a field is silent, for each field.
     ...[
       ['2.1.224', manifest({}, { name: 'a', source: archive })],
       ['2.1.229', manifest({}, { name: 'a', source: command })],
       ['2.1.238', manifest({}, { name: 'a', source: './a', headers: {}, headersHelper: 'x' })],
+      // "Plugin entries": `engines` "Requires Claude Code v2.1.323 or later".
+      [
+        '2.1.323',
+        manifest({}, { name: 'a', source: './a', engines: { 'claude-code': '>=2.1.400' } }),
+      ],
     ].map(([minVersion, code]) => ({ code: code as string, filename, options: [{ minVersion }] })),
-    { code: everything, filename, options: [{ minVersion: '2.1.300' }] },
+    { code: everything, filename, options: [{ minVersion: '2.1.400' }] },
     { code: everything, filename, options: [{ minVersion: '2.2.0' }] },
     { code: everything, filename, options: [{ minVersion: '3.0.0' }] },
     { code: everything, filename, options: [{ minVersion: '10.0.0' }] },
@@ -173,10 +178,11 @@ jsonTester.run('marketplace-min-version (invalid)', rule, {
       options: [{ minVersion: '2.1.0' }],
       errors: [
         { ...tooNew('"metadata.pluginRoot" field', '2.1.239', '2.1.0'), line: 1, column: 28 },
-        { ...tooNew('"archive" source', '2.1.224', '2.1.0'), line: 1, column: 138 },
-        { ...tooNew('entry field "headers"', '2.1.238', '2.1.0'), line: 1, column: 193 },
-        { ...tooNew('entry field "headersHelper"', '2.1.238', '2.1.0'), line: 1, column: 215 },
-        { ...tooNew('"command" source', '2.1.229', '2.1.0'), line: 1, column: 272 },
+        { ...tooNew('entry field "engines"', '2.1.323', '2.1.0'), line: 1, column: 106 },
+        { ...tooNew('"archive" source', '2.1.224', '2.1.0'), line: 1, column: 176 },
+        { ...tooNew('entry field "headers"', '2.1.238', '2.1.0'), line: 1, column: 231 },
+        { ...tooNew('entry field "headersHelper"', '2.1.238', '2.1.0'), line: 1, column: 253 },
+        { ...tooNew('"command" source', '2.1.229', '2.1.0'), line: 1, column: 310 },
       ],
     },
     // Each field below its own version, one version below.
@@ -192,6 +198,13 @@ jsonTester.run('marketplace-min-version (invalid)', rule, {
         manifest({}, { name: 'a', source: './a', headersHelper: 'x' }),
         'entry field "headersHelper"',
         '2.1.238',
+      ],
+      // "Plugin entries": `engines` "Requires Claude Code v2.1.323 or later".
+      [
+        '2.1.322',
+        manifest({}, { name: 'a', source: './a', engines: { 'claude-code': '>=2.1.400' } }),
+        'entry field "engines"',
+        '2.1.323',
       ],
     ].map(([minVersion, code, feature, since]) => ({
       code: code as string,
