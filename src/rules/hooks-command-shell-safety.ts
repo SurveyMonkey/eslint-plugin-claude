@@ -45,7 +45,7 @@ const parametersIn = (text: string) =>
   [...text.matchAll(PARAMETER)].map((match) => (match[1] ?? match[2]) as string)
 
 /** Adds each name of `from` to the end of `into`. A spread puts each name in one argument of one
- *  call, and more than about 120,000 arguments throw a RangeError. */
+ *  call, and more than about 100,000 arguments can throw a RangeError. */
 function append(into: string[], from: readonly string[]): void {
   for (const item of from) {
     into.push(item)
