@@ -12,7 +12,7 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
-import { at, boolOf, sourceOf } from '../permission-source.ts'
+import { at, boolOf, sandboxOn, sourceOf } from '../permission-source.ts'
 import { kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-sandbox-bash-ask' as const
@@ -52,8 +52,9 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
       if (!complete) {
         return
       }
-      const values = (key: string) => objects.map((object) => at(object, ['sandbox', key]))
-      // A managed file reads a quoted Boolean. Another invalid value there counts as `false`.
+      // A managed file reads a quoted Boolean. Another invalid value of `autoAllowBashIfSandboxed`
+      // counts as `false` there. An invalid `enabled` counts as `true`, as `sandboxOn` reads it
+      // (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
       const isManaged = kindOf(context.filename) === 'managed'
       const auto = objects.map((object) =>
         boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
@@ -61,8 +62,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
       // A file that sets `enabled` or `autoAllowBashIfSandboxed` to false ends the skip. An unset
       // `autoAllowBashIfSandboxed` ends it too, unless `minVersion` is older than 2.1.324.
       if (
-        !values('enabled').includes(true) ||
-        values('enabled').includes(false) ||
+        !sandboxOn(objects, isManaged) ||
         auto.includes(false) ||
         (!defaultsOn && !auto.includes(true))
       ) {

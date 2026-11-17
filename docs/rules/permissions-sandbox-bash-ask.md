@@ -39,7 +39,7 @@ The rule reports each ask entry that is `Bash` or `Bash(*)`. The report is on th
 
 The rule is silent in these cases:
 
-- `sandbox.enabled` is not `true`, or a file of the same source sets it to `false`.
+- `sandbox.enabled` is not on, or a file of the same source sets it to `false`.
 - A file of the same source sets `autoAllowBashIfSandboxed` to `false`.
 - No file of the same source sets `autoAllowBashIfSandboxed` to `true`, and `minVersion` is unset or is 2.1.324 or later.
 - The ask rule has a specifier other than `*`, or the rule is for another tool.
@@ -54,7 +54,7 @@ Claude Code still applies the ask rule in a few cases. The rule reports the entr
 - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` turns auto-allow off.
 
 The rule does not read `permissions.defaultMode`, `excludedCommands` or the `env` block.
-It reads a quoted `"true"` in `sandbox.enabled` as no value. A user file or the `--settings` flag can set
+A user file or the `--settings` flag can set
 `sandbox.enabled` or `autoAllowBashIfSandboxed`, and the repository does not hold them.
 
 ### One source
@@ -69,6 +69,10 @@ In a project or local file, the rule reads only the Boolean `true` of `autoAllow
 `"true"` is no value there, and `sandbox-schema` reports it. In a managed file, the rule reads a quoted `"true"` or
 `"false"` of `autoAllowBashIfSandboxed` as that Boolean. Claude Code does the same. Another value that is not `null`
 counts as `false` there. See [`sandbox-schema`](sandbox-schema.md#a-managed-file).
+
+In a managed file, the rule reads `sandbox.enabled` as managed settings do. A quoted `"true"` or `"false"` counts as that
+Boolean. Every other invalid value counts as `true`, because `enabled` turns the sandbox on.[^invalid] In a project or local
+file, only the Boolean `true` turns the sandbox on.
 
 Fail, in `.claude/settings.json`:
 
@@ -119,3 +123,4 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 
 [^interact]: [Configure permissions: How permissions interact with sandboxing](https://code.claude.com/docs/en/permissions#how-permissions-interact-with-sandboxing)
 [^auto]: [All settings: sandbox.autoAllowBashIfSandboxed](https://code.claude.com/docs/en/settings-reference#sandbox-autoallowbashifsandboxed)
+[^invalid]: [Managed settings: Invalid values inside sandbox](https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox)

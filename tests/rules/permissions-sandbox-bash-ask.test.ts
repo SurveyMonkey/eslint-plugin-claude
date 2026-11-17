@@ -205,6 +205,24 @@ describe(`${name}: a managed source, on disk`, () => {
     }
   })
 
+  // "If you set a Boolean key to a quoted "true" or "false", the value counts as that Boolean."
+  // "A key that turns the sandbox ... on, such as `enabled` ..., counts as `true`." So a managed
+  // `enabled` of "true" or 1 is on, and a quoted "false" is off:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('reads a quoted or invalid enabled in a managed source as on', () => {
+    for (const enabled of ['true', 1]) {
+      const sandbox = { enabled, autoAllowBashIfSandboxed: true }
+      expect(alone({ ...ASK, sandbox }, MANAGED), String(enabled)).toEqual(['skipped'])
+      expect(alone({ ...ASK, sandbox }, DROP_IN), String(enabled)).toEqual(['skipped'])
+    }
+  })
+
+  it('is silent when a managed drop-in sets enabled to a quoted "false"', () => {
+    const root = repo({ 'managed-settings.d/20-b.json': file({ sandbox: { enabled: 'false' } }) })
+    expect(at(root, DROP_IN, file(REPORTING))).toEqual([])
+    expect(at(root, MANAGED, file(REPORTING))).toEqual([])
+  })
+
   it('does not read a project file for a managed file', () => {
     const root = repo({ [PROJECT]: file(AUTO), [LOCAL]: file(AUTO) })
     expect(at(root, MANAGED, file(ASK))).toEqual([])
