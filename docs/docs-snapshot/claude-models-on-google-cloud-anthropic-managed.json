@@ -1,0 +1,85 @@
+{
+  "url": "https://code.claude.com/docs/en/claude-models-on-google-cloud-anthropic-managed",
+  "hash": "6f09c13fa486ac7bba8308a547607e651c1a8e50a0ac6f406c456bbb1d128c59",
+  "text": "> ## Documentation Index\n> Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt\n> Use this file to discover all available pages before exploring further.\n\n# Claude Code with Claude Models on Google Cloud (Anthropic managed)\n\n> Configure Claude Code to use the Claude API that Anthropic runs through your Google Cloud project, with Google Cloud credentials, IAM, and Marketplace billing.\n\nClaude Models on Google Cloud (Anthropic managed) is the Claude API, run by Anthropic and reached through your Google Cloud project. To use it from Claude Code, sign in to Google Cloud and set three environment variables.\n\n> [!NOTE]\n>\n> Google Cloud also offers Claude through Google Cloud's Agent Platform, formerly Vertex AI, which Google manages. If you use Agent Platform, follow [Claude Code on Google Cloud's Agent Platform](/docs/en/google-vertex-ai) instead. To find out which one you use, see [Which offering are you using?](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/overview#which-offering-are-you-using)\n\nBefore you start, [install Claude Code](/docs/en/setup#install-claude-code) v2.1.307 or later. To check your version, run `claude --version` in your shell. To update, run `claude update`.\n\n## Prerequisites\n\n* A Google Cloud project where the [account setup](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#set-up-your-account) is complete\n* The `roles/claude.user` [IAM role](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#iam-roles) on that project, for each Google account or service account that runs Claude Code\n* Your project ID and your [workspace ID](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#find-your-workspace-id), which starts with `wrkspc_`\n* The [gcloud CLI](https://cloud.google.com/sdk/docs/install), if you sign in with a Google account rather than with a service account key file\n\n## Set up Claude Code\n\n**1. Create Application Default Credentials**\n\n> [tab] Google account\n>\n> Run this command in your shell, and sign in with the Google account that has the `roles/claude.user` role:\n>\n> ```bash theme={null}\n> gcloud auth application-default login\n> ```\n>\n> Run it even if you've already run `gcloud auth login`.\n>\n> If `GOOGLE_APPLICATION_CREDENTIALS` is set, unset it. While that variable is set, Claude Code uses the file it names and ignores the credentials that the command saves.\n\n> [tab] Service account key file\n>\n> In the shell or CI job that runs Claude Code, set `GOOGLE_APPLICATION_CREDENTIALS` to the path of a [service account key file](https://docs.cloud.google.com/iam/docs/keys-create-delete). For other credential sources, see [how to authenticate](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#authentication).\n\n**2. Add the variables to your settings**\n\nAdd three variables to the `env` block of your [user settings file](/docs/en/settings), `~/.claude/settings.json`. If the file doesn't exist, create it with this content:\n\n```json theme={null}\n{\n  \"env\": {\n    \"CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD\": \"1\",\n    \"ANTHROPIC_GOOGLE_CLOUD_PROJECT\": \"my-project-id\",\n    \"ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID\": \"wrkspc_01ABCDEFGHIJKLMN\"\n  }\n}\n```\n\nUse your own project ID and [workspace ID](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#find-your-workspace-id) in place of `my-project-id` and the `wrkspc_` value. To configure a single shell or a CI job instead, set the same three variables in that environment.\n\nYou don't need to log in to an Anthropic account, or to log out of one.\n\n**3. Start Claude Code and check the provider**\n\nRun `claude` in your shell, then run `/status` at the Claude Code prompt. The `API provider` line contains `on Google Cloud`, and the lines after it show your `Workspace ID`, `GCP project`, and `GCP location`. To print the same lines from your shell or a CI job, run [`claude auth status --text`](/docs/en/cli-reference).\n\nIf you see `on Google Cloud`, send a prompt, or run `claude -p \"hello\"` in a CI job. A reply confirms that your credentials and IAM role work. If you don't see it, or Claude Code shows an error, [troubleshoot the provider setup](#troubleshooting).\n\n### Set up Claude Code for a team\n\nPut the `env` block from step 2 of [Set up Claude Code](#set-up-claude-code) in a [managed settings](/docs/en/managed-settings) file on each developer's machine. Grant each developer the `roles/claude.user` role on the project, and have each one run `gcloud auth application-default login` on their own machine.\n\n## Pin model versions\n\nIf you deploy to a team, [pin the model IDs](/docs/en/model-config#pin-models-for-third-party-deployments), so a Claude Code update doesn't move everyone to a newer model at once. Add these variables to the `env` block that holds the three variables from [Set up Claude Code](#set-up-claude-code):\n\n```json theme={null}\n{\n  \"env\": {\n    \"ANTHROPIC_DEFAULT_OPUS_MODEL\": \"claude-opus-5-5\",\n    \"ANTHROPIC_DEFAULT_SONNET_MODEL\": \"claude-sonnet-5-5\",\n    \"ANTHROPIC_DEFAULT_FABLE_MODEL\": \"claude-fable-5-1\",\n    \"ANTHROPIC_DEFAULT_HAIKU_MODEL\": \"claude-haiku-4-5-20251001\"\n  }\n}\n```\n\nUse the Claude API model IDs that you want from [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) in place of the example values.\n\n## Environment variables\n\n| Variable | Required | Description |\n| - | - | - |\n| `CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD` | Yes | Set to `1` to send model requests to Claude Models on Google Cloud (Anthropic managed) |\n| `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID` | Yes, unless you set `ANTHROPIC_GOOGLE_CLOUD_BASE_URL` | Your workspace ID |\n| `ANTHROPIC_GOOGLE_CLOUD_PROJECT` | Recommended | Your Google Cloud project ID. Without it, Claude Code uses `GOOGLE_CLOUD_PROJECT` |\n| `ANTHROPIC_GOOGLE_CLOUD_LOCATION` | No | The [location](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#project-location-and-workspace-resolution) in the request URL. Defaults to `global` |\n| `ANTHROPIC_GOOGLE_CLOUD_BASE_URL` | No | Replaces the base URL that Claude Code builds from the project, location, and workspace ID, for example with the address of an [LLM gateway](/docs/en/llm-gateway). Claude Code appends the API path, such as `/v1/messages` |\n| `CLAUDE_CODE_SKIP_ANTHROPIC_GOOGLE_CLOUD_AUTH` | No | Set to `1` when a gateway attaches the Google credentials itself, so that Claude Code sends no Google access token |\n\n## Claude Code features that aren't available\n\nWith Claude Models on Google Cloud (Anthropic managed), the features you can't use include:\n\n* [Fast mode](/docs/en/fast-mode): you can't turn it on with `/fast` or the `fastMode` setting\n* [Remote Control](/docs/en/remote-control) and [cloud sessions](/docs/en/claude-code-on-the-web)\n* [MCP connectors from claude.ai](/docs/en/mcp#use-mcp-servers-from-claude-ai)\n* [Channels](/docs/en/channels)\n* The [`/design-sync` and `/import` commands](/docs/en/commands#all-commands)\n* [Server-managed settings](/docs/en/server-managed-settings). To enforce settings for your team, use [managed settings](/docs/en/managed-settings) on each machine instead\n\nTo see other features that are unavailable or partially supported, select the **Google Cloud (Anthropic managed)** tab in the [feature availability summary](/docs/en/feature-availability#summary-by-provider).\n\n## Troubleshooting\n\nIf Claude Code asks you to log in, or the `API provider` line in `/status` doesn't contain `on Google Cloud`:\n\n* Make sure `CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD` is `1`\n* Make sure `claude --version` prints 2.1.307 or later\n* Remove `CLAUDE_CODE_USE_BEDROCK`, `CLAUDE_CODE_USE_FOUNDRY`, and `CLAUDE_CODE_USE_ANTHROPIC_AWS` from your shell and your [settings files](/docs/en/settings#find-or-create-your-settings-files)\n\n`CLAUDE_CODE_USE_VERTEX` can stay set. After you change a variable, restart Claude Code. If `/status` doesn't show the change, see [A value you set is ignored](/docs/en/settings#a-value-you-set-is-ignored).\n\n### `No workspace ID found`\n\nSet `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID` to your [workspace ID](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#find-your-workspace-id), then restart Claude Code. Ignore the `workspaceId` constructor option that the message mentions: it's for people who call Anthropic's SDK from their own code.\n\n### `No project was given`\n\nSet `ANTHROPIC_GOOGLE_CLOUD_PROJECT` to your Google Cloud project ID, then restart Claude Code.\n\n### `Could not load Google Cloud credentials`\n\nRepeat step 1 of [Set up Claude Code](#set-up-claude-code), with a new key if you use a service account key file.\n\n### `Google Cloud credentials expired or invalid`\n\nIf the message tells you to refresh your Google Cloud credentials, repeat step 1 of [Set up Claude Code](#set-up-claude-code). With a service account key file, use a new key.\n\n### `Google Cloud authentication failed`\n\nFollow the steps for [`Google Cloud credentials expired or invalid`](#google-cloud-credentials-expired-or-invalid). If that doesn't clear the error:\n\n* **Project**: in `/status`, make sure the `GCP project` line names your project. If it names another project, or there's no such line, follow [`No project was given`](#no-project-was-given)\n* **Workspace**: in `/status`, make sure the `Workspace ID` line shows your workspace ID. If it shows another, follow [`No workspace ID found`](#no-workspace-id-found)\n* **IAM role**: make sure the Google account or service account that runs Claude Code has `roles/claude.user` or `roles/claude.admin` on the project in the `GCP project` line. To grant the role, use [the service's grant command](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#before-making-api-calls), or ask a project admin to grant it\n* **Service**: make sure the `claude.googleapis.com` service is enabled on the project in the `GCP project` line. To enable it, follow [the service's account setup steps](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed#set-up-your-account), or ask a project admin to enable it\n\n## Related resources\n\n* [Claude Models on Google Cloud (Anthropic managed)](https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed): account setup, IAM roles, billing, data retention, and feature support\n* [Enterprise deployment overview](/docs/en/third-party-integrations): the other ways to deploy Claude Code, and proxy and gateway setup\n* [Model configuration](/docs/en/model-config): model aliases, pinning a model version, and restricting which models users can select\n",
+  "blocks": [
+    {
+      "id": "claude-code-with-claude-models-on-google-cloud-anthropic-managed",
+      "hash": "97a2da29202adae87af965ae08e5019d1114bb91bcd0319830d10c7680d7473c",
+      "bodyHash": "63e3011644f3adbd3f27855b0121b5443cf8e23ac6e24e0702128c021e1846a1"
+    },
+    {
+      "id": "prerequisites",
+      "hash": "54316dfc355b6194f86bf9220eb2576a85f2014f48f22af02623912461daf54f",
+      "bodyHash": "a31ffd82a5dfd4a89bfef257bd60de38bcdbc7da9e8f9500bc6b21c76605cb7a"
+    },
+    {
+      "id": "set-up-claude-code",
+      "hash": "b706f43b3075b6bfe5b1cc36c35accd558eb6a9f3785bd38a4457eda55e8125b",
+      "bodyHash": "53885872ef9d3898c045915e160302659c382938f29a9e943dcd811cb3e1b9fd"
+    },
+    {
+      "id": "set-up-claude-code-for-a-team",
+      "hash": "a63404ea4adbf9c391514bcdefae7e4865c362662e0113fba66ebf4459d0a231",
+      "bodyHash": "7e7064204061dc2b05d53a52168e18bcd8a2fb1e204ed1d4e90df98d713ec65b"
+    },
+    {
+      "id": "pin-model-versions",
+      "hash": "7aadf0533503a0c23c39471be8f3a928cd7c11dfb5a9f8867e9558fc2a24ace0",
+      "bodyHash": "46500d82977a78974e99e1fa4052c7c5e66d77ee9d549473a862b7b1a9c46de2"
+    },
+    {
+      "id": "environment-variables",
+      "hash": "9b70d877b462001a280063b5c970cf535b488ea16917b0f80104cc599619cbb8",
+      "bodyHash": "785b45cbd0b2ed87e8384c67d4b78430b4008ddf1e674e21e42a3b31dd992f07"
+    },
+    {
+      "id": "claude-code-features-that-arent-available",
+      "hash": "63400d302547bd46f86371eadc778266db03f868a7a432f40e8f3823f161c5e9",
+      "bodyHash": "55fea63486cedf809ce7cb6a63921daeb5b8f7300611e8bb326fde83d3c856b9"
+    },
+    {
+      "id": "troubleshooting",
+      "hash": "37f7776206d9013d91227b82b314e20683e4e55973dbf2b2647a9c6875f2e9d8",
+      "bodyHash": "bec8414e7dcf71261cb38faddfb0de0d30e338cfd051c5f3a23735c6fcd15c84"
+    },
+    {
+      "id": "no-workspace-id-found",
+      "hash": "9f6ee0c5faf433f61a6fab38633ab7dcf97fe77e6356aa0704444ae918537437",
+      "bodyHash": "eccc63f0a8353b946944b0e37a005a44ffea1c12c91406e62da3de4972fcfadc"
+    },
+    {
+      "id": "no-project-was-given",
+      "hash": "51a7555ebcf6758d844fbf38558a0aa72ac809046cce213145376e945d53a1ce",
+      "bodyHash": "d9bff80285b5bcbb54d3b532a363aadcf78c3c12476221c1ef4ea9379bbf203c"
+    },
+    {
+      "id": "could-not-load-google-cloud-credentials",
+      "hash": "21b0ce7938e2c1801fed5335d0700ea367439013bc735e7a843af5928d8b11a9",
+      "bodyHash": "3218a0f67e932b6d32413ebb0cb677b5de652b5efb8063b2e370e449a7866c78"
+    },
+    {
+      "id": "google-cloud-credentials-expired-or-invalid",
+      "hash": "8011d8b821f6d72d0adb4d5923dacf45d98126222eb7868bf7b886d650b4e0f1",
+      "bodyHash": "8b8ba770f0d332749a8be0bfed79d63f5fbf04bc678011193479036d29631f50"
+    },
+    {
+      "id": "google-cloud-authentication-failed",
+      "hash": "2ab206f178f59a6cfff1a251d534c9cce589a20cdaeab0b6f73cadb6d6fc7ae3",
+      "bodyHash": "f52f3b46b5b8fcb310f863b8e76e392b983f610a7150691ad01fb5e4b93c5f2a"
+    },
+    {
+      "id": "related-resources",
+      "hash": "fe3507c3b8c3fac59bb33af802c78d829dcda2c701c735634b0abdfbd83377ed",
+      "bodyHash": "c67d75f88034b390c945d52114be5267b6e830410815bd2f49936b39b43ec64a"
+    }
+  ],
+  "sources": [
+    {
+      "heading": "Pin model versions",
+      "id": "pin-model-versions",
+      "hash": "7aadf0533503a0c23c39471be8f3a928cd7c11dfb5a9f8867e9558fc2a24ace0",
+      "text": "## Pin model versions\n\nIf you deploy to a team, [pin the model IDs](/docs/en/model-config#pin-models-for-third-party-deployments), so a Claude Code update doesn't move everyone to a newer model at once. Add these variables to the `env` block that holds the three variables from [Set up Claude Code](#set-up-claude-code):\n\n```json theme={null}\n{\n  \"env\": {\n    \"ANTHROPIC_DEFAULT_OPUS_MODEL\": \"claude-opus-5-5\",\n    \"ANTHROPIC_DEFAULT_SONNET_MODEL\": \"claude-sonnet-5-5\",\n    \"ANTHROPIC_DEFAULT_FABLE_MODEL\": \"claude-fable-5-1\",\n    \"ANTHROPIC_DEFAULT_HAIKU_MODEL\": \"claude-haiku-4-5-20251001\"\n  }\n}\n```\n\nUse the Claude API model IDs that you want from [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) in place of the example values."
+    }
+  ]
+}

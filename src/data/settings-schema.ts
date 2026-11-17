@@ -236,6 +236,7 @@ const SHAPES: Record<string, ValueSpec> = {
       'vertex',
       'foundry',
       'anthropicAws',
+      'anthropicGoogleCloud',
       'mantle',
       'customEndpoint',
       'gateway',
