@@ -103,6 +103,8 @@ describe(`${name}: one file`, () => {
   it('is silent when the sandbox is off or unset, or enabled is not true', () => {
     for (const sandbox of [{ enabled: false }, {}, { enabled: 'true' }, { enabled: null }]) {
       expect(alone({ ...ASK, sandbox }), JSON.stringify(sandbox)).toEqual([])
+      const auto = { ...sandbox, autoAllowBashIfSandboxed: true }
+      expect(alone({ ...ASK, sandbox: auto }), JSON.stringify(auto)).toEqual([])
     }
     expect(alone(ASK)).toEqual([])
   })
