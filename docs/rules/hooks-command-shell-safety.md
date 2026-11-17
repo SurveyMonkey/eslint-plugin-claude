@@ -56,11 +56,12 @@ the call stack small. Both come from `MAX_NESTING` (100) in `src/shell-words.ts`
 
 At a limit, the scan cannot find the quotes in the rest of the text that holds the deep substitution. For
 the second limit, this text is usually the rest of the command. So the rule counts each variable and
-parameter in that rest (`$X`, `$@`, `$*`, `$1`) as out of quotes, and reports the first one. bash reads the deeper levels. In probes,
-bash 3.2.57 and 5.3.9 read 101 levels of `$(` and 102 levels of `"$(`, and split an unquoted `$X`.
+parameter in that rest (`$X`, `$@`, `$*`, `$1`) as out of quotes, and reports the first one. bash
+reads the deeper levels. In probes, bash 3.2.57 and 5.3.9 read 101 levels of `$(` and 102 levels of
+`"$(`, and split an unquoted `$X`.
 
-This gives a known false positive. Past a limit, the rule also reports a variable in quotes, such as
-`"$X"` or `'$X'`. It also reports one in an assignment, a `[[ ]]` test or a comment. After `rm` with a
+This gives a known false positive. Past a limit, the rule also counts a variable in quotes, such as
+`"$X"` or `'$X'`. It also counts one in an assignment, a `[[ ]]` test or a comment. After `rm` with a
 recursive flag, the report can be `destructive`.
 
 ### What the rule does not read
