@@ -27,6 +27,11 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
     // With no option, the rule is off.
     { code: everything, filename },
     { code: everything, filename, options: [{}] },
+    // With no option, `engines` gives no report.
+    {
+      code: manifest({}, { name: 'a', source: './a', engines: { 'claude-code': '>=2.1.400' } }),
+      filename,
+    },
     // The configured version is the version of the field, or newer.
     { code: everything, filename, options: [{ minVersion: '2.1.239' }] },
     // A version equal to the version of a field is silent, for each field.
@@ -34,6 +39,11 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
       ['2.1.224', manifest({}, { name: 'a', source: archive })],
       ['2.1.229', manifest({}, { name: 'a', source: command })],
       ['2.1.238', manifest({}, { name: 'a', source: './a', headers: {}, headersHelper: 'x' })],
+      // "Plugin entries": `engines` "Requires Claude Code v2.1.323 or later".
+      [
+        '2.1.323',
+        manifest({}, { name: 'a', source: './a', engines: { 'claude-code': '>=2.1.400' } }),
+      ],
     ].map(([minVersion, code]) => ({ code: code as string, filename, options: [{ minVersion }] })),
     { code: everything, filename, options: [{ minVersion: '2.1.300' }] },
     { code: everything, filename, options: [{ minVersion: '2.2.0' }] },
@@ -96,6 +106,13 @@ jsonTester.run('marketplace-min-version (valid)', rule, {
 jsonTester.run('marketplace-min-version (invalid)', rule, {
   valid: [],
   invalid: [
+    // "Plugin entries": `engines` "Requires Claude Code v2.1.323 or later".
+    {
+      code: manifest({}, { name: 'a', source: './a', engines: { 'claude-code': '>=2.1.400' } }),
+      filename,
+      options: [{ minVersion: '2.1.322' }],
+      errors: [tooNew('entry field "engines"', '2.1.323', '2.1.322')],
+    },
     // Each field and each source type, at a version just below its own.
     {
       code: manifest({ metadata: { pluginRoot: './plugins' } }, { name: 'a', source: 'a' }),

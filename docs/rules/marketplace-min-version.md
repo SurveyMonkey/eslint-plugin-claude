@@ -40,6 +40,7 @@ sources" under 2.1.229. See the
 | `archive` source                    | 2.1.224 |
 | `command` source                    | 2.1.229 |
 | Entry `headers` and `headersHelper` | 2.1.238 |
+| Entry `engines`                     | 2.1.323 |
 | Top-level `metadata.pluginRoot`     | 2.1.239 |
 
 The report is on the key, or for a source type, on the value of its `source` member. The rule
