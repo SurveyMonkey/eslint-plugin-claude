@@ -21,7 +21,7 @@ const name = 'permissions-sandbox-bash-ask' as const
 const FIXED = '2.1.324'
 
 // The first version that reads each managed `sandbox` field on its own. Before it, an invalid
-// field drops the whole managed `sandbox` block
+// field drops every managed `sandbox` field except `credentials`
 // (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
 const PER_FIELD = '2.1.283'
 
@@ -65,7 +65,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
       const auto = objects.map((object) =>
         boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
       )
-      // Before v2.1.283, an invalid managed `enabled` drops the block, so the sandbox is off.
+      // Before v2.1.283, an invalid managed `enabled` drops `enabled` too, so the sandbox is off.
       const dropped =
         isManaged &&
         supportsBefore(minVersion, PER_FIELD) &&
