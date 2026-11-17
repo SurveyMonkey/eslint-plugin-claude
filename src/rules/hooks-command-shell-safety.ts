@@ -44,6 +44,14 @@ const DERIVED =
 const parametersIn = (text: string) =>
   [...text.matchAll(PARAMETER)].map((match) => (match[1] ?? match[2]) as string)
 
+/** Adds each name of `from` to the end of `into`. A spread puts each name in one argument of one
+ *  call, and more than about 120,000 arguments throw a RangeError. */
+function append(into: string[], from: readonly string[]): void {
+  for (const item of from) {
+    into.push(item)
+  }
+}
+
 /** The names of the variables outside quotes in the shell text `text`. The scan skips an assignment value, a
  *  `[[ ]]` test, a comment and a special parameter. It scans the inside of a substitution or a
  *  backtick pair on its own, with a new quote level. In a backtick pair, a comment ends at the
@@ -54,7 +62,7 @@ const parametersIn = (text: string) =>
  *  The scan stops and fails closed in two cases. Then each variable and parameter in the rest of
  *  the text counts, also one in quotes:
  *  - `closingParen` can stop at its depth limit (`nestsTooDeep`). That limit counts only the
- *    levels in double quotes, so a chain of `$(` with no quotes does not get to it.
+ *    levels in double quotes. So a chain of `$(` with no quotes does not get to it.
  *  - A substitution or a backtick pair is deeper than `MAX_NESTING`. The scan reads each level
  *    with one more call, so this limit keeps the call stack small (#960). */
 function unquotedVariables(text: string, nesting = 0): string[] {
@@ -82,14 +90,14 @@ function unquotedVariables(text: string, nesting = 0): string[] {
       if (nesting >= MAX_NESTING || (end === text.length && nestsTooDeep(text, i + 1))) {
         // The scan cannot find the quotes past a limit. bash reads the deeper levels. So each
         // variable and parameter in the rest counts as out of quotes, also one in quotes.
-        names.push(...parametersIn(text.slice(i + 2)))
+        append(names, parametersIn(text.slice(i + 2)))
         break
       }
-      names.push(...unquotedVariables(text.slice(i + 2, end), nesting + 1))
+      append(names, unquotedVariables(text.slice(i + 2, end), nesting + 1))
       i = end
     } else if (char === '`') {
       if (nesting >= MAX_NESTING) {
-        names.push(...parametersIn(text.slice(i + 1)))
+        append(names, parametersIn(text.slice(i + 1)))
         break
       }
       const end = tickEnd(text, i)
@@ -97,7 +105,7 @@ function unquotedVariables(text: string, nesting = 0): string[] {
       // the pair is in double quotes, it also removes one before a double quote.
       const escaped = quote === '"' ? /\\([$`\\"])/g : /\\([$`\\])/g
       const inner = text.slice(i + 1, end).replace(escaped, '$1')
-      names.push(...unquotedVariables(inner, nesting + 1))
+      append(names, unquotedVariables(inner, nesting + 1))
       i = end
     } else if (char === '\\') {
       i++

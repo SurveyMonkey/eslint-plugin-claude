@@ -532,14 +532,41 @@ describe(`${name}: an unquoted variable in the command`, () => {
 
   it('counts each variable past 100 levels of substitutions with no quotes, and does not throw', () => {
     // A chain of `$(` with no quotes does not get to the limit of `closingParen`. Before #960, a
-    // chain 20,000 deep threw a RangeError in the scan. bash 3.2.57 and 5.3.9 print `[a]` and
-    // `[b]` for the chains of 100 and 101 levels below, with X="a b".
+    // chain 20,000 deep threw a RangeError in the scan. With X="a b", bash 3.2.57 and 5.3.9 print
+    // `[a]`, then `[b]`, for each of the two chains at 100 and at 101 levels.
     const chain = (open: string, close: string, n: number, inner: string) =>
       `printf '[%s]\\n' ${open.repeat(n)}${inner}${close.repeat(n)}`
     for (const n of [100, 101, 20_000]) {
       expect(line(chain('$(echo ', ')', n, '$X')), String(n)).toEqual(['unquoted'])
       expect(line(chain('$( (echo ', ') )', n, '$X')), String(n)).toEqual(['unquoted'])
     }
+    // The scan reads each level of the 20,000 chains, and coverage makes it slow on CI.
+  }, 30_000)
+
+  it('does not throw for a substitution that holds very many variables', () => {
+    // Before #960, the scan gave the names of a substitution to its caller as the arguments of
+    // one call. More than about 120,000 names threw a RangeError.
+    const many = '$X '.repeat(150_000)
+    const deep = (open: string, close: string) =>
+      `echo ${open.repeat(101)}${many}${close.repeat(101)}`
+    expect(line(`echo $(echo ${many})`)).toEqual(['unquoted'])
+    expect(line(`echo \`echo ${many}\``)).toEqual(['unquoted'])
+    expect(line(deep('$(echo ', ')'))).toEqual(['unquoted'])
+  }, 30_000)
+
+  it('counts each parameter in the rest of the level past 100 levels, and only there', () => {
+    // At the limit, the fallback reads the rest of the text of level 100. That text starts at
+    // the deep `$(` or backtick, and holds the `"$Y"` after it. bash keeps `"$Y"` as one word.
+    // The `"$Z"` before it is in quotes, so the scan does not count it.
+    const deep = (inner: string) => `echo ${'$(echo '.repeat(100)}${inner}${')'.repeat(100)}`
+    const variables = (text: string) =>
+      lintJson(
+        name,
+        settings(hooks('PostToolUse', [command({ command: text })], 'Write')),
+        path.join(repo({}), '.claude/settings.json'),
+      ).map((message) => message.message.match(/uses (\S+) with/)?.[1])
+    expect(variables(deep('"$Z" $(true) "$Y"'))).toEqual(['$Y'])
+    expect(variables(deep('"$Z" `true` "$Y"'))).toEqual(['$Y'])
   })
 
   it('counts a variable in quotes past 100 levels of substitutions', () => {
