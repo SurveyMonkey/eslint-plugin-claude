@@ -12,13 +12,18 @@ import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
 import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
-import { at, boolOf, sourceOf } from '../permission-source.ts'
+import { at, boolOf, sandboxOn, sourceOf } from '../permission-source.ts'
 import { kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-sandbox-bash-ask' as const
 
 // The first version with `false` as the default of `autoAllowBashIfSandboxed`.
 const FIXED = '2.1.324'
+
+// The first version that reads each managed `sandbox` field on its own. Before it, an invalid
+// field drops every managed `sandbox` field except `credentials`
+// (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
+const PER_FIELD = '2.1.283'
 
 type Options = [{ minVersion?: string }]
 
@@ -52,17 +57,31 @@ const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> 
       if (!complete) {
         return
       }
-      const values = (key: string) => objects.map((object) => at(object, ['sandbox', key]))
-      // A managed file reads a quoted Boolean. Another invalid value there counts as `false`.
+      // In a managed file, Claude Code reads a quoted Boolean as that Boolean. There, another
+      // invalid `autoAllowBashIfSandboxed` that is not `null` counts as `false`. Another invalid
+      // `enabled` that is not `null` counts as `true`
+      // (https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox).
       const isManaged = kindOf(context.filename) === 'managed'
       const auto = objects.map((object) =>
         boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
       )
-      // A file that sets `enabled` or `autoAllowBashIfSandboxed` to false ends the skip. An unset
-      // `autoAllowBashIfSandboxed` ends it too, unless `minVersion` is older than 2.1.324.
+      // Before v2.1.283, an invalid managed `enabled` or `autoAllowBashIfSandboxed` drops
+      // `enabled` too, so the sandbox is off. The rule does not read the other `sandbox` fields.
+      const dropped =
+        isManaged &&
+        supportsBefore(minVersion, PER_FIELD) &&
+        objects.some((object) =>
+          (['enabled', 'autoAllowBashIfSandboxed'] as const).some((key) => {
+            const value = at(object, ['sandbox', key])
+            return value !== undefined && value !== null && typeof value !== 'boolean'
+          }),
+        )
+      // The rule is silent unless a file turns `enabled` on and no file turns it off. A file that
+      // sets `autoAllowBashIfSandboxed` to false stops the report too. So does an unset
+      // `autoAllowBashIfSandboxed`, unless `minVersion` is older than 2.1.324.
       if (
-        !values('enabled').includes(true) ||
-        values('enabled').includes(false) ||
+        dropped ||
+        !sandboxOn(objects, isManaged) ||
         auto.includes(false) ||
         (!defaultsOn && !auto.includes(true))
       ) {

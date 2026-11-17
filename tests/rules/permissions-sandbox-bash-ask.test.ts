@@ -103,6 +103,8 @@ describe(`${name}: one file`, () => {
   it('is silent when the sandbox is off or unset, or enabled is not true', () => {
     for (const sandbox of [{ enabled: false }, {}, { enabled: 'true' }, { enabled: null }]) {
       expect(alone({ ...ASK, sandbox }), JSON.stringify(sandbox)).toEqual([])
+      const auto = { ...sandbox, autoAllowBashIfSandboxed: true }
+      expect(alone({ ...ASK, sandbox: auto }), JSON.stringify(auto)).toEqual([])
     }
     expect(alone(ASK)).toEqual([])
   })
@@ -203,6 +205,76 @@ describe(`${name}: a managed source, on disk`, () => {
     for (const value of ['false', 'x']) {
       expect(at(quoted(value), DROP_IN, file(ASK), [{ minVersion: '2.1.323' }]), value).toEqual([])
     }
+  })
+
+  // "If you set a Boolean key to a quoted `"true"` or `"false"`, the value counts as that Boolean."
+  // "A key that turns the sandbox ... on, such as `enabled` ..., counts as `true`." So a managed
+  // `enabled` of "true" or 1 is on, and a quoted "false" is off:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('reads a quoted or invalid enabled in a managed source as on', () => {
+    for (const enabled of ['true', 1]) {
+      const sandbox = { enabled, autoAllowBashIfSandboxed: true }
+      expect(alone({ ...ASK, sandbox }, MANAGED), String(enabled)).toEqual(['skipped'])
+      expect(alone({ ...ASK, sandbox }, DROP_IN), String(enabled)).toEqual(['skipped'])
+      const floor = [{ minVersion: '2.1.283' }]
+      expect(alone({ ...ASK, sandbox }, MANAGED, floor), String(enabled)).toEqual(['skipped'])
+    }
+  })
+
+  // "This per-field handling requires Claude Code v2.1.283 or later. On versions before v2.1.283,
+  // Claude Code drops every `sandbox` field except `credentials` when a value outside
+  // `credentials` is invalid." So an invalid `enabled` turns the sandbox off there:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('is silent for an invalid managed enabled when minVersion is older than 2.1.283', () => {
+    for (const enabled of ['true', 1, 'false']) {
+      const sandbox = { enabled, autoAllowBashIfSandboxed: true }
+      const options = [{ minVersion: '2.1.282' }]
+      expect(alone({ ...ASK, sandbox }, MANAGED, options), String(enabled)).toEqual([])
+      const root = repo({ [MANAGED]: file({ sandbox }) })
+      expect(at(root, DROP_IN, file(REPORTING), options), String(enabled)).toEqual([])
+    }
+    expect(alone(REPORTING, MANAGED, [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+    // A sibling that does not set `enabled` holds no invalid value, so it drops no block.
+    const unset = repo({ [MANAGED]: file(ASK) })
+    expect(at(unset, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+    // The text names the managed block only. In a project pair, a quoted "true" is no value.
+    const pair = repo({ [LOCAL]: file({ sandbox: { enabled: 'true' } }) })
+    expect(at(pair, PROJECT, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+  })
+
+  // The same text: a quoted "true" of `autoAllowBashIfSandboxed` is invalid before v2.1.283. So it
+  // drops `enabled` too, and the sandbox is off:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('is silent for a quoted managed auto-allow when minVersion is older than 2.1.283', () => {
+    const sandbox = { enabled: true, autoAllowBashIfSandboxed: 'true' }
+    expect(alone({ ...ASK, sandbox }, MANAGED, [{ minVersion: '2.1.282' }])).toEqual([])
+    expect(alone({ ...ASK, sandbox }, MANAGED, [{ minVersion: '2.1.283' }])).toEqual(['skipped'])
+    const root = repo({ [MANAGED]: file({ sandbox: { autoAllowBashIfSandboxed: 'true' } }) })
+    expect(at(root, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual([])
+  })
+
+  // The docs name no `null` inside `sandbox`. For a top-level key, "A `null` removes the key":
+  // https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed
+  // The rule reads a `null` in `sandbox` the same way, so it drops no block.
+  it('reads a managed null enabled as unset when minVersion is older than 2.1.283', () => {
+    const root = repo({ [MANAGED]: file({ sandbox: { enabled: null } }) })
+    expect(at(root, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual(['skipped'])
+  })
+
+  // The default of `sandbox.enabled` is `false`:
+  // https://code.claude.com/docs/en/settings-reference#sandbox-enabled
+  it('is silent when no file of a managed source sets enabled', () => {
+    const sandbox = { autoAllowBashIfSandboxed: true }
+    expect(alone({ ...ASK, sandbox }, MANAGED)).toEqual([])
+    expect(alone({ ...ASK, sandbox }, DROP_IN)).toEqual([])
+  })
+
+  // "If you set a Boolean key to a quoted `"true"` or `"false"`, the value counts as that Boolean":
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('is silent when a managed drop-in sets enabled to a quoted "false"', () => {
+    const root = repo({ 'managed-settings.d/20-b.json': file({ sandbox: { enabled: 'false' } }) })
+    expect(at(root, DROP_IN, file(REPORTING))).toEqual([])
+    expect(at(root, MANAGED, file(REPORTING))).toEqual([])
   })
 
   it('does not read a project file for a managed file', () => {
