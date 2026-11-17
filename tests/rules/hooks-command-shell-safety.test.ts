@@ -485,6 +485,51 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
+  it('finds the end of a command substitution after a backtick pair in it', () => {
+    // The bash manual (Command Substitution) says: "The first backquote not preceded by a
+    // backslash terminates the command substitution." So a `)` or a quote in the pair does not
+    // end the outer `$(`. The probe sets X="a b" and puts `printf '[%s]\n'` in place of `echo`.
+    // bash 3.2.57 and 5.3.9 then print `[a]` and `[b]` for `$X`, so `$X` is out of quotes.
+    for (const text of [
+      // The `)` of a `case` pattern in the pair. bash prints `[x]` first.
+      'echo "$(echo `case a in a) echo x;; esac`)" $X',
+      // An escaped single quote in the pair. bash prints `[']` first.
+      `echo "$(echo \`echo \\\\'\`)" $X`,
+      // An escaped double quote in the pair. bash prints `["]` first.
+      `echo "$(echo \`echo \\\\"\`)" $X`,
+      // A double quote holds the pair, and the pair holds a double quote. bash prints `[a)]` first.
+      `echo $(echo "\`echo "a)"\`") $X`,
+    ]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+    // The `)` in the pair does not end the `$(`, so `$X` stays in the double quotes. bash 3.2.57
+    // and 5.3.9 print one word, `[x a b]`.
+    expect(line('echo "$(echo `case a in a) echo x;; esac`) $X"')).toEqual([])
+  })
+
+  it('counts each variable after a substitution that the reader cannot close', () => {
+    // The probe puts `printf '[%s]\n'` in place of `echo`. bash 3.2.57 and 5.3.9 read each
+    // of these levels of `$(echo "`, and print `[x]`, `[a]` and `[b]`. The reader stops at 51
+    // levels in a `$(` (`MAX_NESTING` in `src/shell-words.ts`), so at 52 here. Then the rule
+    // cannot find the quotes, so it counts `$X` as out of quotes.
+    const deep = (n: number) => `echo "${'$(echo "'.repeat(n)}x${'")'.repeat(n)}" $X`
+    for (const n of [50, 51, 52, 53, 60]) {
+      expect(line(deep(n)), String(n)).toEqual(['unquoted'])
+    }
+    // With `set -- 'a b'`, bash 3.2.57 and 5.3.9 also print `[x]`, `[a]` and `[b]` for `$@` at 52
+    // levels.
+    for (const parameter of ['$@', '$*', '$1']) {
+      expect(line(deep(52).replace('$X', parameter)), parameter).toEqual(['unquoted'])
+    }
+    // A `)` closes the first `$(`, so the rule reads the quotes, with 51 more `$(` after it. bash
+    // 3.2.57 and 5.3.9 print one word, `[ a b]`.
+    expect(line(`echo "$(true) $X"${' $(true)'.repeat(51)}`)).toEqual([])
+    // No `)` closes this. bash 3.2.57 and 5.3.9 exit with status 2: "unexpected EOF while
+    // looking for matching `)'". So bash gives no value. This pinning test keeps the single quotes
+    // of the scan when 50 or fewer `$(` come after the open one.
+    expect(line(`echo $(${'$(echo '.repeat(50)}'$X'`)).toEqual([])
+  })
+
   it(`reads a # after two substitutions in a \${...} expansion as bash does`, () => {
     // bash 5.3.9 prints `#y`, then runs `rm` on the split `$T`.
     expect(line(`echo \${1:-$(true) $(false) #y}; rm -rf $T`)).toEqual(['destructive'])

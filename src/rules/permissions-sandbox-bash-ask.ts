@@ -1,32 +1,45 @@
 // A bare `Bash` ask rule, or `Bash(*)`, is skipped for a command that runs in the sandbox while
-// `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is not false
+// `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is true
 // (https://code.claude.com/docs/en/permissions#how-permissions-interact-with-sandboxing). The
-// rule adds up the project pair, or one managed source. The rule makes no report when it cannot
-// read a file of the source, because that file can set `autoAllowBashIfSandboxed` to `false`. It
-// does not read plan mode, an excluded command or `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`
+// default of `autoAllowBashIfSandboxed` is `false` from v2.1.324, and was `true` before
+// (https://code.claude.com/docs/en/settings-reference#sandbox-autoallowbashifsandboxed). So the
+// rule needs a file that sets it to `true`, unless `minVersion` is older than 2.1.324. The rule
+// adds up the project pair, or one managed source. The rule makes no report when it cannot read
+// a file of the source, because that file can set `autoAllowBashIfSandboxed` to `false`. It does
+// not read plan mode, an excluded command or `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`
 // (docs/rules/permissions-sandbox-bash-ask.md).
 import type { JSONRuleDefinition } from '@eslint/json'
 import { docsUrl } from '../docs-url.ts'
+import { MIN_VERSION_SCHEMA, supportsBefore } from '../min-version.ts'
 import { SETTINGS_FILES, settingsListener } from '../permission-listener.ts'
-import { at, sourceOf } from '../permission-source.ts'
-import { MANAGED_SETTINGS_FILES } from '../settings-files.ts'
+import { at, boolOf, sourceOf } from '../permission-source.ts'
+import { kindOf, MANAGED_SETTINGS_FILES } from '../settings-files.ts'
 
 const name = 'permissions-sandbox-bash-ask' as const
 
-const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'skipped' }> = {
+// The first version with `false` as the default of `autoAllowBashIfSandboxed`.
+const FIXED = '2.1.324'
+
+type Options = [{ minVersion?: string }]
+
+const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'skipped' }> = {
   meta: {
     type: 'problem',
     docs: {
       description: 'Do not rely on a bare Bash ask rule while the sandbox auto-allows Bash',
       url: docsUrl(name),
     },
-    schema: [],
+    schema: [MIN_VERSION_SCHEMA],
+    defaultOptions: [{}],
     messages: {
       skipped:
-        '`{{rule}}` is skipped for a command that runs in the sandbox, because `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is not false. Set `autoAllowBashIfSandboxed` to false, or scope the rule, as `Bash(git push *)`.',
+        '`{{rule}}` is skipped for a command that runs in the sandbox, because `sandbox.enabled` is true and `autoAllowBashIfSandboxed` is on. Claude Code before v2.1.324 turns `autoAllowBashIfSandboxed` on by default. Set `autoAllowBashIfSandboxed` to false, or scope the rule, as `Bash(git push *)`.',
     },
   },
   create(context) {
+    const [{ minVersion }] = context.options
+    // Before v2.1.324 an unset key is on. From v2.1.324 it is off, so a file must set it to `true`.
+    const defaultsOn = supportsBefore(minVersion, FIXED)
     return settingsListener(context, (entries) => {
       const asks = entries.filter(
         ({ list, rule: { tool, specifier } }) =>
@@ -40,11 +53,18 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'skipped' }> = {
         return
       }
       const values = (key: string) => objects.map((object) => at(object, ['sandbox', key]))
-      // A file that sets `enabled` to false, or `autoAllowBashIfSandboxed` to false, ends the skip.
+      // A managed file reads a quoted Boolean. Another invalid value there counts as `false`.
+      const isManaged = kindOf(context.filename) === 'managed'
+      const auto = objects.map((object) =>
+        boolOf(at(object, ['sandbox', 'autoAllowBashIfSandboxed']), isManaged, false),
+      )
+      // A file that sets `enabled` or `autoAllowBashIfSandboxed` to false ends the skip. An unset
+      // `autoAllowBashIfSandboxed` ends it too, unless `minVersion` is older than 2.1.324.
       if (
         !values('enabled').includes(true) ||
         values('enabled').includes(false) ||
-        values('autoAllowBashIfSandboxed').includes(false)
+        auto.includes(false) ||
+        (!defaultsOn && !auto.includes(true))
       ) {
         return
       }
