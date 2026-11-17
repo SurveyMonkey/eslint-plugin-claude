@@ -20,6 +20,10 @@ const inline = (fields: Record<string, unknown>) => ({
 })
 /** A `settings` source with one item in `plugins`. */
 const withItem = (item: unknown) => withSource(inline({ plugins: [item] }))
+const SHA = 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0'
+/** A source of the type `github` or `git`. */
+const sourceOf = (source: string) =>
+  source === 'github' ? github : { source: 'git', url: 'https://git.example.com/p.git' }
 const goodItem = { name: 'formatter', source: { source: 'github', repo: 'acme-corp/formatter' } }
 
 jsonTester.run('settings-extra-known-marketplaces-schema (valid)', rule, {
@@ -438,9 +442,8 @@ jsonTester.run('settings-extra-known-marketplaces-schema (invalid settings sourc
       'skills-dir',
       'synced',
       'claude-plugin-test',
-      'npm',
-      'NPM',
-      'Gh',
+      'constructor',
+      'toString',
       'claudeai-team',
       'claude.code.plugins',
     ].map((name) => ({
@@ -807,10 +810,88 @@ jsonTester.run('settings-extra-known-marketplaces-schema (other keys)', rule, {
     { code: withItem({ name: 'f', source: { source: 'bogus' } }), filename },
     { code: withSource(inline({ owner: 5 })), filename },
     // Names close to a reserved name, with a different case or no dash.
-    ...['claudeai', 'claudeaiteam', 'Inline', 'my-npm'].map((name) => ({
+    ...['claudeai', 'claudeaiteam', 'Inline', 'Constructor'].map((name) => ({
       code: marketplaces({ [name]: { source: inline({ name }) } }),
       filename,
     })),
+    // "Reserved names" lists no package manager, so none is reserved.
+    ...['npm', 'NPM', 'pip', 'uv', 'cargo', 'github', 'gh'].map((name) => ({
+      code: marketplaces({ [name]: { source: inline({ name }) } }),
+      filename,
+    })),
+    // A SHA `ref` under a key that is not reserved. The "Fields by type" row of
+    // `ref` refuses a SHA for a reserved name, and names no other refusal.
+    ...['github', 'git'].map((source) => ({
+      code: marketplaces({ acme: { source: { ...sourceOf(source), ref: SHA } } }),
+      filename,
+    })),
+    // A branch or tag `ref` under a reserved key.
+    ...['main', 'v1.2.0', ''].map((ref) => ({
+      code: marketplaces({ 'claude-plugins-official': { source: { ...github, ref } } }),
+      filename,
+    })),
+    // The docs write "the full lowercase SHA", so these are not a SHA.
+    ...[SHA.toUpperCase(), SHA.slice(1), `${SHA}0`, SHA.replace('a', 'g')].map((ref) => ({
+      code: marketplaces({ 'claude-plugins-official': { source: { ...github, ref } } }),
+      filename,
+    })),
+    // A SHA in a field other than `ref` is not a `ref`.
+    {
+      code: marketplaces({ 'claude-plugins-official': { source: { ...github, path: SHA } } }),
+      filename,
+    },
+    // A SHA `ref` on a type that has no `ref` is not read.
+    {
+      code: marketplaces({
+        'claude-plugins-official': {
+          source: { source: 'url', url: 'https://x.example/m.json', ref: SHA },
+        },
+      }),
+      filename,
+    },
   ],
   invalid: [],
+})
+
+jsonTester.run('settings-extra-known-marketplaces-schema (invalid SHA ref)', rule, {
+  valid: [],
+  invalid: [
+    // The "Fields by type" row of `ref`: a SHA "is refused for a marketplace
+    // with a reserved name, such as `claude-plugins-official`".
+    ...['github', 'git'].flatMap((source) =>
+      [
+        'claude-plugins-official',
+        'claude.code.plugins',
+        'inline',
+        'claudeai-team',
+        'constructor',
+      ].map((key) => ({
+        code: marketplaces({ [key]: { source: { ...sourceOf(source), ref: SHA } } }),
+        filename,
+        errors: [{ messageId: 'refShaReserved' as const, data: { key }, line: 1 }],
+      })),
+    ),
+    // The `ref` row gives `claude-plugins-official` as its example, and that
+    // marketplace comes from `github.com/anthropics/`. So the exception for the
+    // Anthropic names does not apply to a SHA.
+    {
+      code: marketplaces({
+        'claude-plugins-official': {
+          source: { source: 'github', repo: 'anthropics/claude-plugins-official', ref: SHA },
+        },
+      }),
+      filename,
+      errors: [{ messageId: 'refShaReserved' as const, data: { key: 'claude-plugins-official' } }],
+    },
+    {
+      code: marketplaces({ 'claude-plugins-official': { source: { ...github, ref: SHA } } }),
+      filename: local,
+      errors: [
+        {
+          message:
+            'The "ref" of the marketplace "claude-plugins-official" is a commit SHA, and Claude Code refuses a SHA for a marketplace with a reserved name. Use a branch or a tag.',
+        },
+      ],
+    },
+  ],
 })
