@@ -44,7 +44,7 @@ jobs:
       # Installs pnpm from packageManager, and Node from the runtime input or
       # devEngines.runtime (22.18.0). require-lockfile adds --frozen-lockfile
       # to the install.
-      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+      - uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
         with:
           runtime: node@${{ matrix.node }}
           cache: true
@@ -95,7 +95,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+      - uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
         with:
           cache: true
           require-lockfile: true
@@ -137,7 +137,7 @@ jobs:
           persist-credentials: false
           # The gate reads the base commit, and the diff from the base.
           fetch-depth: 0
-      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+      - uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         with:
           cache: true
