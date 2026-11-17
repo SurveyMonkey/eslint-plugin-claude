@@ -863,12 +863,12 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exit code 2 behavior per event",
-      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038"
+      "hash": "ec61f39afb8529deb33239d53cc8091377053a92b6940b4615e3c4511af7a88b"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Decision control",
-      "hash": "cdf1e7e99a64b4e68beacea743278e224c4310485746eebe70a722c06fccac51"
+      "hash": "e13c41b5e57662c2c4aee93345a4ef21e90ba0e0c6ad0061828493b6b7a70f7f"
     }
   ],
   "hooks-broad-auto-approve": [
@@ -1192,7 +1192,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Response schema",
-      "hash": "3d4f07cd2e88a8dca95c7ac50e4b646e8283fbe5f9edf9a3f8a1bf3a3598ca88"
+      "hash": "bbbcfd1f96865f5e01dcb957acdbc7f0b3c4e972f6c483199fc798f6df33d599"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1221,7 +1221,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Prompt-based hooks",
-      "hash": "2cbc1bf7b0f0d5412128234c17ef6f1f4a5aa34d66574aec1b3348930d6564c3"
+      "hash": "eff01c22c190cfc87cdb4b7ca362543a964677732c3b18adda72aef264b5254e"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1236,7 +1236,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Response schema",
-      "hash": "3d4f07cd2e88a8dca95c7ac50e4b646e8283fbe5f9edf9a3f8a1bf3a3598ca88"
+      "hash": "bbbcfd1f96865f5e01dcb957acdbc7f0b3c4e972f6c483199fc798f6df33d599"
     }
   ],
   "hooks-http-env-allowlist": [
@@ -1306,7 +1306,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     }
   ],
   "hooks-matcher-deprecated-value": [
@@ -1318,14 +1318,14 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     }
   ],
   "hooks-matcher-enum": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1342,7 +1342,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1359,7 +1359,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     }
   ],
   "hooks-matcher-name-unresolved": [
@@ -1393,7 +1393,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     },
     {
       "url": "https://code.claude.com/docs/en/debug-your-config",
@@ -1437,7 +1437,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1454,14 +1454,14 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     }
   ],
   "hooks-matcher-unsupported-event": [
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Matcher patterns",
-      "hash": "75c8f6de04f8ac694d345a57f10301d5b9a0e4424b07f075da635ed82b179385"
+      "hash": "85a23d1afa88f2cb943af2f5840f45c1a2fed7fa5edec74c2688fcecd61e5e28"
     }
   ],
   "hooks-multiple-updatedinput": [
@@ -1517,7 +1517,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exit code 2 behavior per event",
-      "hash": "4605ad26de87a5d8d7ba76c46fcbf86bf19778dcc74686657c4753c1acc71038"
+      "hash": "ec61f39afb8529deb33239d53cc8091377053a92b6940b4615e3c4511af7a88b"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1527,7 +1527,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Exit code output",
-      "hash": "13b826a5a41fb71b279b7db02943b6f0ff01426239b0b2a01e2a0e6749ad82de"
+      "hash": "75b83358b325292489a51b26d62dd4989f91bba1cd9446b9b97022f558053d96"
     }
   ],
   "hooks-output-deprecated-fields": [
@@ -1561,7 +1561,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "JSON output",
-      "hash": "54a6bf971a463dae34c8f6f8b028ca65058296ce6a0c8c43a0ec0a4574a7af74"
+      "hash": "8d30815515f446317973bcd4b7f3ccc77017ace8ab573a042b50ccf8ec2974c1"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks-guide",
@@ -1571,7 +1571,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Decision control",
-      "hash": "cdf1e7e99a64b4e68beacea743278e224c4310485746eebe70a722c06fccac51"
+      "hash": "e13c41b5e57662c2c4aee93345a4ef21e90ba0e0c6ad0061828493b6b7a70f7f"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1593,7 +1593,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "JSON output",
-      "hash": "54a6bf971a463dae34c8f6f8b028ca65058296ce6a0c8c43a0ec0a4574a7af74"
+      "hash": "8d30815515f446317973bcd4b7f3ccc77017ace8ab573a042b50ccf8ec2974c1"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
@@ -1758,7 +1758,7 @@
     {
       "url": "https://code.claude.com/docs/en/hooks",
       "heading": "Response schema",
-      "hash": "3d4f07cd2e88a8dca95c7ac50e4b646e8283fbe5f9edf9a3f8a1bf3a3598ca88"
+      "hash": "bbbcfd1f96865f5e01dcb957acdbc7f0b3c4e972f6c483199fc798f6df33d599"
     },
     {
       "url": "https://code.claude.com/docs/en/hooks",
