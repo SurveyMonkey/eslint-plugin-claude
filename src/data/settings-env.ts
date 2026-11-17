@@ -641,7 +641,7 @@ export function heuristicEnvForm(name: string): EnvForm | undefined {
 
 /** The variables that hold the path to a key file or a certificate, and not a key. Their names end
  *  in `_KEY`. The env vars reference lists `CLAUDE_CODE_CLIENT_KEY` as the "Path to client
- *  private key file for mTLS authentication". The settings reference lists the forms
+ *  private key file for mTLS authentication". The settings reference lists
  *  `OTEL_EXPORTER_OTLP_*_CLIENT_KEY`, in the generic and per-signal forms, among the variables that
  *  Claude Code ignores in project settings. It does not say that they hold a path. The rule reads
  *  them the same way as `CLAUDE_CODE_CLIENT_KEY`. */

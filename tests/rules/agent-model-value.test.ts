@@ -1,7 +1,8 @@
-// The sub-agents page, "Supported frontmatter fields" and "Choose a model"
+// The sub-agents page, "Frontmatter reference"
+// (https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields) and "Choose a model"
 // (https://code.claude.com/docs/en/sub-agents#choose-a-model): `model` is `sonnet`, `opus`,
-// `haiku`, `fable`, `inherit`, or a full model ID, and a full ID "accepts the same values as the
-// `--model` flag". The model configuration page lists the aliases of `--model`
+// `haiku`, `fable`, `inherit`, or a full model ID. A full ID is "a value the `--model` flag
+// accepts". The model configuration page lists the aliases of `--model`
 // (https://code.claude.com/docs/en/model-config#model-aliases).
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
