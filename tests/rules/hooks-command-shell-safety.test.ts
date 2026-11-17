@@ -540,7 +540,8 @@ describe(`${name}: an unquoted variable in the command`, () => {
       expect(line(chain('$(echo ', ')', n, '$X')), String(n)).toEqual(['unquoted'])
       expect(line(chain('$( (echo ', ') )', n, '$X')), String(n)).toEqual(['unquoted'])
     }
-    // The scan reads each level of the 20,000 chains, and coverage makes it slow on CI.
+    // For each of 100 levels, `closingParen` reads the rest of a 20,000 chain. Coverage makes
+    // this slow on CI.
   }, 30_000)
 
   it('does not throw for a substitution that holds very many variables', () => {
