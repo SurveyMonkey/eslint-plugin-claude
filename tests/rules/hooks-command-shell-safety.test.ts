@@ -546,12 +546,13 @@ describe(`${name}: an unquoted variable in the command`, () => {
   it('does not throw for a substitution that holds very many variables', () => {
     // Before #960, the scan gave the names of a substitution to its caller as the arguments of
     // one call. More than about 120,000 names threw a RangeError.
+    // The last two commands put the substitution past the limit of 100 levels.
     const many = '$X '.repeat(150_000)
-    const deep = (open: string, close: string) =>
-      `echo ${open.repeat(101)}${many}${close.repeat(101)}`
+    const deep = (inner: string) => `echo ${'$(echo '.repeat(100)}${inner}${')'.repeat(100)}`
     expect(line(`echo $(echo ${many})`)).toEqual(['unquoted'])
     expect(line(`echo \`echo ${many}\``)).toEqual(['unquoted'])
-    expect(line(deep('$(echo ', ')'))).toEqual(['unquoted'])
+    expect(line(deep(`$(echo ${many})`))).toEqual(['unquoted'])
+    expect(line(deep(`\`echo ${many}\``))).toEqual(['unquoted'])
   }, 30_000)
 
   it('counts each parameter in the rest of the level past 100 levels, and only there', () => {
