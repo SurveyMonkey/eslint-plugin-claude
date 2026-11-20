@@ -41,8 +41,9 @@ Claude Code ignores these variables in the `env` block of any settings file:[^ig
 - The variables that Claude Code reads from the launch environment only:
   `CLAUDE_CODE_PROJECT_DIR_NAME`, `CLAUDE_CODE_RESTRICTED`,
   `CLAUDE_CODE_DISABLE_POWERSHELL_CMD_RM_DENY`, `CLAUDE_CODE_DISABLE_DANGEROUS_RM_TIMEOUT`,
-  `CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT`, `CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT` and
-  `CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT`.
+  `CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT`, `CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT`,
+  `CLAUDE_CODE_STRICT_INLINE_SHELL_RM_PROMPT`, `CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT` and
+  `CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK`.
 - `CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION`. Claude Code ignores a copy in a settings `env` block.[^vars]
 - `CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS`. Claude Code reads it from the launch environment only.
 - `CLAUDE_CODE_RESUME_HINT_COMMAND`. Claude Code ignores it in the `env` block of a settings file.[^vars]
@@ -65,7 +66,8 @@ can set them, so the rule makes no report in a managed file.[^ignored]
   variables `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_ASSISTANT_RESPONSES`, `OTEL_LOG_TOOL_CONTENT` and
   `OTEL_LOG_TOOL_DETAILS`, each `OTEL_EXPORTER_OTLP_*` variable that ends in `_ENDPOINT`,
   `_HEADERS`, `_PROTOCOL`, `_CERTIFICATE`, `_CLIENT_KEY` or `_INSECURE`, and
-  `OTEL_EXPORTER_PROMETHEUS_HOST` and `OTEL_EXPORTER_PROMETHEUS_PORT`.
+  `OTEL_EXPORTER_PROMETHEUS_HOST`, `OTEL_EXPORTER_PROMETHEUS_PORT` and
+  `OTEL_RESOURCE_INCLUDE_HOST`.
 - `OTEL_LOG_MANAGED_SETTINGS`. A value in project or local settings does not turn it on.[^vars]
 - Variables that change how Claude Code starts or syncs: `CLAUDE_CODE_PROCESS_WRAPPER`,
   `CLAUDE_CODE_SYNC_SKILLS`, `CLAUDE_CODE_SYNC_PLUGINS`, `CLAUDE_CODE_PLUGIN_CACHE_DIR` and
