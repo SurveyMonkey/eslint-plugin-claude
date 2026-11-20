@@ -28,9 +28,9 @@ const isStringList = (value: unknown): boolean =>
 
 const quoted = (values: readonly string[]): string => values.map((v) => `\`${v}\``).join(', ')
 
-// The docs give `autoCompactWindow` as a plain integer from 100000 to 1000000. YAML reads `1.5e5`
-// as a number, so for a number the rule reads the text of the value. Claude Code reads the digits
-// of a string, so a quoted `"200000"` is valid.
+// The docs give `autoCompactWindow` as a plain integer of at least 100000. YAML reads `1.5e5` as a
+// number, so for a number the rule reads the text of the value. Claude Code reads the digits of a
+// string, so a quoted `"200000"` is valid.
 const PLAIN_INTEGER = /^\d+$/
 
 /** The fault in the value of the known field `key`, or null. `text` is the value as written. */
@@ -52,9 +52,9 @@ function valueProblem(key: string, value: unknown, text: string): Problem | null
   }
   if (key === 'autoCompactWindow') {
     const digits = typeof value === 'string' ? value : text
-    return PLAIN_INTEGER.test(digits) && Number(digits) >= 100000 && Number(digits) <= 1000000
+    return PLAIN_INTEGER.test(digits) && Number(digits) >= 100000
       ? null
-      : wrong('a plain integer from 100000 to 1000000')
+      : wrong('a plain integer of at least 100000')
   }
   if (key === 'skills') {
     return isStringList(value) ? null : wrong('a list of skill names')
