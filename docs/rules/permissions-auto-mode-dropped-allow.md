@@ -33,6 +33,11 @@ The rule reports these `allow` rules:
 - A wildcarded interpreter: the program `python` with only a `*` after it. Examples are `Bash(python*)`,
   `Bash(python *)` and `Bash(python:*)`.[^dropped] The option `interpreters` adds programs to this list. A `PowerShell` rule gets
   the same check, because `autoMode.classifyAllShell` names both shell tools.[^classify]
+- A wrapper from the process-wrapper list with only a `*` after it, such as `Bash(timeout *)`.
+- A shell rule that starts with a wildcard, such as `Bash(* --version)`.
+- A path-like program with only a `*` after it, such as `Bash($HOME/bin/*)` or
+  `Bash(C:\tools\x.exe *)`. The docs say "some wildcarded paths" and give no complete list, so
+  the rule reports a program that starts with `/`, a drive letter, `~`, `$HOME/` or `${HOME}/`.
 - Every `Agent` allow rule.
 - Every `Monitor` allow rule, because Claude Code runs Monitor commands through the shell.[^dropped] Before v2.1.236, Claude Code
   kept `Monitor` allow rules in effect in auto mode. The rule has no version option, so it reports them on every version.[^dropped]
@@ -54,7 +59,8 @@ rules that the docs name, and it reads these facts from the files:
 
 The rule does not check these cases:
 
-- A package-manager run command and a shell-wrapper prefix. The docs name the classes and give no list of commands.
+- A package-manager run command. The docs name the class and give no list of commands.
+- A wildcarded path that does not start with `/`, a drive letter, `~`, `$HOME/` or `${HOME}/`.
 - An interpreter that is not `python` or in the option `interpreters`, and a rule with more words, such as
   `Bash(python -m pytest *)`.
 - The `permissions.defaultMode` of the file. A session can enter auto mode with Shift+Tab or a flag, whatever the file sets.
