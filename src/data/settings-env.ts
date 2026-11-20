@@ -238,7 +238,7 @@ const FORMS = new Map<string, EnvForm>([
   [
     'CLAUDE_CODE_AUTO_COMPACT_WINDOW',
     {
-      expected: 'plain digits, with an optional k or M suffix, from 100000 to 1000000 tokens',
+      expected: 'plain digits, with an optional k or M suffix, of at least 100000 tokens',
       // The suffix k means 1000 times the number and M means 1000000 times, in any letter case. The env vars row
       // says "Suffixed values such as 200k require v2.1.304 or later". The rule has no version
       // option, so it accepts the suffix.
@@ -246,7 +246,7 @@ const FORMS = new Map<string, EnvForm>([
         if (!/^\d+[kKmM]?$/.test(value)) return false
         const factor = /k$/i.test(value) ? 1000 : /m$/i.test(value) ? 1000000 : 1
         const tokens = Number(value.replace(/[kKmM]$/, '')) * factor
-        return tokens >= 100000 && tokens <= 1000000
+        return tokens >= 100000
       },
     },
   ],
