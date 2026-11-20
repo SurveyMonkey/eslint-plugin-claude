@@ -1,6 +1,5 @@
-// The permissions page, "Read and Edit": `Read` and `Edit` rules use gitignore pattern syntax.
-// "A deny or ask rule whose path isn't usable as a gitignore pattern still guards that exact
-// path. An allow rule with an unusable pattern doesn't approve anything."
+// The permissions page, "Special characters and ! negation": `Read` and `Edit` rules use
+// gitignore pattern syntax. "An allow rule with an unusable pattern doesn't approve anything."
 // https://code.claude.com/docs/en/permissions#read-and-edit
 import { describe, expect, it } from 'vitest'
 import { lintJson } from '../rule-tester.test-support.ts'
@@ -36,17 +35,13 @@ describe(`${name}: the reports`, () => {
     expect(message?.message).toContain('approves nothing')
   })
 
-  it('reports a deny or ask rule as one that guards the literal path only', () => {
+  it('is silent for a deny or ask rule', () => {
     for (const key of ['deny', 'ask'] as const) {
-      const [message, ...rest] = lint(list(key, 'Read(./secrets[1/**)'))
-      expect(rest).toEqual([])
-      expect(message?.messageId, key).toBe('guardsLiteralPath')
-      expect(message?.message, key).toContain(`\`${key}\``)
-      expect(message?.message, key).toContain('guards only the literal path')
+      expect(ids(list(key, 'Read(./secrets[1/**)')), key).toEqual([])
     }
   })
 
-  it('reports for Read and Edit, and for a bracket in each position', () => {
+  it('reports an allow rule for Read and Edit, and for a bracket in each position', () => {
     for (const rule of [
       'Read([)',
       'Edit(a[)',
@@ -63,20 +58,20 @@ describe(`${name}: the reports`, () => {
       'Read(a[b]c[d)',
       'Read([a][b)',
     ]) {
-      expect(ids(list('deny', rule)), rule).toEqual(['guardsLiteralPath'])
+      expect(ids(list('allow', rule)), rule).toEqual(['approvesNothing'])
     }
   })
 
-  it('reports a deny or ask rule in the form of a parameter name of one letter', () => {
+  it('reports an allow rule in the form of a parameter name of one letter', () => {
     // A one-letter name is a path with a colon, as in `permissions-windows-path`.
-    expect(ids(list('deny', 'Read(a:[b)'))).toEqual(['guardsLiteralPath'])
+    expect(ids(list('allow', 'Read(a:[b)'))).toEqual(['approvesNothing'])
   })
 
   it('reports each entry once, at its line, column and end', () => {
-    const [message, ...rest] = lint(JSON.stringify(list('deny', 'Read(a[b)', 'Read(a/b)')))
+    const [message, ...rest] = lint(JSON.stringify(list('allow', 'Read(a[b)', 'Read(a/b)')))
     expect(rest).toEqual([])
     expect([message?.line, message?.column, message?.endLine, message?.endColumn]).toEqual([
-      1, 25, 1, 36,
+      1, 26, 1, 37,
     ])
   })
 })
