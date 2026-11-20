@@ -792,7 +792,7 @@ Source: the Scope column of the settings index [^settings-reference-settings-ind
 
 - CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH, CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS: plain digits only. CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS: positive whole number.
 - CLAUDE_CODE_FORK_SUBAGENT: `0`. CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: `1`.
-- CLAUDE_CODE_AUTO_COMPACT_WINDOW: 100000 to 1000000 tokens, in plain digits or with a `k` or `M` suffix (any letter case; no version condition). BASH_MAX_OUTPUT_LENGTH: at most 150000.
+- CLAUDE_CODE_AUTO_COMPACT_WINDOW: at least 100000 tokens, in plain digits or with a `k` or `M` suffix (any letter case; no version condition). BASH_MAX_OUTPUT_LENGTH: at most 150000.
 - CLAUDE_CODE_TOOL_MEMORY_LIMIT: digits with optional K, M, G, T, or `0`, `off`, `false`, `no`, `none`. CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE: comma list of mcp, lsp, hooks, plugin, helper, agent, or `none`, `all-new`.
 - ENABLE_TOOL_SEARCH: `true`, `false`, `auto`, `auto:N` (N 0 to 100). MCP_SDK_GENERATION: `v1`, `v2`. MCP_PROTOCOL_NEGOTIATION: `auto`, `legacy`.
 - CLAUDE_CODE_PROMPT_CACHE_TTL, CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL: `5m`, `1h`. CLAUDE_CODE_EFFORT_LEVEL: a level, `auto` or `unset`, never `ultracode`.

@@ -49,17 +49,28 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'a positive whole number in plain digits',
   },
   {
-    // "from 100000 to 1000000 tokens. Suffixed values such as 200k require v2.1.304 or later".
+    // "a token count of 100000 or more. Suffixed values such as 200k require v2.1.304 or later".
     // The docs name the k suffix only. The M suffix and any letter case are choices of the plugin.
     name: 'CLAUDE_CODE_AUTO_COMPACT_WINDOW',
-    pass: ['100000', '500000', '1000000', '200k', '1M', '1000k', '200K', '1m', '100k', '0001M'],
+    pass: [
+      '100000',
+      '500000',
+      '1000000',
+      '1000001',
+      '1500000',
+      '200k',
+      '1M',
+      '2M',
+      '1000k',
+      '1001k',
+      '200K',
+      '1m',
+      '100k',
+      '0001M',
+    ],
     fail: [
       '99999',
-      '1000001',
       '50k',
-      '2M',
-      '1001k',
-      '1500000',
       '5e5',
       '500_000',
       '500000.0',
@@ -73,7 +84,7 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
       '0M',
       '99k',
     ],
-    expected: 'plain digits, with an optional k or M suffix, from 100000 to 1000000 tokens',
+    expected: 'plain digits, with an optional k or M suffix, of at least 100000 tokens',
   },
   {
     // "default: 30000; maximum: 150000".
