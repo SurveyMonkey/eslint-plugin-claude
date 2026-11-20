@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/permissions-invalid-path-pattern, which reports a Read or Edit path rule with an unclosed bracket, because Claude Code cannot use it as a gitignore pattern, so an allow rule approves nothing and a deny or ask rule guards only the literal path.
+description: The ESLint rule claude/permissions-invalid-path-pattern, which reports an allow rule for a Read or Edit path with an unclosed bracket, because Claude Code cannot use it as a gitignore pattern, so the rule approves nothing.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [15]
@@ -27,19 +27,16 @@ It reads no hidden drop-in, because Claude Code ignores it.
 
 ## Rule details
 
-`Read` and `Edit` rules use gitignore pattern syntax.[^patterns] The docs say what happens to a pattern that Claude Code
-cannot use. "A deny or ask rule whose path isn't usable as a gitignore pattern still guards that exact path. An allow
-rule with an unusable pattern doesn't approve anything."[^special]
+`Read` and `Edit` rules use gitignore pattern syntax.[^patterns] The docs say that an allow rule with a pattern Claude
+Code cannot use "doesn't approve anything".[^special]
 
 The docs do not say which patterns are unusable. The changelog of Claude Code gives one example: an unclosed `[`. It
 records the fix under 2.1.260. The live docs page of the changelog is too large to cite. Read the entry in the
 [changelog file](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md). So the rule checks this one form.
 
-The rule reports a `Read` or `Edit` specifier with a `[` that has no `]` to close it. These are reports:
-`Edit(docs/[draft/**)`, `Read([)` and `Read([]a)`. The report names the list:
-
-- In `allow`, the rule approves nothing.
-- In `deny` and `ask`, the rule guards only the literal path. It does not guard the files that the pattern was meant to cover.
+The rule reports an allow rule with a `Read` or `Edit` specifier that has a `[` with no `]` to close it. These are
+reports: `Edit(docs/[draft/**)`, `Read([)` and `Read([]a)`. A deny or ask rule is silent, because the docs no longer
+describe an unusable pattern there as a fault.
 
 A `]` right after `[`, `[!` or `[^` is a member of the class, as in gitignore. So `Read([]].ts)` is silent, and
 `Read([]a)` is a report. A backslash escapes the next character, so `Read(a\[b)` is silent. Claude Code writes such
@@ -67,13 +64,13 @@ The rule reads the last of two keys of one name, as `JSON.parse` does. It skips 
 Fail:
 
 ```json
-{ "permissions": { "allow": ["Edit(docs/[draft/**)"], "deny": ["Read(./secrets[1/**)"] } }
+{ "permissions": { "allow": ["Edit(docs/[draft/**)"] } }
 ```
 
 Pass:
 
 ```json
-{ "permissions": { "allow": ["Edit(docs/[draft]/**)"], "deny": ["Read(./secrets\\[1\\]/**)"] } }
+{ "permissions": { "allow": ["Edit(docs/[draft]/**)"], "deny": ["Read(./secrets[1/**)"] } }
 ```
 
 ## Usage
