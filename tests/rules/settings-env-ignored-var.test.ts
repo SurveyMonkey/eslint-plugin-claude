@@ -48,8 +48,6 @@ const EVERY_FILE = [
 // "Project and local settings can't set variables that a checked-out repository shouldn't
 // control". A name with a family is one member of it.
 const PROJECT_ONLY = [
-  // "Claude Code ignores it in project and local settings" (env vars reference).
-  'CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR',
   'CLAUDE_CONFIG_DIR',
   'CLAUDE_CODE_TMPDIR',
   'HOME',
@@ -99,6 +97,8 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
+  // "Claude Code ignores it in project and local settings" (env vars reference).
+  'CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR',
   // "Variables that set your claude.ai sign-in". `CLAUDE_CODE_OAUTH_TOKEN` is not here. It is a
   // credential, and `settings-env-credential` gives its report (see `CREDENTIAL`).
   'CLAUDE_CODE_OAUTH_REFRESH_TOKEN',

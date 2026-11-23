@@ -512,7 +512,7 @@ jsonTester.run('settings-schema (types)', rule, {
       type('disableMobileSimulatorTools', 'a Boolean'),
       type('disableDesktopLocalSessions', 'a Boolean'),
     ),
-    // `enforceAnthropicSignIn`, a managed Boolean key of the settings index (#1034).
+    // `enforceAnthropicSignIn`, a managed key. Its settings reference entry gives the type Boolean (#1034).
     bad({ enforceAnthropicSignIn: 'true' }, type('enforceAnthropicSignIn', 'a Boolean')),
     // `disableRemotePreviewScripts`, a managed Boolean key: a string and a number are wrong types (#857).
     bad({ disableRemotePreviewScripts: 'true' }, type('disableRemotePreviewScripts', 'a Boolean')),
