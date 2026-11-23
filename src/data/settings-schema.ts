@@ -138,6 +138,7 @@ const BOOLEAN_KEYS = [
   'disableSkillShellExecution',
   'disableWorkflows',
   'emojiCompletionEnabled',
+  'enforceAnthropicSignIn',
   'enableAllProjectMcpServers',
   'enableArtifact',
   'enableWorkflows',

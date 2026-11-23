@@ -289,6 +289,13 @@ const FORMS: { name: string; pass: string[]; fail: string[]; expected: string }[
     expected: 'low, medium, high, xhigh, max, auto or unset',
   },
   {
+    // "`low`, `medium`, `high`, `xhigh`, or `max`" (#1059). The row names no `auto` or `unset`.
+    name: 'CLAUDE_CODE_SUBAGENT_EFFORT',
+    pass: ['low', 'medium', 'high', 'xhigh', 'max'],
+    fail: ['auto', 'unset', 'Low', 'ultracode'],
+    expected: 'low, medium, high, xhigh or max',
+  },
+  {
     // "Accepts a path to a bash or zsh binary. Other shells such as fish are not supported".
     name: 'CLAUDE_CODE_SHELL',
     pass: ['/opt/homebrew/bin/bash', '/bin/zsh', 'bash', 'C:\\Program Files\\Git\\bin\\bash.exe'],
