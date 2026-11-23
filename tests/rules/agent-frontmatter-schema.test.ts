@@ -64,13 +64,13 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
     ...['"true"', '"False"', '"yes"', '"On"', '"1"', '"0"'].map((v) =>
       file(`omitClaudeMd: ${v}\n`),
     ),
-    // The ends of the range of `autoCompactWindow`, and a comment after the value.
+    // The lower edge of `autoCompactWindow`, a value above the old upper edge, and a comment.
     file('autoCompactWindow: 100000\n'),
-    file('autoCompactWindow: 1000000\n'),
+    file('autoCompactWindow: 1000001\n'),
     file('autoCompactWindow: 200000 # tokens\n'),
     // The docs say that Claude Code reads `200k` as 200, so it reads the digits of a string. A
-    // string of plain digits in the range is valid.
-    ...['"200000"', "'1000000'", '!!str 100000'].map((v) => file(`autoCompactWindow: ${v}\n`)),
+    // string of plain digits at or above the minimum is valid.
+    ...['"200000"', "'1000001'", '!!str 100000'].map((v) => file(`autoCompactWindow: ${v}\n`)),
     // An empty value is an absent field.
     file('name:\ndescription:\ntools:\nmaxTurns:\nexperimental:\nautoCompactWindow:\n'),
     { code: '# No frontmatter\n', filename: local },
@@ -161,14 +161,12 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
     ...[
       '200k',
       '99999',
-      '1000001',
       '1.5e5',
       '0x30d40',
       '+200000',
       '0',
       '"200k"',
       '"99999"',
-      '"1000001"',
       '" 200000"',
       'true',
       '[200000]',
@@ -176,7 +174,7 @@ markdownTester.run('agent-frontmatter-schema', ruleOf('agent-frontmatter-schema'
       ...file(`autoCompactWindow: ${v}\n`),
       errors: [
         {
-          ...wrong('autoCompactWindow', 'a plain integer from 100000 to 1000000'),
+          ...wrong('autoCompactWindow', 'a plain integer of at least 100000'),
           line: 2,
           column: 20,
           endColumn: 20 + v.length,
