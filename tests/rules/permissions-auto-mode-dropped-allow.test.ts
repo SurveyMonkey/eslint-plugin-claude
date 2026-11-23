@@ -52,6 +52,19 @@ describe(`${name}: the report`, () => {
     expect(allow('PowerShell(python*)')).toEqual(['dropped'])
   })
 
+  it('reports wildcarded wrappers, leading wildcards, and wildcarded paths', () => {
+    for (const rule of [
+      'Bash(timeout *)',
+      'Bash(timeout:*)',
+      'PowerShell(nohup*)',
+      'Bash(* --version)',
+      'Bash($HOME/bin/*)',
+      'Bash(C:\\tools\\x.exe *)',
+    ]) {
+      expect(allow(rule), rule).toEqual(['dropped'])
+    }
+  })
+
   it('reports an Agent rule and a Monitor rule, with or without a specifier', () => {
     for (const rule of ['Agent', 'Agent(Explore)', 'Monitor', 'Monitor(tail *)']) {
       expect(allow(rule), rule).toEqual(['dropped'])
@@ -123,6 +136,9 @@ describe(`${name}: the silent cases`, () => {
       'Bash(python -m pytest)',
       'Bash(python -m pytest *)',
       'Bash(git *)',
+      'Bash(timeout 30 npm test)',
+      'Bash(bin/*)',
+      'Bash(C:\\tools\\x.exe)',
       'Bash(pythonista*)',
       'Bash(nodemon *)',
       'Bash()',

@@ -4,6 +4,7 @@
 // the docs name, unless the settings source turns auto mode off. `permissions-allow-unrestricted`
 // owns `Bash(*)`, `PowerShell(*)` and the bare names, so this rule skips them.
 import type { JSONRuleDefinition } from '@eslint/json'
+import { STRIPPED_WRAPPERS } from '../data/bash-commands.ts'
 import { SHELL_TOOLS } from '../data/shell-tools.ts'
 import { docsUrl } from '../docs-url.ts'
 import { commandWords } from '../permission-command.ts'
@@ -20,13 +21,16 @@ type Options = [{ interpreters: string[] }]
  *  `interpreters` adds to it. */
 const INTERPRETERS = ['python']
 
+/** The start of a rule for one absolute or home-relative path. The docs say "some wildcarded
+ *  paths" and name no complete list, so the rule reports these forms only. */
+const PATH_LIKE = /^(?:[A-Za-z]:[\\/]|[\\/]|~[\\/]|\$HOME[\\/]|\$\{HOME\}[\\/])/
+
 /** The places of the lock that turns auto mode off, as the docs give them. In managed settings,
  *  any value but null reads as "disable", at the top level and inside `permissions`. */
 const LOCKS = [['disableAutoMode'], ['permissions', 'disableAutoMode']]
 
-/** Why auto mode drops `rule`, or null when it keeps the rule. A wildcarded interpreter is a rule
- *  with only a `*` after the program name, as in `python*` and `python *`. A rule for every
- *  command is for `permissions-allow-unrestricted`. */
+/** Why auto mode drops `rule`, or null when it keeps the rule. A rule for every command is for
+ *  `permissions-allow-unrestricted`. */
 function reasonOf({ tool, specifier }: ParsedRule, interpreters: string[]): string | null {
   if (tool === 'Agent' || tool === 'Monitor') {
     return `is an allow rule for ${tool}`
@@ -41,9 +45,19 @@ function reasonOf({ tool, specifier }: ParsedRule, interpreters: string[]): stri
   const glued = program.endsWith('*')
   const bare = glued ? program.slice(0, -1) : program
   const wildcard = glued ? rest.length === 0 : rest.length === 1 && rest[0] === '*'
-  return interpreters.includes(bare) && wildcard
-    ? `is a wildcarded \`${bare}\` interpreter rule`
-    : null
+  if (program === '*' && rest.length === 0) {
+    return null
+  }
+  if (interpreters.includes(bare) && wildcard) {
+    return `is a wildcarded \`${bare}\` interpreter rule`
+  }
+  if (STRIPPED_WRAPPERS.includes(bare) && wildcard) {
+    return `is a wildcarded \`${bare}\` wrapper rule`
+  }
+  if (program.startsWith('*')) {
+    return 'is a shell rule that starts with a wildcard'
+  }
+  return PATH_LIKE.test(program) && wildcard ? 'is a wildcarded path rule' : null
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: Options; MessageIds: 'dropped' }> = {
