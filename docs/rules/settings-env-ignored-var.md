@@ -44,7 +44,7 @@ Claude Code ignores these variables in the `env` block of any settings file:[^ig
   `CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT`, `CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT`,
   `CLAUDE_CODE_STRICT_INLINE_SHELL_RM_PROMPT`, `CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT` and
   `CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK`.
-- `CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION`. Claude Code ignores a copy in a settings `env` block.[^vars]
+- `CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME`. Claude Code ignores it in a settings `env` block.[^vars]
 - `CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS`. Claude Code reads it from the launch environment only.
 - `CLAUDE_CODE_RESUME_HINT_COMMAND`. Claude Code ignores it in the `env` block of a settings file.[^vars]
 
@@ -72,6 +72,7 @@ can set them, so the rule makes no report in a managed file.[^ignored]
 - Variables that change how Claude Code starts or syncs: `CLAUDE_CODE_PROCESS_WRAPPER`,
   `CLAUDE_CODE_SYNC_SKILLS`, `CLAUDE_CODE_SYNC_PLUGINS`, `CLAUDE_CODE_PLUGIN_CACHE_DIR` and
   `CLAUDE_CODE_PLUGIN_SEED_DIR`.
+- `CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR`. Claude Code ignores it in project and local settings.[^vars]
 - The variables that set the claude.ai sign-in: `CLAUDE_CODE_OAUTH_REFRESH_TOKEN` and
   `CLAUDE_CODE_OAUTH_SCOPES`. `CLAUDE_CODE_OAUTH_TOKEN` is the third variable of this group. The
   rule makes no report for it when its value has text (see below).

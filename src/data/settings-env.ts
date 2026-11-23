@@ -33,12 +33,12 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_AUTO_MODE_SERVER', '2.1.271'],
   ['CLAUDE_CODE_BASH_EDIT_DIFF', '2.1.269'],
   ['CLAUDE_CODE_CONFIG_LOCK_WAIT_MS', '2.1.318'],
-  ['CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION', '2.1.223'],
   ['CLAUDE_CODE_DISABLE_AUTH_REFRESH_LOCK', '2.1.286'],
   ['CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_DEFAULT', '2.1.239'],
   ['CLAUDE_CODE_DISABLE_BG_STABLE_PATH', '2.1.295'],
   ['CLAUDE_CODE_DISABLE_CFC_PROMPT', '2.1.257'],
   ['CLAUDE_CODE_DISABLE_DANGEROUS_RM_TIMEOUT', '2.1.281'],
+  ['CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME', '2.1.328'],
   ['CLAUDE_CODE_DISABLE_FEATURE_FLAGS', '2.1.319'],
   ['CLAUDE_CODE_DISABLE_FILE_MENTIONS', '2.1.299'],
   ['CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT', '2.1.288'],
@@ -48,6 +48,8 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_DISABLE_MTLS_RELOAD_ON_STALE_CONNECTION', '2.1.232'],
   ['CLAUDE_CODE_DISABLE_PERMISSION_PROMPT_NOTIFY_HOOKS', '2.1.233'],
   ['CLAUDE_CODE_DISABLE_POWERSHELL_CMD_RM_DENY', '2.1.283'],
+  ['CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR', '2.1.327'],
+  ['CLAUDE_CODE_DISABLE_SHELL_HEAD_START', '2.1.327'],
   ['CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS', '2.1.288'],
   ['CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT', '2.1.281'],
   ['CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK', '2.1.309'],
@@ -61,6 +63,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_ENABLE_TODO_TOOLS', '2.1.233'],
   ['CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS', '2.1.311'],
   ['CLAUDE_CODE_FORWARD_SUBAGENT_TEXT', '2.1.211'],
+  ['CLAUDE_CODE_FULL_SIGN_IN_LINK', '2.1.330'],
   ['CLAUDE_CODE_GATEWAY_HINT_HEADERS', '2.1.273'],
   ['CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS', '2.1.269'],
   ['CLAUDE_CODE_GOAL_CHECKIN_MINUTES', '2.1.234'],
@@ -90,6 +93,8 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS', '2.1.305'],
   ['CLAUDE_CODE_SKIP_MODEL_ACCESS_MEMORY', '2.1.285'],
   ['CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '2.1.274'],
+  ['CLAUDE_CODE_STRICT_INLINE_SHELL_RM_PROMPT', '2.1.299'],
+  ['CLAUDE_CODE_SUBAGENT_EFFORT', '2.1.315'],
   ['CLAUDE_CODE_SUBAGENT_MODEL_FORCE', '2.1.257'],
   ['CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL', '2.1.242'],
   ['CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE', '2.1.246'],
@@ -112,6 +117,7 @@ const ENV_FIRST_VERSIONS = new Map<string, string>([
   ['OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT', '2.1.214'],
   ['OTEL_LOG_MANAGED_SETTINGS', '2.1.274'],
   ['OTEL_METRICS_INCLUDE_REPOSITORY', '2.1.269'],
+  ['OTEL_RESOURCE_INCLUDE_HOST', '2.1.326'],
 ])
 
 /** The first Claude Code version that reads `name`. It is `undefined` when the list has no
@@ -316,6 +322,10 @@ const FORMS = new Map<string, EnvForm>([
   ['CLAUDE_CODE_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
   ['CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL', PROMPT_CACHE_TTL],
   [
+    'CLAUDE_CODE_SUBAGENT_EFFORT',
+    oneOf('low, medium, high, xhigh or max', ['low', 'medium', 'high', 'xhigh', 'max']),
+  ],
+  [
     'CLAUDE_CODE_EFFORT_LEVEL',
     oneOf('low, medium, high, xhigh, max, auto or unset', [
       'low',
@@ -347,8 +357,8 @@ export function envValueForm(name: string): EnvForm | undefined {
 
 /** Variables that Claude Code ignores in the `env` block of every settings file. The settings
  *  reference names two kinds. Host platforms own the identity variables. Claude Code exports
- *  the others, or reads them from the launch environment only. The env vars reference names one
- *  more: `CLAUDE_CODE_RESUME_HINT_COMMAND`. */
+ *  the others, or reads them from the launch environment only. The env vars reference names two
+ *  more: `CLAUDE_CODE_RESUME_HINT_COMMAND` and `CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME`. */
 const IGNORED_IN_EVERY_FILE = new Set([
   'CLAUDE_CODE_REMOTE',
   'CLAUDE_CODE_ACCOUNT_UUID',
@@ -363,11 +373,11 @@ const IGNORED_IN_EVERY_FILE = new Set([
   'CLAUDE_CODE_STRICT_INLINE_SHELL_RM_PROMPT',
   'CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT',
   'CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK',
-  'CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION',
   'CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS',
   'CLAUDE_CODE_WARN_DISK_FREE_GIB',
   'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
   'CLAUDE_CODE_RESUME_HINT_COMMAND',
+  'CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME',
 ])
 
 /** Variables that Claude Code ignores in project and local settings. The user, managed and
@@ -418,6 +428,8 @@ const IGNORED_IN_PROJECT_FILES: readonly (string | RegExp)[] = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
+  // The env vars reference: Claude Code ignores it in project and local settings.
+  'CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR',
   // The variables that set the claude.ai sign-in.
   'CLAUDE_CODE_OAUTH_TOKEN',
   'CLAUDE_CODE_OAUTH_REFRESH_TOKEN',

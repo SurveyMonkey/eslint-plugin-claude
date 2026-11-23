@@ -46,6 +46,7 @@ const MANAGED_ONLY: readonly string[] = [
   'disableMobileSimulatorTools',
   'disableRemotePreviewScripts',
   'disableSideloadFlags',
+  'enforceAnthropicSignIn',
   'forceRemoteSettingsRefresh',
   'gatewayInternalNetworks',
   'managedMcpServers',

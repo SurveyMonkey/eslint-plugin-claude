@@ -148,6 +148,7 @@ jsonTester.run('settings-schema (valid)', rule, {
         availableModelsMatch: 'exact',
         browserExternalPageTools: 'DISABLE',
         disableBrowserExternalNavigation: true,
+        enforceAnthropicSignIn: true,
         forceLoginMethod: 'gateway',
         forceLoginOrgUUID: '123E4567-E89B-12D3-A456-426614174000',
         managedSourcesBehavior: 'merge',
@@ -511,6 +512,8 @@ jsonTester.run('settings-schema (types)', rule, {
       type('disableMobileSimulatorTools', 'a Boolean'),
       type('disableDesktopLocalSessions', 'a Boolean'),
     ),
+    // `enforceAnthropicSignIn`, a managed key. Its settings reference entry gives the type Boolean (#1034).
+    bad({ enforceAnthropicSignIn: 'true' }, type('enforceAnthropicSignIn', 'a Boolean')),
     // `disableRemotePreviewScripts`, a managed Boolean key: a string and a number are wrong types (#857).
     bad({ disableRemotePreviewScripts: 'true' }, type('disableRemotePreviewScripts', 'a Boolean')),
     bad({ disableRemotePreviewScripts: 1 }, type('disableRemotePreviewScripts', 'a Boolean')),

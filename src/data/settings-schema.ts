@@ -141,6 +141,7 @@ const BOOLEAN_KEYS = [
   'enableAllProjectMcpServers',
   'enableArtifact',
   'enableWorkflows',
+  'enforceAnthropicSignIn',
   'enforceAvailableModels',
   'fastMode',
   'fastModePerSessionOptIn',

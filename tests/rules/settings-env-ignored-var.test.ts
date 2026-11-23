@@ -35,11 +35,12 @@ const EVERY_FILE = [
   'CLAUDE_CODE_STRICT_INLINE_SHELL_RM_PROMPT',
   'CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT',
   'CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK',
-  'CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION',
   'CLAUDE_CODE_WARN_DISK_FREE_GIB',
   'CLAUDE_CODE_WARN_MEMORY_FREE_GIB',
   // "It also ignores the variable in a settings file's `env` block" (env vars reference).
   'CLAUDE_CODE_RESUME_HINT_COMMAND',
+  // "Ignored in a settings `env` block" (env vars reference).
+  'CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME',
   // The docs say Claude Code ignores it from every file. It reads the launch environment only.
   'CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS',
 ]
@@ -96,6 +97,8 @@ const PROJECT_ONLY = [
   'CLAUDE_CODE_SYNC_PLUGINS',
   'CLAUDE_CODE_PLUGIN_CACHE_DIR',
   'CLAUDE_CODE_PLUGIN_SEED_DIR',
+  // "Claude Code ignores it in project and local settings" (env vars reference).
+  'CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR',
   // "Variables that set your claude.ai sign-in". `CLAUDE_CODE_OAUTH_TOKEN` is not here. It is a
   // credential, and `settings-env-credential` gives its report (see `CREDENTIAL`).
   'CLAUDE_CODE_OAUTH_REFRESH_TOKEN',

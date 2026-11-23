@@ -138,7 +138,7 @@ describe('the value forms, against the docs', () => {
       expect(VARIABLES).toContain(`| \`${name}\` |`)
     }
     expect(VARIABLES).toContain('maximum: 150000')
-    expect(VARIABLES).toContain('from `100000` to `1000000`')
+    expect(VARIABLES).toContain('a token count of `100000` or more')
     // The ranges of the plain-digit forms.
     expect(VARIABLES).toContain('from 500 to 32000 in plain digits')
     expect(VARIABLES).toContain('from 32000 to 300000 in plain digits')
