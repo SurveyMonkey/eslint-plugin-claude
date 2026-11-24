@@ -44,7 +44,7 @@ const rule: MarkdownRuleDefinition<{
       bundled:
         '`{{name}}` is the name of a bundled skill. A skill with this name replaces the bundled skill, but not its aliases. Rename the skill, or add the name to the option `allow`.',
       notLoaded:
-        '`{{name}}` is a name that Claude Code does not load for a skill or command, where `/ship` is available. The bundled `/ship` or `/steward` runs instead. Rename the skill, or add the name to the option `allow`.',
+        'Claude Code does not load a skill or command with the name `{{name}}`, where `/ship` is available. The bundled `/ship` or `/steward` runs instead. Rename the skill, or add the name to the option `allow` to silence this report.',
       notTaken:
         '`{{name}}` is the name of a command that Claude Code owns, so the field `name` does not take it. The folder name `{{folder}}` still invokes the skill. Use another name, or add the name to the option `allow`.',
     },
@@ -85,19 +85,23 @@ const rule: MarkdownRuleDefinition<{
         const start = { line: 1, column: 1 }
         const ownLoc =
           named && given === own ? fm.at(field.valueStart, field.valueEnd) : { start, end: start }
-        // `ownerOf` accepts a built-in name only. So `escapeName` has no effect on `own` or
+        // `ownerOf` accepts a listed name only. So `escapeName` has no effect on `own` or
         // `given` here. It guards the message. Only `folder` can hold a refused character.
         const messageId = ownerOf(own)
         if (messageId !== null) {
           context.report({ loc: ownLoc, messageId, data: { name: escapeName(own) } })
         }
-        // A `name` field that is a name Claude Code owns does not take.
-        if (named && given !== own && ownerOf(given) !== null) {
-          context.report({
-            loc: fm.at(field.valueStart, field.valueEnd),
-            messageId: 'notTaken',
-            data: { name: escapeName(given), folder: escapeName(own) },
-          })
+        // A `name` field that is a name Claude Code owns does not take. A `name` field that is
+        // a name that Claude Code does not load gets the report of that name.
+        if (named && given !== own) {
+          const givenId = ownerOf(given)
+          if (givenId !== null) {
+            context.report({
+              loc: fm.at(field.valueStart, field.valueEnd),
+              messageId: givenId === 'notLoaded' ? 'notLoaded' : 'notTaken',
+              data: { name: escapeName(given), folder: escapeName(own) },
+            })
+          }
         }
       },
     }
