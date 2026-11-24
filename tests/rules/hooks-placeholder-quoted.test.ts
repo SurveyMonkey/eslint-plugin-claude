@@ -239,6 +239,7 @@ describe(`${name}: an unquoted placeholder in a substitution`, () => {
       `FOO=$(cat ${P}/a) run`,
       `echo "it's $(cat ${P}/a)"`,
       `echo a#"$(cat ${P}/a)"`,
+      `echo a\\\n#"$(cat ${P}/a)"`,
       `echo "a # $(cat ${P}/a)"`,
       `echo hi # x\necho "$(cat ${P}/a)"`,
     ]) {
