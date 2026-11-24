@@ -14,12 +14,14 @@ const name = 'plugin-feature-min-version' as const
 const SKILLS_DOT = '2.1.221'
 // The first version that loads a plugin with `options` on a `userConfig` field.
 const OPTIONS = '2.1.271'
+// The first version that accepts the `engines` field. The manifest reference "Fields" gives it.
+const ENGINES = '2.1.323'
 
 type Options = [{ minVersion?: string }]
 
 const rule: JSONRuleDefinition<{
   RuleOptions: Options
-  MessageIds: 'skillsDot' | 'options'
+  MessageIds: 'skillsDot' | 'options' | 'engines'
 }> = {
   meta: {
     type: 'problem',
@@ -34,6 +36,8 @@ const rule: JSONRuleDefinition<{
         'The `skills` path "." fails manifest validation on Claude Code before v2.1.221. Use "./" for the plugin root, or set the option `minVersion` to 2.1.221 or later.',
       options:
         'The `options` of a `userConfig` field needs Claude Code v2.1.271 or later. Before that, the plugin fails to load. Remove it, or set the option `minVersion` to 2.1.271 or later.',
+      engines:
+        'The `engines` field needs Claude Code v2.1.323 or later. Claude Code v2.0.15 through v2.1.75 rejects a manifest that has it. Remove it, or set the option `minVersion` to 2.1.323 or later.',
     },
   },
   create(context) {
@@ -50,6 +54,10 @@ const rule: JSONRuleDefinition<{
               context.report({ node: path, messageId: 'skillsDot' })
             }
           }
+        }
+        const engines = lastMember(node.body, 'engines')
+        if (engines !== undefined && supportsBefore(minVersion, ENGINES)) {
+          context.report({ node: engines.name, messageId: 'engines' })
         }
         const fields = lastMember(node.body, 'userConfig')?.value
         if (fields?.type === 'Object' && supportsBefore(minVersion, OPTIONS)) {

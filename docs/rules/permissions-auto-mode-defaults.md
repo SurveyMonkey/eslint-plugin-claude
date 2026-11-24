@@ -29,16 +29,15 @@ The rule reads managed files only. It skips a hidden drop-in in `managed-setting
 Setting any of `environment`, `allow`, `soft_deny` or `hard_deny` without `"$defaults"` replaces the whole default list
 of that section.[^override] The loss differs by list:
 
-- `soft_deny`: every built-in soft block rule, including force push, `curl | bash`, production deploys, and auto-mode bypass.[^override]
-- `hard_deny`: the built-in data exfiltration rule.[^override]
+- `soft_deny`: the built-in soft block rules, such as production deploys.[^defaults]
+- `hard_deny`: the built-in hard block rules.[^override]
 - `environment`: the built-in context, trust and sensitivity slots.[^trusted]
 - `allow`: the built-in exceptions to the soft block rules.[^override]
 
-The Danger block of the docs names the `soft_deny` and `hard_deny` loss. Its first sentence covers all four lists. Claude
+The Caution block of the docs says to include `"$defaults"` in every list you set.[^override] Claude
 Code writes the `environment` list of its own draft with no `"$defaults"`, so a managed copy of that draft is reported.
 
-The rule reports the array that has no `"$defaults"` entry. An empty array has none, so the rule reports it. The docs say
-to leave out `"$defaults"` only to own the whole list.[^override] The rule gives a warning for that choice.
+The rule reports the array that has no `"$defaults"` entry. An empty array has none, so the rule reports it.
 
 ### Scope
 
@@ -77,6 +76,7 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^override]: [Configure auto mode: Override the block and allow rules](https://code.claude.com/docs/en/auto-mode-config#override-the-block-and-allow-rules)
+[^defaults]: [Configure auto mode: Inspect the defaults and your effective config](https://code.claude.com/docs/en/auto-mode-config#inspect-the-defaults-and-your-effective-config)
 [^trusted]: [Configure auto mode: Define trusted infrastructure](https://code.claude.com/docs/en/auto-mode-config#define-trusted-infrastructure)
 [^where]: [Configure auto mode: Where the classifier reads configuration](https://code.claude.com/docs/en/auto-mode-config#where-the-classifier-reads-configuration)
 [^automode]: [All settings: autoMode](https://code.claude.com/docs/en/settings-reference#automode)

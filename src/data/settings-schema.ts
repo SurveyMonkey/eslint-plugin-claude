@@ -83,7 +83,7 @@ const COMMAND: ValueSpec = {
   fields: { type: words('command'), command: STRING },
   required: ['type', 'command'],
 }
-const AUTO_WINDOW: ValueSpec = { kind: 'number', min: 100000, max: 1000000 }
+const AUTO_WINDOW: ValueSpec = { kind: 'number', min: 100000 }
 const RATE: ValueSpec = { kind: 'number', min: 0, max: 10000 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const VERSION = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.+-]+)?$/

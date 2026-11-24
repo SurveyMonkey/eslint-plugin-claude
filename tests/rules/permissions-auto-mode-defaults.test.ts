@@ -50,9 +50,15 @@ describe(`${name}: the report`, () => {
     const [message] = at(repo({}), MANAGED, text)
     expect([message?.line, message?.column]).toEqual([3, 18])
     expect(message?.message).toContain('soft_deny')
-    expect(message?.message).toContain('force push')
+    expect(message?.message).toBe(
+      '"autoMode.soft_deny" has no "$defaults" entry, so it replaces the built-in soft block rules, such as production deploys. Add "$defaults" to keep them.',
+    )
+    for (const claim of ['force push', 'curl', 'bypass', 'own the whole list']) {
+      expect(message?.message).not.toContain(claim)
+    }
     const [hard] = at(repo({}), MANAGED, auto({ hard_deny: ['a'] }))
-    expect(hard?.message).toContain('exfiltration')
+    expect(hard?.message).toContain('the built-in hard block rules')
+    expect(hard?.message).not.toContain('exfiltration')
     const [environment] = at(repo({}), MANAGED, auto({ environment: ['a'] }))
     expect(environment?.message).toContain('trust')
     const [allow] = at(repo({}), MANAGED, auto({ allow: ['a'] }))
