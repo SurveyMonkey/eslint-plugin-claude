@@ -4,7 +4,14 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { envFirstVersion, envIgnoredIn, removedEnvVarSince } from '../src/data/settings-env.ts'
+import {
+  ENV_FIRST_VERSIONS,
+  envFirstVersion,
+  envIgnoredIn,
+  IGNORED_IN_EVERY_FILE,
+  IGNORED_IN_PROJECT_FILES,
+  removedEnvVarSince,
+} from '../src/data/settings-env.ts'
 import { NO_EFFECT_KEYS } from '../src/data/settings-keys.ts'
 
 function snapshotText(page: string, id: string): string {
@@ -74,6 +81,42 @@ describe('the variables that settings cannot set, against the settings reference
       expect(IGNORED).toContain(`\`${name}\``)
       expect(envIgnoredIn(name)).toBe('every-file')
     }
+  })
+})
+
+describe('the names in the lists, against the docs', () => {
+  // A name that the docs do not show is wrong. The RegExp entries are families, and the family
+  // text test above checks their text.
+  const hasRow = (name: string) => VARIABLES.includes(`| \`${name}\` |`)
+  // The settings reference names each ignored variable, except these. Only the env vars
+  // reference names them, in a table row.
+  const ROW_ONLY = new Set([
+    'CLAUDE_CODE_RESUME_HINT_COMMAND',
+    'CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME',
+    'OTEL_LOG_MANAGED_SETTINGS',
+    'CLAUDE_CODE_DISABLE_PROXY_SCHEME_REPAIR',
+  ])
+  const ignoredNamed = (name: string) =>
+    ROW_ONLY.has(name) ? hasRow(name) : IGNORED.includes(`\`${name}\``)
+  const projectNames = IGNORED_IN_PROJECT_FILES.filter(
+    (entry): entry is string => typeof entry === 'string',
+  )
+
+  it('gives a table row to each first-version variable in the env vars reference', () => {
+    const names = [...ENV_FIRST_VERSIONS.keys()]
+    expect(names.length).toBeGreaterThan(90)
+    expect(names.filter((name) => !hasRow(name))).toEqual([])
+  })
+
+  it('names each variable that every file ignores in the docs', () => {
+    const names = [...IGNORED_IN_EVERY_FILE]
+    expect(names.length).toBeGreaterThan(10)
+    expect(names.filter((name) => !ignoredNamed(name))).toEqual([])
+  })
+
+  it('names each variable that project files ignore in the docs', () => {
+    expect(projectNames.length).toBeGreaterThan(30)
+    expect(projectNames.filter((name) => !ignoredNamed(name))).toEqual([])
   })
 })
 
