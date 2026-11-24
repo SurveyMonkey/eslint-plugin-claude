@@ -33,8 +33,9 @@ dependency are the exception:[^non-git]
   marketplace entry sets one before they install the plugin that needs it.
 
 These operations follow the same limits: `/reload-plugins`, the auto-update of the marketplace, a
-repeat of `claude plugin install` and `claude plugin marketplace add`.[^non-git] `claude plugin
-validate` reads one plugin. It does not read its marketplace, so it does not report this (checked on
+repeat of `claude plugin install` and `claude plugin marketplace add`.[^non-git][^auto-install]
+From Claude Code v2.1.319, `claude plugin update` and **Update now** in `/plugin` follow the same
+limits. `claude plugin validate` reads one plugin. It does not read its marketplace, so it does not report this (checked on
 Claude Code 2.1.296).
 
 The rule reads the `dependencies` array of `plugin.json`. It finds the `marketplace.json` that
@@ -80,4 +81,5 @@ Put the rule in `rules`, in the config block that extends `claude/recommended`. 
 ## Sources
 
 [^non-git]: [Plugin dependencies: Constrain a dependency that has a non-git source](https://code.claude.com/docs/en/plugins/dependencies#constrain-a-dependency-that-has-a-non-git-source)
+[^auto-install]: [Plugin dependencies: When a dependency installs automatically](https://code.claude.com/docs/en/plugins/dependencies#when-a-dependency-installs-automatically)
 [^dependencies]: [Plugin manifest reference: dependencies](https://code.claude.com/docs/en/plugins/manifest-reference#dependencies)
