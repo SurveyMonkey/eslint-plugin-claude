@@ -33,7 +33,7 @@ severity is `warn`.
 | All types  | `type`, `if`, `timeout`, `statusMessage`, `once`                |
 | `command`  | `command`, `args`, `async`, `asyncRewake`, `shell`, `onFailure` |
 | `http`     | `url`, `headers`, `allowedEnvVars`, `onFailure`                 |
-| `mcp_tool` | `server`, `tool`, `input`                                       |
+| `mcp_tool` | `server`, `tool`, `input`, `onFailure`                          |
 | `prompt`   | `prompt`, `model`, `continueOnBlock`                            |
 | `agent`    | `prompt`, `model`                                               |
 
