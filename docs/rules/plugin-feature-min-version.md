@@ -1,6 +1,6 @@
 ---
 type: Reference
-description: The ESLint rule claude/plugin-feature-min-version, which with the option minVersion reports a plugin.json feature that needs a Claude Code newer than minVersion, namely skills "." and userConfig options, with its option, examples and sources.
+description: The ESLint rule claude/plugin-feature-min-version, which with the option minVersion reports a plugin.json feature that needs a Claude Code newer than minVersion, namely skills ".", userConfig options and engines, with its option, examples and sources.
 owner: brianespinosa
 created: 2026-10-10
 related_issues: [11]
@@ -35,12 +35,14 @@ is older than the version that added it:
 | --------------------------------- | -------- | ------------------------------------------------------------------------- | ------------------------------ |
 | `"."` as a `skills` path          | v2.1.221 | Manifest validation fails. Use `"./"`, which means the same.[^path-rules] | Path rules, changelog          |
 | `options` on a `userConfig` field | v2.1.271 | The plugin fails to load.[^options]                                       | Limit a field to fixed options |
+| `engines`                         | v2.1.323 | v2.0.15 through v2.1.75 reject the manifest.[^fields]                     | Fields                         |
 
 The rule reports these places:
 
 - Each `"."` string in the `skills` key, whether it is the value or an element of an array. The
   report is on the string.
 - The `options` member of each field in `userConfig`.
+- The `engines` key at the top level. The report is on the key.
 
 The changelog lists the `"."` path under 2.1.221. Its entry says: "Changed plugins to accept `"."`
 as a `skills` path". See the [Claude Code changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
@@ -98,4 +100,5 @@ numbers, such as `2.1.221`.
 
 [^path-rules]: [Plugin manifest reference: Path rules](https://code.claude.com/docs/en/plugins/manifest-reference#path-rules)
 [^options]: [Plugin manifest reference: Limit a field to fixed options](https://code.claude.com/docs/en/plugins/manifest-reference#limit-a-field-to-fixed-options)
+[^fields]: [Plugin manifest reference: Fields](https://code.claude.com/docs/en/plugins/manifest-reference#fields)
 [^listing]: [Plugin manifest reference: Directory listing fields](https://code.claude.com/docs/en/plugins/manifest-reference#directory-listing-fields)

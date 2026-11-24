@@ -41,6 +41,8 @@ const SKILLS_DOT =
   'The `skills` path "." fails manifest validation on Claude Code before v2.1.221. Use "./" for the plugin root, or set the option `minVersion` to 2.1.221 or later.'
 const OPTIONS =
   'The `options` of a `userConfig` field needs Claude Code v2.1.271 or later. Before that, the plugin fails to load. Remove it, or set the option `minVersion` to 2.1.271 or later.'
+const ENGINES =
+  'The `engines` field needs Claude Code v2.1.323 or later. Claude Code v2.0.15 through v2.1.75 rejects a manifest that has it. Remove it, or set the option `minVersion` to 2.1.323 or later.'
 const TONE = { tone: { type: 'string', title: 'Tone', description: 'd', options: ['a', 'b'] } }
 
 describe(RULE, () => {
@@ -94,6 +96,9 @@ describe(RULE, () => {
       ['options'],
     ],
     ['both features', { skills: '.', userConfig: TONE }, '2.1.200', ['skillsDot', 'options']],
+    ['engines', { engines: { 'claude-code': '>=2.1.400' } }, '2.1.322', ['engines']],
+    ['engines with any value', { engines: 1 }, '2.1.0', ['engines']],
+    ['engines and skills "."', { engines: {}, skills: '.' }, '2.1.220', ['engines', 'skillsDot']],
   ])('reports %s below its version', (_title, fields, minVersion, expected) => {
     expect(ids(fields, minVersion)).toEqual(expected)
   })
@@ -103,6 +108,22 @@ describe(RULE, () => {
     expect(ids(fields, '2.1.220')).toEqual(['skillsDot', 'options'])
     expect(ids(fields, '2.1.221')).toEqual(['options'])
     expect(ids(fields, '2.1.271')).toEqual([])
+  })
+
+  check('reports engines, with the full message and the position of the key', () => {
+    const { dir } = pluginTree('{}')
+    const code = '{"name": "p", "engines": {"claude-code": ">=2.1.400"}}'
+    const found = lint(dir, code, { minVersion: '2.1.322' })
+    expect(found).toHaveLength(1)
+    expect(found[0]).toMatchObject({
+      ruleId: `claude/${RULE}`,
+      messageId: 'engines',
+      message: ENGINES,
+      line: 1,
+      column: 15,
+      endLine: 1,
+      endColumn: 24,
+    })
   })
 
   check('reports in a plugin below the repository root', () => {
@@ -117,7 +138,7 @@ describe(`${RULE} (silent)`, () => {
     ['no option', undefined],
     ['an empty option object', {}],
   ])('stays silent for every feature with %s', (_title, options) => {
-    expect(run({ skills: '.', userConfig: TONE }, options)).toEqual([])
+    expect(run({ skills: '.', engines: {}, userConfig: TONE }, options)).toEqual([])
   })
 
   check.each([
@@ -125,6 +146,8 @@ describe(`${RULE} (silent)`, () => {
     ['skills "." above its version', { skills: '.' }, '2.2.0'],
     ['userConfig options', { userConfig: TONE }, '2.1.271'],
     ['userConfig options above its version', { userConfig: TONE }, '2.1.1000'],
+    ['engines', { engines: { 'claude-code': '>=2.1.400' } }, '2.1.323'],
+    ['engines above its version', { engines: {} }, '2.2.0'],
   ])(
     'stays silent for %s with minVersion at or above the version',
     (_title, fields, minVersion) => {
@@ -147,6 +170,7 @@ describe(`${RULE} (silent)`, () => {
     ['userConfig that is a string', { userConfig: 'options' }],
     ['userConfig that is an array', { userConfig: [{ options: [] }] }],
     ['a userConfig field that is a string', { userConfig: { t: 'options' } }],
+    ['an engines key in a nested object', { x: { engines: {} } }],
     ['an options key beside userConfig', { options: [], userConfig: {} }],
     ['an options key one level too deep', { userConfig: { t: { x: { options: [] } } } }],
   ])('stays silent for %s, at minVersion 2.0.0', (_title, fields) => {
