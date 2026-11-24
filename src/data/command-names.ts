@@ -1,7 +1,8 @@
 // The command names that Claude Code owns, from the All commands table of
 // https://code.claude.com/docs/en/commands#all-commands, checked on Claude
 // Code 2.1.296 on 2026-10-10. Review this list on or before 2027-04-10, the
-// `stale_after` date of docs/rules/skill-name-shadows-builtin.md.
+// `stale_after` date of docs/rules/skill-name-shadows-builtin.md. The bundled skills `ship`
+// and `steward` were added on 2026-11-24.
 //
 // An alias is not in either list. The skills page says that a skill replaces
 // the command with its name, but not its aliases (`/review`, `/cost`, `/stats`).
@@ -129,7 +130,16 @@ export const BUNDLED_SKILLS: readonly string[] = [
   'loop',
   'run',
   'run-skill-generator',
+  'ship',
   'slides',
+  'steward',
   'update-config',
   'workflow-authoring',
 ]
+
+/** The names that Claude Code does not load as a skill or command of a project, where `/ship`
+ *  is available. The skills page, "Resolve skills that share a name", gives them: the bundled
+ *  `/ship` or `/steward` runs, and a skill with the same name does not load. `ship-local` is
+ *  not a row of the commands table, so it is in this set only. Checked on 2026-11-24. Review
+ *  this set with the lists above. */
+export const NOT_LOADED_SKILLS: readonly string[] = ['ship', 'ship-local', 'steward']

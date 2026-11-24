@@ -158,6 +158,22 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
       filename: inFolder('loop'),
       errors: [{ messageId: 'bundled', data: { name: 'loop' } }],
     },
+    // Claude Code does not load a skill or command named `ship`, `ship-local` or `steward`.
+    ...['ship', 'ship-local', 'steward'].map((folder) => ({
+      code: bare,
+      filename: inFolder(folder),
+      errors: [{ messageId: 'notLoaded' as const, data: { name: folder }, line: 1, column: 1 }],
+    })),
+    {
+      code: '# C\n',
+      filename: '.claude/commands/ship.md',
+      errors: [{ messageId: 'notLoaded', data: { name: 'ship' } }],
+    },
+    {
+      code: named('steward'),
+      filename: inFolder('s'),
+      errors: [{ messageId: 'notTaken', data: { name: 'steward', folder: 's' } }],
+    },
     // A command file takes its name from its path.
     {
       code: '# C\n',

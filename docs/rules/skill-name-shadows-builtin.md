@@ -47,6 +47,10 @@ case. The lists leave out these names:
   supported setup. `/verify` records its recipe in `.claude/skills/verify/SKILL.md`. From v2.1.286,
   Claude Code runs a skill with either name before a commit, except for changes to docs or tests.
 
+A skill or command with the name `ship`, `ship-local` or `steward` gets another report. Where
+`/ship` is available, Claude Code does not load it. The bundled `/ship` or `/steward` runs
+instead.[^resolve] The option `allow` covers these names too.
+
 The rule checks skills and commands outside a plugin. A plugin skill has the namespace
 `/plugin-name:skill-name`, so it cannot replace a built-in command.[^resolve] The rule skips plugin
 files.

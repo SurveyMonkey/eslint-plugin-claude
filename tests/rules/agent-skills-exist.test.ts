@@ -84,6 +84,7 @@ describe('agent-skills-exist', () => {
     })
     it('for a bundled skill, and for the option allow', () => {
       expect(run({}, list('verify', 'code-review', 'Simplify'))).toEqual([])
+      expect(run({}, list('ship', 'steward'))).toEqual([])
       expect(run({}, list('user-skill'), AGENT, [{ allow: ['USER-skill'] }])).toEqual([])
     })
     it('for a skill of the plugin', () => {
