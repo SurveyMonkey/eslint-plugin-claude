@@ -21,9 +21,9 @@ const VARIABLES = PATH_VARIABLES.join('|')
 /** A reference to a path variable: `${NAME}`, or `$NAME` that no name character follows. */
 const REFERENCE = new RegExp(`\\$\\{(?:${VARIABLES})\\}|\\$(?:${VARIABLES})(?![A-Za-z0-9_])`, 'g')
 
-/** The first reference in `line` that sits outside quotes, or undefined. Each reference becomes two
- *  marks with a backslash and a space between them. Private-use characters delimit each mark, so a
- *  quoted text such as "0 0" cannot look like one.
+/** The first reference in `line` that sits outside quotes at the level of `line`, or undefined.
+ *  Each reference becomes two marks with a backslash and a space between them. Private-use
+ *  characters delimit each mark, so a quoted text such as "0 0" cannot look like one.
  *
  *  Out of quotes, the reader drops the backslash. In quotes, it keeps it. A `${...}` expansion does
  *  not change this, so a reference in the value of an unquoted expansion is out of quotes too. bash
@@ -40,22 +40,30 @@ function levelReference(line: string): string | undefined {
   return found.find((_, mark) => words.some((word) => word.includes(`${mark} ${mark}`)))
 }
 
+/** A `case` word in the place of a command. */
+const CASE = /(?:^|[;&|(\n])\s*case\s/
+
 /** The text of each command substitution and backtick pair in `line`, at the level of `line`. A
  *  nested one is in the text of its outer one. Single quotes and comments hide a substitution.
- *  A comment that starts in a `${...}` expansion hides the rest of the line: that can miss a
- *  report, and gives no false one. In backticks, the shell removes a backslash before `$`, a
- *  backtick or a backslash, and before a double quote when the pair is in double quotes. */
-function substitutionsIn(line: string): string[] {
+ *  A `#` after a blank in a `${...}` expansion starts a comment here, to the next new line. That
+ *  can miss a report. It gives no false report. In backticks, the shell removes a backslash before
+ *  `$`, a backtick or a backslash. In double quotes, it also removes one before a double quote.
+ *
+ *  `closingParen` cannot tell the `)` of a `case` pattern from the `)` that ends a substitution.
+ *  So the result is undefined when the text of a `$(...)` holds a `case` command. */
+function substitutionsIn(line: string): string[] | undefined {
   const texts: string[] = []
   let quoted = false
-  // True when the next character starts a word.
+  // True when the next character starts a word. The shell removes each backslash and new line
+  // pair first, so a pair does not change `boundary`.
   let boundary = true
   for (let i = 0; i < line.length; i++) {
     const char = line.charAt(i)
-    const before = boundary
+    const before: boolean = boundary
     boundary = false
     if (char === '\\') {
       i++
+      boundary = before && line.charAt(i) === '\n'
     } else if (char === "'" && !quoted) {
       const end = line.indexOf("'", i + 1)
       i = end === -1 ? line.length : end
@@ -63,7 +71,11 @@ function substitutionsIn(line: string): string[] {
       quoted = !quoted
     } else if (char === '$' && line.charAt(i + 1) === '(') {
       const end = closingParen(line, i + 1)
-      texts.push(line.slice(i + 2, end))
+      const text = line.slice(i + 2, end)
+      if (CASE.test(text)) {
+        return undefined
+      }
+      texts.push(text)
       i = end
     } else if (char === '`') {
       const end = tickEnd(line, i)
@@ -75,7 +87,9 @@ function substitutionsIn(line: string): string[] {
       i = end === -1 ? line.length : end
       boundary = true
     } else {
-      boundary = !quoted && /[\s;|&<>]/.test(char)
+      // A `#` after the `(` or `)` of a subshell starts a word. The `)` of a substitution does
+      // not come here, because the `$(` branch skips it.
+      boundary = !quoted && /[\s;|&<>()]/.test(char)
     }
   }
   return texts
@@ -84,13 +98,18 @@ function substitutionsIn(line: string): string[] {
 /** The first reference in `line` that sits outside quotes at its own level, or undefined. Bash
  *  splits the value of a reference in a command substitution, also when the substitution is in
  *  double quotes. So `levelReference` reads the line, and then the text of each substitution in
- *  it. A level that is deeper than `MAX_NESTING` gets no report. */
+ *  it. A level that is deeper than `MAX_NESTING` gets no report. A line with a `case` command in a
+ *  `$(...)` gets no report (see `substitutionsIn`). */
 function unquotedReference(line: string, depth = 0): string | undefined {
+  const texts = substitutionsIn(line)
+  if (texts === undefined) {
+    return undefined
+  }
   const found = levelReference(line)
   if (found !== undefined || depth >= MAX_NESTING) {
     return found
   }
-  for (const text of substitutionsIn(line)) {
+  for (const text of texts) {
     const inner = unquotedReference(text, depth + 1)
     if (inner !== undefined) {
       return inner
