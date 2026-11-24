@@ -60,6 +60,13 @@ describe(`${name}: an unknown field`, () => {
     )
   })
 
+  it('lists onFailure among the fields of an mcp_tool hook', () => {
+    const [message] = lintJson(name, settings(hooks('Stop', [mcp({ bogus: 1 })])), FILES.project)
+    expect(message?.message).toBe(
+      'The "bogus" field is not documented for the "mcp_tool" hook type. The fields are "type", "if", "timeout", "statusMessage", "once", "server", "tool", "input" and "onFailure".',
+    )
+  })
+
   it('reports at the key of the field', () => {
     const text =
       '{\n  "hooks": {\n    "Stop": [{"hooks": [{"type": "command", "command": "c", "bogus": 1}]}]\n  }\n}'
@@ -80,9 +87,10 @@ describe(`${name}: a known field`, () => {
     expect(ids(agent({ ...common, model: 'm' }))).toEqual([])
   })
 
-  it('is silent for onFailure on a command and an http hook', () => {
+  it('is silent for onFailure on a command, an http and an mcp_tool hook', () => {
     expect(ids(command({ onFailure: 'block' }))).toEqual([])
     expect(ids(http({ onFailure: 'continue' }))).toEqual([])
+    expect(ids(mcp({ onFailure: 'block' }))).toEqual([])
   })
 })
 
@@ -90,7 +98,6 @@ describe(`${name}: what the other rules own`, () => {
   it('leaves a misplaced async, asyncRewake, continueOnBlock and onFailure to hooks-handler-field-ignored', () => {
     expect(ids(http({ async: true, asyncRewake: true }))).toEqual([])
     expect(ids(command({ continueOnBlock: true }))).toEqual([])
-    expect(ids(mcp({ onFailure: 'block' }))).toEqual([])
     expect(ids(agent({ continueOnBlock: true, onFailure: 'block' }))).toEqual([])
     const text = settings(hooks('Stop', [http({ async: true, bogus: 1 })]))
     expect(jsonIds('hooks-handler-field-ignored', text, FILES.project)).toEqual(['asyncType'])

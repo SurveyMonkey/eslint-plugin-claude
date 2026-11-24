@@ -79,7 +79,7 @@ const FIELDS = new Map<string, Kind>([
   ['continueOnBlock', 'boolean'],
 ])
 
-/** The fields with a fixed set of values. `onFailure` needs Claude Code v2.1.295. */
+/** The fields with a fixed set of values. `onFailure` needs Claude Code v2.1.295, or v2.1.328 on an `mcp_tool` hook. */
 const ENUMS = new Map([
   ['shell', ['bash', 'powershell']],
   ['onFailure', ['continue', 'block']],

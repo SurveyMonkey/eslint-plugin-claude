@@ -174,8 +174,8 @@ export const COMMON_HANDLER_FIELDS: readonly string[] = [
   'once',
 ]
 
-/** The fields that only one handler type lists, by type. `onFailure` is on `command`, `http` and `mcp_tool`
- *  hooks, and `continueOnBlock` on `prompt` hooks. */
+/** The fields of each handler type, beyond the common fields. `onFailure` is on `command`, `http` and
+ *  `mcp_tool` hooks. `continueOnBlock` is on `prompt` hooks. */
 export const HANDLER_FIELDS: Readonly<Record<HandlerType, readonly string[]>> = {
   command: ['command', 'args', 'async', 'asyncRewake', 'shell', 'onFailure'],
   http: ['url', 'headers', 'allowedEnvVars', 'onFailure'],

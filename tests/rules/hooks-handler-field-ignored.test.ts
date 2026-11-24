@@ -243,6 +243,27 @@ describe(`${name}: onFailure`, () => {
     }
   })
 
+  it('reports onFailure on an mcp_tool hook of the events where exit code 2 keeps Claude working', () => {
+    for (const event of ['Stop', 'SubagentStop', 'TaskCompleted', 'TeammateIdle']) {
+      expect(
+        ids(event, { type: 'mcp_tool', server: 's', tool: 't', onFailure: 'block' }),
+        event,
+      ).toEqual(['onFailureEvent'])
+    }
+  })
+
+  it('reports only async on an mcp_tool hook that sets async and onFailure', () => {
+    expect(
+      ids('PreToolUse', {
+        type: 'mcp_tool',
+        server: 's',
+        tool: 't',
+        async: true,
+        onFailure: 'block',
+      }),
+    ).toEqual(['asyncType'])
+  })
+
   it('reports onFailure on a background command hook', () => {
     expect(ids('PreToolUse', command({ onFailure: 'block', async: true }))).toEqual([
       'onFailureAsync',
