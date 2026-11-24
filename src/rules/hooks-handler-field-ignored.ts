@@ -109,7 +109,7 @@ function problemsOf({ source, event, handler }: HookHandler, limits: Options): P
       )
     }
   }
-  if (known && type !== 'command' && type !== 'http') {
+  if (known && type !== 'command' && type !== 'http' && type !== 'mcp_tool') {
     add('onFailure', 'onFailureType', { type })
   } else if (ON_FAILURE_IGNORED.includes(event)) {
     add('onFailure', 'onFailureEvent', { event })
@@ -163,7 +163,7 @@ const rule: Rule.RuleModule = {
       timeoutSessionEndLimit:
         'This SessionEnd "timeout" is above the configured limit of {{max}} seconds.',
       onFailureType:
-        '"onFailure" works on a command or http hook only. Claude Code ignores it on a "{{type}}" hook.',
+        '"onFailure" works on a command, http or mcp_tool hook only. Claude Code ignores it on a "{{type}}" hook.',
       onFailureEvent:
         'Claude Code ignores "onFailure" on {{event}}. Exit code 2 on this event sends Claude back to work.',
       onFailureAsync: 'Claude Code ignores "onFailure" on a hook that runs in the background.',

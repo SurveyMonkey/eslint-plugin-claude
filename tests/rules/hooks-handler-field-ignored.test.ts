@@ -224,17 +224,44 @@ describe(`${name}: SessionEnd timeout`, () => {
 })
 
 describe(`${name}: onFailure`, () => {
-  it('reports onFailure on a handler that is not a command or http', () => {
+  it('reports onFailure on a handler that is not a command, http or mcp_tool', () => {
     expect(ids('PreToolUse', prompt({ onFailure: 'block' }))).toEqual(['onFailureType'])
+    expect(ids('PreToolUse', { type: 'agent', prompt: 'Is it safe?', onFailure: 'block' })).toEqual(
+      ['onFailureType'],
+    )
+  })
+
+  it('is silent on onFailure on an mcp_tool hook', () => {
     expect(
       ids('PreToolUse', { type: 'mcp_tool', server: 's', tool: 't', onFailure: 'block' }),
-    ).toEqual(['onFailureType'])
+    ).toEqual([])
   })
 
   it('reports onFailure on the events where exit code 2 keeps Claude working', () => {
     for (const event of ['Stop', 'SubagentStop', 'TaskCompleted', 'TeammateIdle']) {
       expect(ids(event, command({ onFailure: 'block' })), event).toEqual(['onFailureEvent'])
     }
+  })
+
+  it('reports onFailure on an mcp_tool hook of the events where exit code 2 keeps Claude working', () => {
+    for (const event of ['Stop', 'SubagentStop', 'TaskCompleted', 'TeammateIdle']) {
+      expect(
+        ids(event, { type: 'mcp_tool', server: 's', tool: 't', onFailure: 'block' }),
+        event,
+      ).toEqual(['onFailureEvent'])
+    }
+  })
+
+  it('reports only async on an mcp_tool hook that sets async and onFailure', () => {
+    expect(
+      ids('PreToolUse', {
+        type: 'mcp_tool',
+        server: 's',
+        tool: 't',
+        async: true,
+        onFailure: 'block',
+      }),
+    ).toEqual(['asyncType'])
   })
 
   it('reports onFailure on a background command hook', () => {
