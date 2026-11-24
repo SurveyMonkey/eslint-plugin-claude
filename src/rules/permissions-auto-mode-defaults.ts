@@ -17,9 +17,8 @@ const name = 'permissions-auto-mode-defaults' as const
 const DROPPED: Readonly<Record<string, string>> = {
   environment: 'the built-in environment entries: the context, trust and sensitivity slots',
   allow: 'the built-in allow exceptions',
-  soft_deny:
-    'every built-in soft block rule, including force push, `curl | bash`, production deploys, and auto-mode bypass',
-  hard_deny: 'the built-in data exfiltration rule',
+  soft_deny: 'the built-in soft block rules, such as production deploys',
+  hard_deny: 'the built-in hard block rules',
 }
 
 const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'replaced' }> = {
@@ -32,7 +31,7 @@ const rule: JSONRuleDefinition<{ RuleOptions: []; MessageIds: 'replaced' }> = {
     schema: [],
     messages: {
       replaced:
-        '"autoMode.{{list}}" has no "$defaults" entry, so it replaces {{dropped}}. Add "$defaults", or keep it out only to own the whole list.',
+        '"autoMode.{{list}}" has no "$defaults" entry, so it replaces {{dropped}}. Add "$defaults" to keep them.',
     },
   },
   create(context) {
