@@ -199,6 +199,7 @@ describe(`${name}: a quoted placeholder`, () => {
     // bash 5.3.9 gives one word for this line. The reader cannot tell the `)` of the pattern from
     // the `)` of the substitution.
     expect(run(`echo "$(case x in a) cat "${P}"/f;; esac)"`)).toEqual([])
+    expect(run(`echo "$(cd /; case x in a) cat "${P}"/f;; esac)"`)).toEqual([])
     // The rule makes no report for the line, also when a placeholder has no quotes.
     expect(run(`echo "$(case x in a) cat ${P}/f;; esac)"`)).toEqual([])
     expect(run(`echo $(case x in a) cat ${P}/f;; esac)`)).toEqual([])
