@@ -116,6 +116,14 @@ describe(`${name}: an unquoted variable in the command`, () => {
     }
   })
 
+  it('does not read a brace form of a parameter that has an operator', () => {
+    // Only `${1}`, `${@}` and `${*}` are in scope of #980. The closing brace of the pattern
+    // keeps `${1:-x}` and `${@:2}` out. The rule does not report them yet.
+    for (const text of [`cat \${1:-x}`, `cat \${@:2}`]) {
+      expect(line(text), text).toEqual([])
+    }
+  })
+
   it('is silent for a quoted variable inside a quoted command substitution', () => {
     for (const text of [
       'cd "$(dirname "$0")"',

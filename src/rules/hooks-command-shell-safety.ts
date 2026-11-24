@@ -34,7 +34,7 @@ const OTHER_LANGUAGE = /\.(?:py|js|mjs|cjs|ts|rb|ps1|bat|cmd)$/i
 const SHELL_SHEBANG = /^#!.*\b(?:ba|z|da|k)?sh\b/
 /** A variable or a positional or special parameter, as the scan of `unquotedVariables` reads one. */
 const PARAMETER = /\$(?:\{#?([A-Za-z_]\w*)|\{(\d+|[@*])\}|([A-Za-z_]\w*|\d|[@*]))/g
-/** `PARAMETER` at one index: a sticky copy, so the scan needs no slice of the text. */
+/** A copy of `PARAMETER` with the `y` flag. It matches only at `lastIndex`, so the match needs no slice. */
 const PARAMETER_AT = new RegExp(PARAMETER.source, 'y')
 const VARIABLE = /\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*))/g
 const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
