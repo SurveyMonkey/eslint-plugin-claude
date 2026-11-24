@@ -110,8 +110,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
   })
 
   it('is silent for a quoted brace form and for a count', () => {
-    // bash prints one word for each of these: a quoted `${@}` or `${1}` does not split, and
-    // `${#}`, `${#@}` and `${#*}` give a count.
+    // A quoted `${@}` or `${1}` does not split a value. `${#}`, `${#@}` and `${#*}` give a count.
     for (const text of [`cat "\${@}"`, `cat "\${1}"`, `cat \${#}`, `cat \${#@}`, `cat \${#*}`]) {
       expect(line(text), text).toEqual([])
     }
@@ -216,7 +215,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       `echo \${@// #/}`,
       `echo \${@:-\${@% #*}}`,
       // The inner expansion ends, and the `#` is still in the outer one.
-      `echo \${@:-\${@} #*}`,
+      `echo \${@:-\${@:-x} #*}`,
       'ls a\\ #b',
       'ls a \\ #b',
       // The shell removes the backslash and the new line, so the `#` is in the word `a#b`.
@@ -332,7 +331,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       // expansion, a lone parenthesis or a process substitution in it.
       `echo \${1% #*} $F`,
       `echo \${1:-$(true) #y}; echo $F`,
-      `echo \${1:-\${2} #y} $F`,
+      `echo \${1:-\${2:-x} #y} $F`,
       `echo \${1:-(x #y} $F`,
       `echo \${1:-x) #y} $F`,
       `echo \${1:-<(echo }) #y} $F`,
@@ -341,7 +340,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       `echo \${1:-<(true #'\n)} $F`,
       // In the command, the rule skips `CLAUDE_PROJECT_DIR`. A quote or a nested `\${` in its
       // expansion does not end it.
-      `echo \${CLAUDE_PROJECT_DIR:-\${2} #y} $F`,
+      `echo \${CLAUDE_PROJECT_DIR:-\${2:-x} #y} $F`,
       `echo \${CLAUDE_PROJECT_DIR:-"}" #y} $F`,
       // The scan reads a variable in the expansion too.
       `echo \${CLAUDE_PROJECT_DIR:-$F}`,
@@ -376,6 +375,12 @@ describe(`${name}: an unquoted variable in the command`, () => {
       `x=\${F// /_}$T`,
       `A=\${b:-x y}$F true`,
       `A=\${b:-<(true)}$F`,
+      // The process substitution closes, and the expansion goes on, so a nested one counts too.
+      `A=\${a:-<(true \${b:-<(true)} x)}$F`,
+      // After the process substitution and the expansion close, a test reads again.
+      `echo \${CLAUDE_PROJECT_DIR:-<(true)}; [[ $F == x ]]`,
+      // A group in parentheses ends, so the next assignment value is not a variable.
+      `(true); A=$B cmd`,
       // The `]]` of the array index does not end the test.
       `[[ \${a[b[0]]} == $T ]]`,
     ]) {
@@ -582,11 +587,31 @@ describe(`${name}: an unquoted variable in the command`, () => {
   }, 30_000)
 
   it('scans a long run of parentheses in linear time', () => {
-    // The scan once checked every outer level at each character, so the time grew with the
-    // square of the run. 80,000 parentheses took about one second then.
+    // The scan once checked every outer level at each character. So the time increased with
+    // the square of the number of parentheses. 150,000 took about four seconds then, and
+    // takes well under one second now.
     const start = performance.now()
-    expect(line(`echo ${'('.repeat(20_000)} $X`)).toEqual(['unquoted'])
-    expect(performance.now() - start).toBeLessThan(500)
+    expect(line(`echo ${'('.repeat(150_000)} $X`)).toEqual(['unquoted'])
+    expect(performance.now() - start).toBeLessThan(1500)
+  })
+
+  it('reads a parameter only where it starts, and skips a quoted one after a non-parameter', () => {
+    // A `$` that is no parameter must not make the scan find the next `"$X"` in quotes.
+    expect(line('echo $? "$X"')).toEqual([])
+    expect(line('echo $ "$X"')).toEqual([])
+  })
+
+  it('names a brace form in the rest of the level past 100 levels', () => {
+    const deep = (inner: string) => `echo ${'$(echo '.repeat(100)}${inner}${')'.repeat(100)}`
+    const variables = (text: string) =>
+      lintJson(
+        name,
+        settings(hooks('PostToolUse', [command({ command: text })], 'Write')),
+        path.join(repo({}), '.claude/settings.json'),
+      ).map((message) => message.message.match(/uses (\S+) with/)?.[1])
+    expect(variables(deep(`$(true) \${@}`))).toEqual(['$@'])
+    expect(variables(deep(`$(true) \${10}`))).toEqual(['$10'])
+    expect(variables(deep(`\`true\` \${*}`))).toEqual(['$*'])
   })
 
   it('counts each parameter in the rest of the level past 100 levels, and only there', () => {
