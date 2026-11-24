@@ -37,8 +37,8 @@ path must start with `${CLAUDE_PROJECT_DIR}` or `${CLAUDE_PLUGIN_ROOT}`, with br
 [`hooks-script-shebang`](hooks-script-shebang.md). The rule makes one report for each handler, at the `command`
 string.
 
-- `unquoted`: a variable (`$NAME`, `${NAME}`, `$1`, `$@`) outside quotes. The scan skips a variable in a word that starts with `NAME=` (`A=$B`, and also `make CC=$CC`), a `[[ ... ]]` test, a comment, a special parameter such as
-  `$?`, and a variable in single or double quotes. It scans the inside of a command substitution
+- `unquoted`: a variable (`$NAME`, `${NAME}`, `$1`, `${1}`, `$@`, `${@}`, `$*`, `${*}`) outside quotes. A count of parameters (`${#}`, `${#@}`, `${#*}`) is not a variable. The scan skips a variable in a word that starts with `NAME=` (`A=$B`, and also `make CC=$CC`), a `[[ ... ]]` test, a comment, a special parameter such as
+  `$?`, `$#` or `$$`, and a variable in single or double quotes. It scans the inside of a command substitution
   (`$(...)` or a backtick pair) on its own. So a quote in it starts a new quote level. A quote or a
   parenthesis inside a substitution does not end it early.
 - `destructive`: `rm` with a recursive flag (`-r`, `-R`, `-rf`, `--recursive`) and an operand that holds a variable
@@ -56,7 +56,8 @@ the call stack small. Both come from `MAX_NESTING` (100) in `src/shell-words.ts`
 
 At a limit, the scan cannot find the quotes in the rest of the text that holds the deep substitution. For
 the second limit, this text is usually the rest of the command. So the rule counts each variable and
-parameter in that rest (`$X`, `$@`, `$*`, `$1`) as out of quotes, and reports the first one. bash
+parameter in that rest (`$X`, `$@`, `$*`, `$1`, `${@}`, `${*}`, `${1}`) as out of quotes, and
+reports the first one. bash
 reads the deeper levels. In probes, bash 3.2.57 and 5.3.9 read 101 levels of `$(` and 102 levels of
 `"$(`, and split an unquoted `$X`.
 
