@@ -156,10 +156,96 @@ describe(`${name}: a quoted placeholder`, () => {
     }
   })
 
-  it('is silent for a line with a command substitution, where quotes nest', () => {
-    expect(run(`echo "$(cd ${P} && pwd)"`)).toEqual([])
-    expect(run(`echo $(cat ${P}/a)`)).toEqual([])
-    expect(run(`echo \`cat ${P}/a\``)).toEqual([])
+  it('is silent for a placeholder that is in quotes at its own level in a substitution', () => {
+    for (const text of [
+      `echo $(cat "${P}"/a)`,
+      `echo $(cat "$CLAUDE_PROJECT_DIR"/a)`,
+      `echo "$(cat "${P}"/a)"`,
+      `echo \`cat "${P}"/a\``,
+      `echo "\`cat "${P}"/a\`"`,
+      `echo "\`cat \\"${P}\\"/a\`"`,
+      `echo $(a $(b "${P}"))`,
+      `echo "$(a "$(b "${P}")")"`,
+      `echo $(cat '${P}')`,
+      `echo '$(cat ${P}/a)'`,
+      `echo '\`cat ${P}/a\`'`,
+      `echo hi # $(cat ${P}/a)`,
+      `echo 'a $(cat ${P}/a)`,
+      `echo $(cat "${P}"/a) "${P}"`,
+      `echo "\\$(cat ${P}/a)"`,
+    ]) {
+      expect(run(text), text).toEqual([])
+    }
+  })
+
+  it('is silent for a placeholder in a comment in a substitution', () => {
+    expect(run(`echo $(cat "${P}"/a # ${P}\n)`)).toEqual([])
+  })
+
+  it('is silent for a substitution in a comment', () => {
+    // bash 5.3.9 runs none of these substitutions.
+    for (const text of [
+      `# "$(cat ${P}/a)"`,
+      `echo hi # x\n# "$(cat ${P}/a)"`,
+      `echo a \\\n# "$(cat ${P}/a)"`,
+      `(# a "$(cat ${P}/a)"\ntrue)`,
+      `(true)# "$(cat ${P}/a)"`,
+    ]) {
+      expect(run(text), text).toEqual([])
+    }
+  })
+
+  it('is silent for a line with a case command in a substitution', () => {
+    // bash 5.3.9 gives one word for this line. The reader cannot tell the `)` of the pattern from
+    // the `)` of the substitution.
+    expect(run(`echo "$(case x in a) cat "${P}"/f;; esac)"`)).toEqual([])
+    expect(run(`echo "$(cd /; case x in a) cat "${P}"/f;; esac)"`)).toEqual([])
+    // The rule makes no report for the line, also when a placeholder has no quotes.
+    expect(run(`echo "$(case x in a) cat ${P}/f;; esac)"`)).toEqual([])
+    expect(run(`echo $(case x in a) cat ${P}/f;; esac)`)).toEqual([])
+    // A case command out of the substitution, or in a backtick pair, does not stop the rule.
+    expect(run(`case x in a) cat ${P}/f;; esac; echo "$(pwd)"`)).toEqual(['unquoted'])
+    expect(run(`echo "\`case x in a) cat ${P}/f;; esac\`"`)).toEqual(['unquoted'])
+    expect(run(`echo "$(echo case x) $(cat ${P}/f)"`)).toEqual(['unquoted'])
+  })
+
+  it('is silent for a substitution that is too deep to read', () => {
+    expect(run(`${'echo "$('.repeat(150)}cat ${P}${')"'.repeat(150)}`)).toEqual([])
+    expect(run(`${'echo "$('.repeat(101)}cat ${P}${')"'.repeat(101)}`)).toEqual([])
+    // A chain of `MAX_NESTING` levels still reports.
+    expect(run(`${'echo "$('.repeat(100)}cat ${P}${')"'.repeat(100)}`)).toEqual(['unquoted'])
+    expect(run(`${'echo "$('.repeat(20)}cat ${P}${')"'.repeat(20)}`)).toEqual(['unquoted'])
+  })
+})
+
+describe(`${name}: an unquoted placeholder in a substitution`, () => {
+  it('reports a placeholder with no quotes at its own level', () => {
+    // bash splits the path in a substitution, also when the substitution is in double quotes.
+    for (const text of [
+      `echo $(cat ${P}/a)`,
+      `echo $(cat $CLAUDE_PROJECT_DIR/a)`,
+      `echo \`cat ${P}/a\``,
+      `echo \`cat $CLAUDE_PROJECT_DIR/a\``,
+      `echo "$(cat ${P}/a)"`,
+      `echo "$(cat $CLAUDE_PROJECT_DIR/a)"`,
+      `echo "\`cat ${P}/a\`"`,
+      `echo "\`cat \\"x\\" ${P}/a\`"`,
+      `echo "$(cd ${P} && pwd)"`,
+      `echo $(a $(b ${P}))`,
+      `echo "$(a "$(b ${P})")"`,
+      `echo $(a "$(b ${P})")`,
+      `echo $(a "x") $(b ${P})`,
+      `echo $(cat "${P}"/a ${P}/b)`,
+      `echo "$(cat "${P}"/a)" "$(cat ${P}/b)"`,
+      `FOO=$(cat ${P}/a) run`,
+      `echo "it's $(cat ${P}/a)"`,
+      `echo a#"$(cat ${P}/a)"`,
+      `echo a\\\n#"$(cat ${P}/a)"`,
+      `echo "a # $(cat ${P}/a)"`,
+      `echo hi # x\necho "$(cat ${P}/a)"`,
+    ]) {
+      expect(run(text), text).toEqual(['unquoted'])
+    }
   })
 })
 
