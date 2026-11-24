@@ -2,7 +2,7 @@
 // skill (docs/rules/skill-name-shadows-builtin.md). A plugin skill has a
 // namespace, so the rule checks files outside a plugin only.
 import type { MarkdownRuleDefinition } from '@eslint/markdown'
-import { BUILT_IN_COMMANDS, BUNDLED_SKILLS } from '../data/command-names.ts'
+import { BUILT_IN_COMMANDS, BUNDLED_SKILLS, NOT_LOADED_SKILLS } from '../data/command-names.ts'
 import { docsUrl } from '../docs-url.ts'
 import { classifySkillFile } from '../skill-files.ts'
 import { readFrontmatter } from '../skill-frontmatter.ts'
@@ -14,7 +14,7 @@ type Options = [{ allow: string[] }]
 
 const rule: MarkdownRuleDefinition<{
   RuleOptions: Options
-  MessageIds: 'builtIn' | 'bundled' | 'notTaken'
+  MessageIds: 'builtIn' | 'bundled' | 'notLoaded' | 'notTaken'
 }> = {
   meta: {
     type: 'suggestion',
@@ -43,6 +43,8 @@ const rule: MarkdownRuleDefinition<{
         '`{{name}}` is the name of a built-in command. In a local terminal session, a skill with this name replaces the command, but not its aliases. Rename the skill, or add the name to the option `allow`.',
       bundled:
         '`{{name}}` is the name of a bundled skill. A skill with this name replaces the bundled skill, but not its aliases. Rename the skill, or add the name to the option `allow`.',
+      notLoaded:
+        'Claude Code does not load a skill or command with the name `{{name}}`, where `/ship` is available. The bundled `/ship` or `/steward` runs instead. Rename the skill, or add the name to the option `allow` to silence this report.',
       notTaken:
         '`{{name}}` is the name of a command that Claude Code owns, so the field `name` does not take it. The folder name `{{folder}}` still invokes the skill. Use another name, or add the name to the option `allow`.',
     },
@@ -58,6 +60,9 @@ const rule: MarkdownRuleDefinition<{
     function ownerOf(given: string) {
       if (allow.includes(given)) {
         return null
+      }
+      if (NOT_LOADED_SKILLS.includes(given)) {
+        return 'notLoaded' as const
       }
       if (BUILT_IN_COMMANDS.includes(given)) {
         return 'builtIn' as const
@@ -80,19 +85,23 @@ const rule: MarkdownRuleDefinition<{
         const start = { line: 1, column: 1 }
         const ownLoc =
           named && given === own ? fm.at(field.valueStart, field.valueEnd) : { start, end: start }
-        // `ownerOf` accepts a built-in name only. So `escapeName` has no effect on `own` or
+        // `ownerOf` accepts a listed name only. So `escapeName` has no effect on `own` or
         // `given` here. It guards the message. Only `folder` can hold a refused character.
         const messageId = ownerOf(own)
         if (messageId !== null) {
           context.report({ loc: ownLoc, messageId, data: { name: escapeName(own) } })
         }
-        // A `name` field that is a name Claude Code owns does not take.
-        if (named && given !== own && ownerOf(given) !== null) {
-          context.report({
-            loc: fm.at(field.valueStart, field.valueEnd),
-            messageId: 'notTaken',
-            data: { name: escapeName(given), folder: escapeName(own) },
-          })
+        // A `name` field that is a name Claude Code owns does not take. A `name` field that is
+        // a name that Claude Code does not load gets the report of that name.
+        if (named && given !== own) {
+          const givenId = ownerOf(given)
+          if (givenId !== null) {
+            context.report({
+              loc: fm.at(field.valueStart, field.valueEnd),
+              messageId: givenId === 'notLoaded' ? 'notLoaded' : 'notTaken',
+              data: { name: escapeName(given), folder: escapeName(own) },
+            })
+          }
         }
       },
     }

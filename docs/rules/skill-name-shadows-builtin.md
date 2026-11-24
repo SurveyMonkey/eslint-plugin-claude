@@ -24,7 +24,8 @@ generated:
 
 ## Rule details
 
-A skill with the name of a bundled skill replaces it. In a local terminal session, a skill with the
+A skill with the name of a bundled skill replaces it. The names `ship`, `ship-local` and `steward` are
+the exception, as the next sections show. In a local terminal session, a skill with the
 name of a built-in command replaces the command. In both cases, the aliases still run the original. A
 project `code-review` skill replaces `/code-review`, and the alias `/review` never runs the
 skill.[^resolve] The rule reports a skill or command with such a name. The effect
@@ -46,6 +47,12 @@ case. The lists leave out these names:
 - `verify` and `simplify`. The skills page describes a project skill with either name as a
   supported setup. `/verify` records its recipe in `.claude/skills/verify/SKILL.md`. From v2.1.286,
   Claude Code runs a skill with either name before a commit, except for changes to docs or tests.
+
+A skill or command with the name `ship`, `ship-local` or `steward` gets the message `notLoaded`.
+Where `/ship` is available, Claude Code does not load the skill or command. The bundled `/ship` or
+`/steward` runs instead.[^resolve] A `name` field with one of these names gets the same message.
+The set `NOT_LOADED_SKILLS` in `src/data/command-names.ts` holds these names. The option `allow`
+only silences the report. It does not make Claude Code load the skill.
 
 The rule checks skills and commands outside a plugin. A plugin skill has the namespace
 `/plugin-name:skill-name`, so it cannot replace a built-in command.[^resolve] The rule skips plugin

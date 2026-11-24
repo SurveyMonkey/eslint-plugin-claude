@@ -36,7 +36,18 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
     { code: bare, filename: inFolder('clear'), options: [{ allow: ['clear'] }] },
     { code: named('batch'), filename: inFolder('s'), options: [{ allow: ['batch', 'x'] }] },
     { code: '# C\n', filename: '.claude/commands/compact.md', options: [{ allow: ['compact'] }] },
+    // The option `allow` covers the names that Claude Code does not load.
+    ...['ship', 'ship-local', 'steward'].flatMap((id) => [
+      { code: bare, filename: inFolder(id), options: [{ allow: [id] }] },
+      { code: '# C\n', filename: `.claude/commands/${id}.md`, options: [{ allow: [id] }] },
+      { code: named(id), filename: inFolder('s'), options: [{ allow: [id] }] },
+    ]),
+    // The match is exact, and a command in a subfolder has a name with `:`.
+    { code: bare, filename: inFolder('Ship') },
+    { code: named('Steward'), filename: inFolder('s') },
+    { code: '# C\n', filename: '.claude/commands/ns/ship.md' },
     // A plugin skill and a plugin command have the namespace `plugin:name`.
+    { code: bare, filename: pluginSkill('ship') },
     { code: named('clear'), filename: pluginSkill('clear') },
     { code: bare, filename: pluginSkill('batch') },
     { code: '# C\n', filename: pluginCommand('clear') },
@@ -157,6 +168,52 @@ markdownTester.run('skill-name-shadows-builtin', ruleOf('skill-name-shadows-buil
       code: '---\nname: [unclosed\n---\n',
       filename: inFolder('loop'),
       errors: [{ messageId: 'bundled', data: { name: 'loop' } }],
+    },
+    // Claude Code does not load a skill or command named `ship`, `ship-local` or `steward`.
+    ...['ship', 'ship-local', 'steward'].map((folder) => ({
+      code: bare,
+      filename: inFolder(folder),
+      errors: [{ messageId: 'notLoaded' as const, data: { name: folder }, line: 1, column: 1 }],
+    })),
+    {
+      code: '# C\n',
+      filename: '.claude/commands/ship.md',
+      errors: [{ messageId: 'notLoaded', data: { name: 'ship' } }],
+    },
+    ...['steward', 'ship-local'].map((command) => ({
+      code: '# C\n',
+      filename: `.claude/commands/${command}.md`,
+      errors: [{ messageId: 'notLoaded' as const, data: { name: command } }],
+    })),
+    // A `name` field with one of these names does not load either, whatever the folder.
+    ...['ship', 'ship-local', 'steward'].map((field) => ({
+      code: named(field),
+      filename: inFolder('s'),
+      errors: [{ messageId: 'notLoaded' as const, data: { name: field }, line: 2, column: 7 }],
+    })),
+    // The folder and the `name` field give one report, on the field.
+    {
+      code: named('ship'),
+      filename: inFolder('ship'),
+      errors: [{ messageId: 'notLoaded', data: { name: 'ship' }, line: 2, column: 7 }],
+    },
+    // The text of the message.
+    {
+      code: '# S\n\nNo frontmatter.\n',
+      filename: inFolder('ship'),
+      errors: [
+        {
+          message:
+            'Claude Code does not load a skill or command with the name `ship`, where `/ship` is available. The bundled `/ship` or `/steward` runs instead. Rename the skill, or add the name to the option `allow` to silence this report.',
+        },
+      ],
+    },
+    // `allow` covers one name only.
+    {
+      code: bare,
+      filename: inFolder('ship-local'),
+      options: [{ allow: ['ship'] }],
+      errors: [{ messageId: 'notLoaded', data: { name: 'ship-local' } }],
     },
     // A command file takes its name from its path.
     {

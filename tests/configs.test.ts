@@ -1779,9 +1779,9 @@ const TREE: Record<string, string> = {
   'packages/dr/.claude/rules/a.md': 'See `docs/gone/file.md`.\n',
   'packages/dr/docs/notes.md': 'See `docs/gone/file.md`.\n',
   'packages/dr/ok/.git': 'gitdir: ../.git\n',
-  'packages/dr/ok/CLAUDE.md': 'See `src/a.ts`, and run `/ship`.\n',
+  'packages/dr/ok/CLAUDE.md': 'See `src/a.ts`, and run `/release`.\n',
   'packages/dr/ok/src/a.ts': 'x\n',
-  'packages/dr/ok/.claude/skills/ship/SKILL.md': '---\nname: ship\ndescription: d\n---\n',
+  'packages/dr/ok/.claude/skills/release/SKILL.md': '---\nname: release\ndescription: d\n---\n',
   // `claude-md-import-external`: an import out of the repository in a CLAUDE.md file. The file
   // `.git` makes each package a repository. The same import in a CLAUDE.local.md and an AGENTS.md
   // file, which the rule does not lint.
