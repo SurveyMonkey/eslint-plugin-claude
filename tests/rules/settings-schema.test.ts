@@ -59,7 +59,7 @@ jsonTester.run('settings-schema (valid)', rule, {
             maxEffortLevel: 'max',
             autoCompactWindow: 'auto',
           },
-          other: { autoCompactWindow: 200000 },
+          other: { autoCompactWindow: 2000000 },
         },
         modelPicker: {
           options: [
@@ -171,7 +171,7 @@ jsonTester.run('settings-schema (valid)', rule, {
     // The edge of each range, and the longest allowed text.
     ...ALL.map((filename) => ({
       code: obj({
-        autoCompactWindow: 1000000,
+        autoCompactWindow: 2000000,
         skillListingBudgetFraction: 0.5,
         feedbackSurveyRate: 1,
         modelPricing: { multiplier: 10 },
@@ -590,7 +590,7 @@ jsonTester.run('settings-schema (types)', rule, {
     ),
     bad(
       { modelSettings: { m: { autoCompactWindow: true } } },
-      type('modelSettings.m.autoCompactWindow', 'a number from 100000 to 1000000 or "auto"'),
+      type('modelSettings.m.autoCompactWindow', 'a number of at least 100000 or "auto"'),
     ),
     bad(
       { spinnerTipsOverride: { tips: [5] } },
@@ -646,7 +646,7 @@ jsonTester.run('settings-schema (types)', rule, {
     ),
     bad(
       { autoCompactWindow: '200000', bashOutputMaxChars: true, feedbackSurveyRate: [] },
-      type('autoCompactWindow', 'a number from 100000 to 1000000'),
+      type('autoCompactWindow', 'a number of at least 100000'),
       type('bashOutputMaxChars', 'a whole number of at least 1'),
       type('feedbackSurveyRate', 'a number from 0 to 1'),
     ),
@@ -812,18 +812,14 @@ jsonTester.run('settings-schema (ranges)', rule, {
     bad(
       { autoCompactWindow: 99999 },
       {
-        ...range('autoCompactWindow', 'a number from 100000 to 1000000'),
+        ...range('autoCompactWindow', 'a number of at least 100000'),
         column: 22,
         endColumn: 27,
       },
     ),
     bad(
-      { autoCompactWindow: 1000001 },
-      range('autoCompactWindow', 'a number from 100000 to 1000000'),
-    ),
-    bad(
       { modelSettings: { m: { autoCompactWindow: 5 } } },
-      range('modelSettings.m.autoCompactWindow', 'a number from 100000 to 1000000'),
+      range('modelSettings.m.autoCompactWindow', 'a number of at least 100000'),
     ),
     bad({ bashOutputMaxChars: 0 }, range('bashOutputMaxChars', 'a whole number of at least 1')),
     bad({ bashOutputMaxChars: 1.5 }, range('bashOutputMaxChars', 'a whole number of at least 1')),

@@ -80,7 +80,7 @@ last review. The kinds of value are below.
   `preferredNotifChannel`, `managedSourcesBehavior`, `parentSettingsBehavior`,
   `allowedProviders`[^providers], `worktree.baseRef`, `worktree.bgIsolation`, `spellcheck.checker`,
   `voice.mode`, `spinnerVerbs.mode` and `disableDeepLinkRegistration`.
-- **Ranges.** `autoCompactWindow` (100000 to 1000000, also under `modelSettings`),
+- **Ranges.** `autoCompactWindow` (at least 100000, also under `modelSettings`),
   `bashOutputMaxChars` (a positive whole number), `skillListingBudgetFraction` (above 0, at most
   1), `skillListingMaxDescChars`, `maxProseWidth` (at least 40), `cleanupPeriodDays` (at least
   1), `desktopSessionCleanupPeriodDays` (at least 0), `feedbackSurveyRate` (0 to 1),
