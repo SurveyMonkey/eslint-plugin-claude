@@ -253,6 +253,31 @@ describe(`${name}: a managed source, on disk`, () => {
     expect(at(root, DROP_IN, file(REPORTING), [{ minVersion: '2.1.282' }])).toEqual([])
   })
 
+  // The same text: a value of any other managed `sandbox` field outside `credentials` that is
+  // invalid also drops `enabled` before v2.1.283. An unknown key is not invalid, and the rule
+  // does not read `credentials`:
+  // https://code.claude.com/docs/en/managed-settings#invalid-values-inside-sandbox
+  it('is silent for an invalid value of another managed field before v2.1.283', () => {
+    const before = [{ minVersion: '2.1.282' }]
+    const floor = [{ minVersion: '2.1.283' }]
+    const block = (extra: object) => ({ ...ASK, sandbox: { ...AUTO.sandbox, ...extra } })
+    for (const extra of [{ excludedCommands: 'x' }, { excludedCommands: [1] }]) {
+      const text = JSON.stringify(extra)
+      expect(alone(block(extra), MANAGED, before), text).toEqual([])
+      expect(alone(block(extra), MANAGED, floor), text).toEqual(['skipped'])
+      const root = repo({ [MANAGED]: file({ sandbox: extra }) })
+      expect(at(root, DROP_IN, file(REPORTING), before), text).toEqual([])
+    }
+    const kept = [{ foo: 1 }, { credentials: { files: 'x' } }, { excludedCommands: ['git'] }]
+    for (const extra of kept) {
+      const text = JSON.stringify(extra)
+      expect(alone(block(extra), MANAGED, before), text).toEqual(['skipped'])
+      expect(alone(block(extra), MANAGED, floor), text).toEqual(['skipped'])
+    }
+    // A project file keeps its report: the drop is a managed behaviour.
+    expect(alone(block({ excludedCommands: 'x' }), PROJECT, before)).toEqual(['skipped'])
+  })
+
   // The docs name no `null` inside `sandbox`. For a top-level key, "A `null` removes the key":
   // https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed
   // The rule reads a `null` in `sandbox` the same way, so it drops no block.
