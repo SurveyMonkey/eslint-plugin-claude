@@ -18,7 +18,9 @@
 // `tests/settings-env.test.ts` checks the list against the stored text.
 
 /** The first Claude Code version that reads each variable, when that version is v2.1.211 or later.
- *  A variable that is not here is old, or the docs give no whole-variable "Requires" sentence. */
+ *  A variable that is not here is old, or the docs give no whole-variable "Requires" sentence.
+ *  The export is for `tests/settings-env.test.ts`, which reads the names.
+ *  @public */
 export const ENV_FIRST_VERSIONS: ReadonlyMap<string, string> = new Map<string, string>([
   ['ANTHROPIC_BEDROCK_REGION_PREFIX', '2.1.224'],
   ['ANTHROPIC_CUSTOM_HEADERS', '2.1.227'],
@@ -358,7 +360,9 @@ export function envValueForm(name: string): EnvForm | undefined {
 /** Variables that Claude Code ignores in the `env` block of every settings file. The settings
  *  reference names two kinds. Host platforms own the identity variables. Claude Code exports
  *  the others, or reads them from the launch environment only. The env vars reference names two
- *  more: `CLAUDE_CODE_RESUME_HINT_COMMAND` and `CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME`. */
+ *  more: `CLAUDE_CODE_RESUME_HINT_COMMAND` and `CLAUDE_CODE_DISABLE_DEFERRED_TOOL_RESUME`.
+ *  The export is for `tests/settings-env.test.ts`, which reads the names.
+ *  @public */
 export const IGNORED_IN_EVERY_FILE: ReadonlySet<string> = new Set([
   'CLAUDE_CODE_REMOTE',
   'CLAUDE_CODE_ACCOUNT_UUID',
@@ -382,7 +386,9 @@ export const IGNORED_IN_EVERY_FILE: ReadonlySet<string> = new Set([
 
 /** Variables that Claude Code ignores in project and local settings. The user, managed and
  *  `--settings` files can set them. A name is a variable, or a family of variables. The
- *  Windows names have the letter case of the settings reference. */
+ *  Windows names have the letter case of the settings reference.
+ *  The export is for `tests/settings-env.test.ts`, which reads the names.
+ *  @public */
 export const IGNORED_IN_PROJECT_FILES: readonly (string | RegExp)[] = [
   // Where Claude Code stores its files, and the operating-system directories.
   'CLAUDE_CONFIG_DIR',
