@@ -4,7 +4,14 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { envFirstVersion, envIgnoredIn, removedEnvVarSince } from '../src/data/settings-env.ts'
+import {
+  ENV_FIRST_VERSIONS,
+  envFirstVersion,
+  envIgnoredIn,
+  IGNORED_IN_EVERY_FILE,
+  IGNORED_IN_PROJECT_FILES,
+  removedEnvVarSince,
+} from '../src/data/settings-env.ts'
 import { NO_EFFECT_KEYS } from '../src/data/settings-keys.ts'
 
 function snapshotText(page: string, id: string): string {
@@ -74,6 +81,29 @@ describe('the variables that settings cannot set, against the settings reference
       expect(IGNORED).toContain(`\`${name}\``)
       expect(envIgnoredIn(name)).toBe('every-file')
     }
+  })
+})
+
+describe('the names in the lists, against the docs', () => {
+  // A name that the docs no longer give is stale. The RegExp entries are families, and the
+  // family text test above checks them.
+  const named = (name: string) => [IGNORED, VARIABLES].some((text) => text.includes(`\`${name}\``))
+
+  it('names each first-version variable in the env vars reference', () => {
+    const stale = [...ENV_FIRST_VERSIONS.keys()].filter((name) => !named(name))
+    expect(stale).toEqual([])
+  })
+
+  it('names each variable that every file ignores in the docs', () => {
+    const stale = [...IGNORED_IN_EVERY_FILE].filter((name) => !named(name))
+    expect(stale).toEqual([])
+  })
+
+  it('names each variable that project files ignore in the docs', () => {
+    const stale = IGNORED_IN_PROJECT_FILES.filter(
+      (entry): entry is string => typeof entry === 'string',
+    ).filter((name) => !named(name))
+    expect(stale).toEqual([])
   })
 })
 
