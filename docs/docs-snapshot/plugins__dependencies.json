@@ -92,6 +92,12 @@
       "text": "### Constrain a dependency that has a non-git source\n\nTag-based resolution applies only to git-backed sources. For a dependency with an `npm`, `archive`, or `command` [plugin source](/docs/en/plugins/marketplace-reference#plugin-sources), the constraint doesn't control which version is fetched. It's still checked when the plugin loads, and the dependent plugin is disabled if the installed version doesn't satisfy it.\n\nFor `npm`, `archive`, and `command` sources, the version checked is the `version` in the dependency's `plugin.json`. Set one there before you constrain that dependency, because a `plugin.json` that sets no version satisfies no constraint.\n\nClaude Code never installs a dependency with a `command` source itself, so users [install it first](/docs/en/plugins/marketplace-reference#command-plugin-source). It also never runs a dependency's [`headersHelper`](/docs/en/plugins/host-marketplace#authenticate-archive-downloads), so users also install a dependency whose marketplace entry sets one before they install your plugin."
     },
     {
+      "heading": "When a dependency installs automatically",
+      "id": "when-a-dependency-installs-automatically",
+      "hash": "298e11ec6cc162ec15a4b6ce9a129d49aba6fdfd2d0ceba989d7168b8335e505",
+      "text": "### When a dependency installs automatically\n\nBesides `claude plugin install`, these operations also install a missing declared dependency, and the [`command` and `headersHelper` limits](#constrain-a-dependency-that-has-a-non-git-source) apply to them too:\n\n* `/reload-plugins`\n* Auto-update of the dependent plugin's marketplace\n* Re-running `claude plugin install` on the dependent plugin\n* Updating the dependent plugin with `claude plugin update` or **Update now** in `/plugin`, unless [non-essential traffic is turned off](/docs/en/plugins/troubleshooting#dependency-errors). Requires Claude Code v2.1.319 or later\n* `claude plugin marketplace add`"
+    },
+    {
       "heading": "Declare a dependency with a version constraint",
       "id": "declare-a-dependency-with-a-version-constraint",
       "hash": "de47bc27873204731ebb3568257258b98930ae73e90d774173343426193418a9",
