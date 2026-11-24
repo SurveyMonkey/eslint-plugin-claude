@@ -33,7 +33,9 @@ const name = 'hooks-command-shell-safety' as const
 const OTHER_LANGUAGE = /\.(?:py|js|mjs|cjs|ts|rb|ps1|bat|cmd)$/i
 const SHELL_SHEBANG = /^#!.*\b(?:ba|z|da|k)?sh\b/
 /** A variable or a positional or special parameter, as the scan of `unquotedVariables` reads one. */
-const PARAMETER = /\$(?:\{#?([A-Za-z_]\w*)|([A-Za-z_]\w*|\d|[@*]))/g
+const PARAMETER = /\$(?:\{#?([A-Za-z_]\w*)|\{(\d+|[@*])\}|([A-Za-z_]\w*|\d|[@*]))/g
+/** `PARAMETER` at one index: a sticky copy, so the scan needs no slice of the text. */
+const PARAMETER_AT = new RegExp(PARAMETER.source, 'y')
 const VARIABLE = /\$(?:\{#?([A-Za-z_]\w*)[^}]*\}|([A-Za-z_]\w*))/g
 const ASSIGNMENT = /^[A-Za-z_]\w*\+?=/
 /** A variable that gets a value from `jq` or `cat`, which read the hook input, or from `read`. */
@@ -42,7 +44,7 @@ const DERIVED =
 
 /** The name of each variable and parameter in `text`, also one in quotes. */
 const parametersIn = (text: string) =>
-  [...text.matchAll(PARAMETER)].map((match) => (match[1] ?? match[2]) as string)
+  [...text.matchAll(PARAMETER)].map((match) => (match[1] ?? match[2] ?? match[3]) as string)
 
 /** Adds each name of `from` to the end of `into`. A spread puts each name in one argument of one
  *  call, and more than about 100,000 arguments can throw a RangeError. */
@@ -73,6 +75,8 @@ function unquotedVariables(text: string, nesting = 0): string[] {
   // The open `${` expansions at this level, and the counts of the outer levels.
   let braces = 0
   const outer: number[] = []
+  // The number of outer levels with an open expansion. `bare` reads it in constant time.
+  let open = 0
   // True when the next character starts a word. The shell removes each backslash and new line
   // pair first, so a pair does not change `boundary`.
   let boundary = true
@@ -82,7 +86,7 @@ function unquotedVariables(text: string, nesting = 0): string[] {
     boundary = false
     // True when no `${...}` expansion holds the scan, also through a process substitution in one.
     // In an expansion, a blank ends no word, and `[[` starts no test.
-    const bare = braces === 0 && outer.every((count) => count === 0)
+    const bare = braces === 0 && open === 0
     if (quote === "'") {
       quote = char === "'" ? '' : quote
     } else if (char === '$' && text.startsWith('(', i + 1)) {
@@ -127,11 +131,10 @@ function unquotedVariables(text: string, nesting = 0): string[] {
       // `$$` is a parameter, so a `{` after it opens no expansion.
       i++
     } else if (char === '$') {
-      const match = test
-        ? null
-        : /^\$(?:\{#?([A-Za-z_]\w*)|([A-Za-z_]\w*|\d|[@*]))/.exec(text.slice(i))
+      PARAMETER_AT.lastIndex = i
+      const match = test ? null : PARAMETER_AT.exec(text)
       if (match !== null && !ASSIGNMENT.test(text.slice(wordStart, i))) {
-        names.push((match[1] ?? match[2]) as string)
+        names.push((match[1] ?? match[2] ?? match[3]) as string)
       }
       if (/^\{[^\s|]/.test(text.slice(i + 1, i + 3))) {
         // The scan reads the expansion one character at a time, so a quote in it is a quote. A
@@ -147,10 +150,12 @@ function unquotedVariables(text: string, nesting = 0): string[] {
       if (char === '(' && (braces === 0 || /[<>]/.test(text.charAt(i - 1)))) {
         // In an expansion, a parenthesis is plain text, unless it starts a process substitution.
         outer.push(braces)
+        open += braces === 0 ? 0 : 1
         braces = 0
         boundary = true
       } else if (char === ')' && braces === 0) {
         braces = outer.pop() ?? 0
+        open -= braces === 0 ? 0 : 1
       }
     }
   }

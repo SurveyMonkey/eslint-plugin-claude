@@ -92,6 +92,31 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line('cat $*')).toEqual(['unquoted'])
   })
 
+  it('reports the brace forms of $@, $* and a positional parameter', () => {
+    for (const text of [`cat \${@}`, `cat \${*}`, `cat \${1}`, `cat \${10}`]) {
+      expect(line(text), text).toEqual(['unquoted'])
+    }
+  })
+
+  it('names the parameter in the report of a brace form', () => {
+    const variable = (text: string) =>
+      lintJson(
+        name,
+        settings(hooks('PostToolUse', [command({ command: text })], 'Write')),
+        path.join(repo({}), '.claude/settings.json'),
+      ).map((message) => message.message.match(/uses (\S+) with/)?.[1])
+    expect(variable(`cat \${@}`)).toEqual(variable('cat $@'))
+    expect(variable(`cat \${10}`)).toEqual(['$10'])
+  })
+
+  it('is silent for a quoted brace form and for a count', () => {
+    // bash prints one word for each of these: a quoted `${@}` or `${1}` does not split, and
+    // `${#}`, `${#@}` and `${#*}` give a count.
+    for (const text of [`cat "\${@}"`, `cat "\${1}"`, `cat \${#}`, `cat \${#@}`, `cat \${#*}`]) {
+      expect(line(text), text).toEqual([])
+    }
+  })
+
   it('is silent for a quoted variable inside a quoted command substitution', () => {
     for (const text of [
       'cd "$(dirname "$0")"',
@@ -387,7 +412,7 @@ describe(`${name}: an unquoted variable in the command`, () => {
       'echo a;#c $F',
       'echo a|#c $F\ncat',
       'echo a&#c $F\nwait',
-      `echo \${1} # $F`,
+      `echo "\${1}" # $F`,
       // A quote in an expansion is a quote, so the `\${` in it opens no expansion.
       `echo \${CLAUDE_PROJECT_DIR:-'\${'} # $F`,
       // bash 5.3 reads `$$` as the process id, so the `#` after `{a ` starts a comment.
@@ -555,6 +580,14 @@ describe(`${name}: an unquoted variable in the command`, () => {
     expect(line(deep(`$(echo ${many})`))).toEqual(['unquoted'])
     expect(line(deep(`\`echo ${many}\``))).toEqual(['unquoted'])
   }, 30_000)
+
+  it('scans a long run of parentheses in linear time', () => {
+    // The scan once checked every outer level at each character, so the time grew with the
+    // square of the run. 80,000 parentheses took about one second then.
+    const start = performance.now()
+    expect(line(`echo ${'('.repeat(20_000)} $X`)).toEqual(['unquoted'])
+    expect(performance.now() - start).toBeLessThan(500)
+  })
 
   it('counts each parameter in the rest of the level past 100 levels, and only there', () => {
     // At the limit, the fallback reads the rest of the text of level 100. That text starts at
