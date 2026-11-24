@@ -71,7 +71,7 @@ export const MCP_SERVER_TYPES = ['stdio', 'http', 'sse', 'ws', 'streamable-http'
 
 /** The names of the built-in subagents. Source: the "Built-in subagents"
  *  section (https://code.claude.com/docs/en/sub-agents#built-in-subagents),
- *  checked on 2026-10-10. */
+ *  checked on Claude Code 2.1.331 on 2026-11-24. */
 export const BUILT_IN_AGENTS = [
   'Explore',
   'Plan',
@@ -79,4 +79,5 @@ export const BUILT_IN_AGENTS = [
   'claude',
   'statusline-setup',
   'claude-code-guide',
+  'web-fetch',
 ] as const

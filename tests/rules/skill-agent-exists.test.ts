@@ -114,6 +114,7 @@ markdownTester.run('skill-agent-exists', ruleOf('skill-agent-exists'), {
       'claude',
       'statusline-setup',
       'claude-code-guide',
+      'web-fetch',
     ].map((agent) => ({ code: fork(agent), filename: projectSkill })),
     // The docs do not give the case rule for names, so the rule ignores case.
     { code: fork('explore'), filename: projectSkill },

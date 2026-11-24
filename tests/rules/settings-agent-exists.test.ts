@@ -79,6 +79,7 @@ describe(RULE, () => {
       'claude',
       'statusline-setup',
       'claude-code-guide',
+      'web-fetch',
     ])('for the built-in agent %s, with no agents directory', (value) => {
       const dir = tree({}, true)
       expect(lint(dir, settings(value))).toEqual([])

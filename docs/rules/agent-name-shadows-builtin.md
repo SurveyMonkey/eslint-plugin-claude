@@ -24,12 +24,12 @@ generated:
 
 ## Rule details
 
-Claude Code has six built-in subagents: `Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup` and
-`claude-code-guide`.[^builtin] When two subagents have the same name, Claude Code uses the one from the higher-priority
+Claude Code has seven built-in subagents: `Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup`,
+`claude-code-guide` and `web-fetch`.[^builtin] When two subagents have the same name, Claude Code uses the one from the higher-priority
 location.[^scope] The page says that a project or user subagent named `Explore` overrides the built-in.[^builtin] The
-rule applies the same reading to the other five names, because the page gives no other rule for them.
+rule applies the same reading to the other six names, because the page gives no other rule for them.
 
-The rule reports the `name` of a local agent that is one of the six names. The match is exact and case-sensitive.
+The rule reports the `name` of a local agent that is one of the seven names. The match is exact and case-sensitive.
 `explore` and `Explorer` are not reports.
 
 An override can be intended. The docs show one: an `Explore` agent with `model: haiku` runs exploration on a cheaper

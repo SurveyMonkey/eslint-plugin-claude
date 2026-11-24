@@ -141,6 +141,7 @@ describe('agent-descriptions-budget', () => {
       // The built-in file adds nothing, so it gets no report.
       expect(run(agent('Explore', 90000), LOCAL, sibling(30000))).toEqual([])
       expect(run(agent('claude-code-guide', 90000), LOCAL)).toEqual([])
+      expect(run(agent('web-fetch', 90000), LOCAL)).toEqual([])
     })
     it('adds nothing for a built-in name or a skipped file, at the limit', () => {
       // 30000 + 30000 characters is exactly 15000 tokens. Any extra character is over the limit.

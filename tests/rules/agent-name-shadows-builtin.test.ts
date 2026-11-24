@@ -1,5 +1,5 @@
 // The sub-agents page, "Built-in subagents": a project or user subagent named
-// `Explore` overrides the built-in. The page lists six built-in names. A plugin
+// `Explore` overrides the built-in. The page lists seven built-in names. A plugin
 // agent has a scoped name, so the rule checks local agents only.
 import { describe, expect, it } from 'vitest'
 import { BUILT_IN_AGENTS } from '../../src/data/agent-fields.ts'
@@ -51,9 +51,17 @@ markdownTester.run('agent-name-shadows-builtin', ruleOf('agent-name-shadows-buil
       ],
     },
     // Each built-in name on the sub-agents page.
-    ...['Plan', 'general-purpose', 'claude', 'statusline-setup', 'claude-code-guide'].map(
-      (name) => ({ ...file(name), errors: [{ messageId: 'shadows' as const, data: { name } }] }),
-    ),
+    ...[
+      'Plan',
+      'general-purpose',
+      'claude',
+      'statusline-setup',
+      'claude-code-guide',
+      'web-fetch',
+    ].map((name) => ({
+      ...file(name),
+      errors: [{ messageId: 'shadows' as const, data: { name } }],
+    })),
     // A subfolder does not change the name.
     {
       ...file('Explore', '.claude/agents/review/a.md'),
@@ -85,7 +93,7 @@ describe('agent-name-shadows-builtin options', () => {
 })
 
 describe('BUILT_IN_AGENTS', () => {
-  it('holds the six names of the sub-agents page', () => {
+  it('holds the seven names of the sub-agents page', () => {
     expect([...BUILT_IN_AGENTS]).toEqual([
       'Explore',
       'Plan',
@@ -93,6 +101,7 @@ describe('BUILT_IN_AGENTS', () => {
       'claude',
       'statusline-setup',
       'claude-code-guide',
+      'web-fetch',
     ])
   })
 })

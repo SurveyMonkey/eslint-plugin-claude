@@ -28,8 +28,8 @@ A skill with `context: fork` runs in a subagent of the type that `agent` names.[
 is a built-in agent, or a custom subagent from `.claude/agents/`.[^example] The rule reports an
 `agent` value that matches none of these. A forked skill cannot start such an agent.
 
-The built-in agents are `Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup` and
-`claude-code-guide`.[^builtin] The rule ignores letter case, because the docs do not say if Claude
+The built-in agents are `Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup`,
+`claude-code-guide` and `web-fetch`.[^builtin] The rule ignores letter case, because the docs do not say if Claude
 Code compares names with case.
 
 For a skill or command file outside a plugin, the rule reads the `name` field of each Markdown

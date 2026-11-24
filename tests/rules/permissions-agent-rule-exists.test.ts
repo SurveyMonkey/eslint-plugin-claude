@@ -122,6 +122,7 @@ describe(`${name}: silent`, () => {
       'claude',
       'statusline-setup',
       'claude-code-guide',
+      'web-fetch',
       'explore',
       ' Explore ',
     ].map((agentName) => `Agent(${agentName})`)
