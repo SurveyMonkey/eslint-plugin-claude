@@ -156,10 +156,61 @@ describe(`${name}: a quoted placeholder`, () => {
     }
   })
 
-  it('is silent for a line with a command substitution, where quotes nest', () => {
-    expect(run(`echo "$(cd ${P} && pwd)"`)).toEqual([])
-    expect(run(`echo $(cat ${P}/a)`)).toEqual([])
-    expect(run(`echo \`cat ${P}/a\``)).toEqual([])
+  it('is silent for a placeholder that is in quotes at its own level in a substitution', () => {
+    for (const text of [
+      `echo $(cat "${P}"/a)`,
+      `echo $(cat "$CLAUDE_PROJECT_DIR"/a)`,
+      `echo "$(cat "${P}"/a)"`,
+      `echo \`cat "${P}"/a\``,
+      `echo "\`cat "${P}"/a\`"`,
+      `echo "\`cat \\"${P}\\"/a\`"`,
+      `echo $(a $(b "${P}"))`,
+      `echo "$(a "$(b "${P}")")"`,
+      `echo $(cat '${P}')`,
+      `echo '$(cat ${P}/a)'`,
+      `echo '\`cat ${P}/a\`'`,
+      `echo hi # $(cat ${P}/a)`,
+      `echo 'a $(cat ${P}/a)`,
+      `echo $(cat "${P}"/a) "${P}"`,
+    ]) {
+      expect(run(text), text).toEqual([])
+    }
+  })
+
+  it('is silent for a placeholder in a comment in a substitution', () => {
+    expect(run(`echo $(cat "${P}"/a # ${P}\n)`)).toEqual([])
+  })
+
+  it('is silent for a substitution that is too deep to read', () => {
+    expect(run(`${'echo "$('.repeat(150)}cat ${P}${')"'.repeat(150)}`)).toEqual([])
+    // A shallower chain still reports.
+    expect(run(`${'echo "$('.repeat(20)}cat ${P}${')"'.repeat(20)}`)).toEqual(['unquoted'])
+  })
+})
+
+describe(`${name}: an unquoted placeholder in a substitution`, () => {
+  it('reports a placeholder with no quotes at its own level', () => {
+    // bash splits the path inside `$(...)`, whatever quotes are outside.
+    for (const text of [
+      `echo $(cat ${P}/a)`,
+      `echo $(cat $CLAUDE_PROJECT_DIR/a)`,
+      `echo \`cat ${P}/a\``,
+      `echo \`cat $CLAUDE_PROJECT_DIR/a\``,
+      `echo "$(cat ${P}/a)"`,
+      `echo "$(cat $CLAUDE_PROJECT_DIR/a)"`,
+      `echo "\`cat ${P}/a\`"`,
+      `echo "\`cat \\"x\\" ${P}/a\`"`,
+      `echo "$(cd ${P} && pwd)"`,
+      `echo $(a $(b ${P}))`,
+      `echo "$(a "$(b ${P})")"`,
+      `echo $(a "$(b ${P})")`,
+      `echo $(a "x") $(b ${P})`,
+      `echo $(cat "${P}"/a ${P}/b)`,
+      `echo "$(cat "${P}"/a)" "$(cat ${P}/b)"`,
+      `FOO=$(cat ${P}/a) run`,
+    ]) {
+      expect(run(text), text).toEqual(['unquoted'])
+    }
   })
 })
 

@@ -13,7 +13,7 @@ import {
   PATH_VARIABLES,
   stringOf,
 } from '../hooks-config.ts'
-import { commandsOf } from '../shell-words.ts'
+import { closingParen, commandsOf, MAX_NESTING, tickEnd } from '../shell-words.ts'
 
 const name = 'hooks-placeholder-quoted' as const
 
@@ -27,12 +27,9 @@ const REFERENCE = new RegExp(`\\$\\{(?:${VARIABLES})\\}|\\$(?:${VARIABLES})(?![A
  *
  *  Out of quotes, the reader drops the backslash. In quotes, it keeps it. A `${...}` expansion does
  *  not change this, so a reference in the value of an unquoted expansion is out of quotes too. bash
- *  splits that value at a space. A reference in a comment is in no word. The function does not read
- *  a line with a command substitution, because quotes nest inside it. */
-function unquotedReference(line: string): string | undefined {
-  if (line.includes('$(') || line.includes('`')) {
-    return undefined
-  }
+ *  splits that value at a space. A reference in a comment is in no word. A substitution in double
+ *  quotes stays one word, with its text. `unquotedReference` reads that text. */
+function levelReference(line: string): string | undefined {
   const found: string[] = []
   const marked = line.replace(REFERENCE, (text) => {
     found.push(text)
@@ -41,6 +38,65 @@ function unquotedReference(line: string): string | undefined {
   })
   const words = commandsOf(marked).flat()
   return found.find((_, mark) => words.some((word) => word.includes(`${mark} ${mark}`)))
+}
+
+/** The text of each command substitution and backtick pair in `line`, at the level of `line`. A
+ *  nested one is in the text of its outer one. Single quotes and comments hide a substitution.
+ *  A comment that starts in a `${...}` expansion hides the rest of the line: that can miss a
+ *  report, and gives no false one. In backticks, the shell removes a backslash before `$`, a
+ *  backtick or a backslash, and before a double quote when the pair is in double quotes. */
+function substitutionsIn(line: string): string[] {
+  const texts: string[] = []
+  let quoted = false
+  // True when the next character starts a word.
+  let boundary = true
+  for (let i = 0; i < line.length; i++) {
+    const char = line.charAt(i)
+    const before = boundary
+    boundary = false
+    if (char === '\\') {
+      i++
+    } else if (char === "'" && !quoted) {
+      const end = line.indexOf("'", i + 1)
+      i = end === -1 ? line.length : end
+    } else if (char === '"') {
+      quoted = !quoted
+    } else if (char === '$' && line.charAt(i + 1) === '(') {
+      const end = closingParen(line, i + 1)
+      texts.push(line.slice(i + 2, end))
+      i = end
+    } else if (char === '`') {
+      const end = tickEnd(line, i)
+      const escaped = quoted ? /\\([$`\\"])/g : /\\([$`\\])/g
+      texts.push(line.slice(i + 1, end).replace(escaped, '$1'))
+      i = end
+    } else if (char === '#' && before && !quoted) {
+      const end = line.indexOf('\n', i)
+      i = end === -1 ? line.length : end
+      boundary = true
+    } else {
+      boundary = !quoted && /[\s;|&<>]/.test(char)
+    }
+  }
+  return texts
+}
+
+/** The first reference in `line` that sits outside quotes at its own level, or undefined. Bash
+ *  splits the value of a reference in a command substitution, also when the substitution is in
+ *  double quotes. So `levelReference` reads the line, and then the text of each substitution in
+ *  it. A level that is deeper than `MAX_NESTING` gets no report. */
+function unquotedReference(line: string, depth = 0): string | undefined {
+  const found = levelReference(line)
+  if (found !== undefined || depth >= MAX_NESTING) {
+    return found
+  }
+  for (const text of substitutionsIn(line)) {
+    const inner = unquotedReference(text, depth + 1)
+    if (inner !== undefined) {
+      return inner
+    }
+  }
+  return undefined
 }
 
 const rule: Rule.RuleModule = {

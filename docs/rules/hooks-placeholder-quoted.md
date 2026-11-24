@@ -35,6 +35,10 @@ placeholders, and the bare variables `$CLAUDE_PROJECT_DIR`, `$CLAUDE_PLUGIN_ROOT
 split in the same way. The rule reads single quotes and double quotes as quotes. It reports once for each handler,
 at the `command` string.
 
+The rule also reads inside `$(...)` and a backtick pair. The text there has its own quotes. So
+`$(cat "$CLAUDE_PROJECT_DIR"/x)` passes. `$(cat $CLAUDE_PROJECT_DIR/x)` is reported, also inside double
+quotes, because bash splits the path in the substitution.
+
 ### What `claude plugin validate` reports
 
 `claude plugin validate` warns about an unquoted variable in a shell-form command of a plugin hooks file. It does
@@ -47,8 +51,6 @@ and of a project subagent.
 - A hook in exec form (with `args`). No shell reads the command, and each `args` item is one argument.[^scripts]
 - A hook with `shell` set to `"powershell"`. [`hooks-powershell-placeholder`](hooks-powershell-placeholder.md)
   reads the quote rules of PowerShell.
-- A line with a command substitution (`$(...)` or a backtick). Quotes nest inside it, and the rule cannot tell
-  which quote closes which.
 - A placeholder in a shell comment. The shell does not run a comment.
 - A `command` that is not a string, and a handler that is not a `command` hook.
 
