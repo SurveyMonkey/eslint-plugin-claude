@@ -36,8 +36,8 @@ split in the same way. The rule reads single quotes and double quotes as quotes.
 at the `command` string.
 
 The rule also reads inside `$(...)` and a backtick pair. The text there has its own quotes. So
-`$(cat "$CLAUDE_PROJECT_DIR"/x)` passes. `$(cat $CLAUDE_PROJECT_DIR/x)` is reported, also inside double
-quotes, because bash splits the path in the substitution.
+`$(cat "$CLAUDE_PROJECT_DIR"/x)` passes. The rule reports `$(cat $CLAUDE_PROJECT_DIR/x)`, also inside
+double quotes. bash splits the path in the substitution.
 
 ### What `claude plugin validate` reports
 
@@ -52,6 +52,8 @@ and of a project subagent.
 - A hook with `shell` set to `"powershell"`. [`hooks-powershell-placeholder`](hooks-powershell-placeholder.md)
   reads the quote rules of PowerShell.
 - A placeholder in a shell comment. The shell does not run a comment.
+- A line with a `case` command in `$(...)`. The rule cannot tell the `)` of a pattern from the `)` that ends the
+  substitution.
 - A `command` that is not a string, and a handler that is not a `command` hook.
 
 [`hooks-prefer-exec-form`](hooks-prefer-exec-form.md) reports a placeholder in shell form, quoted or not. A hook
