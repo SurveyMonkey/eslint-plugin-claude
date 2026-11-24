@@ -90,7 +90,9 @@ describe('agent-tools-agent-type-list', () => {
       expect(messages[0]?.message).not.toContain('Explore')
     })
     it('stays silent for a built-in type, in any letter case', () => {
-      expect(run(MAIN, 'tools: Agent(Explore, plan, general-purpose), Read\n')).toEqual([])
+      expect(run(MAIN, 'tools: Agent(Explore, plan, general-purpose, web-fetch), Read\n')).toEqual(
+        [],
+      )
     })
     it('stays silent for an agent file of the project or of a folder above', () => {
       const files = {

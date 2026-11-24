@@ -57,7 +57,14 @@ describe('agent-name-kebab-case', () => {
       expect(lint('reviewer', 'plugins/p/agents/other-name.md')).toEqual([])
     })
     it('for the name of a built-in agent', () => {
-      for (const name of ['Explore', 'Plan', 'general-purpose', 'claude', 'claude-code-guide']) {
+      for (const name of [
+        'Explore',
+        'Plan',
+        'general-purpose',
+        'claude',
+        'claude-code-guide',
+        'web-fetch',
+      ]) {
         expect(lint(name), name).toEqual([])
       }
     })

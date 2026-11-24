@@ -214,6 +214,7 @@ describe(`${name}: a subagent name`, () => {
       'claude',
       'statusline-setup',
       'claude-code-guide',
+      'web-fetch',
     ]) {
       expect(ids(files, subagents(matcher)), matcher).toEqual([])
     }

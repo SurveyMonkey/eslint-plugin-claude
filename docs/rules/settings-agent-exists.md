@@ -32,8 +32,8 @@ or custom agent".[^agent] A name that no agent has points to nothing.
 
 The rule accepts a value that is one of these:
 
-- A built-in agent: `Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup` or
-  `claude-code-guide`.[^invoke] The data is in `src/data/agent-fields.ts`.
+- A built-in agent: `Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup`,
+  `claude-code-guide` or `web-fetch`.[^invoke] The data is in `src/data/agent-fields.ts`.
 - The `name` field of an agent file in `.claude/agents/`. The folder can have subfolders.
 - A name in the option `allow`.
 - A name with a colon. That is the form of a plugin agent, and the repository cannot show it.

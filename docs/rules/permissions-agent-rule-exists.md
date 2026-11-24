@@ -30,7 +30,7 @@ The rule is `off` in `recommended`. It is a heuristic, so `strict` turns it on a
 that the name is the `name` field of the subagent.[^disable] A rule for a name that no subagent has matches nothing.
 
 The rule reads the `Agent(Name)` rules of the two project settings files, in `allow`, `ask` and `deny`. It reports a name that is
-not a built-in subagent (`Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup`, `claude-code-guide`) and not the
+not a built-in subagent (`Explore`, `Plan`, `general-purpose`, `claude`, `statusline-setup`, `claude-code-guide`, `web-fetch`) and not the
 `name` field of a Markdown file in a `.claude/agents/` folder.[^builtin] It reads the folder of the project and the folder of each
 directory above the project, up to the repository root. The rule matches names without regard to letter case, because the docs do not say that
 Claude Code compares them with case.
